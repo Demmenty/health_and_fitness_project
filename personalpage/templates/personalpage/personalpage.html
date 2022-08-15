@@ -1,0 +1,49 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+
+<h1>Персональная страница клиента: {{ user.username }}</h1>
+
+<!-- измерения за сегодня -->
+{% if today_measure %}
+    <h3>Данные измерений за сегодня</h3><br>
+    
+    <label>Дата<p>{{ today_measure.date }}</p></label><br>
+    <p>{{ today_measure.weekday }}</p><br>
+    <label>Самочувствие<p>{{ today_measure.feel }}</p></label><br>
+    <label>Масса<p>{{ today_measure.weight }}</p></label><br>
+    <label>Жирность<p>{{ today_measure.fat }}</p></label><br>
+    <label>Пульс в покое<p>{{ today_measure.pulse }}</p></label><br>
+    <label>Давление<p>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</p></label><br>
+    {% if today_measure.comment %}
+        <label>Комментарий<p>{{ today_measure.comment }}</p></label><br>
+    {% endif %}
+
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Редактировать записи</button></a>
+    
+{% else %}
+    <p>За сегодня измерений не сделано.</p><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Добавить запись</button></a>
+{% endif %}
+
+<!-- измерения за неделю-->
+<h3>Данные измерений за неделю</h3><br>
+
+{% for measure in week_set %}
+    {{ measure }}<br><br>
+    <label>Дата<p>{{ measure.date }}</p></label><br>
+    <p>{{ measure.weekday }}</p><br>
+    <label>Самочувствие<p>{{ measure.feel }}</p></label><br>
+    <label>Масса<p>{{ measure.weight }}</p></label><br>
+    <label>Жирность<p>{{ measure.fat }}</p></label><br>
+    <label>Пульс в покое<p>{{ measure.pulse }}</p></label><br>
+    <label>Давление<p>{{ measure.pressure_upper }}/{{ measure.pressure_lower }}</p></label><br>
+    {% if measure.comment %}
+        <label>Комментарий<p>{{ measure.comment }}</p></label><br>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

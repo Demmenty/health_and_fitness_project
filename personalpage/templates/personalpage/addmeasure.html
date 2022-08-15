@@ -1,0 +1,36 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+
+{% block title %}Контроль измерений{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Внесение данных о физических показателях</h1><br>
+
+    <table class="table table-bordered border-primary" id="week_calendar_table">
+        <tr>
+            {% for selected_date, day_value in week_calendar.items %}
+            <td class="select_date" value="{{ selected_date }}">{{ day_value }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+    
+    <span>{{ error }}</span><br>
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Дата{{ measure_form.date }}</label><br>
+        <label>Самочувствие{{ measure_form.feel }}</label><br>
+        <label>Масса{{ measure_form.weight }}</label><br>
+        <label>Жирность{{ measure_form.fat }}</label><br>
+        <label>Пульс в покое{{ measure_form.pulse }}</label><br>
+        <label>Давление{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
+        <label>Комментарий{{ measure_form.comment }}</label><br>
+        <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </form>
+</div>
+<script src="{% static 'personalpage/js/addmeasure.js' %}"></script>
+
+{% endblock %}
