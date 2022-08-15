@@ -8,6 +8,7 @@
 <div class="container">
     <h1>Внесение данных о физических показателях</h1><br>
 
+    <!-- недельный календарик -->
     <table class="table table-bordered border-primary" id="week_calendar_table">
         <tr>
             {% for selected_date, day_value in week_calendar.items %}
@@ -18,7 +19,9 @@
     
     <span>{{ error }}</span><br>
 
-    <form method="post">
+    <!-- форма для редактирования записи -->
+    {% for measure_form in week_measureforms %}
+    <form class="hidden_form" method="post" id="{{ measure_form.date.value }}">
         {% csrf_token %}
         <label>Дата{{ measure_form.date }}</label><br>
         <label>Самочувствие{{ measure_form.feel }}</label><br>
@@ -30,7 +33,10 @@
         <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
         <button class="btn btn-primary" type="submit">Сохранить</button>
     </form>
+    {% endfor %}
+
 </div>
+
 <script src="{% static 'personalpage/js/addmeasure.js' %}"></script>
 
 {% endblock %}
