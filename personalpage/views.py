@@ -20,13 +20,9 @@ def make_weekcalendar():
 
     for _ in range(7):
         selected_date = today - timedelta(days=days_range)
-        
         weekday_short = weekday_dict[selected_date.weekday()][1]
-        
         day_value = weekday_short + ' - ' + str(selected_date.day)
-
         selected_date = selected_date.strftime('%d.%m.%Y')
-
         week_calendar[selected_date] = day_value
         days_range -= 1
 
@@ -58,9 +54,16 @@ def personalpage(request):
 #если была - редактировать её
 def addmeasure(request):
 
+    #измерения за сегодня
+    today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
+    if today_set:
+        today_measure = today_set[0]
+        measure_form = MeasurementForm(instance=today_measure)
+    else:
+        measure_form = MeasurementForm()
+
     if request.method == 'GET':
         week_calendar = make_weekcalendar()
-        measure_form = MeasurementForm()
         data = {
             'measure_form': measure_form,
             'error': '',
@@ -69,7 +72,12 @@ def addmeasure(request):
         return render(request, 'personalpage/addmeasure.html', data)
     
     if request.method == 'POST':
-        form = MeasurementForm(request.POST)       
+
+        if today_set:
+            form = MeasurementForm(request.POST, instance=today_measure) 
+        else:
+            form = MeasurementForm(request.POST)    
+
         if form.is_valid():
             newform = form.save(commit=False)
             newform.user = request.user
@@ -79,7 +87,6 @@ def addmeasure(request):
             return redirect('personalpage')
         else:
             week_calendar = make_weekcalendar()
-            measure_form = MeasurementForm()
             data = {
                 'measure_form': measure_form,
                 'error': 'Данные введены некорректно. Попробуйте ввести их еще раз.',
