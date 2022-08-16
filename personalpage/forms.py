@@ -11,7 +11,8 @@ class MeasurementForm(ModelForm):
                   'pressure_upper',
                   'pressure_lower',
                   'comment',
-                  'date']
+                  'date',
+                  'weekday']
 
         widgets = {
             'feel': NumberInput(attrs={
@@ -50,5 +51,9 @@ class MeasurementForm(ModelForm):
             'date': DateInput(attrs={
                 'class': 'form-control-plaintext',
                 'readonly': True,
-            })
+            }),
+            'weekday': TextInput(attrs={
+                'class': 'form-control-plaintext',
+                'readonly': True,
+            }),
         }

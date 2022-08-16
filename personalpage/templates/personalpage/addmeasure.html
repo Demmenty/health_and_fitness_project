@@ -17,13 +17,15 @@
         </tr>
     </table>
     
+    
     <span>{{ error }}</span><br>
+    
 
     <!-- форма для редактирования записи -->
     {% for measure_form in week_measureforms %}
-    <form class="hidden_form" method="post" id="{{ measure_form.date.value }}">
+    <form class="hidden_element" method="post" id="{{ measure_form.date.value }}">
         {% csrf_token %}
-        <label>Дата{{ measure_form.date }}</label><br>
+        <label>Дата{{ measure_form.date }} {{ measure_form.weekday }}</label><br>
         <label>Самочувствие{{ measure_form.feel }}</label><br>
         <label>Масса{{ measure_form.weight }}</label><br>
         <label>Жирность{{ measure_form.fat }}</label><br>

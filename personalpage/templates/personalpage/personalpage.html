@@ -5,25 +5,35 @@
 
 {% block content %}
 
-<h1>Персональная страница клиента: {{ user.username }}</h1>
+<h1>Персональная страница клиента: {{ user.username }}</h1><br>
+
+<!-- ссылка на анкету -->
+{% if questionary %}
+<h3>Вашу анкету можно посмотреть тут</h3><br>
+{% else %}
+<h3>Пожалуйста, заполните анкету</h3>
+{% endif %}
+<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета</button></a><br><br>
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
     <h3>Данные измерений за сегодня</h3><br>
-    
-    <label>Дата<p>{{ today_measure.date }}</p></label><br>
-    <p>{{ today_measure.weekday }}</p><br>
-    <label>Самочувствие<p>{{ today_measure.feel }}</p></label><br>
-    <label>Масса<p>{{ today_measure.weight }}</p></label><br>
-    <label>Жирность<p>{{ today_measure.fat }}</p></label><br>
-    <label>Пульс в покое<p>{{ today_measure.pulse }}</p></label><br>
-    <label>Давление<p>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</p></label><br>
-    {% if today_measure.comment %}
-        <label>Комментарий<p>{{ today_measure.comment }}</p></label><br>
-    {% endif %}
 
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Редактировать записи</button></a>
+    <div class="table-responsive today_measure_table">
+        <table class="table table-bordered table-fixed">
+            <tr><th class="tablerow_name">Дата</th><td>{{ today_measure.date }}</td></tr>
+            <tr><th class="tablerow_name">Самочувствие</th><td>{{ today_measure.feel }}</td></tr>
+            <tr><th class="tablerow_name">Вес</th><td>{{ today_measure.weight }}</td></tr>
+            <tr><th class="tablerow_name">Процент жира</th><td>{{ today_measure.fat }}</td></tr>
+            <tr><th class="tablerow_name">Пульс в покое</th><td>{{ today_measure.pulse }}</td></tr>
+            <tr><th class="tablerow_name">Артериальное давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>
+            {% if today_measure.comment %}
+            <tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>
+            {% endif %}
+        </table>
+    </div><br>
     
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Редактировать записи</button></a><br><br>
 {% else %}
     <p>За сегодня измерений не сделано.</p><br>
     <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Добавить запись</button></a>
@@ -32,38 +42,25 @@
 <!-- измерения за неделю-->
 <h3>Данные измерений за неделю</h3><br>
 
-<div class="week_statistic">
-    <table class="table table-bordered border-primary">
-        <tr><td>Дата</td></tr>
-        <tr><td>День недели</td></tr>
-        <tr><td>Самочувствие</td></tr>
-        <tr><td>Масса</td></tr>
-        <tr><td>Жирность</td></tr>
-        <tr><td>Пульс в покое</td></tr>
-        <tr><td>Давление</td></tr>
-    </table>
-    {% for measure in week_set %}
-    <table class="table table-bordered border-primary table-hover">
-        <tr><td>{{ measure.date }}</td></tr>
-        <tr><td>{{ measure.weekday }}</td></tr>
-        <tr><td>{{ measure.feel }}</td></tr>
-        <tr><td>{{ measure.weight }}</td></tr>
-        <tr><td>{{ measure.fat }}</td></tr>
-        <tr><td>{{ measure.pulse }}</td></tr>
-        <tr><td>{{ measure.pressure_upper }}/{{ measure.pressure_lower }}</td></tr>
-    </table>
-    {% endfor %}
-</div>
+<button class="btn btn-info" id ="comment_btn">Показать комментарии</button><br><br>
 
-<div class="week_statistic">
-    <table class="table table-bordered border-primary">
-        <tr><td>Комментарий</td>
-        {% for measure in week_set %}
-        <td>{{ measure.comment }}</td>
-        {% endfor %}
+<div class="table-responsive">
+    <table class="table table-bordered table-fixed">
+        <tr><th class="tablerow_name">Дата</th>{% for date in week_data.date %}<th>{{ date|date:"d E" }}</th>{% endfor %}</tr>
+        <tr class="week_name"><th class="tablerow_name">День недели</th>{% for weekday in week_data.weekday %}<td class="weekday_text">{{ weekday }}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Самочувствие</th>{% for feel in week_data.feel %}<td>{% if feel %}{{ feel }}/10{% endif %}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Масса</th>{% for weight in week_data.weight %}<td>{% if weight %}{{ weight }} кг{% endif %}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Жирность</th>{% for fat in week_data.fat %}<td>{% if fat %}{{ fat }} %{% endif %}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Пульс в покое</th>{% for pulse in week_data.pulse %}<td>{% if pulse %}{{ pulse }}{% endif %}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Давление</th>{% for pressure in week_data.pressure %}<td>{{ pressure }}</td>{% endfor %}</tr>  
     </table>
-    
+</div>
+<div class="table-responsive hidden_element" id="comment_table">
+    <table class="table table-bordered table-fixed">
+        <tr class="date_row"><th class="tablerow_name">Дата</th>{% for date in week_data.date %}<td>{{ date|date:"d E" }}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Комментарии</th>{% for comment in week_data.comment %}<td class="comment_text">{{ comment|truncatechars:250 }}</td>{% endfor %}</tr>
+    </table>
 </div>
     
-
+<script src="{% static 'personalpage/js/personalpage.js' %}"></script>
 {% endblock %}
