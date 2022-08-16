@@ -12,6 +12,7 @@ weekday_dict = {
     5: ['Суббота', 'СБ'],
     6: ['Воскресенье', 'ВС'] }
 
+
 def make_weekcalendar():
     #создает актуальный календарь на 7 прошедших дней
     week_calendar = {}
@@ -29,6 +30,31 @@ def make_weekcalendar():
     return week_calendar
 
 
+def make_weekmeasureforms(request):
+    #делаем список из форм от записей за неделю (либо пустых)
+    week_measureforms = []
+    for i in range(7):
+        measure_date = date.today() - timedelta(days=i)
+        try:
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
+        except Measurement.DoesNotExist:
+            measure_form = MeasurementForm()
+            measure_form = measure_form.save(commit=False)
+            measure_form.user = request.user
+            measure_form.date = measure_date
+            weekday_number = measure_form.date.weekday()
+            measure_form.weekday = weekday_dict[weekday_number][0]
+            measure_form.save()
+
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
+                
+        week_measureforms.append(measure_form)
+        
+    return week_measureforms
+
+
 # My views
 def personalpage(request):
 
@@ -43,7 +69,8 @@ def personalpage(request):
         today_measure = ''
 
     #измерения за неделю
-    week_set = Measurement.objects.filter(user=request.user)
+    week_set = reversed(Measurement.objects.filter(user=request.user)[:7])
+
     data = {
         'today_measure': today_measure,
         'week_set': week_set,
@@ -53,34 +80,12 @@ def personalpage(request):
 
 def addmeasure(request):
 
-
-
+    week_measureforms = make_weekmeasureforms(request)
+    week_calendar = make_weekcalendar()
+    
 
     if request.method == 'GET':
 
-        #делаем список из форм от записей за неделю (либо пустых)
-        week_measureforms = []
-        for i in range(7):
-            measure_date = date.today() - timedelta(days=i)
-            try:
-                measure = Measurement.objects.get(date=measure_date, user=request.user)
-                measure_form = MeasurementForm(instance=measure)
-            except Measurement.DoesNotExist:
-                measure_form = MeasurementForm()
-                measure_form = measure_form.save(commit=False)
-                measure_form.user = request.user
-                measure_form.date = measure_date
-                weekday_number = measure_form.date.weekday()
-                measure_form.weekday = weekday_dict[weekday_number][0]
-                measure_form.save()
-
-                measure = Measurement.objects.get(date=measure_date, user=request.user)
-                measure_form = MeasurementForm(instance=measure)
-                
-            week_measureforms.append(measure_form)
-
-
-        week_calendar = make_weekcalendar()
         data = {
             'week_measureforms': week_measureforms,
             'error': '',
@@ -121,7 +126,6 @@ def addmeasure(request):
 
         # дополнить!
         else:
-            week_calendar = make_weekcalendar()
             data = {
                 'week_measureforms': week_measureforms,
                 'error': 'Данные введены некорректно. Попробуйте ввести их еще раз.',
