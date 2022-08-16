@@ -32,18 +32,38 @@
 <!-- измерения за неделю-->
 <h3>Данные измерений за неделю</h3><br>
 
-{% for measure in week_set %}
-    {{ measure }}<br><br>
-    <label>Дата<p>{{ measure.date }}</p></label><br>
-    <p>{{ measure.weekday }}</p><br>
-    <label>Самочувствие<p>{{ measure.feel }}</p></label><br>
-    <label>Масса<p>{{ measure.weight }}</p></label><br>
-    <label>Жирность<p>{{ measure.fat }}</p></label><br>
-    <label>Пульс в покое<p>{{ measure.pulse }}</p></label><br>
-    <label>Давление<p>{{ measure.pressure_upper }}/{{ measure.pressure_lower }}</p></label><br>
-    {% if measure.comment %}
-        <label>Комментарий<p>{{ measure.comment }}</p></label><br>
-    {% endif %}
-{% endfor %}
+<div class="week_statistic">
+    <table class="table table-bordered border-primary">
+        <tr><td>Дата</td></tr>
+        <tr><td>День недели</td></tr>
+        <tr><td>Самочувствие</td></tr>
+        <tr><td>Масса</td></tr>
+        <tr><td>Жирность</td></tr>
+        <tr><td>Пульс в покое</td></tr>
+        <tr><td>Давление</td></tr>
+    </table>
+    {% for measure in week_set %}
+    <table class="table table-bordered border-primary table-hover">
+        <tr><td>{{ measure.date }}</td></tr>
+        <tr><td>{{ measure.weekday }}</td></tr>
+        <tr><td>{{ measure.feel }}</td></tr>
+        <tr><td>{{ measure.weight }}</td></tr>
+        <tr><td>{{ measure.fat }}</td></tr>
+        <tr><td>{{ measure.pulse }}</td></tr>
+        <tr><td>{{ measure.pressure_upper }}/{{ measure.pressure_lower }}</td></tr>
+    </table>
+    {% endfor %}
+</div>
+
+<div class="week_statistic">
+    <table class="table table-bordered border-primary">
+        <tr><td>Комментарий</td>
+        {% for measure in week_set %}
+        <td>{{ measure.comment }}</td>
+        {% endfor %}
+    </table>
+    
+</div>
+    
 
 {% endblock %}

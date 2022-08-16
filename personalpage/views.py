@@ -62,13 +62,11 @@ def addmeasure(request):
         week_measureforms = []
         for i in range(7):
             measure_date = date.today() - timedelta(days=i)
-            print(measure_date)
             try:
                 measure = Measurement.objects.get(date=measure_date, user=request.user)
                 measure_form = MeasurementForm(instance=measure)
             except Measurement.DoesNotExist:
                 measure_form = MeasurementForm()
-
                 measure_form = measure_form.save(commit=False)
                 measure_form.user = request.user
                 measure_form.date = measure_date
