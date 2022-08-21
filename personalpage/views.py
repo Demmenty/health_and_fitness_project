@@ -101,7 +101,10 @@ def personalpage(request):
 
 
 def questionary(request):
-    pass
+    
+    data = {}
+
+    return render(request, 'personalpage/questionary.html', data)
 
 
 

@@ -13,7 +13,7 @@
 {% else %}
 <h3>Пожалуйста, заполните анкету</h3>
 {% endif %}
-<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета</button></a><br><br>
+<a href="{% url 'questionary' %}"><button class="btn btn-info">Анкета</button></a><br><br>
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
@@ -22,27 +22,24 @@
     <div class="table-responsive today_measure_table">
         <table class="table table-bordered table-fixed">
             <tr><th class="tablerow_name">Дата</th><td>{{ today_measure.date }}</td></tr>
-            <tr><th class="tablerow_name">Самочувствие</th><td>{{ today_measure.feel }}</td></tr>
-            <tr><th class="tablerow_name">Вес</th><td>{{ today_measure.weight }}</td></tr>
-            <tr><th class="tablerow_name">Процент жира</th><td>{{ today_measure.fat }}</td></tr>
-            <tr><th class="tablerow_name">Пульс в покое</th><td>{{ today_measure.pulse }}</td></tr>
-            <tr><th class="tablerow_name">Артериальное давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>
-            {% if today_measure.comment %}
-            <tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>
-            {% endif %}
+            <tr><th class="tablerow_name">Самочувствие</th><td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td></tr>
+            <tr><th class="tablerow_name">Вес</th><td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td></tr>
+            <tr><th class="tablerow_name">Процент жира</th><td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td></tr>
+            <tr><th class="tablerow_name">Пульс в покое</th><td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td></tr>
+            {% if today_measure.pressure_upper and today_measure.pressure_lower %}<tr><th class="tablerow_name">Давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>{% endif %}
+            {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>{% endif %}
         </table>
     </div><br>
     
     <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Редактировать записи</button></a><br><br>
 {% else %}
     <p>За сегодня измерений не сделано.</p><br>
+    <p>Данные необходимо вносить каждый день!</p><br>
     <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Добавить запись</button></a>
 {% endif %}
 
 <!-- измерения за неделю-->
 <h3>Данные измерений за неделю</h3><br>
-
-<button class="btn btn-info" id ="comment_btn">Показать комментарии</button><br><br>
 
 <div class="table-responsive">
     <table class="table table-bordered table-fixed">
@@ -61,6 +58,8 @@
         <tr><th class="tablerow_name">Комментарии</th>{% for comment in week_data.comment %}<td class="comment_text">{{ comment|truncatechars:250 }}</td>{% endfor %}</tr>
     </table>
 </div>
+
+<button class="btn btn-info" id ="comment_btn">Показать комментарии</button><br><br>
     
 <script src="{% static 'personalpage/js/personalpage.js' %}"></script>
 {% endblock %}
