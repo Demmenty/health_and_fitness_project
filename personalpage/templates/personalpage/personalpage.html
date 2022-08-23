@@ -8,8 +8,8 @@
 <h1>Персональная страница клиента: {{ user.username }}</h1><br>
 
 <!-- ссылка на анкету -->
-{% if questionary %}
-<h3>Вашу анкету можно посмотреть тут</h3><br>
+{% if questionary_existing %}
+<h3>Вашу анкету можно изменить тут</h3>
 {% else %}
 <h3>Пожалуйста, заполните анкету</h3>
 {% endif %}
@@ -31,11 +31,11 @@
         </table>
     </div><br>
     
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Редактировать записи</button></a><br><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Редактировать записи</button></a><br><br>
 {% else %}
     <p>За сегодня измерений не сделано.</p><br>
     <p>Данные необходимо вносить каждый день!</p><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'><i class='fas fa-plus-circle'></i>Добавить запись</button></a>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Добавить запись</button></a>
 {% endif %}
 
 <!-- измерения за неделю-->

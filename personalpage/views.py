@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Measurement
-from .forms import MeasurementForm
+from .models import Measurement, Questionary
+from .forms import MeasurementForm, QuestionaryForm
 from datetime import date, timedelta
 
-weekday_ru = {
+WEEKDAY_RU = {
     0: ['Понедельник', 'ПН'],
     1: ['Вторник', 'ВТ'],
     2: ['Среда', 'СР'],
@@ -17,7 +17,7 @@ def make_weekcalendar():
     week_calendar = {}
     for i in range(7):
         selected_date = date.today() - timedelta(days=(6-i))
-        weekday_short = weekday_ru[selected_date.weekday()][1]
+        weekday_short = WEEKDAY_RU[selected_date.weekday()][1]
         day_value = weekday_short + ' - ' + str(selected_date.day)
         week_calendar[selected_date] = day_value
 
@@ -40,7 +40,7 @@ def make_weekmeasureforms(request):
             # в нее сразу записывается user, дата и день недели
             measure_form.user = request.user
             measure_form.date = measure_date
-            measure_form.weekday = weekday_ru[measure_date.weekday()][0]
+            measure_form.weekday = WEEKDAY_RU[measure_date.weekday()][0]
             # сохраняется запись в базе
             measure_form.save()
             # и формочка создается на основе этой записи
@@ -58,6 +58,12 @@ def personalpage(request):
     # если аноним - пусть регается
     if request.user.is_anonymous:
         return redirect('loginuser')
+
+    # анкета
+    try:
+        questionary_existing = Questionary.objects.get(user=request.user)
+    except Questionary.DoesNotExist:
+        questionary_existing = ''
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
@@ -96,21 +102,77 @@ def personalpage(request):
         'week_data': week_data,
         'today_measure': today_measure,
         'week_set': week_set,
+        'questionary_existing': questionary_existing,
     }
     return render(request, 'personalpage/personalpage.html', data)
 
 
 def questionary(request):
-    
-    data = {}
+    """Страница заполнения личной анкеты"""
 
-    return render(request, 'personalpage/questionary.html', data)
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
 
+    # GET-запрос
+    if request.method == 'GET':
+        # проверяем, есть ли у клиента уже анкета
+        try:
+            questionary_existing = Questionary.objects.get(user=request.user)
+            # создаем форму на ее основе
+            form = QuestionaryForm(instance=questionary_existing)
+        except Questionary.DoesNotExist:
+             # или создаем пустую форму
+            form = QuestionaryForm()
 
+        # рендерим страницу с формой
+        data = {
+            'form': form,
+            'error': '',
+        }
+        return render(request, 'personalpage/questionary.html', data)
+
+    # POST-запрос
+    if request.method == 'POST':
+        # получаем форму из запроса
+        form = QuestionaryForm(request.POST)
+        # проверяем на корректность
+        if form.is_valid():
+            try:
+                # пробуем получить анкету из БД
+                questionary_existing = Questionary.objects.get(user=request.user)
+                form = QuestionaryForm(request.POST, instance=questionary_existing)
+                form.save()
+                return redirect('personalpage')
+            except Questionary.DoesNotExist:
+                # если ее нет - сохраняем как новую
+                new_form = form.save(commit=False)
+                new_form.user = request.user
+                new_form.save()
+                return redirect('personalpage')
+        # если форма некорректна - перезагружаем страницу с ошибкой
+        else:
+            # проверяем, есть ли у клиента уже анкета
+            try:
+                questionary_existing = Questionary.objects.get(user=request.user)
+                # создаем форму на ее основе
+                form = QuestionaryForm(instance=questionary_existing)
+            except Questionary.DoesNotExist:
+                # или создаем пустую форму
+                form = QuestionaryForm()
+            data = {
+                'form': form,
+                'error': 'Данные введены некорректно. Попробуйте ещё раз.',
+            }
+            return render(request, 'personalpage/questionary.html', data)
 
 
 def addmeasure(request):
     """Страница внесения и редактирования измерений"""
+
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
 
     # генерация календарика и формочек на 7 дней
     week_measureforms = make_weekmeasureforms(request)
@@ -149,7 +211,7 @@ def addmeasure(request):
                 'week_calendar': week_calendar,
                 }
                 return render(request, 'personalpage/addmeasure.html', data)
-        # если форма неккоректна - перезагружаем страницу с ошибкой
+        # если форма некорректна - перезагружаем страницу с ошибкой
         else:
             data = {
                 'week_measureforms': week_measureforms,
