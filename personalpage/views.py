@@ -219,3 +219,17 @@ def addmeasure(request):
                 'week_calendar': week_calendar,
                 }
             return render(request, 'personalpage/addmeasure.html', data)
+
+def mealjournal(request):
+    """Страница контроля питания и кбжу"""
+
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
+    # GET-запрос
+    if request.method == 'GET':
+        data = {
+
+            }
+        return render(request, 'personalpage/mealjournal.html', data)
