@@ -219,3 +219,8 @@ input[type="radio"]:focus {
 #back_btn_questionary {
     margin-top: -36px;
 }
+
+#input_briefdate {
+    max-width: 200px;
+    display: inline;
+}

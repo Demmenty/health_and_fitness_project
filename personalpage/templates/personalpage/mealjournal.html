@@ -5,21 +5,40 @@
 
 {% block content %}
 
-<h1>Дневник питания</h1>
+<h1>Дневник питания</h1><br>
 
 {% if user_not_connected %}
 <a href="{% url 'fatsecretauth' %}"><button class='btn btn-info'>Привязать FatSecret</button></a><br><br>
-<p>У вас должна быть подтвержденная учетная запись на сайте FatSecret</p>
+<p>Ваш аккаунт на FatSecret должен быть подтвержденным.</p>
+<p>Если не получается, попробуйте сначала войти в него на <a href="https://www.fatsecret.com" target="_blank">FatSecret</a></p>
+
+{% else %}
+
+<!-- сводка за сегодня -->
+<h3>Сводка за сегодня</h3>
+
+{% if food_entries %}
+    {% for food in food_entries %}
+        {{ food.food_entry_name }} - {{ food.calories }} кал<br>
+        (белки: {{ food.protein }}, жиры: {{ food.fat }}, углеводы: {{ food.carbohydrate }})<br><br>
+    {% endfor %}
+{% else %}
+<p>Данные отсутствуют</p>
 {% endif %}
-
-
-{{ req }}<br>
-{{ profile_info }}<br>
-{{ food_entries_month }}<br>
-<br>
-<br>
 <br>
 
+<!-- получить данные за какое-то число -->
+<h5>Нужна сводка за другое число?</h5>
+<form action = "{% url 'foodbydate' %}" method = "get">
+    <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+    <button type="submit" class="btn btn-info" name="submit">Получить</button>
+</form>
 
+<br><br>
+
+<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>
+
+
+{% endif %}
 
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+
+{% block title %}Дневник питания{% endblock %}
+
+{% block content %}
+
+<h3>Сводка за {{ briefdate|date }}</h3><br>
+{% if food_by_date %}
+    {% for food in food_by_date %}
+        {{ food.food_entry_name }} - {{ food.calories }} кал<br>
+        (белки: {{ food.protein }}, жиры: {{ food.fat }}, углеводы: {{ food.carbohydrate }})<br><br>
+    {% endfor %}
+{% else %}
+<p>Данные отсутствуют</p>
+{% endif %}
+
+<br>
+
+<h5>Нужна сводка за другое число?</h5>
+<form action = "{% url 'foodbydate' %}" method = "get">
+    <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+    <button type="submit" class="btn btn-info" name="submit">Получить</button>
+</form>
+
+<br><br>
+
+<a href="{% url 'mealjournal' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>
+
+
+{% endblock %}

@@ -246,25 +246,38 @@ def mealjournal(request):
             fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
             # данные для тех, у кого подключен FatSecret
-            user_not_connected = False  
-            profile_info = fs.profile_get()
-            food_entries_month = fs.food_entries_get_month(date=datetime.today())
+            food_entries = fs.food_entries_get(date=datetime.today())
+
+            data = {
+                'food_entries': food_entries,
+                'user_not_connected': False,
+            }
+            return render(request, 'personalpage/mealjournal.html', data)
 
         except FatSecretEntry.DoesNotExist:
             
             # данные для тех, у кого НЕ подключен FatSecret
-            user_not_connected = True
-            profile_info = 'Нет данных'
-            food_entries_month = 'Нет данных'
+
+            data = {
+                'user_not_connected': True,
+            }
+            return render(request, 'personalpage/mealjournal.html', data)
 
 
-        data = {
-            'profile_info': profile_info,
-            'food_entries_month': food_entries_month,
-            'user_not_connected': user_not_connected,
-        }
-        return render(request, 'personalpage/mealjournal.html', data)
+def foodbydate(request):
+    userdata = FatSecretEntry.objects.get(user=request.user)
+    session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+    fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
+    briefdate = request.GET['date']
+    briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
+    food_by_date = fs.food_entries_get(date=briefdate)
+
+    data = {
+        'briefdate': briefdate,
+        'food_by_date': food_by_date,
+    }
+    return render(request, 'personalpage/foodbydate.html', data)
 
 
 def fatsecretauth(request):

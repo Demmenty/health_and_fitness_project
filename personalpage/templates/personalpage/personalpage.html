@@ -51,7 +51,7 @@
         <tr><th class="tablerow_name">Самочувствие</th>{% for feel in week_data.feel %}<td>{% if feel %}{{ feel }}/10{% endif %}</td>{% endfor %}</tr>
         <tr><th class="tablerow_name">Масса</th>{% for weight in week_data.weight %}<td>{% if weight %}{{ weight }} кг{% endif %}</td>{% endfor %}</tr>
         <tr><th class="tablerow_name">Жирность</th>{% for fat in week_data.fat %}<td>{% if fat %}{{ fat }} %{% endif %}</td>{% endfor %}</tr>
-        <tr><th class="tablerow_name">Пульс в покое</th>{% for pulse in week_data.pulse %}<td>{% if pulse %}{{ pulse }}{% endif %}</td>{% endfor %}</tr>
+        <tr><th class="tablerow_name">Пульс в покое</th>{% for pulse in week_data.pulse %}<td>{{ pulse|default:"" }}</td>{% endfor %}</tr>
         <tr><th class="tablerow_name">Давление</th>{% for pressure in week_data.pressure %}<td>{{ pressure }}</td>{% endfor %}</tr>  
     </table>
 </div>
