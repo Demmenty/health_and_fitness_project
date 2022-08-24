@@ -5,4 +5,21 @@
 
 {% block content %}
 
+<h1>Дневник питания</h1>
+
+{% if user_not_connected %}
+<a href="{% url 'fatsecretauth' %}"><button class='btn btn-info'>Привязать FatSecret</button></a><br><br>
+<p>У вас должна быть подтвержденная учетная запись на сайте FatSecret</p>
+{% endif %}
+
+
+{{ req }}<br>
+{{ profile_info }}<br>
+{{ food_entries_month }}<br>
+<br>
+<br>
+<br>
+
+
+
 {% endblock %}

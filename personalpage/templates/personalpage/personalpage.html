@@ -35,11 +35,11 @@
 {% else %}
     <p>За сегодня измерений не сделано.</p><br>
     <p>Данные необходимо вносить каждый день!</p><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Добавить запись</button></a>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Добавить запись</button></a><br><br>
 {% endif %}
 
 <!-- дневник питания -->
-<a href="{% url 'mealjournal' %}"><button class='btn btn-info'>Дневник питания</button></a><br>
+<a href="{% url 'mealjournal' %}"><button class='btn btn-info'>Дневник питания</button></a><br><br>
 
 <!-- измерения за неделю-->
 <h3>Данные измерений за неделю</h3><br>

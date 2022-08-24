@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Measurement, Questionary
+from .models import Measurement, Questionary, FatSecretEntry
 from .forms import MeasurementForm, QuestionaryForm
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from fatsecret import Fatsecret
 
 WEEKDAY_RU = {
     0: ['Понедельник', 'ПН'],
@@ -220,6 +221,13 @@ def addmeasure(request):
                 }
             return render(request, 'personalpage/addmeasure.html', data)
 
+
+# данные fatsecret
+consumer_key = '96509fd6591d4fb384386e1b75516777'
+consumer_secret = 'cb1398ad47344691b092cabce5647116'
+fs = Fatsecret(consumer_key, consumer_secret)
+
+
 def mealjournal(request):
     """Страница контроля питания и кбжу"""
 
@@ -229,7 +237,57 @@ def mealjournal(request):
 
     # GET-запрос
     if request.method == 'GET':
-        data = {
 
-            }
+        # проверка подключения Fatsecret к этому аккаунту
+        try:
+            userdata = FatSecretEntry.objects.get(user=request.user)
+            session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+
+            fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+
+            # данные для тех, у кого подключен FatSecret
+            user_not_connected = False  
+            profile_info = fs.profile_get()
+            food_entries_month = fs.food_entries_get_month(date=datetime.today())
+
+        except FatSecretEntry.DoesNotExist:
+            
+            # данные для тех, у кого НЕ подключен FatSecret
+            user_not_connected = True
+            profile_info = 'Нет данных'
+            food_entries_month = 'Нет данных'
+
+
+        data = {
+            'profile_info': profile_info,
+            'food_entries_month': food_entries_month,
+            'user_not_connected': user_not_connected,
+        }
         return render(request, 'personalpage/mealjournal.html', data)
+
+
+
+def fatsecretauth(request):
+    """Подключение к FatSecret"""
+
+    if request.GET.get('oauth_verifier', None):
+
+        # получаем данные от response FatSecret
+        verifier_pin = request.GET.get('oauth_verifier')
+        oauth_token = request.GET.get('oauth_token')
+
+        # Сеанс теперь аутентифицирован
+        session_token = fs.authenticate(verifier_pin)
+
+        # записываем данные для сессии в базу
+        FatSecretEntry.objects.create(user=request.user, oauth_token=session_token[0], oauth_token_secret=session_token[1])
+
+        return redirect('mealjournal')
+
+    else:
+        # получаем адрес подключения и направляем по нему
+        auth_url = fs.get_authorize_url(callback_url="http://127.0.0.1:8000/personalpage/fatsecretauth/")
+
+        # получаем oauth_token и oauth_verifier
+        # каждый раз разные
+        return redirect(auth_url)
