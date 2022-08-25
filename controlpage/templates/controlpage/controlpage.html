@@ -1,1 +1,16 @@
-<h1>Страница самого лучшего фитнес-тренера</h1>
+{% extends 'controlpage/layout.html' %}
+{% load static %}
+
+{% block title %}Тотальный фитнес-контроль{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Страница самого лучшего фитнес-тренера</h1>
+
+    <h3>Мои клиенты</h3>
+    {% for client in clients %}
+        <button type="button" class="btn btn-outline-primary" value="{{ client.username }}">{{ client.username }}</button>
+    {% endfor %}
+</div>
+
+{% endblock %}

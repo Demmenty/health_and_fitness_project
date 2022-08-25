@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Measurement, Questionary, FatSecretEntry
 from .forms import MeasurementForm, QuestionaryForm
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from fatsecret import Fatsecret
 
 WEEKDAY_RU = {
@@ -269,6 +270,10 @@ def mealjournal(request):
             avg_carbo = round(avg_carbo / days_count, 2)
             avg_calories = round(avg_calories / days_count, 2)
 
+            # предыдущий месяц для поля выбора
+            previous_month = date.today() + relativedelta(months=-1)
+            previous_month = str(previous_month)[0:7]
+
             data = {
                 'food_entries_month': food_entries_month,
                 'avg_protein': avg_protein,
@@ -276,6 +281,7 @@ def mealjournal(request):
                 'avg_carbo': avg_carbo,
                 'avg_calories': avg_calories,
                 'food_entries': food_entries,
+                'previous_month': previous_month,
                 'user_not_connected': False,
             }
             return render(request, 'personalpage/mealjournal.html', data)
@@ -338,8 +344,14 @@ def foodbymonth(request):
     avg_carbo = round(avg_carbo / days_count, 2)
     avg_calories = round(avg_calories / days_count, 2)
 
+    # предыдущий месяц для поля выбора
+    previous_month = date.today() + relativedelta(months=-1)
+    previous_month = str(previous_month)[0:7]
+
     data = {
+        'previous_month': previous_month,
         'briefmonth':briefmonth,
+        'previous_month': previous_month,
         'food_entries_month': food_entries_month,
         'avg_protein': avg_protein,
         'avg_fat': avg_fat,

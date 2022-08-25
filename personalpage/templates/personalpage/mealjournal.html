@@ -84,7 +84,7 @@
 <!-- Выбор сводки за другой месяц-->
 <h5>Нужна сводка за другой месяц?</h5>
 <form action = "{% url 'foodbymonth' %}" method = "get">
-    <input type="month" class="form-control text-center" name="month" id="input_briefmonth">
+    <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
     <button type="submit" class="btn btn-info" name="submit">Получить</button>
 </form>
 <br><br>
