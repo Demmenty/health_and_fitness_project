@@ -60,6 +60,9 @@ def personalpage(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
+    if request.user.username == 'Parrabolla':
+        return redirect('controlpage')
+
     # анкета
     try:
         questionary_existing = Questionary.objects.get(user=request.user)
@@ -238,26 +241,47 @@ def mealjournal(request):
     # GET-запрос
     if request.method == 'GET':
 
-        # проверка подключения Fatsecret к этому аккаунту
         try:
+            # берем данные для доступа из БД
             userdata = FatSecretEntry.objects.get(user=request.user)
             session_token = (userdata.oauth_token, userdata.oauth_token_secret)
-
             fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
             # данные для тех, у кого подключен FatSecret
+
+            # питание за сегодняшний день
             food_entries = fs.food_entries_get(date=datetime.today())
+            # питание за текущий месяц
+            food_entries_month = fs.food_entries_get_month(date=datetime.today())
+            avg_protein = 0
+            avg_fat = 0
+            avg_carbo = 0
+            avg_calories = 0
+            days_count = len(food_entries_month)
+            for day in food_entries_month:
+                day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
+                avg_protein += float(day['protein'])
+                avg_fat += float(day['fat'])
+                avg_carbo += float(day['carbohydrate'])
+                avg_calories += float(day['calories'])
+            avg_protein = round(avg_protein / days_count, 2)
+            avg_fat = round(avg_fat / days_count, 2)
+            avg_carbo = round(avg_carbo / days_count, 2)
+            avg_calories = round(avg_calories / days_count, 2)
 
             data = {
+                'food_entries_month': food_entries_month,
+                'avg_protein': avg_protein,
+                'avg_fat': avg_fat,
+                'avg_carbo': avg_carbo,
+                'avg_calories': avg_calories,
                 'food_entries': food_entries,
                 'user_not_connected': False,
             }
             return render(request, 'personalpage/mealjournal.html', data)
 
         except FatSecretEntry.DoesNotExist:
-            
             # данные для тех, у кого НЕ подключен FatSecret
-
             data = {
                 'user_not_connected': True,
             }
@@ -265,12 +289,17 @@ def mealjournal(request):
 
 
 def foodbydate(request):
+    """Получение данных за опр.день из FatSecret"""
+    # берем данные для доступа из БД
     userdata = FatSecretEntry.objects.get(user=request.user)
     session_token = (userdata.oauth_token, userdata.oauth_token_secret)
     fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
+    # получаем введенную дату
     briefdate = request.GET['date']
+    # форматируем
     briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
+     # получаем нужные данные от FS
     food_by_date = fs.food_entries_get(date=briefdate)
 
     data = {
@@ -280,27 +309,60 @@ def foodbydate(request):
     return render(request, 'personalpage/foodbydate.html', data)
 
 
+def foodbymonth(request):
+    """Получение данных за опр.месяц из FatSecret"""
+    # берем данные для доступа из БД
+    userdata = FatSecretEntry.objects.get(user=request.user)
+    session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+    fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+
+    # получаем введенную дату
+    briefmonth = request.GET['month']
+    # форматируем
+    briefmonth = datetime.strptime(briefmonth, "%Y-%m")
+     # получаем нужные данные от FS
+    food_entries_month = fs.food_entries_get_month(date=briefmonth)
+    avg_protein = 0
+    avg_fat = 0
+    avg_carbo = 0
+    avg_calories = 0
+    days_count = len(food_entries_month)
+    for day in food_entries_month:
+        day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
+        avg_protein += float(day['protein'])
+        avg_fat += float(day['fat'])
+        avg_carbo += float(day['carbohydrate'])
+        avg_calories += float(day['calories'])
+    avg_protein = round(avg_protein / days_count, 2)
+    avg_fat = round(avg_fat / days_count, 2)
+    avg_carbo = round(avg_carbo / days_count, 2)
+    avg_calories = round(avg_calories / days_count, 2)
+
+    data = {
+        'briefmonth':briefmonth,
+        'food_entries_month': food_entries_month,
+        'avg_protein': avg_protein,
+        'avg_fat': avg_fat,
+        'avg_carbo': avg_carbo,
+        'avg_calories': avg_calories,
+    }
+    return render(request, 'personalpage/foodbymonth.html', data)
+
+
 def fatsecretauth(request):
     """Подключение к FatSecret"""
 
     if request.GET.get('oauth_verifier', None):
-
         # получаем данные от response FatSecret
         verifier_pin = request.GET.get('oauth_verifier')
-        oauth_token = request.GET.get('oauth_token')
-
-        # Сеанс теперь аутентифицирован
+        # аутентифицирование сеанса и получение токена доступа
         session_token = fs.authenticate(verifier_pin)
-
         # записываем данные для сессии в базу
         FatSecretEntry.objects.create(user=request.user, oauth_token=session_token[0], oauth_token_secret=session_token[1])
-
         return redirect('mealjournal')
 
     else:
         # получаем адрес подключения и направляем по нему
         auth_url = fs.get_authorize_url(callback_url="http://127.0.0.1:8000/personalpage/fatsecretauth/")
-
         # получаем oauth_token и oauth_verifier
-        # каждый раз разные
         return redirect(auth_url)

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'homepage',
     'authorization',
     'personalpage',
+    'controlpage',
 ]
 
 MIDDLEWARE = [

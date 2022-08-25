@@ -9,4 +9,5 @@ urlpatterns = [
     path('fatsecretauth/', views.fatsecretauth, name='fatsecretauth'),
 
     path('foodbydate/', views.foodbydate, name='foodbydate'),
+    path('foodbymonth/', views.foodbymonth, name='foodbymonth'),
 ]

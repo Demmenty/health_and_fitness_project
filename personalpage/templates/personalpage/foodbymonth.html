@@ -1,0 +1,59 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+
+{% block title %}Дневник питания{% endblock %}
+
+{% block content %}
+
+<!-- Сводка за выбраннный месяц-->
+<h3>Сводка за {{ briefmonth|date:'F Y'|lower }}</h3>
+{% if food_entries_month %}
+    <p><b>сырая:</b></p>
+    {{ food_entries_month }}<br><br>
+
+    <p><b>редактированная:</b></p>
+
+    <table class="table table-bordered border-primary">
+        <tr>
+            <th>Дата</th>
+            <th>Калории</th>
+            <th>Белки</th>
+            <th>Жиры</th>
+            <th>Углеводы</th>
+        </tr>
+        {% for day in food_entries_month %}
+        <tr>
+            <td>{{ day.date_int|date:"j E" }}</td>
+            <td>{{ day.calories }}</td>
+            <td>{{ day.protein }}</td>
+            <td>{{ day.fat }}</td>
+            <td>{{ day.carbohydrate }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>В среднем:</th>
+            <th>{{ avg_calories }}</th>
+            <th>{{ avg_protein }}</th>
+            <th>{{ avg_fat }}</th>
+            <th>{{ avg_carbo }}</th>
+        </tr>
+    </table><br>
+
+{% else %}
+<p>Данные отсутствуют</p>
+{% endif %}
+<br><br>
+
+<!-- Выбор сводки за другой месяц -->
+<h5>Нужна сводка за другое число?</h5>
+<form action = "{% url 'foodbymonth' %}" method = "get">
+    <input type="month" class="form-control text-center" name="month" id="input_briefmonth">
+    <button type="submit" class="btn btn-info" name="submit">Получить</button>
+</form>
+<br><br>
+
+<!-- Кнопка возврата -->
+<a href="{% url 'mealjournal' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>
+
+
+{% endblock %}

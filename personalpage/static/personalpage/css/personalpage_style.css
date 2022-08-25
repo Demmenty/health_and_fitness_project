@@ -224,3 +224,8 @@ input[type="radio"]:focus {
     max-width: 200px;
     display: inline;
 }
+
+#input_briefmonth {
+    max-width: 200px;
+    display: inline;
+}

@@ -5,6 +5,7 @@
 
 {% block content %}
 
+<!-- Сводка за выбраннную дату -->
 <h3>Сводка за {{ briefdate|date }}</h3><br>
 {% if food_by_date %}
     {% for food in food_by_date %}
@@ -14,17 +15,17 @@
 {% else %}
 <p>Данные отсутствуют</p>
 {% endif %}
-
 <br>
 
+<!-- Выбор сводки за другое число -->
 <h5>Нужна сводка за другое число?</h5>
 <form action = "{% url 'foodbydate' %}" method = "get">
     <input type="date" class="form-control text-center" name="date" id="input_briefdate">
     <button type="submit" class="btn btn-info" name="submit">Получить</button>
 </form>
-
 <br><br>
 
+<!-- Кнопка возврата -->
 <a href="{% url 'mealjournal' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>
 
 
