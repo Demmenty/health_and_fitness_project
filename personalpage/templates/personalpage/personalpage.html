@@ -27,6 +27,10 @@
             <tr><th class="tablerow_name">Процент жира</th><td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td></tr>
             <tr><th class="tablerow_name">Пульс в покое</th><td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td></tr>
             {% if today_measure.pressure_upper and today_measure.pressure_lower %}<tr><th class="tablerow_name">Давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>{% endif %}
+            <tr><th class="tablerow_name">Калории</th><td>{{ today_measure.calories|default_if_none:"-" }}</td></tr>
+            <tr><th class="tablerow_name">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
+            <tr><th class="tablerow_name">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
+            <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
             {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>{% endif %}
         </table>
     </div><br>

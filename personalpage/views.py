@@ -27,27 +27,68 @@ def make_weekcalendar():
 
 
 def make_weekmeasureforms(request):
-    """Генерация списка формочек за неделю"""
+    """Генерация списка формочек за неделю
+       Плюс автозаполнение кбжу из FatSecret
+    """
     week_measureforms = []
+
+    try:
+        # берем данные для доступа к FS из БД
+        userdata = FatSecretEntry.objects.get(user=request.user)
+        session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+        fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+        # получаем данные кбжу этого месяца со срезом - посл. 7дней
+        food_data = fs.food_entries_get_month()[:-8:-1]
+
+    except FatSecretEntry.DoesNotExist:
+        ...
+        # если FS не подключен
+    
     for i in range(7):
         measure_date = date.today() - timedelta(days=i)
         try:
             # если запись за этот день есть, то формочка создается на ее основе
             measure = Measurement.objects.get(date=measure_date, user=request.user)
             measure_form = MeasurementForm(instance=measure)
+
         except Measurement.DoesNotExist:
             # если записи за этот день нет, то формочка создается пустая
             measure_form = MeasurementForm()
-            measure_form = measure_form.save(commit=False)
+
             # в нее сразу записывается user, дата и день недели
+            measure_form = measure_form.save(commit=False)
             measure_form.user = request.user
             measure_form.date = measure_date
             measure_form.weekday = WEEKDAY_RU[measure_date.weekday()][0]
             # сохраняется запись в базе
             measure_form.save()
+
             # и формочка создается на основе этой записи
             measure = Measurement.objects.get(date=measure_date, user=request.user)
-            measure_form = MeasurementForm(instance=measure)      
+            measure_form = MeasurementForm(instance=measure)
+
+        # перевод даты в формат FS
+        date_int = (measure_date - date(1970, 1, 1)).days
+
+        # записываем кбжу в форму
+        measure_form = measure_form.save(commit=False)
+
+        # перенести в область - если подключен FS
+        # будет записывать данные из FS для каждого дня
+        # даже если были вручную изменены
+        for day in food_data:
+            if day['date_int'] == str(date_int):
+                measure_form.calories = int(day['calories'])
+                measure_form.protein = float(day['protein'])
+                measure_form.fats = float(day['fat'])
+                measure_form.carbohydrates = float(day['carbohydrate'])
+                break
+
+        measure_form.save()
+        measure = Measurement.objects.get(date=measure_date, user=request.user)
+        measure_form = MeasurementForm(instance=measure)
+
+        # добавление формы в список форм недели
         week_measureforms.append(measure_form)
 
     return week_measureforms
@@ -74,6 +115,24 @@ def personalpage(request):
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
     if today_set:
         today_measure = today_set[0]
+        try:
+            # берем данные для доступа к FS из БД
+            userdata = FatSecretEntry.objects.get(user=request.user)
+            session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+            fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+            # получаем данные кбжу этого месяца со срезом - сегодня
+            food_data = fs.food_entries_get_month()[-1]
+            today_measure.calories = food_data['calories']
+            today_measure.protein = food_data['protein']
+            today_measure.fats = food_data['fat']
+            today_measure.carbohydrates = food_data['carbohydrate']
+            today_measure.save()
+
+
+        except FatSecretEntry.DoesNotExist:
+            ...
+            # если FS не подключен
+
     else:
         today_measure = ''
 

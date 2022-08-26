@@ -13,7 +13,12 @@ class MeasurementForm(ModelForm):
                   'pressure_lower',
                   'comment',
                   'date',
-                  'weekday']
+                  'weekday',
+                  'calories',
+                  'protein',
+                  'fats',
+                  'carbohydrates',
+                  ]
 
         widgets = {
             'feel': NumberInput(attrs={
@@ -56,6 +61,30 @@ class MeasurementForm(ModelForm):
             'weekday': TextInput(attrs={
                 'class': 'form-control-plaintext',
                 'readonly': True,
+            }),
+            'calories': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'нет данных',
+                'readonly': True,
+                'disabled': True,
+            }),
+            'protein': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'нет данных',
+                'readonly': True,
+                'disabled': True,
+            }),
+            'fats': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'нет данных',
+                'readonly': True,
+                'disabled': True,
+            }),
+            'carbohydrates': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'нет данных',
+                'readonly': True,
+                'disabled': True,
             }),
         }
 

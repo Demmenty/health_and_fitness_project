@@ -31,10 +31,20 @@
         <label>Жирность{{ measure_form.fat }}</label><br>
         <label>Пульс в покое{{ measure_form.pulse }}</label><br>
         <label>Давление{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
-        <label>Комментарий{{ measure_form.comment }}</label><br>
+
+        <!-- сделать кбжу неактивными если подключен FS -->
+
+        <label>Калории: {{ measure_form.calories }}</label><br>
+        <label>Белки: {{ measure_form.protein }}</label><br>
+        <label>Жиры: {{ measure_form.fats }}</label><br>
+        <label>Углеводы: {{ measure_form.carbohydrates }}</label><br>
+
+        <label>Жалкие оправдания{{ measure_form.comment }}</label><br>
         <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
         <button class="btn btn-primary" type="submit">Сохранить</button>
     </form>
+
+        
     {% endfor %}
 
 </div>
