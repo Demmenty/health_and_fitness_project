@@ -93,11 +93,11 @@
         <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
         <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
         <td>{{ day.pulse|default_if_none:"" }}</td>
-        <td>{% if today_measure.pressure_upper is not None and today_measure.pressure_lower is not None %}{{ day.pressure_upper }}/{{ day.pressure_lower }}{% endif %}</td>
-        <td>{% if day.calories %}{{ day.calories }}{% endif %}</td>
-        <td>{% if day.protein %}{{ day.protein }}{% endif %}</td>
-        <td>{% if day.fats %}{{ day.fats }}{% endif %}</td>
-        <td>{% if day.carbohydrates %}{{ day.carbohydrates }}{% endif %}</td>
+        <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}{{ day.pressure_upper }}/{{ day.pressure_lower }}{% else %}{% endif %}</td>
+        <td>{{ day.calories|default_if_none:"" }}</td>
+        <td>{{ day.protein|default_if_none:"" }}</td>
+        <td>{{ day.fats|default_if_none:"" }}</td>
+        <td>{{ day.carbohydrates|default_if_none:"" }}</td>
     </tr>
     {% endfor %}
     <tr>
