@@ -85,6 +85,8 @@ def make_weekmeasureforms(request):
                 break
 
         measure_form.save()
+
+        # если это удалить - не работает
         measure = Measurement.objects.get(date=measure_date, user=request.user)
         measure_form = MeasurementForm(instance=measure)
 
@@ -120,14 +122,17 @@ def personalpage(request):
             userdata = FatSecretEntry.objects.get(user=request.user)
             session_token = (userdata.oauth_token, userdata.oauth_token_secret)
             fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
-            # получаем данные кбжу этого месяца со срезом - сегодня
+            # получаем данные кбжу этого месяца - последняя запись
             food_data = fs.food_entries_get_month()[-1]
-            today_measure.calories = food_data['calories']
-            today_measure.protein = food_data['protein']
-            today_measure.fats = food_data['fat']
-            today_measure.carbohydrates = food_data['carbohydrate']
-            today_measure.save()
-
+            # сегодняшняя дата в формате FS
+            today_date_int = str((date.today() - date(1970, 1, 1)).days)
+            # если посл.запись - сегодня, то записываем ее данные
+            if food_data['date_int'] == today_date_int:
+                today_measure.calories = food_data['calories']
+                today_measure.protein = food_data['protein']
+                today_measure.fats = food_data['fat']
+                today_measure.carbohydrates = food_data['carbohydrate']
+                today_measure.save()
 
         except FatSecretEntry.DoesNotExist:
             ...

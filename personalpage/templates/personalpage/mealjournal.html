@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<h1>Дневник питания</h1><br>
+<h1 class="text-center">Дневник питания</h1><br>
 
 <!-- Кнопка соединения с FS -->
 {% if user_not_connected %}
@@ -42,11 +42,6 @@
 <!-- Сводка за текущий месяц -->
 <h3>Сводка за текущий месяц</h3>
 {% if food_entries_month %}
-    <p><b>сырая:</b></p>
-    {{ food_entries_month }}<br><br>
-
-    <p><b>редактированная:</b></p>
-
     <table class="table table-bordered border-primary">
         <tr>
             <th>Дата</th>
