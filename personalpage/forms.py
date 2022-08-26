@@ -66,25 +66,21 @@ class MeasurementForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'нет данных',
                 'readonly': True,
-                'disabled': True,
             }),
             'protein': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
                 'readonly': True,
-                'disabled': True,
             }),
             'fats': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
                 'readonly': True,
-                'disabled': True,
             }),
             'carbohydrates': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
                 'readonly': True,
-                'disabled': True,
             }),
         }
 

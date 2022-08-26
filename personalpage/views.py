@@ -25,7 +25,7 @@ def make_weekcalendar():
 
     return week_calendar
 
-
+# оптимизировать!!
 def make_weekmeasureforms(request):
     """Генерация списка формочек за неделю
        Плюс автозаполнение кбжу из FatSecret
@@ -166,11 +166,15 @@ def personalpage(request):
         else:
             week_data['pressure'].append('')
         week_data['comment'].append(measure.comment)
+
+    #  test
+    #измерения за неделю (еще раз ибо итератор)
+    week = reversed(Measurement.objects.filter(user=request.user)[:7])
     
     data = {
-        'week_data': week_data,
         'today_measure': today_measure,
-        'week_set': week_set,
+        'week_data': week_data,
+        'week': week,
         'questionary_existing': questionary_existing,
     }
     return render(request, 'personalpage/personalpage.html', data)

@@ -229,3 +229,8 @@ input[type="radio"]:focus {
     max-width: 200px;
     display: inline;
 }
+
+#id_calories, #id_protein, #id_fats, #id_carbohydrates {
+    background-color: #e9ecef;
+    opacity: 1;
+}

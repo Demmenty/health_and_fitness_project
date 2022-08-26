@@ -48,6 +48,7 @@
 <!-- измерения за неделю-->
 <h3>Данные измерений за неделю</h3><br>
 
+<h4>Вариант 1</h4>
 <div class="table-responsive">
     <table class="table table-bordered table-fixed">
         <tr><th class="tablerow_name">Дата</th>{% for date in week_data.date %}<th>{{ date|date:"d E" }}</th>{% endfor %}</tr>
@@ -67,6 +68,53 @@
 </div>
 
 <button class="btn btn-info" id ="comment_btn">Показать комментарии</button><br><br>
+
+<h4>Вариант 2</h4>
+<table class="table table-bordered border-primary">
+    <tr>
+        <!-- куда комменты? -->
+        <th>Дата</th>
+        <th>День</th>
+        <th>Самочувствие</th>
+        <th>Масса</th>
+        <th>Жирность</th>
+        <th>Пульс</th>
+        <th>Давление</th>
+        <th>Калории</th>
+        <th>Белки</th>
+        <th>Жиры</th>
+        <th>Углеводы</th>
+    </tr>
+    {% for day in week %}
+    <tr>
+        <td>{{ day.date|date:"j b" }}</td>
+        <td>{{ day.date|date:"D" }}</td>
+        <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+        <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+        <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+        <td>{{ day.pulse|default_if_none:"" }}</td>
+        <td>{% if today_measure.pressure_upper is not None and today_measure.pressure_lower is not None %}{{ day.pressure_upper }}/{{ day.pressure_lower }}{% endif %}</td>
+        <td>{% if day.calories %}{{ day.calories }}{% endif %}</td>
+        <td>{% if day.protein %}{{ day.protein }}{% endif %}</td>
+        <td>{% if day.fats %}{{ day.fats }}{% endif %}</td>
+        <td>{% if day.carbohydrates %}{{ day.carbohydrates }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <th colspan="2">В среднем:</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+</table><br>
+
+
     
 <script src="{% static 'personalpage/js/personalpage.js' %}"></script>
 {% endblock %}
