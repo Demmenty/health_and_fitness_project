@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Measurement, Questionary, FatSecretEntry
 from .forms import MeasurementForm, QuestionaryForm
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from fatsecret import Fatsecret
 
@@ -179,6 +179,19 @@ def make_avg_for_period(user, period=7):
     return avg_data
 
 
+# данные fatsecret
+consumer_key = '96509fd6591d4fb384386e1b75516777'
+consumer_secret = 'cb1398ad47344691b092cabce5647116'
+fs = Fatsecret(consumer_key, consumer_secret)
+
+def make_session(user):
+    # берем данные для доступа из БД
+    global fs
+    userdata = FatSecretEntry.objects.get(user=user)
+    session_token = (userdata.oauth_token, userdata.oauth_token_secret)
+    fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+
+
 # My views
 def personalpage(request):
     """Личный кабинет клиента"""
@@ -342,6 +355,23 @@ def addmeasure(request):
         if form.is_valid():
             # получаем дату из формы
             measure_date = form.cleaned_data['date']
+            # получаем вес из формы
+            measure_weight = form.cleaned_data['weight']
+            # если вес вообще записан
+            if measure_weight:
+                # проверка что дата измерения не старше 2 дней назад иначе FS не примет
+                if (date.today() - measure_date).days >= -2:
+                    # делаем сессию с FS для user
+                    make_session(request.user)
+                    # получение даты последнего веса из FS (из профиля неверная)
+                    last_weight_date_int = fs.weights_get_month()[-1]['date_int']
+                    # переводим в нормальную дату
+                    last_weight_date = date(1970, 1 ,1) + timedelta(days=int(last_weight_date_int))
+                    # если дата последне записанного в FS веса старее, чем текущая дата
+                    if last_weight_date < measure_date:
+                        # записываем вес в FS (нельзя чтобы перезаписывалось)
+                        fs.weight_update(current_weight_kg=float(measure_weight), date=datetime.combine(measure_date, time()))               
+
             try:
                 # получаем запись из БД с этим числом
                 measure = Measurement.objects.get(date=measure_date, user=request.user) 
@@ -368,10 +398,7 @@ def addmeasure(request):
             return render(request, 'personalpage/addmeasure.html', data)
 
 
-# данные fatsecret
-consumer_key = '96509fd6591d4fb384386e1b75516777'
-consumer_secret = 'cb1398ad47344691b092cabce5647116'
-fs = Fatsecret(consumer_key, consumer_secret)
+
 
 
 def mealjournal(request):
@@ -385,10 +412,8 @@ def mealjournal(request):
     if request.method == 'GET':
 
         try:
-            # берем данные для доступа из БД
-            userdata = FatSecretEntry.objects.get(user=request.user)
-            session_token = (userdata.oauth_token, userdata.oauth_token_secret)
-            fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+            # делаем сессию с FS для user
+            make_session(request.user)
 
             # данные для тех, у кого подключен FatSecret
 
@@ -438,10 +463,8 @@ def mealjournal(request):
 
 def foodbydate(request):
     """Получение данных за опр.день из FatSecret"""
-    # берем данные для доступа из БД
-    userdata = FatSecretEntry.objects.get(user=request.user)
-    session_token = (userdata.oauth_token, userdata.oauth_token_secret)
-    fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+    # делаем сессию с FS для user
+    make_session(request.user)
 
     # получаем введенную дату
     briefdate = request.GET['date']
@@ -459,10 +482,8 @@ def foodbydate(request):
 
 def foodbymonth(request):
     """Получение данных за опр.месяц из FatSecret"""
-    # берем данные для доступа из БД
-    userdata = FatSecretEntry.objects.get(user=request.user)
-    session_token = (userdata.oauth_token, userdata.oauth_token_secret)
-    fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
+    # делаем сессию с FS для user
+    make_session(request.user)
 
     # получаем введенную дату
     briefmonth = request.GET['month']
