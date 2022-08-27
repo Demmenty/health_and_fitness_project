@@ -42,12 +42,12 @@ class MeasurementForm(ModelForm):
                 'max': '300',
             }),
             'pressure_upper': NumberInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control d-inline',
                 'min': '0',
                 'max': '300',
             }),
             'pressure_lower': NumberInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control d-inline',
                 'min': '0',
                 'max': '200',
             }),

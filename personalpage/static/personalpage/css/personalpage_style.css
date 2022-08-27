@@ -53,8 +53,9 @@ footer {
 }
 
 .today_measure_table {
-    max-width: 600px;
+    max-width: 500px;
 }
+
 
 .error_message {
     color: crimson;
@@ -63,12 +64,6 @@ footer {
 .tablerow_name {
     text-align: left;
     width: 150px;
-}
-
-th, td, .date_row {
-    text-align: center;
-    width: 117px;
-    overflow-y: auto;
 }
 
 .comment_text {
@@ -233,4 +228,33 @@ input[type="radio"]:focus {
 #id_calories, #id_protein, #id_fats, #id_carbohydrates {
     background-color: #e9ecef;
     opacity: 1;
+}
+
+#id_pressure_upper, #id_pressure_lower {
+    width: 47.5%;
+}
+
+#input_period {
+    max-width: 70px;
+    padding: 6px;
+}
+
+
+
+.period_select {
+    display: flex;
+    max-width: 380px;
+    align-items: baseline;
+    justify-content: space-between;
+    white-space: nowrap;
+    flex-flow: wrap;
+}
+
+.week_table {
+    width: 90%;
+}
+
+.week_table_container {
+    display: flex;
+    flex-direction: row;
 }

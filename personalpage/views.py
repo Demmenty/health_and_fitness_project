@@ -96,6 +96,89 @@ def make_weekmeasureforms(request):
     return week_measureforms
 
 
+def make_avg_for_period(user, period=7):
+    """Составляет словарь из средних значений по
+       каждому измерению за неделю.
+       Нужно передать user и period = кол-во дней
+    """
+    set = reversed(Measurement.objects.filter(user=user)[:period])
+    avg_data = {
+        'avg_feel': 0,
+        'avg_weight': 0,
+        'avg_fat': 0,
+        'avg_pulse': 0,
+        'avg_pressure': 0,
+        'avg_calories': 0,
+        'avg_protein': 0,
+        'avg_fats': 0,
+        'avg_carbohydrates': 0,
+    }
+    pressure_upper = 0
+    pressure_lower = 0
+
+    count_feel = 0
+    count_weight = 0
+    count_fat = 0
+    count_pulse = 0
+    count_pressure = 0
+    count_calories = 0
+    count_protein = 0
+    count_fats = 0
+    count_carbohydrates = 0
+
+    for day in set:
+        if day.feel:
+            avg_data['avg_feel'] += int(day.feel)
+            count_feel += 1
+        if day.weight:
+            avg_data['avg_weight'] += float(day.weight)
+            count_weight += 1
+        if day.fat:
+            avg_data['avg_fat'] += float(day.fat)
+            count_fat += 1
+        if day.pulse:
+            avg_data['avg_pulse'] += int(day.pulse)
+            count_pulse += 1
+        if day.pressure_upper and day.pressure_lower:
+            pressure_upper += int(day.pressure_upper)
+            pressure_lower += int(day.pressure_lower)
+            count_pressure += 1
+        # кбжу - без учета сегодняшнего дня
+        if day.calories and day.date != date.today():
+            avg_data['avg_calories'] += int(day.calories)
+            count_calories += 1
+        if day.protein and day.date != date.today():
+            avg_data['avg_protein'] += float(day.protein)
+            count_protein += 1
+        if day.fats and day.date != date.today():
+            avg_data['avg_fats'] += float(day.fats)
+            count_fats += 1
+        if day.carbohydrates and day.date != date.today():
+            avg_data['avg_carbohydrates'] += float(day.carbohydrates)
+            count_carbohydrates += 1
+
+    if count_feel:
+        avg_data['avg_feel'] = round(avg_data['avg_feel'] / count_feel, 1)
+    if count_weight:
+        avg_data['avg_weight'] = round(avg_data['avg_weight'] / count_weight, 1)
+    if count_fat:
+        avg_data['avg_fat'] = round(avg_data['avg_fat'] / count_fat, 1)
+    if count_pulse:
+        avg_data['avg_pulse'] = int(avg_data['avg_pulse'] / count_pulse)
+    if count_pressure:
+        avg_data['avg_pressure'] = str(int(pressure_upper / count_pressure)) + "/" + str(int(pressure_lower / count_pressure))
+    if count_calories:
+        avg_data['avg_calories'] = int(avg_data['avg_calories'] / count_calories)
+    if count_protein:
+        avg_data['avg_protein'] = int(avg_data['avg_protein'] / count_protein)
+    if count_fats:
+        avg_data['avg_fats'] = int(avg_data['avg_fats'] / count_fats)
+    if count_carbohydrates:
+        avg_data['avg_carbohydrates'] = int(avg_data['avg_carbohydrates'] / count_carbohydrates)
+    
+    return avg_data
+
+
 # My views
 def personalpage(request):
     """Личный кабинет клиента"""
@@ -104,10 +187,11 @@ def personalpage(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
+    # Парабола перенаправляется на свою страницу
     if request.user.username == 'Parrabolla':
         return redirect('controlpage')
 
-    # анкета
+    # существоавние анкеты
     try:
         questionary_existing = Questionary.objects.get(user=request.user)
     except Questionary.DoesNotExist:
@@ -141,40 +225,30 @@ def personalpage(request):
     else:
         today_measure = ''
 
-    #измерения за неделю
-    week_set = reversed(Measurement.objects.filter(user=request.user)[:7])
-
-    # словарь по видам данных для красивой таблички
-    week_data = {'date': [],
-                 'weekday': [],
-                 'feel': [],
-                 'weight': [],
-                 'fat': [],
-                 'pulse': [],
-                 'pressure': [],
-                 'comment': []}
-
-    for measure in week_set:
-        week_data['date'].append(measure.date)
-        week_data['weekday'].append(measure.weekday)
-        week_data['feel'].append(measure.feel)
-        week_data['weight'].append(measure.weight)
-        week_data['fat'].append(measure.fat)
-        week_data['pulse'].append(measure.pulse)
-        if measure.pressure_upper is not None and measure.pressure_lower is not None:
-            week_data['pressure'].append(str(measure.pressure_upper) + '/' + str(measure.pressure_lower))
-        else:
-            week_data['pressure'].append('')
-        week_data['comment'].append(measure.comment)
-
-    #  test
-    #измерения за неделю (еще раз ибо итератор)
+    # список данных измерений за неделю
     week = reversed(Measurement.objects.filter(user=request.user)[:7])
+    # средние значения измерений за неделю 
+    avg_week = make_avg_for_period(request.user, period=7)
+
+    if request.GET.get('selectperiod'):
+        selected_period = int(request.GET.get('selectperiod'))
+        # средние значения измерений за произвольный период
+        avg_period = make_avg_for_period(request.user, period=selected_period)
+        # список измерений за этот период
+        period = reversed(Measurement.objects.filter(user=request.user)[:selected_period])
     
+    else:
+        selected_period = ""
+        avg_period = ""
+        period = ""
+
     data = {
         'today_measure': today_measure,
-        'week_data': week_data,
         'week': week,
+        'selected_period': selected_period,
+        'period': period,
+        'avg_week': avg_week,
+        'avg_period': avg_period,
         'questionary_existing': questionary_existing,
     }
     return render(request, 'personalpage/personalpage.html', data)

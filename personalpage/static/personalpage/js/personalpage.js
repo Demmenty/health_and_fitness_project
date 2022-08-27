@@ -1,6 +1,6 @@
-commentButton = document.getElementById("comment_btn");
+commentButton = document.querySelectorAll(".comment_btn");
 
-function ShowComments() {
+function ShowComment() {
     commentsTable = document.getElementById("comment_table");
     if (commentsTable.classList.contains("hidden_element")) {
         commentsTable.classList.remove("hidden_element");
@@ -12,4 +12,4 @@ function ShowComments() {
     }
 };
 
-commentButton.addEventListener('click', ShowComments, false);
+commentButton.addEventListener('click', ShowComment, false);
