@@ -179,6 +179,24 @@ def make_avg_for_period(user, period=7):
     return avg_data
 
 
+def get_noun_ending(number, one, two, five):
+    """Функция возвращает вариант слова с правильным окончанием
+       в зависимости от числа
+       Нужно передать число и соответствующие варианты
+       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
+    """
+    n = abs(number)
+    n %= 100
+    if 20 >= n >= 5:
+        return five
+    n %= 10
+    if n == 1:
+        return one
+    if 4 >= n >= 2:
+        return two
+    return five
+
+
 # данные fatsecret
 consumer_key = '96509fd6591d4fb384386e1b75516777'
 consumer_secret = 'cb1398ad47344691b092cabce5647116'
@@ -243,12 +261,15 @@ def personalpage(request):
     # средние значения измерений за неделю 
     avg_week = make_avg_for_period(request.user, period=7)
 
+    # статистика за выбранный период
     if request.GET.get('selectperiod'):
         selected_period = int(request.GET.get('selectperiod'))
         # средние значения измерений за произвольный период
         avg_period = make_avg_for_period(request.user, period=selected_period)
         # список измерений за этот период
         period = reversed(Measurement.objects.filter(user=request.user)[:selected_period])
+        # красивый формат
+        selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
     
     else:
         selected_period = ""
