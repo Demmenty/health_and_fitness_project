@@ -74,7 +74,7 @@ def make_weekmeasureforms(request):
         measure_form = measure_form.save(commit=False)
 
         # перенести в область - если подключен FS
-        # будет записывать данные из FS для каждого дня
+        # будет записывать данные кбжу из FS для каждого дня
         # даже если были вручную изменены
         for day in food_data:
             if day['date_int'] == str(date_int):
@@ -442,6 +442,9 @@ def mealjournal(request):
             food_entries = fs.food_entries_get(date=datetime.today())
             # питание за текущий месяц
             food_entries_month = fs.food_entries_get_month(date=datetime.today())
+            # подсчет средних значений
+            # если за день нет записей - то она итак не отображается
+            # поэтому тут другая формула
             avg_protein = 0
             avg_fat = 0
             avg_carbo = 0
@@ -491,12 +494,91 @@ def foodbydate(request):
     briefdate = request.GET['date']
     # форматируем
     briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
-     # получаем нужные данные от FS
-    food_by_date = fs.food_entries_get(date=briefdate)
+    # получаем нужные данные от FS
+
+    # категории
+    count_meal_in_category = {
+        'Breakfast': 0,
+        'Lunch': 0,
+        'Dinner': 0,
+        'Other': 0,
+    }
+    # итоговые вес и калории по продуктам
+    total_by_prod = {}
+    # итоговые кбжу дня
+    day_total = {
+            'amount': 0,
+            'calories': 0,
+            'protein': 0,
+            'fat': 0,
+            'carbohydrate': 0,
+            }
+    
+    # список съеденных продуктов за выбранную дату
+    food_entry = fs.food_entries_get(date=briefdate)
+    # каждая запись о продукте
+    for food in food_entry:
+        # получение инфы об этом продукте
+        food_info = fs.food_get(food_id=food['food_id'])
+        # получение инфы о соотв.виде порции
+        if type(food_info['servings']['serving']) is list:
+            for i in food_info['servings']['serving']:
+                if i['serving_id'] == food['serving_id']:
+                    food['serving'] = i
+        else:
+            food['serving'] = food_info['servings']['serving']
+        
+        # добавляем номальное отображение количества
+        if (food['serving']['measurement_description'] == 'g' or
+            food['serving']['measurement_description'] == 'ml'):
+            food['norm_amount'] = int(float(food['number_of_units']))
+        else:
+            food['norm_amount'] = int(float(food['number_of_units']) *
+                                  float(food['serving']['metric_serving_amount']) *
+                                  float(food['serving']['number_of_units']))
+        
+        if food['meal'] == 'Breakfast':
+            count_meal_in_category['Breakfast'] += 1
+        if food['meal'] == 'Lunch':
+            count_meal_in_category['Lunch'] += 1
+        if food['meal'] == 'Dinner':
+            count_meal_in_category['Dinner'] += 1
+        if food['meal'] == 'Other':
+            count_meal_in_category['Other'] += 1
+
+        if total_by_prod.get(food['food_entry_name']) == None:
+            total_by_prod[food['food_entry_name']] = {
+                'calories': 0,
+                'amount': 0,
+            }
+
+        total_by_prod[food['food_entry_name']]['calories'] += int(food['calories'])
+        total_by_prod[food['food_entry_name']]['amount'] += food['norm_amount']
+        total_by_prod[food['food_entry_name']]['metric'] = food['serving']['metric_serving_unit']
+
+        day_total['amount'] += food['norm_amount']
+        day_total['calories'] += int(food['calories'])
+        day_total['protein'] += float(food['protein'])
+        day_total['fat'] += float(food['fat'])
+        day_total['carbohydrate'] += float(food['carbohydrate'])
+
+    for key, value in day_total.items():
+        day_total[key] = round(value, 2)
+
+    category_translate = {
+        'Breakfast': 'Завтрак',
+        'Lunch': 'Обед',
+        'Dinner': 'Ужин',
+        'Other': 'Другое',
+    }
 
     data = {
+        'total_by_prod': total_by_prod,
+        'day_total': day_total,
+        'category_translate': category_translate,
+        'count_meal_in_category': count_meal_in_category,
         'briefdate': briefdate,
-        'food_by_date': food_by_date,
+        'food_entry': food_entry,
     }
     return render(request, 'personalpage/foodbydate.html', data)
 
