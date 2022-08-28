@@ -65,7 +65,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for product, value in total_by_prod.items %}
+    {% for product, value in top_amount.items %}
         <tr>
             <td></td>
             <td><li>{{ product }}</li></td>
@@ -79,6 +79,30 @@
 <br>
 
 <h3 class="text-center">Топ по калориям</h3><br>
+
+<ol>
+<table class="table">
+    <thead class="table-light">
+        <tr>
+            <th></th>
+            <th>Название продукта</th>
+            <th class="text-center">Съедено</th>
+            <th class="text-center">Получено калорий</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product, value in top_calories.items %}
+        <tr>
+            <td></td>
+            <td><li>{{ product }}</li></td>
+            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.calories }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</ol>
+<br>
 
 
 {% else %}

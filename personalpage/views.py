@@ -565,17 +565,14 @@ def foodbydate(request):
     for key, value in day_total.items():
         day_total[key] = round(value, 2)
 
-    category_translate = {
-        'Breakfast': 'Завтрак',
-        'Lunch': 'Обед',
-        'Dinner': 'Ужин',
-        'Other': 'Другое',
-    }
+    top_calories = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['calories'], reverse=True)[:3])
+    top_amount = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['amount'], reverse=True)[:3])
 
     data = {
+        'top_calories': top_calories,
+        'top_amount': top_amount,
         'total_by_prod': total_by_prod,
         'day_total': day_total,
-        'category_translate': category_translate,
         'count_meal_in_category': count_meal_in_category,
         'briefdate': briefdate,
         'food_entry': food_entry,
