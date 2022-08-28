@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social_django',
     'homepage',
     'authorization',
     'personalpage',
@@ -115,11 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
-
-LANGUAGES = (
-    ('en', _('English')),
-    ('ru', _('Russian')),
-)
 
 #LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ru-RU'

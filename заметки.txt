@@ -1,0 +1,9 @@
+Ошибки от FatSecret которые надо обработать
+
+raise AuthenticationError(code, message)
+fatsecret.fatsecret.AuthenticationError: Error 6: Invalid/expired timestamp: oauth_timestamp '1661689077'
+
+raise GeneralError(code, message)
+fatsecret.fatsecret.GeneralError: Error 12: User is performing too many actions: please try again later
+
+

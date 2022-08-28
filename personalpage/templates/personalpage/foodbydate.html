@@ -1,6 +1,6 @@
 {% extends 'personalpage/layout.html' %}
 {% load static %}
-
+{% load i18n %}
 
 {% block title %}Дневник питания{% endblock %}
 
@@ -26,7 +26,7 @@
         <tr>
             {% for category, count in count_meal_in_category.items %}
             {% if count > 0 %}
-            <td rowspan="{{ count }}">{{ category }}</td>
+            <td rowspan="{{ count }}">{% translate category %}</td>
             {% endif %}
             {% for food in food_entry %}
             {% if food.meal == category %}
