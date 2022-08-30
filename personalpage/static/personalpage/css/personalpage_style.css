@@ -42,7 +42,7 @@ footer {
 }
 
 .hidden_element {
-    display: none;
+    display: none !important;
 }
 
 .week_statistic {

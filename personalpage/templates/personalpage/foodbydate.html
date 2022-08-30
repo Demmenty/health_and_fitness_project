@@ -7,7 +7,7 @@
 {% block content %}
 
 <!-- Сводка за выбраннную дату -->
-<h3 class="text-center">Сводка за {{ briefdate|date }}</h3><br>
+<h3 class="text-center">{{ briefdate|date:"l" }} {{ briefdate|date }}</h3><br>
 {% if food_entry %}
 
 <table class="table table-bordered">
@@ -16,10 +16,10 @@
             <th>Категория</th>
             <th>Продукт</th>
             <th class="text-center">Количество</th>
+            <th class="text-center">Калории</th>
             <th class="text-center">Белки</th>
             <th class="text-center">Жиры</th>
             <th class="text-center">Углеводы</th>
-            <th class="text-center">Калории</th>
         </tr>
     </thead>
     <tbody>
@@ -32,26 +32,27 @@
             {% if food.meal == category %}
             <td>{{ food.food_entry_name }}</td>
             <td class="text-center">{{ food.norm_amount }} {{ food.serving.metric_serving_unit }}</td>
+            <td class="text-center">{{ food.calories }}</td>
             <td class="text-center">{{ food.protein }}</td>
             <td class="text-center">{{ food.fat }}</td>
-            <td class="text-center">{{ food.carbohydrate }}</td>
-            <td class="text-center">{{ food.calories }}</td>
+            <td class="text-center">{{ food.carbohydrate }}</td> 
         </tr>
             {% endif %}
             {% endfor %}
             {% endfor %}
-        <tr>
+        <tr class="table-light">
             <th colspan="2" class="text-end">Всего:</th>
             <th class="text-center">{{ day_total.amount }} g/ml</th>
+            <th class="text-center">{{ day_total.calories }}</th>
             <th class="text-center">{{ day_total.protein }}</th>
             <th class="text-center">{{ day_total.fat }}</th>
             <th class="text-center">{{ day_total.carbohydrate }}</th>
-            <th class="text-center">{{ day_total.calories }}</th>
         </tr>
     </tbody>
 </table>
 <br><br>
 
+<!-- топчики -- добавить margin -->
 <h3 class="text-center">Топ по количеству</h3><br>
 
 <ol>

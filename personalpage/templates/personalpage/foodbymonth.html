@@ -6,14 +6,11 @@
 {% block content %}
 
 <!-- Сводка за выбраннный месяц-->
-<h3>Сводка за {{ briefmonth|date:'F Y'|lower }}</h3>
+<h3 class="text-center">{{ briefmonth|date:'F Y' }}</h3><br>
 {% if food_entries_month %}
-    <p><b>сырая:</b></p>
-    {{ food_entries_month }}<br><br>
 
-    <p><b>редактированная:</b></p>
-
-    <table class="table table-bordered border-primary">
+<table class="table table-bordered text-center">
+    <thead class="table-light">
         <tr>
             <th>Дата</th>
             <th>Калории</th>
@@ -21,6 +18,8 @@
             <th>Жиры</th>
             <th>Углеводы</th>
         </tr>
+    </thead>
+    <tbody>
         {% for day in food_entries_month %}
         <tr>
             <td>{{ day.date_int|date:"j E" }}</td>
@@ -30,17 +29,100 @@
             <td>{{ day.carbohydrate }}</td>
         </tr>
         {% endfor %}
-        <tr>
+        <tr class="table-light">
             <th>В среднем:</th>
-            <th>{{ avg_calories }}</th>
-            <th>{{ avg_protein }}</th>
-            <th>{{ avg_fat }}</th>
-            <th>{{ avg_carbo }}</th>
+            <th>{{ avg_month.calories }}</th>
+            <th>{{ avg_month.protein }}</th>
+            <th>{{ avg_month.fat }}</th>
+            <th>{{ avg_month.carbo }}</th>
         </tr>
-    </table><br>
+    </tbody>
+</table><br>
+
+{% if top_calories %}
+
+<!-- топчики -- добавить margin справа -->
+<h3 class="text-center">Топ по количеству</h3><br>
+
+<ol>
+<table class="table">
+    <thead class="table-light">
+        <tr>
+            <th></th>
+            <th>Название продукта</th>
+            <th class="text-center">Съедено</th>
+            <th class="text-center">Получено калорий</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product, value in top_amount.items %}
+        <tr>
+            <td></td>
+            <td><li>{{ product }}</li></td>
+            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.calories }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</ol>
+<br>
+
+<h3 class="text-center">Топ по калориям</h3><br>
+
+<ol>
+<table class="table">
+    <thead class="table-light">
+        <tr>
+            <th></th>
+            <th>Название продукта</th>
+            <th class="text-center">Съедено</th>
+            <th class="text-center">Получено калорий</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product, value in top_calories.items %}
+        <tr>
+            <td></td>
+            <td><li>{{ product }}</li></td>
+            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.calories }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</ol>
+<br>
+
+<!-- если не посчитались какие-то продукты -->
+{% if prods_without_info %}
+<h3>Некоторые продукты не удалось включить в статистику</h3>
+<p>Укажите их граммовку</p>
+{% for prod, value in prods_without_info.items %}
+<p>Продукт: {{ value.food_name }} {% if value.brand_name %}({{ value.brand_name }}){% endif %}</p>
+<p>{{ value.serving_description }} = <input type="number"><select><option>g</option><option>ml</option></select></p>
+<button type="submit" class="btn btn-info">Пересчитать</button>
+{% endfor %}
+
+
+{% endif %}
+
+
+
 
 {% else %}
-<p>Данные отсутствуют</p>
+<form action="{% url 'foodbymonth' %}" method="get">
+    <input type="month" class="hidden_element" name="month" id="input_briefmonth" value="{{ briefmonth|date:'Y-m' }}">
+    <input type="checkbox" class="hidden_element" name="top_create" value="True" id="" checked>
+    <button type="submit" class="btn btn-info" name="submit">ТОП-5</button></h5>
+    <p>* может занять длительное время</p>
+    <p>* от 5сек Х кол-во выведенных дней</p>
+</form>
+<br><br>
+{% endif %}
+
+{% else %}
+<p>Данные за выбранный месяц отсутствуют</p>
 {% endif %}
 <br><br>
 

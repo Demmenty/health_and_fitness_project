@@ -1,5 +1,6 @@
 {% extends 'personalpage/layout.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}Дневник питания{% endblock %}
 
@@ -16,16 +17,79 @@
 {% else %}
 
 <!-- Сводка за сегодня - авто -->
-<h3>Сводка за сегодня</h3>
-{% if food_entries %}
-    <p><b>сырая:</b></p>
-    {{ food_entries }}<br><br>
+<h3>Сегодня</h3>
+{% if food_entry %}
 
-    <p><b>редактированная:</b></p>
-    {% for food in food_entries %}
-        {{ food.food_entry_name }} - {{ food.calories }} кал<br>
-        (белки: {{ food.protein }}, жиры: {{ food.fat }}, углеводы: {{ food.carbohydrate }})<br><br>
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Категория</th>
+            <th>Продукт</th>
+            <th class="text-center">Количество</th>
+            <th class="text-center">Калории</th>
+            <th class="text-center">Белки</th>
+            <th class="text-center">Жиры</th>
+            <th class="text-center">Углеводы</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for category, count in count_meal_in_category.items %}
+            {% if count > 0 %}
+            <td rowspan="{{ count }}">{% translate category %}</td>
+            {% endif %}
+            {% for food in food_entry %}
+            {% if food.meal == category %}
+            <td>{{ food.food_entry_name }}</td>
+            <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+            <td class="text-center">{{ food.calories }}</td>
+            <td class="text-center">{{ food.protein }}</td>
+            <td class="text-center">{{ food.fat }}</td>
+            <td class="text-center">{{ food.carbohydrate }}</td> 
+        </tr>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        <tr class="table-light">
+            <th colspan="2" class="text-end">Всего:</th>
+            <th class="text-center">{{ day_total.amount }} g/ml</th>
+            <th class="text-center">{{ day_total.calories }}</th>
+            <th class="text-center">{{ day_total.protein }}</th>
+            <th class="text-center">{{ day_total.fat }}</th>
+            <th class="text-center">{{ day_total.carbohydrate }}</th>
+        </tr>
+    </tbody>
+</table>
+<br>
+
+<!-- если не посчитались какие-то продукты -->
+{% if prods_without_info %}
+<h3>Некоторые продукты не удалось нормально посчитать!</h3>
+<p>Укажите их граммовку, пожалуйста</p>
+<form method="POST" action="">
+    {% csrf_token %}
+    {% for prod, value in prods_without_info.items %}
+    <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+    <p>{{ value.serving_description }} = 
+        <input type="hidden" value="{{ prod }}" name="food_id">
+        <input type="hidden" value="{{ value.serving_id }}" name="serving_id">
+        <input type="number" min="0" name="metric_serving_amount">
+        <select name="metric_serving_unit">
+            <option value="g">г</option>
+            <option value="ml">мл</option>
+        </select>
+    </p><br>
     {% endfor %}
+    <button type="submit" class="btn btn-info">Пересчитать</button>
+</form>
+<br>
+
+
+{% endif %}
+
+
+
+
 {% else %}
 <p>Данные отсутствуют</p>
 {% endif %}
@@ -40,32 +104,36 @@
 <br><br>
 
 <!-- Сводка за текущий месяц -->
-<h3>Сводка за текущий месяц</h3>
+<h3>Текущий месяц</h3>
 {% if food_entries_month %}
-    <table class="table table-bordered border-primary text-center">
-        <tr>
-            <th>Дата</th>
-            <th>Калории</th>
-            <th>Белки</th>
-            <th>Жиры</th>
-            <th>Углеводы</th>
-        </tr>
-        {% for day in food_entries_month %}
-        <tr>
-            <td>{{ day.date_int|date:"j E" }}</td>
-            <td>{{ day.calories }}</td>
-            <td>{{ day.protein }}</td>
-            <td>{{ day.fat }}</td>
-            <td>{{ day.carbohydrate }}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <th>В среднем:</th>
-            <th>{{ avg_calories }}</th>
-            <th>{{ avg_protein }}</th>
-            <th>{{ avg_fat }}</th>
-            <th>{{ avg_carbo }}</th>
-        </tr>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Калории</th>
+                <th>Белки</th>
+                <th>Жиры</th>
+                <th>Углеводы</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in food_entries_month %}
+            <tr>
+                <td>{{ day.date_int|date:"j E" }}</td>
+                <td>{{ day.calories }}</td>
+                <td>{{ day.protein }}</td>
+                <td>{{ day.fat }}</td>
+                <td>{{ day.carbohydrate }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="table-light">
+                <th>В среднем:</th>
+                <th>{{ avg_calories }}</th>
+                <th>{{ avg_protein }}</th>
+                <th>{{ avg_fat }}</th>
+                <th>{{ avg_carbo }}</th>
+            </tr>
+        </tbody>
     </table><br>
 
 {% else %}

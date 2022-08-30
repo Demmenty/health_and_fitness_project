@@ -40,12 +40,14 @@
         <label>Углеводы: {{ measure_form.carbohydrates }}</label><br>
 
         <label>Жалкие оправдания{{ measure_form.comment }}</label><br>
-        <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
+        
         <button class="btn btn-primary" type="submit">Сохранить</button>
     </form>
-
-        
     {% endfor %}
+
+<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
+    
+    <p>* для корректной работы статистик необходимо вносить данные хотя бы раз в неделю</p>
 
 </div>
 

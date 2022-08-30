@@ -31,11 +31,11 @@ msgstr "Завтрак"
 
 #: .\templates\personalpage\foodbydate.html:30
 msgid "Dinner"
-msgstr "Обед"
+msgstr "Ужин"
 
 #: .\templates\personalpage\foodbydate.html:30
 msgid "Lunch"
-msgstr "Ужин"
+msgstr "Обед"
 
 #: .\templates\personalpage\foodbydate.html:30
 msgid "Other"
