@@ -96,13 +96,27 @@
 
 <!-- если не посчитались какие-то продукты -->
 {% if prods_without_info %}
-<h3>Некоторые продукты не удалось включить в статистику</h3>
-<p>Укажите их граммовку</p>
-{% for prod, value in prods_without_info.items %}
-<p>Продукт: {{ value.food_name }} {% if value.brand_name %}({{ value.brand_name }}){% endif %}</p>
-<p>{{ value.serving_description }} = <input type="number"><select><option>g</option><option>ml</option></select></p>
-<button type="submit" class="btn btn-info">Пересчитать</button>
-{% endfor %}
+<h3>Некоторые продукты не удалось нормально посчитать!</h3>
+<p>Укажите их граммовку, пожалуйста</p>
+<form method="POST" action="">
+    {% csrf_token %}
+    {% for prod, value in prods_without_info.items %}
+    <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+    <p>{{ value.serving_description }} = 
+        <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+        <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+        <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+        <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+            <option value="g">г</option>
+            <option value="ml">мл</option>
+        </select>
+    </p><br>
+    {% endfor %}
+    <!-- добавить кнопку сохранить но не считать -->
+
+    <button type="submit" class="btn btn-info">Сохранить и пересчитать</button>
+</form>
+<br>
 
 
 {% endif %}
@@ -111,12 +125,12 @@
 
 
 {% else %}
+<!-- кНопка посчитать ТОП -->
 <form action="{% url 'foodbymonth' %}" method="get">
     <input type="month" class="hidden_element" name="month" id="input_briefmonth" value="{{ briefmonth|date:'Y-m' }}">
     <input type="checkbox" class="hidden_element" name="top_create" value="True" id="" checked>
-    <button type="submit" class="btn btn-info" name="submit">ТОП-5</button></h5>
+    <button type="submit" class="btn btn-info" name="submit">ТОП</button></h5>
     <p>* может занять длительное время</p>
-    <p>* от 5сек Х кол-во выведенных дней</p>
 </form>
 <br><br>
 {% endif %}

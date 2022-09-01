@@ -258,3 +258,7 @@ input[type="radio"]:focus {
     display: flex;
     flex-direction: row;
 }
+
+.width_unset {
+    width: auto !important;
+}
