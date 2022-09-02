@@ -1,6 +1,6 @@
 from calendar import month
 from django.shortcuts import render, redirect
-from .models import Measurement, Questionary, FatSecretEntry, EatenProduct
+from .models import Measurement, Questionary, FatSecretEntry
 from .forms import MeasurementForm, QuestionaryForm
 from time import sleep
 from datetime import date, datetime, timedelta, time

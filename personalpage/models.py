@@ -29,17 +29,6 @@ class Measurement(models.Model):
         #при запросе должна быть сортировка по убыванию даты
 
 
-class EatenProduct(models.Model):
-    product_name = models.CharField('Название продукта', max_length=255, null=True, blank=True)
-    product_amount = models.PositiveSmallIntegerField('Количество', null=True, blank=True)
-    product_metric = models.CharField('Единица измерения', max_length=50, null=True, blank=True)
-    product_calories = models.PositiveSmallIntegerField('Калории', null=True, blank=True)
-    day = models.ForeignKey(Measurement, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return "Съеденные продукты за день"
-
-
 class Questionary(models.Model):
     date = models.DateField('Дата заполнения', auto_now_add=True, help_text='Дата заполнения')
     date_update = models.DateField('Дата обновления', auto_now=True, help_text='Дата последнего редактирования')
