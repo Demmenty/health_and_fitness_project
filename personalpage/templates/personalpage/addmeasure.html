@@ -17,7 +17,8 @@
         </tr>
     </table>
     
-    
+    <!-- поправить отображение -->
+    <span>{{ fatsecret_error }}</span><br>
     <span>{{ error }}</span><br>
     
 
@@ -32,7 +33,7 @@
         <label>Пульс в покое{{ measure_form.pulse }}</label><br>
         <label>Давление<br>{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
 
-        <!-- сделать кбжу неактивными если подключен FS -->
+        <!-- сделать кбжу неактивными если подключен FS ?-->
 
         <label>Калории: {{ measure_form.calories }}</label><br>
         <label>Белки: {{ measure_form.protein }}</label><br>

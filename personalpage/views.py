@@ -43,45 +43,72 @@ def make_weekmeasureforms(request):
        Плюс автозаполнение кбжу из FatSecret
     """
     week_measureforms = []
+    food_data = []
+    global fatsecret_error
 
+    # получаем общие данные кбжу из FS за посл. 7дней - food_data
     try:
         make_session(request.user)
-
-        # получаем данные кбжу этого месяца со срезом - посл. 7дней
-        # сегодняшнее число
-        today = date.today().day
-        if today >= 7:
+        fs_connected = True
+        # если сегодня 7 число или больше - достаточно записей за текущий месяц
+        if date.today().day >= 7:
             try:
-                food_data = fs.food_entries_get_month()[:-8:-1]
+                food_data = fs.food_entries_get_month()
             except KeyError:
-                print('keyerror - данный срез за месяц пуст')
-                food_data = ""
-        else:
-            food_data = []
-            # записи текущего месяца в соответствии с датой
-            try:
-                food_data.extend(fs.food_entries_get_month()[:(-today-1):-1])
-            except KeyError:
+                # записей за текущий месяц нет
                 ...
-            # записи прошлого месяца в соответствии с датой
+            except GeneralError as error:
+                # какая-то ошибка
+                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
+                print('возникла GeneralError')
+                print(error)
+                print(type(error))
+                print()
+        # если сегодня 6 число или меньше - нужно создать данные из 2 месяцев
+        else:
+            # записи текущего месяца
+            try:
+                food_data_cur_month = fs.food_entries_get_month()
+                # если за месяц одна запись, то food_data = 1 словарь
+                # если несколько - список словарей
+                if type(food_data_cur_month) is dict:
+                    food_data.append(food_data_cur_month)
+                else:
+                    food_data.extend(food_data_cur_month)
+            except KeyError:
+                # значит записей нет за текущий месяц
+                ...
+            except GeneralError as error:
+                # какая-то ошибка
+                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
+                print('возникла GeneralError')
+                print(error)
+                print(type(error))
+                print()
+            # записи прошлого месяца
             try:
                 prev_month = datetime.today() - timedelta(weeks=4)
-                food_data.extend(fs.food_entries_get_month(date=prev_month)[:(today-8):-1])
+                food_data_prev_month = fs.food_entries_get_month(date=prev_month)
+                if type(food_data_prev_month) is dict:
+                    food_data.append(food_data_prev_month)
+                else:
+                    food_data.extend(food_data_prev_month)
             except KeyError:
+                # значит записей нет за предыдущий месяц
                 ...
-
-        # проверить что получился список словарей!
-        print('получилась такая food_data')
-        print(food_data)
-        print()
-
-        fs_connected = True
+            except GeneralError as error:
+                # какая-то ошибка
+                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
+                print('возникла GeneralError')
+                print(error)
+                print(type(error))
+                print()
 
     except FatSecretEntry.DoesNotExist:
         fs_connected = False
-        food_data = ""
-        # если FS не подключен
-    
+        # FS не подключен
+
+    # создание форм на основе записей в Measureforms
     for i in range(7):
         measure_date = date.today() - timedelta(days=i)
         try:
@@ -105,6 +132,7 @@ def make_weekmeasureforms(request):
             measure = Measurement.objects.get(date=measure_date, user=request.user)
             measure_form = MeasurementForm(instance=measure)
 
+        # перезапись кбжу в записях бд ЕСЛИ они изменились
         if fs_connected and food_data:
             # перевод даты в формат FS
             date_int = (measure_date - date(1970, 1, 1)).days
@@ -112,6 +140,7 @@ def make_weekmeasureforms(request):
             measure_form = measure_form.save(commit=False)
             # запись кбжу из FS для каждого дня
             # сортировать сначала по дате ?? (key=lambda x: x['date_int'])
+            # food_data должна быть списком
             for day in food_data:
                 if day['date_int'] == str(date_int):
                     # проверка на то, поменялись ли калории 
@@ -121,11 +150,11 @@ def make_weekmeasureforms(request):
                         measure_form.protein = float(day['protein'])
                         measure_form.fats = float(day['fat'])
                         measure_form.carbohydrates = float(day['carbohydrate'])
+                        measure_form.save()
+                    continue
 
-        measure_form.save()
-
-        measure = Measurement.objects.get(date=measure_date, user=request.user)
-        measure_form = MeasurementForm(instance=measure)
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
 
         week_measureforms.append(measure_form)
 
@@ -385,6 +414,8 @@ def addmeasure(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
+    global fatsecret_error
+    fatsecret_error = ""
     # генерация календарика и формочек на 7 дней
     week_measureforms = make_weekmeasureforms(request)
     week_calendar = make_weekcalendar()
@@ -392,6 +423,7 @@ def addmeasure(request):
     # GET-запрос
     if request.method == 'GET':
         data = {
+            'fatsecret_error': fatsecret_error,
             'week_measureforms': week_measureforms,
             'error': '',
             'week_calendar': week_calendar,
@@ -515,17 +547,26 @@ def mealjournal(request):
         try:
             # делаем сессию с FS для user
             make_session(request.user)
+            print('сессия сделана')
 
             # данные для тех, у кого подключен FatSecret
 
             # питание за сегодняшний день
             food_entry = fs.food_entries_get(date=datetime.today())
+            print('питание за сегодня из FS')
+            print('food_entry')
+            print(food_entry)
+            print()
             # питание за текущий месяц
             # если первое число месяца, то без статистики за месяц (иначе ошибка в FS)
-            if date.today().day != 1:
-                food_entries_month = fs.food_entries_get_month(date=datetime.today())
-            else:
+            if date.today().day == 1:
                 food_entries_month = ""
+            else:
+                print('попробую получить стату за текущий месяц')
+                food_entries_month = fs.food_entries_get_month(date=datetime.today())
+                print('food_entries_month')
+                print(food_entries_month)
+                print()
 
             # данные для сегодня
             # категории
@@ -674,11 +715,13 @@ def mealjournal(request):
             }
             
             if food_entries_month:
+                print(food_entries_month)
                 # подсчет средних значений за месяц
                 # если за день нет записей - то она итак не отображается
                 # поэтому тут другая формула
                 days_count = len(food_entries_month)
                 for day in food_entries_month:
+                    print(day)
                     day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
                     avg_month['protein'] += float(day['protein'])
                     avg_month['fat'] += float(day['fat'])
@@ -918,21 +961,23 @@ def foodbymonth(request):
         index_number = 1
         while True:
             try:
-                food_id = request.POST["food_id_"+str(index_number)]
-                metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
-                metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
-                serving_id = request.POST["serving_id_"+str(index_number)]
-                index_number += 1
+                if request.POST.get("metric_serving_amount_"+str(index_number), False):
+                    food_id = request.POST["food_id_"+str(index_number)]
+                    metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
+                    metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
+                    serving_id = request.POST["serving_id_"+str(index_number)]
 
-                if type(food_cache[food_id]['servings']['serving']) is dict:
-                    food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-                    food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-                else:
-                    for dic in food_cache[food_id]['servings']['serving']:
-                        if dic['serving_id'] == serving_id:
-                            dic["metric_serving_amount"] = metric_serving_amount
-                            dic["metric_serving_unit"] = metric_serving_unit
-                            break
+                    if type(food_cache[food_id]['servings']['serving']) is dict:
+                        food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
+                        food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
+                    else:
+                        for dic in food_cache[food_id]['servings']['serving']:
+                            if dic['serving_id'] == serving_id:
+                                dic["metric_serving_amount"] = metric_serving_amount
+                                dic["metric_serving_unit"] = metric_serving_unit
+                                break
+
+                index_number += 1
 
             except KeyError:
                 break
