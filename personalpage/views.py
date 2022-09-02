@@ -46,7 +46,7 @@ def make_weekmeasureforms(request):
     food_data = []
     global fatsecret_error
 
-    # получаем общие данные кбжу из FS за посл. 7дней - food_data
+    # получаем общие данные кбжу из FS за посл. 7дней в food_data
     try:
         make_session(request.user)
         fs_connected = True
@@ -506,6 +506,7 @@ def addmeasure(request):
         # если форма некорректна - перезагружаем страницу с ошибкой
         else:
             data = {
+                'fatsecret_error': fatsecret_error,
                 'week_measureforms': week_measureforms,
                 'error': 'Данные введены некорректно. Попробуйте ввести их еще раз.',
                 'week_calendar': week_calendar,
@@ -547,26 +548,18 @@ def mealjournal(request):
         try:
             # делаем сессию с FS для user
             make_session(request.user)
-            print('сессия сделана')
 
             # данные для тех, у кого подключен FatSecret
 
             # питание за сегодняшний день
             food_entry = fs.food_entries_get(date=datetime.today())
-            print('питание за сегодня из FS')
-            print('food_entry')
-            print(food_entry)
-            print()
             # питание за текущий месяц
             # если первое число месяца, то без статистики за месяц (иначе ошибка в FS)
             if date.today().day == 1:
                 food_entries_month = ""
             else:
-                print('попробую получить стату за текущий месяц')
+                # проверить, если запись за месяц одна или отсутствует и оюработать ошибки
                 food_entries_month = fs.food_entries_get_month(date=datetime.today())
-                print('food_entries_month')
-                print(food_entries_month)
-                print()
 
             # данные для сегодня
             # категории
@@ -715,22 +708,32 @@ def mealjournal(request):
             }
             
             if food_entries_month:
-                print(food_entries_month)
                 # подсчет средних значений за месяц
                 # если за день нет записей - то она итак не отображается
                 # поэтому тут другая формула
-                days_count = len(food_entries_month)
-                for day in food_entries_month:
-                    print(day)
-                    day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
-                    avg_month['protein'] += float(day['protein'])
-                    avg_month['fat'] += float(day['fat'])
-                    avg_month['carbo'] += float(day['carbohydrate'])
-                    avg_month['calories'] += float(day['calories'])
-                avg_month['protein'] = round(avg_month['protein'] / days_count, 2)
-                avg_month['fat'] = round(avg_month['fat'] / days_count, 2)
-                avg_month['carbo'] = round(avg_month['carbo'] / days_count, 2)
-                avg_month['calories'] = round(avg_month['calories'] / days_count, 2)
+
+                # если за месяц одна запись - будет просто словарь
+                if type(food_entries_month) is dict:
+                    food_entries_month['date_int'] = (date(1970, 1, 1) + 
+                                                      timedelta(days=int(food_entries_month['date_int'])))
+                    avg_month['protein'] = food_entries_month['protein']
+                    avg_month['fat'] = food_entries_month['fat']
+                    avg_month['carbo'] = food_entries_month['carbohydrate']
+                    avg_month['calories'] = food_entries_month['calories']
+                    # превращаем в список из словаря, чтобы табличка не ебнулась
+                    food_entries_month = [food_entries_month]
+                else:
+                    days_count = len(food_entries_month)
+                    for day in food_entries_month:
+                        day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
+                        avg_month['protein'] += float(day['protein'])
+                        avg_month['fat'] += float(day['fat'])
+                        avg_month['carbo'] += float(day['carbohydrate'])
+                        avg_month['calories'] += float(day['calories'])
+                    avg_month['protein'] = round(avg_month['protein'] / days_count, 2)
+                    avg_month['fat'] = round(avg_month['fat'] / days_count, 2)
+                    avg_month['carbo'] = round(avg_month['carbo'] / days_count, 2)
+                    avg_month['calories'] = round(avg_month['calories'] / days_count, 2)
 
             # предыдущий месяц для поля выбора
             previous_month = date.today() + relativedelta(months=-1)
@@ -921,18 +924,29 @@ def foodbymonth(request):
 
     # если значения за месяц есть:
     if food_entries_month:
-        # считаем среднее арифметическое для кбжу
-        days_count = len(food_entries_month)
-        for day in food_entries_month:
-            day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
-            avg_protein += float(day['protein'])
-            avg_fat += float(day['fat'])
-            avg_carbo += float(day['carbohydrate'])
-            avg_calories += float(day['calories'])
-        avg_protein = round(avg_protein / days_count, 2)
-        avg_fat = round(avg_fat / days_count, 2)
-        avg_carbo = round(avg_carbo / days_count, 2)
-        avg_calories = round(avg_calories / days_count, 2)
+        # если за месяц одна запись - будет просто словарь
+        if type(food_entries_month) is dict:
+            food_entries_month['date_int'] = (date(1970, 1, 1) + 
+                        timedelta(days=int(food_entries_month['date_int'])))
+            avg_protein = food_entries_month['protein']
+            avg_fat = food_entries_month['fat']
+            avg_carbo = food_entries_month['carbohydrate']
+            avg_calories = food_entries_month['calories']
+            # превращаем в список из словаря, чтобы табличка не ебнулась
+            food_entries_month = [food_entries_month]
+        else:
+            # считаем среднее арифметическое для кбжу
+            days_count = len(food_entries_month)
+            for day in food_entries_month:
+                day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
+                avg_protein += float(day['protein'])
+                avg_fat += float(day['fat'])
+                avg_carbo += float(day['carbohydrate'])
+                avg_calories += float(day['calories'])
+            avg_protein = round(avg_protein / days_count, 2)
+            avg_fat = round(avg_fat / days_count, 2)
+            avg_carbo = round(avg_carbo / days_count, 2)
+            avg_calories = round(avg_calories / days_count, 2)
 
     # предыдущий месяц для подстановки в поле выбора
     previous_month = date.today() + relativedelta(months=-1)
