@@ -8,29 +8,9 @@ from dateutil.relativedelta import relativedelta
 from fatsecret import Fatsecret, GeneralError
 import pickle
 
-WEEKDAY_RU = {
-    0: ['Понедельник', 'ПН'],
-    1: ['Вторник', 'ВТ'],
-    2: ['Среда', 'СР'],
-    3: ['Четверг', 'ЧТ'],
-    4: ['Пятница', 'ПТ'],
-    5: ['Суббота', 'СБ'],
-    6: ['Воскресенье', 'ВС'] }
-
-def make_weekcalendar():
-    """Генерация календаря на неделю для выбора даты"""
-    week_calendar = {}
-    for i in range(7):
-        selected_date = date.today() - timedelta(days=(6-i))
-        weekday_short = WEEKDAY_RU[selected_date.weekday()][1]
-        day_value = weekday_short + ' - ' + str(selected_date.day)
-        week_calendar[selected_date] = day_value
-
-    return week_calendar
-
 
 def make_session(user):
-    # берем данные для доступа из БД
+    """создание сессии с FatSecret Api для переданного пользователя"""
     global fs
     userdata = FatSecretEntry.objects.get(user=user)
     session_token = (userdata.oauth_token, userdata.oauth_token_secret)
@@ -120,11 +100,10 @@ def make_weekmeasureforms(request):
             # если записи за этот день нет, то формочка создается пустая
             measure_form = MeasurementForm()
 
-            # в нее сразу записывается user, дата и день недели
+            # в нее сразу записывается user и дата
             measure_form = measure_form.save(commit=False)
             measure_form.user = request.user
             measure_form.date = measure_date
-            measure_form.weekday = WEEKDAY_RU[measure_date.weekday()][0]
             # сохраняется запись в базе
             measure_form.save()
 
@@ -416,9 +395,13 @@ def addmeasure(request):
 
     global fatsecret_error
     fatsecret_error = ""
+    
     # генерация календарика и формочек на 7 дней
     week_measureforms = make_weekmeasureforms(request)
-    week_calendar = make_weekcalendar()
+    week_calendar = []
+    for i in range(7):
+        selected_date = date.today() - timedelta(days=(6-i))
+        week_calendar.append(selected_date)
     
     # GET-запрос
     if request.method == 'GET':

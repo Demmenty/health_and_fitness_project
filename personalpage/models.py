@@ -17,9 +17,7 @@ class Measurement(models.Model):
     carbohydrates = models.DecimalField('Углеводы', max_digits=5, decimal_places=2, null=True, blank=True, help_text='Количество потребленных за день углеводов в граммах')
     comment = models.TextField('Комментарий', default='', blank=True, help_text='Комментарий (при необходимости)')
     date = models.DateField('Дата', default=date.today, help_text='Дата измерения')
-    weekday = models.CharField('День недели', max_length=15, default='', blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
 
     def __str__(self):
         return f"Измерение клиента {self.user} за {self.date}"

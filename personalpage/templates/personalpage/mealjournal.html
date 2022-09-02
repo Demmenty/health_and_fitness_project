@@ -119,7 +119,7 @@
         <tbody>
             {% for day in food_entries_month %}
             <tr>
-                <td>{{ day.date_int|date:"j E" }}</td>
+                <td>{{ day.date_int|date:"j E - D" }}</td>
                 <td>{{ day.calories }}</td>
                 <td>{{ day.protein }}</td>
                 <td>{{ day.fat }}</td>

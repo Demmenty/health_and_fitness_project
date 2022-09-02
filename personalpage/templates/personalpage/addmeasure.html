@@ -11,29 +11,27 @@
     <!-- недельный календарик -->
     <table class="table table-bordered border-primary" id="week_calendar_table">
         <tr>
-            {% for selected_date, day_value in week_calendar.items %}
-            <td class="select_date" value="{{ selected_date }}">{{ day_value }}</td>
+            {% for selected_date in week_calendar %}
+            <td class="select_date" value="{{ selected_date }}">{{ selected_date|date:'D - j' }}</td>
             {% endfor %}
         </tr>
     </table>
     
     <!-- поправить отображение -->
-    <span>{{ fatsecret_error }}</span><br>
-    <span>{{ error }}</span><br>
+    {% if fatsecret_error %}<h3 class="error_message">{{ fatsecret_error }}</h3><br>{% endif %}
+    {% if error %}<h3 class="error_message">{{ error }}</h3><br>{% endif %}
     
 
     <!-- форма для редактирования записи -->
     {% for measure_form in week_measureforms %}
     <form class="hidden_element" method="post" id="{{ measure_form.date.value }}">
         {% csrf_token %}
-        <label>Дата{{ measure_form.date }} {{ measure_form.weekday }}</label><br>
+        <label>{{ measure_form.date.value|date:"l" }} {{ measure_form.date }}</label><br>
         <label>Самочувствие{{ measure_form.feel }}</label><br>
         <label>Масса{{ measure_form.weight }}</label><br>
         <label>Жирность{{ measure_form.fat }}</label><br>
         <label>Пульс в покое{{ measure_form.pulse }}</label><br>
         <label>Давление<br>{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
-
-        <!-- сделать кбжу неактивными если подключен FS ?-->
 
         <label>Калории: {{ measure_form.calories }}</label><br>
         <label>Белки: {{ measure_form.protein }}</label><br>

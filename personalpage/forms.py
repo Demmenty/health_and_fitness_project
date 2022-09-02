@@ -13,7 +13,6 @@ class MeasurementForm(ModelForm):
                   'pressure_lower',
                   'comment',
                   'date',
-                  'weekday',
                   'calories',
                   'protein',
                   'fats',
@@ -55,10 +54,6 @@ class MeasurementForm(ModelForm):
                 'class': 'form-control',
             }),
             'date': DateInput(attrs={
-                'class': 'form-control-plaintext',
-                'readonly': True,
-            }),
-            'weekday': TextInput(attrs={
                 'class': 'form-control-plaintext',
                 'readonly': True,
             }),
