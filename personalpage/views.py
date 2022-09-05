@@ -322,6 +322,7 @@ def personalpage(request):
         'avg_week': avg_week,
         'avg_period': avg_period,
         'questionary_existing': questionary_existing,
+        'error': "",
     }
     return render(request, 'personalpage/personalpage.html', data)
 
@@ -395,7 +396,7 @@ def addmeasure(request):
 
     global fatsecret_error
     fatsecret_error = ""
-    
+
     # генерация календарика и формочек на 7 дней
     week_measureforms = make_weekmeasureforms(request)
     week_calendar = []
@@ -422,20 +423,18 @@ def addmeasure(request):
         if form.is_valid():
             # получаем дату из формы
             measure_date = form.cleaned_data['date']
+            # ?
             total_by_prod = {}
-            # проверка, что FS подключен
+            error = ""
+            # отправляем ВЕС в FatSecret
             try:
                 make_session(request.user)
-
-                # отправляем вес в FatSecret
                 # получаем вес из формы
                 measure_weight = form.cleaned_data['weight']
                 # если вес вообще записан
                 if measure_weight:
-
                     # проверка что дата измерения не старше 2 дней назад иначе FS не примет
                     if (date.today() - measure_date).days >= -2:
-
                         # получение даты последнего веса из FS (из профиля неверная)
                         try:
                             # пробуем получить последнюю запись за текущий месяц
@@ -466,9 +465,13 @@ def addmeasure(request):
                                 except KeyError:
                                     fs.weight_update(current_weight_kg=float(measure_weight),
                                                      date=datetime.combine(measure_date, time()))
-
             except FatSecretEntry.DoesNotExist:
                 ...
+            except GeneralError as e:
+                # добавить инфо об ошибке на страницу!
+                print("Произошла ошибка при попытке отправки данных о весе в FatSecret:/n"
+                      + str(type(e)) + str(e))
+
             # сохранение формы
             try:
                 # получаем запись из БД с этим числом
@@ -477,6 +480,7 @@ def addmeasure(request):
                 form = MeasurementForm(request.POST, instance=measure)
                 form.save()
                 return redirect('personalpage')
+
             # если записи за число нет - это странно
             except Measurement.DoesNotExist:
                 # перезагружаем с ошибкой
@@ -486,6 +490,7 @@ def addmeasure(request):
                 'week_calendar': week_calendar,
                 }
                 return render(request, 'personalpage/addmeasure.html', data)
+
         # если форма некорректна - перезагружаем страницу с ошибкой
         else:
             data = {
@@ -501,19 +506,21 @@ def addmeasure(request):
 # with open('personalpage/food_cache.pickle', 'wb') as f:
 #     pickle.dump({}, f)
 
-# id '4652615' (184г),  id '20214325' (135г)
-# удаление записей о продуктах без метрики для тестов
+# id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха
+# удаление записей о продуктах без метрики для тестов - раскомментить
 # with open('personalpage/food_cache.pickle', 'rb') as f:
 #     food_cache = pickle.load(f)
 #     del food_cache['4652615']
-#     del food_cache['20214325']
+#     del food_cache['62258251']
 # with open('personalpage/food_cache.pickle', 'wb') as f:
 #     pickle.dump(food_cache, f)
 
 
 def mealjournal(request):
-    """Страница контроля питания и кбжу"""
-
+    """Страница контроля питания и кбжу
+    Тут отображается таблица за сегодняшний день
+    и таблица за текущий месяц
+    """
     # если аноним - пусть регается
     if request.user.is_anonymous:
         return redirect('loginuser')
@@ -521,225 +528,196 @@ def mealjournal(request):
     # GET-запрос
     if request.method == 'GET':
 
-        # продукты, для которых нет инфо о граммовке порции
-        prods_without_info = {}
-
-        # открываем сохраненные данные о продуктах из файла
-        with open('personalpage/food_cache.pickle', 'rb') as file:
-            food_cache = pickle.load(file)
-
         try:
             # делаем сессию с FS для user
             make_session(request.user)
-
-            # данные для тех, у кого подключен FatSecret
-
-            # питание за сегодняшний день
-            food_entry = fs.food_entries_get(date=datetime.today())
-            # питание за текущий месяц
-            # если первое число месяца, то без статистики за месяц (иначе ошибка в FS)
-            if date.today().day == 1:
-                food_entries_month = ""
-            else:
-                # проверить, если запись за месяц одна или отсутствует и оюработать ошибки
-                food_entries_month = fs.food_entries_get_month(date=datetime.today())
-
-            # данные для сегодня
-            # категории
-            count_meal_in_category = {
-                'Breakfast': 0,
-                'Lunch': 0,
-                'Dinner': 0,
-                'Other': 0,
-            }
-        
-            # итоговые кбжу дня
-            day_total = {
-                    'amount': 0,
-                    'calories': 0,
-                    'protein': 0,
-                    'fat': 0,
-                    'carbohydrate': 0,
-                    }
-            
-            # каждая запись о продукте
-            for food in food_entry:
-
-                # подсчет количеств блюд для каждой категории для таблички
-                count_meal_in_category[food['meal']] += 1
-
-                print('новый круг цикла. food in food_entry:')
-                print(food)
-                print()
-
-                day_total['calories'] += int(food['calories'])
-                day_total['protein'] += float(food['protein'])
-                day_total['fat'] += float(food['fat'])
-                day_total['carbohydrate'] += float(food['carbohydrate'])
-
-
-                # получение инфы об этом продукте
-                temp_food_cache = {}
-                    # сначала в кеше
-                if food_cache.get(food['food_id']):
-                    print('инфо найдена в кеше, вот она, food_info:')
-                    food_info = food_cache[food['food_id']]
-                    print(food_info)
-                    print()
-                else:
-                    # потом в FatSecret
-                    # добавить обработчик ошибки! (с таймером - если много запросов)
-                    print('запрошен реквест о еде, food_id: ' + food['food_id'])
-                    food_info = fs.food_get(food_id=food['food_id'])
-                    print('вот сырой food_info:')
-                    print(food_info)
-                    print()
-                    sleep(2)
-
-                    # обработка для компактного сохранения
-                    if type(food_info['servings']['serving']) is dict:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': {
-                                    'serving_id': food_info['servings']['serving']['serving_id'],
-                                    'measurement_description': food_info['servings']['serving']['measurement_description'],
-                                    'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
-                                    'number_of_units': food_info['servings']['serving']['number_of_units'],
-                                    'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
-                                    'serving_description': food_info['servings']['serving']['serving_description'] }}}
-                    else:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': [] }}
-                        for dic in food_info['servings']['serving']:
-                            temp_food_cache[food_info['food_id']]['servings']['serving'].append({
-                                'serving_id': dic['serving_id'],
-                                'measurement_description': dic['measurement_description'],
-                                'metric_serving_amount': dic.get('metric_serving_amount', None),
-                                'number_of_units': dic['number_of_units'],
-                                'metric_serving_unit': dic.get('metric_serving_unit', None),
-                                'serving_description': dic['serving_description'] })
-
-                    print('Обработанный кеш, temp_food_cache:')
-                    print(temp_food_cache)
-                    print()                    
-
-                    # сохранение в кеш
-                    food_cache.update(temp_food_cache)
-
-
-                # добавление инфы в food для соответствующего вида порции
-                if type(food_info['servings']['serving']) is list:
-                    for serv_info in food_info['servings']['serving']:
-                        if serv_info['serving_id'] == food['serving_id']:
-                            food['serving'] = serv_info
-                            break
-                else:
-                    food['serving'] = food_info['servings']['serving']
-                
-
-                print('что записано в food после обработки, перед обработкой количества')
-                print(food)
-                print()
-
-                # добавляем нормальное отображение количества
-                # если измерение в г или мл - считаем как есть
-                if (food['serving']['measurement_description'] == 'g' or
-                    food['serving']['measurement_description'] == 'ml'):
-                    food['norm_amount'] = int(float(food['number_of_units']))
-                    day_total['amount'] += food['norm_amount']
-                else:
-                    # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-                    if food['serving'].get('metric_serving_amount') is None:
-                        print('метрики в food не оказалось')
-                        print()
-                        # если в инфе не оказалось граммовки порции
-                        # добавляем эту еду в спец.словарь и не считаем
-                        prods_without_info[food['food_id']] = {
-                            'food_entry_name': food['food_entry_name'],
-                            'serving_description': food['serving'].get('serving_description', 'порция'),
-                            'serving_id': food['serving_id'] }
-                        print('так выглядит prods_without_info')
-                        print(prods_without_info)
-                        print()
-                    else:
-                        # если в инфе метрика есть - считаем и добавляем к общему подсчету
-                        print('метрика есть')
-                        print()
-                        food['norm_amount'] = int(float(food['number_of_units']) *
-                                              float(food['serving']['metric_serving_amount']) *
-                                              float(food['serving']['number_of_units']))
-                        day_total['amount'] += food['norm_amount']
-
-                        print('круг цикла пройден')
-                        print()
-                        print()
-
-            for key, value in day_total.items():
-                day_total[key] = round(value, 2)
-
-            with open('personalpage/food_cache.pickle', 'wb') as f:
-                pickle.dump(food_cache, f)
-
-            avg_month = {
-                'protein': 0,
-                'fat': 0,
-                'carbo': 0,
-                'calories': 0
-            }
-            
-            if food_entries_month:
-                # подсчет средних значений за месяц
-                # если за день нет записей - то она итак не отображается
-                # поэтому тут другая формула
-
-                # если за месяц одна запись - будет просто словарь
-                if type(food_entries_month) is dict:
-                    food_entries_month['date_int'] = (date(1970, 1, 1) + 
-                                                      timedelta(days=int(food_entries_month['date_int'])))
-                    avg_month['protein'] = food_entries_month['protein']
-                    avg_month['fat'] = food_entries_month['fat']
-                    avg_month['carbo'] = food_entries_month['carbohydrate']
-                    avg_month['calories'] = food_entries_month['calories']
-                    # превращаем в список из словаря, чтобы табличка не ебнулась
-                    food_entries_month = [food_entries_month]
-                else:
-                    days_count = len(food_entries_month)
-                    for day in food_entries_month:
-                        day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
-                        avg_month['protein'] += float(day['protein'])
-                        avg_month['fat'] += float(day['fat'])
-                        avg_month['carbo'] += float(day['carbohydrate'])
-                        avg_month['calories'] += float(day['calories'])
-                    avg_month['protein'] = round(avg_month['protein'] / days_count, 2)
-                    avg_month['fat'] = round(avg_month['fat'] / days_count, 2)
-                    avg_month['carbo'] = round(avg_month['carbo'] / days_count, 2)
-                    avg_month['calories'] = round(avg_month['calories'] / days_count, 2)
-
-            # предыдущий месяц для поля выбора
-            previous_month = date.today() + relativedelta(months=-1)
-            previous_month = str(previous_month)[0:7]
-
-            data = {
-                'food_entries_month': food_entries_month,
-                'prods_without_info': prods_without_info,
-                'avg_month': avg_month,
-                'food_entry': food_entry,
-                'day_total': day_total,
-                'count_meal_in_category': count_meal_in_category,
-                'previous_month': previous_month,
-                'user_not_connected': False,
-            }
-            return render(request, 'personalpage/mealjournal.html', data)
-
         except FatSecretEntry.DoesNotExist:
-            # данные для тех, у кого НЕ подключен FatSecret
+            # если FS не подключен - только предложение подключить
             data = {
                 'user_not_connected': True,
             }
             return render(request, 'personalpage/mealjournal.html', data)
+
+        # открываем сохраненные данные о продуктах из файла
+        with open('personalpage/food_cache.pickle', 'rb') as file:
+            food_cache = pickle.load(file)
+        # продукты, для которых нет инфо о граммовке порции
+        prods_without_info = {}
+
+        # ПИТАНИЕ ЗА СЕГОДНЯ
+        food_entry = fs.food_entries_get(date=datetime.today())
+
+        # категории для таблички
+        count_meal_in_category = {
+            'Breakfast': 0,
+            'Lunch': 0,
+            'Dinner': 0,
+            'Other': 0,
+        }
+        # итоговые кбжу дня
+        day_total = {
+                'amount': 0,
+                'calories': 0,
+                'protein': 0,
+                'fat': 0,
+                'carbohydrate': 0,
+                }
+        
+        # обработка каждой записи о продукте
+        for food in food_entry:
+
+            # подсчет количеств блюд для каждой категории для таблички
+            count_meal_in_category[food['meal']] += 1
+
+            # получение инфы об этом продукте
+            temp_food_cache = {}
+                # сначала в кеше
+            if food_cache.get(food['food_id']):
+                food_info = food_cache[food['food_id']]
+            else:
+                # потом в FatSecret
+                # добавить обработчик ошибки! (с таймером - если много запросов)
+                food_info = fs.food_get(food_id=food['food_id'])
+                sleep(2)
+
+                # обработка для компактного сохранения
+                if type(food_info['servings']['serving']) is dict:
+                    temp_food_cache[food_info['food_id']] = {
+                        'food_name': food_info['food_name'],
+                        'servings': {
+                            'serving': {
+                                'serving_id': food_info['servings']['serving']['serving_id'],
+                                'measurement_description': food_info['servings']['serving']['measurement_description'],
+                                'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
+                                'number_of_units': food_info['servings']['serving']['number_of_units'],
+                                'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
+                                'serving_description': food_info['servings']['serving']['serving_description'] }}}
+                else:
+                    temp_food_cache[food_info['food_id']] = {
+                        'food_name': food_info['food_name'],
+                        'servings': {
+                            'serving': [] }}
+                    for dic in food_info['servings']['serving']:
+                        temp_food_cache[food_info['food_id']]['servings']['serving'].append({
+                            'serving_id': dic['serving_id'],
+                            'measurement_description': dic['measurement_description'],
+                            'metric_serving_amount': dic.get('metric_serving_amount', None),
+                            'number_of_units': dic['number_of_units'],
+                            'metric_serving_unit': dic.get('metric_serving_unit', None),
+                            'serving_description': dic['serving_description'] })
+
+                # сохранение в кеш
+                food_cache.update(temp_food_cache)
+
+
+            # добавление инфы в food для соответствующего вида порции
+            if type(food_info['servings']['serving']) is list:
+                for serv_info in food_info['servings']['serving']:
+                    if serv_info['serving_id'] == food['serving_id']:
+                        food['serving'] = serv_info
+                        break
+            else:
+                food['serving'] = food_info['servings']['serving']
+
+            # добавляем нормальное отображение количества
+            # если измерение в г или мл - считаем как есть
+            if (food['serving']['measurement_description'] == 'g' or
+                food['serving']['measurement_description'] == 'ml'):
+                food['norm_amount'] = int(float(food['number_of_units']))
+                day_total['amount'] += food['norm_amount']
+            else:
+                # если измерение в порциях - сначала проверяем, есть ли граммовка порции
+                if food['serving'].get('metric_serving_amount') is None:
+                    # если в инфе не оказалось граммовки порции
+                    # добавляем эту еду в спец.словарь и не считаем amount
+                    prods_without_info[food['food_id']] = {
+                        'food_entry_name': food['food_entry_name'],
+                        'serving_description': food['serving'].get('serving_description', 'порция'),
+                        'serving_id': food['serving_id'] }
+                else:
+                    # если в инфе метрика есть - считаем и добавляем к общему подсчету
+                    food['norm_amount'] = int(float(food['number_of_units']) *
+                                            float(food['serving']['metric_serving_amount']) *
+                                            float(food['serving']['number_of_units']))
+                    day_total['amount'] += food['norm_amount']
+
+            # подсчет итоговой суммы кбжу
+            day_total['calories'] += int(food['calories'])
+            day_total['protein'] += float(food['protein'])
+            day_total['fat'] += float(food['fat'])
+            day_total['carbohydrate'] += float(food['carbohydrate'])
+
+
+        # записываем измененный кеш обратно в файл
+        with open('personalpage/food_cache.pickle', 'wb') as f:
+            pickle.dump(food_cache, f)
+            
+        # нумерация продуктов без инфы о порции
+        index_number = 1
+        for prod in prods_without_info:
+            prods_without_info[prod]['index_number'] = index_number
+            index_number += 1
+
+        # округляем результаты в получившемся итоге по кбжу
+        for key, value in day_total.items():
+            day_total[key] = round(value, 2)
+
+
+        # ПИТАНИЕ ЗА ТЕКУЩИЙ МЕСЯЦ
+        # средние кбжу
+        avg_month = {
+            'protein': 0,
+            'fat': 0,
+            'carbo': 0,
+            'calories': 0
+        }
+        try:
+            food_entries_month = fs.food_entries_get_month(date=datetime.today())
+            # если за месяц одна запись - будет просто словарь
+            if type(food_entries_month) is dict:
+                food_entries_month['date_int'] = (date(1970, 1, 1) + 
+                                timedelta(days=int(food_entries_month['date_int'])))
+                avg_month['protein'] = food_entries_month['protein']
+                avg_month['fat'] = food_entries_month['fat']
+                avg_month['carbo'] = food_entries_month['carbohydrate']
+                avg_month['calories'] = food_entries_month['calories']
+                # превращаем в список из словаря, чтобы табличка не ебнулась
+                food_entries_month = [food_entries_month]
+            else:
+                # если за день нет записей - то она итак не отображается (поэтому тут другая формула)
+                days_count = len(food_entries_month)
+                for day in food_entries_month:
+                    day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
+                    avg_month['protein'] += float(day['protein'])
+                    avg_month['fat'] += float(day['fat'])
+                    avg_month['carbo'] += float(day['carbohydrate'])
+                    avg_month['calories'] += float(day['calories'])
+                avg_month['protein'] = round(avg_month['protein'] / days_count, 2)
+                avg_month['fat'] = round(avg_month['fat'] / days_count, 2)
+                avg_month['carbo'] = round(avg_month['carbo'] / days_count, 2)
+                avg_month['calories'] = round(avg_month['calories'] / days_count, 2)
+
+        except KeyError:
+            # KeyError = записей нет
+            food_entries_month = ""
+
+        # для поля выбора
+        previous_day = str(date.today() - timedelta(days=1))
+        previous_month = str(date.today() + relativedelta(months=-1))[0:7]
+
+        data = {
+            'food_entries_month': food_entries_month,
+            'prods_without_info': prods_without_info,
+            'avg_month': avg_month,
+            'food_entry': food_entry,
+            'day_total': day_total,
+            'count_meal_in_category': count_meal_in_category,
+            'previous_day': previous_day,
+            'previous_month': previous_month,
+            'user_not_connected': False,
+        }
+        return render(request, 'personalpage/mealjournal.html', data)
+
 
     # POST-запрос
     if request.method == 'POST':
@@ -771,25 +749,92 @@ def mealjournal(request):
 
 
 def foodbydate(request):
-    """Получение данных за опр.день из FatSecret"""
+    """Получение данных за опр.день из FatSecret
+    С ТОПом по количеству и калориям
+    """
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
     # делаем сессию с FS для user
     make_session(request.user)
 
     # получаем введенную дату
-    briefdate = request.GET['date']
-    # форматируем
+    briefdate = request.GET.get('date')
+    if briefdate is None or not briefdate:
+        return redirect('mealjournal')
+    # форматируем для дальнейшей работы
     briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
-    # получаем нужные данные от FS
+    # заготовки для html
+    prev_date = str(briefdate - timedelta(days=1))[:10]
+    next_date = str(briefdate + timedelta(days=1))[:10]
 
-    # категории
+    # добавить обработчик too many actions!?
+
+    # ПИТАНИЕ за выбранную дату (briefdate)
+    food_entry = fs.food_entries_get(date=briefdate)
+    if not food_entry:
+        data = {
+            'top_calories': "",
+            'top_amount': "",
+            'total_by_prod': "",
+            'day_total': "",
+            'count_meal_in_category': "",
+            'prods_without_info': "",
+            'briefdate': briefdate,
+            'prev_date': prev_date,
+            'next_date': next_date,
+            'food_entry': food_entry,
+        }
+        return render(request, 'personalpage/foodbydate.html', data)
+
+    # открываем сохраненные данные о продуктах из файла
+    with open('personalpage/food_cache.pickle', 'rb') as file:
+        food_cache = pickle.load(file)
+
+    # POST-запрос
+    if request.method == 'POST':
+        # предусмотреть вариант, когда продуктов несколько!
+        # попавшиеся: id '4652615',  id '20214325'
+        # может отредактировать total_by_prod ? b top_calories
+        # занести данные в кеш
+        # в prod_without_info занести еще инфо о количестве вхождений для расчета
+        print('пост-запрос получен')
+        # prods_without_info = {}
+        index_number = 1
+        while True:
+            print('цикл', index_number)
+            if request.POST.get("metric_serving_amount_"+str(index_number)):
+                food_id = request.POST["food_id_"+str(index_number)]
+                metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
+                metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
+                serving_id = request.POST["serving_id_"+str(index_number)]
+                print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
+
+                if type(food_cache[food_id]['servings']['serving']) is dict:
+                    food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
+                    food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
+                    print('инфа записана в food_cache')
+                else:
+                    for dic in food_cache[food_id]['servings']['serving']:
+                        if dic['serving_id'] == serving_id:
+                            dic["metric_serving_amount"] = metric_serving_amount
+                            dic["metric_serving_unit"] = metric_serving_unit
+                            print('инфа записана в food_cache')
+                            break
+                index_number += 1
+            else:
+                break
+
+    # продукты, для которых нет инфо о граммовке порции
+    prods_without_info = {}
+    # категории для таблички
     count_meal_in_category = {
         'Breakfast': 0,
         'Lunch': 0,
         'Dinner': 0,
         'Other': 0,
     }
-    # итоговые вес и калории по продуктам
-    total_by_prod = {}
     # итоговые кбжу дня
     day_total = {
             'amount': 0,
@@ -798,61 +843,122 @@ def foodbydate(request):
             'fat': 0,
             'carbohydrate': 0,
             }
-    
-    # список съеденных продуктов за выбранную дату
-    food_entry = fs.food_entries_get(date=briefdate)
-    # каждая запись о продукте
+    # итоговые вес и калории по каждому виду продуктов для ТОПов
+    total_by_prod = {}
+
+    # обработка каждой записи о продукте
     for food in food_entry:
+
+        # подсчет количеств блюд для каждой категории для таблички
+        count_meal_in_category[food['meal']] += 1
+
         # получение инфы об этом продукте
-        food_info = fs.food_get(food_id=food['food_id'])
-        # получение инфы о соотв.виде порции
+        temp_food_cache = {}
+            # сначала в кеше
+        if food_cache.get(food['food_id']):
+            food_info = food_cache[food['food_id']]
+        else:
+            # потом в FatSecret
+            # добавить обработчик ошибки!
+            food_info = fs.food_get(food_id=food['food_id'])
+            sleep(2)
+
+            # обработка для компактного сохранения
+            if type(food_info['servings']['serving']) is dict:
+                temp_food_cache[food_info['food_id']] = {
+                    'food_name': food_info['food_name'],
+                    'servings': {
+                        'serving': {
+                            'serving_id': food_info['servings']['serving']['serving_id'],
+                            'measurement_description': food_info['servings']['serving']['measurement_description'],
+                            'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
+                            'number_of_units': food_info['servings']['serving']['number_of_units'],
+                            'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
+                            'serving_description': food_info['servings']['serving']['serving_description'] }}}
+            else:
+                temp_food_cache[food_info['food_id']] = {
+                    'food_name': food_info['food_name'],
+                    'servings': {
+                        'serving': [] }}
+                for dic in food_info['servings']['serving']:
+                    temp_food_cache[food_info['food_id']]['servings']['serving'].append({
+                        'serving_id': dic['serving_id'],
+                        'measurement_description': dic['measurement_description'],
+                        'metric_serving_amount': dic.get('metric_serving_amount', None),
+                        'number_of_units': dic['number_of_units'],
+                        'metric_serving_unit': dic.get('metric_serving_unit', None),
+                        'serving_description': dic['serving_description'] })
+
+            # сохранение в кеш
+            food_cache.update(temp_food_cache)
+
+
+        # добавление инфы в food для соответствующего вида порции
         if type(food_info['servings']['serving']) is list:
-            for i in food_info['servings']['serving']:
-                if i['serving_id'] == food['serving_id']:
-                    food['serving'] = i
+            for serv_info in food_info['servings']['serving']:
+                if serv_info['serving_id'] == food['serving_id']:
+                    food['serving'] = serv_info
+                    break
         else:
             food['serving'] = food_info['servings']['serving']
         
         # добавляем номальное отображение количества
+        # если измерение в г или мл - считаем как есть
         if (food['serving']['measurement_description'] == 'g' or
             food['serving']['measurement_description'] == 'ml'):
             food['norm_amount'] = int(float(food['number_of_units']))
+            day_total['amount'] += food['norm_amount']
         else:
-            food['norm_amount'] = int(float(food['number_of_units']) *
-                                  float(food['serving']['metric_serving_amount']) *
-                                  float(food['serving']['number_of_units']))
-        
-        if food['meal'] == 'Breakfast':
-            count_meal_in_category['Breakfast'] += 1
-        if food['meal'] == 'Lunch':
-            count_meal_in_category['Lunch'] += 1
-        if food['meal'] == 'Dinner':
-            count_meal_in_category['Dinner'] += 1
-        if food['meal'] == 'Other':
-            count_meal_in_category['Other'] += 1
+            # если измерение в порциях - сначала проверяем, есть ли граммовка порции
+            if food['serving'].get('metric_serving_amount') is None:
+                # если в инфе не оказалось граммовки порции
+                # добавляем эту еду в спец.словарь и не считаем amount
+                prods_without_info[food['food_id']] = {
+                    'food_entry_name': food['food_entry_name'],
+                    'serving_description': food['serving'].get('serving_description', 'порция'),
+                    'serving_id': food['serving_id'] }
+            else:
+                # если в инфе метрика есть - считаем и добавляем к общему подсчету
+                food['norm_amount'] = int(float(food['number_of_units']) *
+                                        float(food['serving']['metric_serving_amount']) *
+                                        float(food['serving']['number_of_units']))
+                day_total['amount'] += food['norm_amount']            
 
-        # нормальное общее наименование для топов
-        food['food_name'] = food_info['food_name']
-
-        if total_by_prod.get(food['food_name']) == None:
-            total_by_prod[food['food_name']] = {
-                'calories': 0,
-                'amount': 0,
-            }
-
-        total_by_prod[food['food_name']]['calories'] += int(food['calories'])
-        total_by_prod[food['food_name']]['amount'] += food['norm_amount']
-        total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
-
-        day_total['amount'] += food['norm_amount']
+        # подсчет итоговой суммы кбжу
         day_total['calories'] += int(food['calories'])
         day_total['protein'] += float(food['protein'])
         day_total['fat'] += float(food['fat'])
         day_total['carbohydrate'] += float(food['carbohydrate'])
 
+        # ТОПЫ
+        # нормальное общее наименование еды для топов
+        food['food_name'] = food_info['food_name']
+        # подсчет
+        if total_by_prod.get(food['food_name']) == None:
+            total_by_prod[food['food_name']] = {
+                'calories': 0,
+                'amount': 0,
+            }
+        total_by_prod[food['food_name']]['calories'] += int(food['calories'])
+        if food.get('norm_amount'):
+            total_by_prod[food['food_name']]['amount'] += food['norm_amount']
+            total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
+
+    # записывается измененный кеш обратно в файл
+    with open('personalpage/food_cache.pickle', 'wb') as f:
+        pickle.dump(food_cache, f)
+
+    # нумерация продуктов без инфы о порции
+    index_number = 1
+    for prod in prods_without_info:
+        prods_without_info[prod]['index_number'] = index_number
+        index_number += 1
+
+    # округляем результаты в получившемся итоге по кбжу
     for key, value in day_total.items():
         day_total[key] = round(value, 2)
-
+           
+    # сортировка ТОПов
     top_calories = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['calories'], reverse=True)[:3])
     top_amount = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['amount'], reverse=True)[:3])
 
@@ -862,7 +968,10 @@ def foodbydate(request):
         'total_by_prod': total_by_prod,
         'day_total': day_total,
         'count_meal_in_category': count_meal_in_category,
+        'prods_without_info': prods_without_info,
         'briefdate': briefdate,
+        'prev_date': prev_date,
+        'next_date': next_date,
         'food_entry': food_entry,
     }
     return render(request, 'personalpage/foodbydate.html', data)
@@ -883,9 +992,9 @@ def foodbymonth(request):
      # месяц, за который нужно посчитать стату,
      # введенный на предыдущей странице
      # ??? так норм проверить
-    briefmonth = request.GET.get('month', False)
+    briefmonth = request.GET.get('month')
     # проверка, что значение введено (ибо его можно удалить)
-    if not briefmonth:
+    if briefmonth is None:
         return redirect('mealjournal')
 
     try:
@@ -945,8 +1054,6 @@ def foodbymonth(request):
     if request.method == 'POST':
         # предусмотреть вариант, когда продуктов несколько!
         # попавшиеся: id '4652615',  id '20214325'
-        print('получен POST запрос')
-
         # может отредактировать total_by_prod ? b top_calories
         # занести данные в кеш
         # в prod_without_info занести еще инфо о количестве вхождений для расчета
@@ -957,26 +1064,27 @@ def foodbymonth(request):
         # prods_without_info = {}
         index_number = 1
         while True:
-            try:
-                if request.POST.get("metric_serving_amount_"+str(index_number), False):
-                    food_id = request.POST["food_id_"+str(index_number)]
-                    metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
-                    metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
-                    serving_id = request.POST["serving_id_"+str(index_number)]
+            print('цикл', index_number)
+            if request.POST.get("metric_serving_amount_"+str(index_number)):
+                food_id = request.POST["food_id_"+str(index_number)]
+                metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
+                metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
+                serving_id = request.POST["serving_id_"+str(index_number)]
+                print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
 
-                    if type(food_cache[food_id]['servings']['serving']) is dict:
-                        food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-                        food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-                    else:
-                        for dic in food_cache[food_id]['servings']['serving']:
-                            if dic['serving_id'] == serving_id:
-                                dic["metric_serving_amount"] = metric_serving_amount
-                                dic["metric_serving_unit"] = metric_serving_unit
-                                break
-
+                if type(food_cache[food_id]['servings']['serving']) is dict:
+                    food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
+                    food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
+                    print('инфа записана в food_cache')
+                else:
+                    for dic in food_cache[food_id]['servings']['serving']:
+                        if dic['serving_id'] == serving_id:
+                            dic["metric_serving_amount"] = metric_serving_amount
+                            dic["metric_serving_unit"] = metric_serving_unit
+                            print('инфа записана в food_cache')
+                            break
                 index_number += 1
-
-            except KeyError:
+            else:
                 break
 
         with open('personalpage/food_cache.pickle', 'wb') as f:
@@ -998,12 +1106,11 @@ def foodbymonth(request):
             # берем дату записи
             food_date = datetime.combine(day['date_int'], time())
             # получаем список съеденных продуктов за эту дату
-            # добавить обработчик ошибки с таймером!
             try:
                 food_entry = fs.food_entries_get(date=food_date)
             except GeneralError:
                 print('спим')
-                sleep(30)
+                sleep(25)
                 print('просыпаемся')
                 food_entry = fs.food_entries_get(date=food_date)
             sleep(3)
@@ -1101,14 +1208,16 @@ def foodbymonth(request):
                             'amount': 0,
                         }
                     total_by_prod[food['food_name']]['calories'] += int(food['calories'])
-                    total_by_prod[food['food_name']]['amount'] += food['norm_amount']
-                    total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
+                    if food.get('norm_amount'):
+                        total_by_prod[food['food_name']]['amount'] += food['norm_amount']
+                        total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
 
         # данные посчитаны
         # можно записать обновленный кеш обратно в файл
         with open('personalpage/food_cache.pickle', 'wb') as f:
             pickle.dump(food_cache, f)
             
+        # нумерация продуктов без инфы о порции
         index_number = 1
         for prod in prods_without_info:
             prods_without_info[prod]['index_number'] = index_number

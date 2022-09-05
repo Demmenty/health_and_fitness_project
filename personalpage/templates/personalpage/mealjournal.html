@@ -71,23 +71,21 @@
     {% for prod, value in prods_without_info.items %}
     <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
     <p>{{ value.serving_description }} = 
-        <input type="hidden" value="{{ prod }}" name="food_id">
-        <input type="hidden" value="{{ value.serving_id }}" name="serving_id">
-        <input type="number" min="0" name="metric_serving_amount">
-        <select name="metric_serving_unit">
+        <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+        <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+        <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+        <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
             <option value="g">г</option>
             <option value="ml">мл</option>
         </select>
     </p><br>
     {% endfor %}
-    <button type="submit" class="btn btn-info">Пересчитать</button>
+    <!-- добавить кнопку сохранить но не считать -->
+
+    <button type="submit" class="btn btn-info">Сохранить и пересчитать</button>
 </form>
 <br>
-
-
 {% endif %}
-
-
 
 
 {% else %}
@@ -98,7 +96,7 @@
 <!-- Выбор сводки за другое число -->
 <h5>Нужна сводка за другое число?</h5>
 <form action = "{% url 'foodbydate' %}" method = "get">
-    <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+    <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ previous_day }}">
     <button type="submit" class="btn btn-info" name="submit">Получить</button>
 </form>
 <br><br>
@@ -141,7 +139,7 @@
 {% endif %}
 <br><br>
 
-<!-- Сводка за последний полный месяц -->
+<!-- Сводка (итоговая средняя) за последний полный месяц -->
 
 
 <!-- Выбор сводки за другой месяц-->

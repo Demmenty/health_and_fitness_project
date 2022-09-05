@@ -31,7 +31,7 @@
             {% for food in food_entry %}
             {% if food.meal == category %}
             <td>{{ food.food_entry_name }}</td>
-            <td class="text-center">{{ food.norm_amount }} {{ food.serving.metric_serving_unit }}</td>
+            <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
             <td class="text-center">{{ food.calories }}</td>
             <td class="text-center">{{ food.protein }}</td>
             <td class="text-center">{{ food.fat }}</td>
@@ -70,7 +70,7 @@
         <tr>
             <td></td>
             <td><li>{{ product }}</li></td>
-            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
             <td class="text-center">{{ value.calories }}</td>
         </tr>
     {% endfor %}
@@ -96,7 +96,7 @@
         <tr>
             <td></td>
             <td><li>{{ product }}</li></td>
-            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
             <td class="text-center">{{ value.calories }}</td>
         </tr>
     {% endfor %}
@@ -105,19 +105,53 @@
 </ol>
 <br>
 
+<!-- если не посчитались какие-то продукты -->
+{% if prods_without_info %}
+<h3>Некоторые продукты не удалось нормально посчитать!</h3>
+<p>Укажите их граммовку, пожалуйста</p>
+<form method="POST" action="">
+    {% csrf_token %}
+    {% for prod, value in prods_without_info.items %}
+    <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+    <p>{{ value.serving_description }} = 
+        <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+        <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+        <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+        <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+            <option value="g">г</option>
+            <option value="ml">мл</option>
+        </select>
+    </p><br>
+    {% endfor %}
+    <!-- добавить кнопку сохранить но не считать -->
+
+    <button type="submit" class="btn btn-info">Сохранить и пересчитать</button>
+</form>
+<br>
+{% endif %}
+
 
 {% else %}
 <p>Данные отсутствуют</p>
 {% endif %}
 <br>
 
-<!-- добавить кнопки следубщий день и предыдущий день! -->
+
 <!-- Выбор сводки за другое число -->
-<h5>Нужна сводка за другое число?</h5>
-<form action = "{% url 'foodbydate' %}" method = "get">
-    <input type="date" class="form-control text-center" name="date" id="input_briefdate">
-    <button type="submit" class="btn btn-info" name="submit">Получить</button>
-</form>
+<div class="d-flex flex-row justify-content-between">
+    <form action = "{% url 'foodbydate' %}" method = "get">
+        <input type="hidden" name="date" value="{{ prev_date }}">
+        <button type="submit" class="btn btn-outline-primary">предыдущий день</button>
+    </form>
+    <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex text-nowrap">
+        <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+        <button type="submit" class="btn btn-info d-inline" name="submit">ОК</button>
+    </form>
+    <form action = "{% url 'foodbydate' %}" method = "get">
+        <input type="hidden" name="date" value="{{ next_date }}">
+        <button type="submit" class="btn btn-outline-primary">следующий день</button>
+    </form>
+</div>
 <br><br>
 
 <!-- Кнопка возврата -->

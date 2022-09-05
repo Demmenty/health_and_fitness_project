@@ -33,6 +33,7 @@
             <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
             {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>{% endif %}
         </table>
+        <p class="error_message">{{ error }}</p>
     </div><br>
     
     <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Редактировать записи</button></a><br><br>
