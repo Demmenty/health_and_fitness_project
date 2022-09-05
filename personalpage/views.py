@@ -991,7 +991,6 @@ def foodbymonth(request):
 
      # месяц, за который нужно посчитать стату,
      # введенный на предыдущей странице
-     # ??? так норм проверить
     briefmonth = request.GET.get('month')
     # проверка, что значение введено (ибо его можно удалить)
     if briefmonth is None:
@@ -1014,7 +1013,7 @@ def foodbymonth(request):
     avg_carbo = 0
     avg_calories = 0
 
-    # если значения за месяц есть:
+    # считаем средние значения кбжу:
     if food_entries_month:
         # если за месяц одна запись - будет просто словарь
         if type(food_entries_month) is dict:
@@ -1052,7 +1051,6 @@ def foodbymonth(request):
 
     # POST-запрос
     if request.method == 'POST':
-        # предусмотреть вариант, когда продуктов несколько!
         # попавшиеся: id '4652615',  id '20214325'
         # может отредактировать total_by_prod ? b top_calories
         # занести данные в кеш
@@ -1090,6 +1088,9 @@ def foodbymonth(request):
         with open('personalpage/food_cache.pickle', 'wb') as f:
                 pickle.dump(food_cache, f)
 
+        if request.POST.get('justsave'):
+            return redirect('mealjournal')
+
     # создание ТОП-списков! (если нажать на кнопку)
     if request.GET.get('top_create', False):
         print('считаю топ')
@@ -1110,7 +1111,7 @@ def foodbymonth(request):
                 food_entry = fs.food_entries_get(date=food_date)
             except GeneralError:
                 print('спим')
-                sleep(25)
+                sleep(30)
                 print('просыпаемся')
                 food_entry = fs.food_entries_get(date=food_date)
             sleep(3)
@@ -1188,7 +1189,8 @@ def foodbymonth(request):
                         prods_without_info[food['food_id']] = {
                             'food_entry_name': food['food_entry_name'],
                             'serving_description': food['serving'].get('serving_description', 'порция'),
-                            'serving_id': food['serving_id'] }
+                            'serving_id': food['serving_id'],
+                            'calories_per_serving': food['serving'].get('calories', food['calories']) }
                     else:
                         # если в инфе метрика есть - считаем
                         food['norm_amount'] = int(float(food['number_of_units']) *
