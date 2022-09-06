@@ -17,11 +17,9 @@
         </tr>
     </table>
     
-    <!-- поправить отображение -->
-    {% if fatsecret_error %}<h3 class="error_message">{{ fatsecret_error }}</h3><br>{% endif %}
     {% if error %}<h3 class="error_message">{{ error }}</h3><br>{% endif %}
     
-
+    
     <!-- форма для редактирования записи -->
     {% for measure_form in week_measureforms %}
     <form class="hidden_element" method="post" id="{{ measure_form.date.value }}">
@@ -32,11 +30,12 @@
         <label>Жирность{{ measure_form.fat }}</label><br>
         <label>Пульс в покое{{ measure_form.pulse }}</label><br>
         <label>Давление<br>{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
-
+        
         <label>Калории: {{ measure_form.calories }}</label><br>
         <label>Белки: {{ measure_form.protein }}</label><br>
         <label>Жиры: {{ measure_form.fats }}</label><br>
         <label>Углеводы: {{ measure_form.carbohydrates }}</label><br>
+        <p class="text-muted">{{ fatsecret_status }}</p><br>
 
         <label>Жалкие оправдания{{ measure_form.comment }}</label><br>
         

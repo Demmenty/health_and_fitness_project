@@ -17,129 +17,6 @@ def make_session(user):
     fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
 
-# оптимизировать!!
-def make_weekmeasureforms(request):
-    """Генерация списка формочек за неделю
-       Плюс автозаполнение кбжу из FatSecret
-    """
-    week_measureforms = []
-    food_data = []
-    global fatsecret_error
-
-    # получаем общие данные кбжу из FS за посл. 7дней в food_data
-    try:
-        make_session(request.user)
-        fs_connected = True
-        # если сегодня 7 число или больше - достаточно записей за текущий месяц
-        if date.today().day >= 7:
-            try:
-                food_data = fs.food_entries_get_month()
-            except KeyError:
-                # записей за текущий месяц нет
-                ...
-            except GeneralError as error:
-                # какая-то ошибка
-                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
-                print('возникла GeneralError')
-                print(error)
-                print(type(error))
-                print()
-        # если сегодня 6 число или меньше - нужно создать данные из 2 месяцев
-        else:
-            # записи текущего месяца
-            try:
-                food_data_cur_month = fs.food_entries_get_month()
-                # если за месяц одна запись, то food_data = 1 словарь
-                # если несколько - список словарей
-                if type(food_data_cur_month) is dict:
-                    food_data.append(food_data_cur_month)
-                else:
-                    food_data.extend(food_data_cur_month)
-            except KeyError:
-                # значит записей нет за текущий месяц
-                ...
-            except GeneralError as error:
-                # какая-то ошибка
-                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
-                print('возникла GeneralError')
-                print(error)
-                print(type(error))
-                print()
-            # записи прошлого месяца
-            try:
-                prev_month = datetime.today() - timedelta(weeks=4)
-                food_data_prev_month = fs.food_entries_get_month(date=prev_month)
-                if type(food_data_prev_month) is dict:
-                    food_data.append(food_data_prev_month)
-                else:
-                    food_data.extend(food_data_prev_month)
-            except KeyError:
-                # значит записей нет за предыдущий месяц
-                ...
-            except GeneralError as error:
-                # какая-то ошибка
-                fatsecret_error = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
-                print('возникла GeneralError')
-                print(error)
-                print(type(error))
-                print()
-
-    except FatSecretEntry.DoesNotExist:
-        fs_connected = False
-        # FS не подключен
-
-    # создание форм на основе записей в Measureforms
-    for i in range(7):
-        measure_date = date.today() - timedelta(days=i)
-        try:
-            # если запись за этот день есть, то формочка создается на ее основе
-            measure = Measurement.objects.get(date=measure_date, user=request.user)
-            measure_form = MeasurementForm(instance=measure)
-
-        except Measurement.DoesNotExist:
-            # если записи за этот день нет, то формочка создается пустая
-            measure_form = MeasurementForm()
-
-            # в нее сразу записывается user и дата
-            measure_form = measure_form.save(commit=False)
-            measure_form.user = request.user
-            measure_form.date = measure_date
-            # сохраняется запись в базе
-            measure_form.save()
-
-            # готовая форма на основе сущетсвующей пустой записи БД
-            measure = Measurement.objects.get(date=measure_date, user=request.user)
-            measure_form = MeasurementForm(instance=measure)
-
-        # перезапись кбжу в записях бд ЕСЛИ они изменились
-        if fs_connected and food_data:
-            # перевод даты в формат FS
-            date_int = (measure_date - date(1970, 1, 1)).days
-            # записываем кбжу в форму
-            measure_form = measure_form.save(commit=False)
-            # запись кбжу из FS для каждого дня
-            # сортировать сначала по дате ?? (key=lambda x: x['date_int'])
-            # food_data должна быть списком
-            for day in food_data:
-                if day['date_int'] == str(date_int):
-                    # проверка на то, поменялись ли калории 
-                    if measure_form.calories != int(day['calories']):
-                        calories_changed = True
-                        measure_form.calories = int(day['calories'])
-                        measure_form.protein = float(day['protein'])
-                        measure_form.fats = float(day['fat'])
-                        measure_form.carbohydrates = float(day['carbohydrate'])
-                        measure_form.save()
-                    continue
-
-            measure = Measurement.objects.get(date=measure_date, user=request.user)
-            measure_form = MeasurementForm(instance=measure)
-
-        week_measureforms.append(measure_form)
-
-    return week_measureforms
-
-
 def make_avg_for_period(user, period=7):
     """Составляет словарь из средних значений по
        каждому ежедневному измерению за неделю.
@@ -394,11 +271,108 @@ def addmeasure(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
-    global fatsecret_error
-    fatsecret_error = ""
+    # ГЕНЕРАЦИЯ ФОРМ на 7 дней
+    week_measureforms = []
 
-    # генерация календарика и формочек на 7 дней
-    week_measureforms = make_weekmeasureforms(request)
+    # получаем общие данные кбжу из FS за посл. 7дней в food_data
+    food_data = []
+    try:
+        make_session(request.user)
+        fatsecret_status = "FatSecret подключен"
+        fs_connected = True
+        try:
+            cur_month_data = fs.food_entries_get_month()
+            if type(cur_month_data) is dict:
+                food_data += [cur_month_data]
+            else:
+                food_data += cur_month_data
+            # записи за текущий месяц есть
+            if date.today().day < 7:
+                prev_month = datetime.today() - timedelta(weeks=4)
+                try:
+                    prev_month_data = fs.food_entries_get_month(date=prev_month)
+                    if type(prev_month_data) is dict:
+                        food_data += [prev_month_data]
+                    else:
+                        food_data += prev_month_data
+                except KeyError:
+                    # записей за прошлый месяц нет
+                    ...
+        except KeyError:
+            # записей за текущий месяц нет
+            if date.today().day < 7:
+                try:
+                    prev_month = datetime.today() - timedelta(weeks=4)
+                    prev_month_data = fs.food_entries_get_month(date=prev_month)
+                    if type(prev_month_data) is dict:
+                        food_data += [prev_month_data]
+                    else:
+                        food_data += prev_month_data
+                    # записи за прошлый месяц есть
+                except KeyError:
+                    # записей за прошлый месяц тоже нет - ну и в рот оно ебись
+                    ...
+    except FatSecretEntry.DoesNotExist:
+        fs_connected = False
+        fatsecret_status = "FatSecret не подключен"
+    except GeneralError as error:
+        fatsecret_status = f'При запросе к FatSecret возникла ошибка: {type(error)} - {error}'
+        print('возникла GeneralError')
+        print(error)
+        print(type(error))
+        print()
+
+    # создание форм на основе записей в Measureforms
+    for i in range(7):
+        measure_date = date.today() - timedelta(days=i)
+        try:
+            # если запись за этот день есть, то формочка создается на ее основе
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
+
+        except Measurement.DoesNotExist:
+            # если записи за этот день нет, то формочка создается пустая
+            measure_form = MeasurementForm()
+
+            # в нее сразу записывается user и дата
+            measure_form = measure_form.save(commit=False)
+            measure_form.user = request.user
+            measure_form.date = measure_date
+            # сохраняется запись в базе
+            measure_form.save()
+
+            # готовая форма на основе сущетсвующей пустой записи БД
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
+
+        # перезапись кбжу в записях бд ЕСЛИ они изменились
+        if fs_connected and food_data:
+            # перевод даты в формат FS
+            date_int = (measure_date - date(1970, 1, 1)).days
+            # записываем кбжу в форму
+            measure_form = measure_form.save(commit=False)
+            # запись кбжу из FS для каждого дня
+            # сортировать сначала по дате ?? (key=lambda x: x['date_int'])
+            # food_data должна быть списком
+            for day in food_data:
+                if day['date_int'] == str(date_int):
+                    # проверка на то, поменялись ли калории 
+                    if measure_form.calories != int(day['calories']):
+                        measure_form.calories = int(day['calories'])
+                        measure_form.protein = float(day['protein'])
+                        measure_form.fats = float(day['fat'])
+                        measure_form.carbohydrates = float(day['carbohydrate'])
+                        measure_form.save()
+                    continue
+
+            measure = Measurement.objects.get(date=measure_date, user=request.user)
+            measure_form = MeasurementForm(instance=measure)
+
+        week_measureforms.append(measure_form)
+
+
+
+    # КАЛЕНДАРЬ для выбора даты
     week_calendar = []
     for i in range(7):
         selected_date = date.today() - timedelta(days=(6-i))
@@ -407,9 +381,8 @@ def addmeasure(request):
     # GET-запрос
     if request.method == 'GET':
         data = {
-            'fatsecret_error': fatsecret_error,
+            'fatsecret_status': fatsecret_status,
             'week_measureforms': week_measureforms,
-            'error': '',
             'week_calendar': week_calendar,
             }
         return render(request, 'personalpage/addmeasure.html', data)
@@ -423,54 +396,41 @@ def addmeasure(request):
         if form.is_valid():
             # получаем дату из формы
             measure_date = form.cleaned_data['date']
-            # ?
-            total_by_prod = {}
-            error = ""
-            # отправляем ВЕС в FatSecret
-            try:
-                make_session(request.user)
-                # получаем вес из формы
-                measure_weight = form.cleaned_data['weight']
-                # если вес вообще записан
-                if measure_weight:
-                    # проверка что дата измерения не старше 2 дней назад иначе FS не примет
-                    if (date.today() - measure_date).days <= 2:
-                        # получение даты последнего веса из FS (из профиля неверная)
+            # получаем вес из формы
+            measure_weight = form.cleaned_data['weight']
+
+            # ОТПРАВКА ВЕСА в FatSecret
+            # дата измерения не старше 2 дней назад иначе FS не примет
+            # и нельзя чтобы перезаписывалось на одну и ту же дату
+            if fs_connected and measure_weight:
+                if (date.today() - measure_date).days <= 2:
+                    try:
                         try:
-                            # пробуем получить последнюю запись за текущий месяц
-                            last_weight_date_int = fs.weights_get_month()[-1]['date_int']
-                        except KeyError:
-                            # если записей за текущий месяц нет
-                            # и сегодня 3 число и более
-                            if date.today().day >=3:
-                                # пишем вес
+                            cur_month_weight = fs.weights_get_month()
+                            last_date_weight = cur_month_weight[-1]['date_int']
+                            last_date_weight = date(1970, 1 ,1) + timedelta(days=int(last_date_weight))
+                            if last_date_weight < measure_date:
                                 fs.weight_update(current_weight_kg=float(measure_weight),
                                                  date=datetime.combine(measure_date, time()))
-                            # если сегодня 1 или 2 число
+                        except KeyError:
+                            if date.today().day >=3:
+                                fs.weight_update(current_weight_kg=float(measure_weight),
+                                                 date=datetime.combine(measure_date, time()))
                             else:
-                                # пробуем получить запись о весе из прошлого месяца
                                 try:
-                                    prev_month = datetime.today() - timedelta(weeks=4)
-                                    last_weight_date_int = fs.weights_get_month(date=prev_month)[-1]['date_int']
-                                    # переводим в нормальную дату
-                                    last_weight_date = date(1970, 1 ,1) + timedelta(days=int(last_weight_date_int))
-
-                                    # проверка что дата последнего веса старее даты текущего измерения
-                                    if last_weight_date < measure_date:
-                                        # записываем вес в FS (нельзя чтобы перезаписывалось)
+                                    measure_month_weight = fs.weights_get_month(date=measure_date)
+                                    last_date_weight = measure_month_weight[-1]['date_int']
+                                    last_date_weight = date(1970, 1 ,1) + timedelta(days=int(last_date_weight))
+                                    if last_date_weight < measure_date:
                                         fs.weight_update(current_weight_kg=float(measure_weight),
-                                                        date=datetime.combine(measure_date, time()))
-
-                                # если и за прошлый месяц нет - можно обновлять
+                                                         date=datetime.combine(measure_date, time()))
                                 except KeyError:
                                     fs.weight_update(current_weight_kg=float(measure_weight),
-                                                     date=datetime.combine(measure_date, time()))
-            except FatSecretEntry.DoesNotExist:
-                ...
-            except GeneralError as e:
-                # добавить инфо об ошибке на страницу!
-                print("Произошла ошибка при попытке отправки данных о весе в FatSecret:/n"
-                      + str(type(e)) + str(e))
+                                                 date=datetime.combine(measure_date, time()))
+                    except GeneralError as e:
+                        # добавить инфо об ошибке на страницу!
+                        print("Произошла ошибка при попытке отправки данных о весе в FatSecret:/n"
+                            + str(type(e)) + str(e))
 
             # сохранение формы
             try:
@@ -494,7 +454,7 @@ def addmeasure(request):
         # если форма некорректна - перезагружаем страницу с ошибкой
         else:
             data = {
-                'fatsecret_error': fatsecret_error,
+                'fatsecret_status': fatsecret_status,
                 'week_measureforms': week_measureforms,
                 'error': 'Данные введены некорректно. Попробуйте ввести их еще раз.',
                 'week_calendar': week_calendar,

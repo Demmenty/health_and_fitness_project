@@ -156,3 +156,5 @@ msgstr "Томаты"
 msgid "Russian Vegetable Stew with Chicken"
 msgstr "Овощное рагу с курицей"
 
+msgid "Potato"
+msgstr "Картофель"
