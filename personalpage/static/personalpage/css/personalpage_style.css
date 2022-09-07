@@ -35,10 +35,12 @@ footer {
     color: white !important;
 }
 
-.displayed_element {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
+.addmeasure_form {
+    max-width: 523px;
+}
+
+.anthropometry_form {
+    max-width: 327px;
 }
 
 .hidden_element {
@@ -207,11 +209,11 @@ input[type="radio"]:focus {
     min-width: 1em;
 }
 
-#submit_btn_questionary {
+.btn_rigth {
     float: right;
 }
 
-#back_btn_questionary {
+.backbtn_leftup {
     margin-top: -36px;
 }
 
@@ -230,9 +232,9 @@ input[type="radio"]:focus {
     opacity: 1;
 }
 
-#id_pressure_upper, #id_pressure_lower {
+/* #id_pressure_upper, #id_pressure_lower {
     width: 47.5%;
-}
+} */
 
 #input_period {
     max-width: 70px;
@@ -262,3 +264,4 @@ input[type="radio"]:focus {
 .width_unset {
     width: auto !important;
 }
+
