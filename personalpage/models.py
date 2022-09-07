@@ -80,3 +80,24 @@ class FatSecretEntry(models.Model):
 
     def __str__(self):
         return f"Данные для использования FS клиента {self.user}"
+
+
+class Anthropometry(models.Model):
+    date = models.DateField('Дата', default=date.today)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shoulder = models.DecimalField('Плечо', max_digits=4, decimal_places=1, null=True, blank=True)
+    chest = models.DecimalField('Грудь', max_digits=4, decimal_places=1, null=True, blank=True)
+    waist = models.DecimalField('Талия', max_digits=4, decimal_places=1, null=True, blank=True)
+    belly = models.DecimalField('Живот', max_digits=4, decimal_places=1, null=True, blank=True)
+    buttocks = models.DecimalField('Ягодицы', max_digits=4, decimal_places=1, null=True, blank=True)
+    hip = models.DecimalField('Бедро', max_digits=4, decimal_places=1, null=True, blank=True)
+    shin = models.DecimalField('Голень', max_digits=4, decimal_places=1, null=True, blank=True)
+
+    def __str__(self):
+        return f"Антропометрия клиента {self.user} за {self.date}"
+
+    class Meta:
+        ordering = ['-date']
+        #при запросе должна быть сортировка по убыванию даты
+        get_latest_by = "date"
+        

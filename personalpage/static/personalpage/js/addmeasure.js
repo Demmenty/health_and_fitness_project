@@ -8,7 +8,7 @@ chosenForm = document.getElementById(dateValue);
 // последняя дата сразу выбрана
 chosenDate.className = "selected_date";
 // и последняя форма отображена
-chosenForm.className = "displayed_element";
+chosenForm.classList.remove("hidden_element");
 
 // функция изменения даты и формы на ту, что кликнута
 function ChangeDate(event) {
@@ -23,11 +23,11 @@ function ChangeDate(event) {
     // теперь новый элемент назначается выбранным
     chosenDate = newDate
     // старая форма скрывается
-    chosenForm.className = "hidden_element";
+    chosenForm.classList.add("hidden_element");
     // определение выбранной формы по дате
     newForm = document.getElementById(newdateValue);
     // новая форма отображается
-    newForm.className = "displayed_element";
+    newForm.classList.remove("hidden_element");
     // теперь новая форма назначается выбранной
     chosenForm = newForm;
 }

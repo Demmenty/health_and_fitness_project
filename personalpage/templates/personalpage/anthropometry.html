@@ -1,0 +1,172 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Антропометрия{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Дневник антропометрии</h1><br>
+
+<!-- таблица сделанных измерений -->
+
+{% if not metrics %}
+
+    <p class="text-center">Данные измерений отсутствуют</p><br>
+
+{% else %}
+
+    {% if first_metrics %}
+        <h5>Первое измерение</h5>
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата</th>
+                    <th>Плечо</th>
+                    <th>Грудь</th>
+                    <th>Талия</th>
+                    <th>Живот</th>
+                    <th>Ягодицы</th>
+                    <th>Бедро</th>
+                    <th>Голень</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ first_metrics.date }}</td>
+                    <td>{{ first_metrics.shoulder|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.chest|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.waist|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.belly|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.buttocks|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.hip|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.shin|default_if_none:"-" }}</td>
+                </tr>
+            </tbody>
+        </table><br>
+    {% endif %}
+
+    <h5>Последние измерения</h5>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Плечо</th>
+                <th>Грудь</th>
+                <th>Талия</th>
+                <th>Живот</th>
+                <th>Ягодицы</th>
+                <th>Бедро</th>
+                <th>Голень</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for metrics in prev_metrics %}
+            <tr>
+                <td>{{ metrics.date|default_if_none:"-" }}</td>
+                <td>{{ metrics.shoulder|default_if_none:"-" }}</td>
+                <td>{{ metrics.chest|default_if_none:"-" }}</td>
+                <td>{{ metrics.waist|default_if_none:"-" }}</td>
+                <td>{{ metrics.belly|default_if_none:"-" }}</td>
+                <td>{{ metrics.buttocks|default_if_none:"-" }}</td>
+                <td>{{ metrics.hip|default_if_none:"-" }}</td>
+                <td>{{ metrics.shin|default_if_none:"-" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table><br>
+
+    {% if metrics.count > 3 %}
+        <form method="get">
+            <input type="hidden" name="show_all" value="True">
+            <button type="submit" class="btn btn-info btn_rigth">Все записи</button>
+        </form>
+    {% endif %}
+
+{% endif %}
+
+<button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button><br><br>
+
+<p class="text-danger">{{ error }}</p>
+
+<!-- форма внесения новой записи -->
+<form method="post" action="" class="anthropometry_form hidden_element" id="add_anthropo_form">
+    <h3>Внесение новых данных</h3><br>
+    {% csrf_token %}
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.date.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.date }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.shoulder.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.shoulder }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.chest.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.chest }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.waist.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.waist }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.belly.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.belly }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.buttocks.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.buttocks }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.hip.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.hip }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.shin.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.shin }}</div>
+    </div><br>
+    <button type="submit" class="btn btn-info btn_rigth">Сохранить</button>
+    <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
+</form>
+<br><br>
+
+<!-- Все записи -->
+{% if show_all %}
+    <h5>Все измерения</h5>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Плечо</th>
+                <th>Грудь</th>
+                <th>Талия</th>
+                <th>Живот</th>
+                <th>Ягодицы</th>
+                <th>Бедро</th>
+                <th>Голень</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for metric in metrics %}
+            <tr>
+                <td>{{ metric.date|default_if_none:"-" }}</td>
+                <td>{{ metric.shoulder|default_if_none:"-" }}</td>
+                <td>{{ metric.chest|default_if_none:"-" }}</td>
+                <td>{{ metric.waist|default_if_none:"-" }}</td>
+                <td>{{ metric.belly|default_if_none:"-" }}</td>
+                <td>{{ metric.buttocks|default_if_none:"-" }}</td>
+                <td>{{ metric.hip|default_if_none:"-" }}</td>
+                <td>{{ metric.shin|default_if_none:"-" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table><br>
+{% endif %}
+
+
+<!-- Кнопка возврата -->
+<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
+
+
+<script src="{% static 'personalpage/js/anthropometry.js' %}"></script>
+{% endblock %}

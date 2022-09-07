@@ -139,15 +139,15 @@
 
 <!-- Выбор сводки за другое число -->
 <div class="d-flex flex-row justify-content-between">
-    <form action = "{% url 'foodbydate' %}" method = "get">
+    <form method = "get">
         <input type="hidden" name="date" value="{{ prev_date }}">
         <button type="submit" class="btn btn-outline-primary">предыдущий день</button>
     </form>
-    <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex text-nowrap">
+    <form method = "get" class="d-flex text-nowrap">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate">
         <button type="submit" class="btn btn-info d-inline" name="submit">ОК</button>
     </form>
-    <form action = "{% url 'foodbydate' %}" method = "get">
+    <form method = "get">
         <input type="hidden" name="date" value="{{ next_date }}">
         <button type="submit" class="btn btn-outline-primary">следующий день</button>
     </form>

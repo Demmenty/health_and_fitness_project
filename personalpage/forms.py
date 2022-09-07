@@ -1,5 +1,7 @@
 from msilib.schema import CheckBox
-from .models import Measurement, Questionary
+from tkinter import Widget
+from datetime import date
+from .models import Measurement, Questionary, Anthropometry
 from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
 
 class MeasurementForm(ModelForm):
@@ -57,19 +59,19 @@ class MeasurementForm(ModelForm):
                 'class': 'form-control-plaintext',
                 'readonly': True,
             }),
-            'calories': TextInput(attrs={
+            'calories': NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
             }),
-            'protein': TextInput(attrs={
+            'protein': NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
             }),
-            'fats': TextInput(attrs={
+            'fats': NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
             }),
-            'carbohydrates': TextInput(attrs={
+            'carbohydrates': NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'нет данных',
             }),
@@ -79,45 +81,45 @@ class MeasurementForm(ModelForm):
 class QuestionaryForm(ModelForm):
     class Meta:
         model = Questionary
-        fields = ['fullname',
-                  'birth_date',
-                  'parameter11',
-                  'parameter12',
-                  'parameter13',
-                  'parameter14',
-                  'parameter15',
-                  'parameter16',
-                  'parameter17',
-                  'parameter20',
-                  'parameter31',
-                  'parameter32',
-                  'parameter33',
-                  'parameter34',
-                  'parameter35',
-                  'parameter36',
-                  'norm_pressure',
-                  'parameter42',
-                  'parameter43',
-                  'parameter44',
-                  'parameter45',
-                  'parameter46',
-                  'parameter47',
-                  'parameter48',
-                  'parameter49',
-                  'parameter410',
-                  'parameter411',
-                  'parameter412',
-                  'parameter413',
-                  'parameter414',
-                  'parameter415',
-                  'parameter416',
-                  'parameter416_exp',
-                  'parameter417',
-                  'parameter418',
-                  'parameter419',
-                  'confirm'
-                ]
-
+        fields = [
+            'fullname',
+            'birth_date',
+            'parameter11',
+            'parameter12',
+            'parameter13',
+            'parameter14',
+            'parameter15',
+            'parameter16',
+            'parameter17',
+            'parameter20',
+            'parameter31',
+            'parameter32',
+            'parameter33',
+            'parameter34',
+            'parameter35',
+            'parameter36',
+            'norm_pressure',
+            'parameter42',
+            'parameter43',
+            'parameter44',
+            'parameter45',
+            'parameter46',
+            'parameter47',
+            'parameter48',
+            'parameter49',
+            'parameter410',
+            'parameter411',
+            'parameter412',
+            'parameter413',
+            'parameter414',
+            'parameter415',
+            'parameter416',
+            'parameter416_exp',
+            'parameter417',
+            'parameter418',
+            'parameter419',
+            'confirm'
+            ]
         widgets = {
             'fullname': TextInput(attrs={
                 'class': 'form-control',
@@ -249,5 +251,61 @@ class QuestionaryForm(ModelForm):
             }),
             'confirm': CheckboxInput(attrs={
                 'class': 'form-check-input',
+            }),
+        }
+
+
+class AnthropometryForm(ModelForm):
+    class Meta:
+        model = Anthropometry
+        fields = [
+            'date',
+            'shoulder',
+            'chest',
+            'waist',
+            'belly',
+            'buttocks',
+            'hip',
+            'shin',
+        ]
+        widgets = {
+            'date': DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date',
+            }),
+            'shoulder': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '100',
+            }),
+            'chest': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '200',
+            }),
+            'waist': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '200',
+            }),
+            'belly': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '200',
+            }),
+            'buttocks': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '200',
+            }),
+            'hip': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '100',
+            }),
+            'shin': NumberInput(attrs={
+                'class': 'form-control d-inline',
+                'min': '0',
+                'max': '100',
             }),
         }

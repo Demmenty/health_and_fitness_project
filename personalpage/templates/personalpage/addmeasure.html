@@ -22,29 +22,65 @@
     
     <!-- форма для редактирования записи -->
     {% for measure_form in week_measureforms %}
-    <form class="hidden_element" method="post" id="{{ measure_form.date.value }}">
+    <form method="post" class="hidden_element addmeasure_form" id="{{ measure_form.date.value }}">
         {% csrf_token %}
-        <label>{{ measure_form.date.value|date:"l" }} {{ measure_form.date }}</label><br>
-        <label>Самочувствие{{ measure_form.feel }}</label><br>
-        <label>Масса{{ measure_form.weight }}</label><br>
-        <label>Жирность{{ measure_form.fat }}</label><br>
-        <label>Пульс в покое{{ measure_form.pulse }}</label><br>
-        <label>Давление<br>{{ measure_form.pressure_upper }} / {{ measure_form.pressure_lower }}</label><br>
-        
-        <label>Калории: {{ measure_form.calories }}</label><br>
-        <label>Белки: {{ measure_form.protein }}</label><br>
-        <label>Жиры: {{ measure_form.fats }}</label><br>
-        <label>Углеводы: {{ measure_form.carbohydrates }}</label><br>
-        <p class="text-muted">{{ fatsecret_status }}</p><br>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Дата:</label>
+            <div class="col-sm-9">{{ measure_form.date }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Самочувствие:</label>
+            <div class="col-sm-9">{{ measure_form.feel }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Масса:</label>
+            <div class="col-sm-9">{{ measure_form.weight }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Жирность:</label>
+            <div class="col-sm-9">{{ measure_form.fat }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Пульс в покое:</label>
+            <div class="col-sm-9">{{ measure_form.pulse }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Давление:</label>
+            <div class="col-sm-4">{{ measure_form.pressure_upper }}</div>
+            <h3 class="col-sm-1 text-center">/</h3>
+            <div class="col-sm-4">{{ measure_form.pressure_lower }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Калории:</label>
+            <div class="col-sm-9">{{ measure_form.calories }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Белки:</label>
+            <div class="col-sm-9">{{ measure_form.protein }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Жиры:</label>
+            <div class="col-sm-9">{{ measure_form.fats }}</div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Углеводы:</label>
+            <div class="col-sm-9">{{ measure_form.carbohydrates }}</div>
+        </div>
+        <div class="form-group row">
+            <p class="col-sm-3"></p>
+            <p class="col-sm-9 text-muted">{{ fatsecret_status }}</p>
+        </div>
+       
 
-        <label>Жалкие оправдания{{ measure_form.comment }}</label><br>
+        <label>Жалкие оправдания:</label>
+        {{ measure_form.comment }}<br>
         
-        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <button class="btn btn-primary btn_rigth" type="submit">Сохранить</button>
     </form>
     {% endfor %}
 <br>
 
-<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
+<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary backbtn_leftup">Вернуться</button></a>
     
     <p>* для корректной работы статистик необходимо вносить данные хотя бы раз в неделю</p>
     <p>* данные кбжу можно вносить и редактировать, но они все равно обновятся на данные из FatSecret, если удастся</p>

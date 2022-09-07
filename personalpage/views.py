@@ -1,7 +1,7 @@
 from calendar import month
 from django.shortcuts import render, redirect
-from .models import Measurement, Questionary, FatSecretEntry
-from .forms import MeasurementForm, QuestionaryForm
+from .models import Anthropometry, Measurement, Questionary, FatSecretEntry
+from .forms import AnthropometryForm, MeasurementForm, QuestionaryForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
@@ -118,7 +118,7 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
-# данные fatsecret
+# данные fatsecret - засунуть в бд
 consumer_key = '96509fd6591d4fb384386e1b75516777'
 consumer_secret = 'cb1398ad47344691b092cabce5647116'
 fs = Fatsecret(consumer_key, consumer_secret)
@@ -476,6 +476,25 @@ def addmeasure(request):
 #     pickle.dump(food_cache, f)
 
 
+def fatsecretauth(request):
+    """Подключение к FatSecret"""
+
+    if request.GET.get('oauth_verifier', None):
+        # получаем данные от response FatSecret
+        verifier_pin = request.GET.get('oauth_verifier')
+        # аутентифицирование сеанса и получение токена доступа
+        session_token = fs.authenticate(verifier_pin)
+        # записываем данные для сессии в базу
+        FatSecretEntry.objects.create(user=request.user, oauth_token=session_token[0], oauth_token_secret=session_token[1])
+        return redirect('mealjournal')
+
+    else:
+        # получаем адрес подключения и направляем по нему
+        auth_url = fs.get_authorize_url(callback_url="http://127.0.0.1:8000/personalpage/fatsecretauth/")
+        # получаем oauth_token и oauth_verifier
+        return redirect(auth_url)
+
+
 def mealjournal(request):
     """Страница контроля питания и кбжу
     Тут отображается таблица за сегодняшний день
@@ -707,7 +726,6 @@ def mealjournal(request):
         return redirect('mealjournal')
 
 
-
 def foodbydate(request):
     """Получение данных за опр.день из FatSecret
     С ТОПом по количеству и калориям
@@ -935,7 +953,6 @@ def foodbydate(request):
         'food_entry': food_entry,
     }
     return render(request, 'personalpage/foodbydate.html', data)
-
 
 
 def foodbymonth(request):
@@ -1206,23 +1223,83 @@ def foodbymonth(request):
     return render(request, 'personalpage/foodbymonth.html', data)
 
 
+def anthropometry(request):
+    """Страница внесения антропометрических измерений"""
+
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
 
 
-
-def fatsecretauth(request):
-    """Подключение к FatSecret"""
-
-    if request.GET.get('oauth_verifier', None):
-        # получаем данные от response FatSecret
-        verifier_pin = request.GET.get('oauth_verifier')
-        # аутентифицирование сеанса и получение токена доступа
-        session_token = fs.authenticate(verifier_pin)
-        # записываем данные для сессии в базу
-        FatSecretEntry.objects.create(user=request.user, oauth_token=session_token[0], oauth_token_secret=session_token[1])
-        return redirect('mealjournal')
-
+    # таблица сделанных измерений
+    metrics = Anthropometry.objects.filter(user=request.user)
+    if metrics.exists():
+        if len(metrics) == 1:
+            first_metrics = ''
+            prev_metrics = [metrics[0]]
+        elif len(metrics) == 2:
+            first_metrics = metrics.earliest()
+            prev_metrics = [metrics.latest()]
+        else:
+            first_metrics = metrics.earliest()
+            prev_metrics = reversed(metrics[0:2])
     else:
-        # получаем адрес подключения и направляем по нему
-        auth_url = fs.get_authorize_url(callback_url="http://127.0.0.1:8000/personalpage/fatsecretauth/")
-        # получаем oauth_token и oauth_verifier
-        return redirect(auth_url)
+        first_metrics = ''
+        prev_metrics = ''
+        
+
+    # показ всех записей
+    if request.GET.get('show_all'):
+        show_all = True
+    else:
+        show_all = False
+
+
+    # форма внесения новой записи
+    metrics_form = AnthropometryForm()
+
+
+    error = ""
+
+    # сохранение полученной формы
+    if request.method == 'POST':
+        # получаем форму из запроса
+        form = AnthropometryForm(request.POST)
+
+        # проверяем на корректность
+        if form.is_valid():
+            # получаем дату из формы
+            form_date = form.cleaned_data['date']
+            if form_date <= date.today():
+                try:
+                    # если за это число есть - переписываем
+                    exist_metrics = Anthropometry.objects.get(date=form_date,
+                                                                user=request.user)
+                    form = AnthropometryForm(request.POST, instance=exist_metrics)
+                    form.save()
+                except Anthropometry.DoesNotExist:
+                    # сохраняем новую запись
+                    form = form.save(commit=False)
+                    form.user = request.user
+                    form.save()
+                return redirect('anthropometry')
+        # если форма некорректна - перезагружаем страницу с ошибкой
+        error = 'Введены некорректные данные'
+        data = {
+            'first_metrics': first_metrics,
+            'prev_metrics': prev_metrics,
+            'metrics_form': metrics_form,
+            'metrics': metrics,
+            'error': error,
+        }
+        return render(request, 'personalpage/anthropometry.html', data)
+
+    data = {
+        'first_metrics': first_metrics,
+        'prev_metrics': prev_metrics,
+        'metrics_form': metrics_form,
+        'metrics': metrics,
+        'show_all': show_all,
+        'error': error,
+    }
+    return render(request, 'personalpage/anthropometry.html', data)
