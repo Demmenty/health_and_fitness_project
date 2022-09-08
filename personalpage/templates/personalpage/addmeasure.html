@@ -68,7 +68,11 @@
         </div><br>
         <div class="form-group row">
             <p class="col-sm-3"></p>
-            <p class="col-sm-9 text-muted">{{ fatsecret_status }}</p>
+            {% if fatsecret_status == 'FatSecret подключен' %}
+            <p class="col-sm-9 text-success">{{ fatsecret_status }}</p>
+            {% else %}
+            <p class="col-sm-9 text-danger">{{ fatsecret_status }}</p>
+            {% endif %}
         </div>
        
 

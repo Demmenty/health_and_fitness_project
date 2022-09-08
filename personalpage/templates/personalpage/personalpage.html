@@ -49,8 +49,9 @@
 <br>
 
 
+
 <!-- измерения за неделю-->
-<table class="week_table table table-bordered table-hover caption-top align-middle text-center">
+<table class="week_table table table-bordered caption-top align-middle text-center">
     <caption><h3>Данные измерений за неделю</h3></caption>
     <thead class="table-light">
         <tr>
@@ -68,8 +69,8 @@
             <th>Белки</th>
             <th>Жиры</th>
             <th>Углеводы</th>
+            <td class="borderless">&nbsp</td>
         </tr>
-        <p>test</p>
     </thead>
     <tbody>
         {% for day in week|dictsort:"date" %}
@@ -87,6 +88,7 @@
             <td>{{ day.protein|default_if_none:"" }}</td>
             <td>{{ day.fats|default_if_none:"" }}</td>
             <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+            <td class="borderless"><img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="comment_pic" id="" title="показать комментарий"></td>
         </tr>
         {% endfor %}
         <tr class="table-light">
@@ -102,6 +104,7 @@
             <th>{{ avg_week.avg_protein|default:"" }}</th>
             <th>{{ avg_week.avg_fats|default:"" }}</th>
             <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
+            <td class="borderless">&nbsp</td>
         </tr>
     </tbody>
 </table>
