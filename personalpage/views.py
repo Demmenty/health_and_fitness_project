@@ -172,9 +172,14 @@ def personalpage(request):
         today_measure = ''
 
     # список данных измерений за неделю
-    week = reversed(Measurement.objects.filter(user=request.user)[:7])
+    week = Measurement.objects.filter(user=request.user)[:7]
     # средние значения измерений за неделю 
     avg_week = make_avg_for_period(request.user, period=7)
+    # измерялось ли давление (отображать или нет)
+    show_pressure = False
+    if any(day.pressure_upper for day in week):
+        show_pressure = True
+    
 
     # статистика за выбранный период
     if request.GET.get('selectperiod'):
@@ -194,6 +199,7 @@ def personalpage(request):
     data = {
         'today_measure': today_measure,
         'week': week,
+        'show_pressure': show_pressure,
         'selected_period': selected_period,
         'period': period,
         'avg_week': avg_week,

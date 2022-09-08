@@ -14,11 +14,10 @@ function showForm() {
 function hideForm() {
     anthropoForm.classList.add("hidden_element");
 }
-
 btnAnthropoAdd.addEventListener('click', showForm, false);
 btnAnthropoHide.addEventListener('click', hideForm, false);
 
-// 
+// показ и скрытие всех записей по кнопке
 allAnthropoTable = document.getElementById("all_anthropo_table");
 btnHideAll = document.getElementById("btn_hide_all");
 
@@ -37,7 +36,6 @@ function hideORshowAll() {
         btnHideAll.textContent = 'Скрыть все записи';
     }
 }
-
 if (btnHideAll != null) {
     console.log('кнопка активна!');
     btnHideAll.addEventListener('click', hideORshowAll, false);

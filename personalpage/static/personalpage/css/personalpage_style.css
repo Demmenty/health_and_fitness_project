@@ -254,6 +254,10 @@ caption {
     color: black;
 }
 
+table {
+    cursor: default;
+}
+
 .period_select {
     display: flex;
     max-width: 380px;
