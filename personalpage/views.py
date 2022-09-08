@@ -1246,18 +1246,13 @@ def anthropometry(request):
     else:
         first_metrics = ''
         prev_metrics = ''
-        
+
 
     # показ всех записей
-    if request.GET.get('show_all'):
-        show_all = True
-    else:
-        show_all = False
-
-
+    show_all = request.GET.get('show_all')
+    
     # форма внесения новой записи
     metrics_form = AnthropometryForm()
-
 
     error = ""
 
@@ -1290,6 +1285,7 @@ def anthropometry(request):
             'prev_metrics': prev_metrics,
             'metrics_form': metrics_form,
             'metrics': metrics,
+            'show_all': show_all,
             'error': error,
         }
         return render(request, 'personalpage/anthropometry.html', data)

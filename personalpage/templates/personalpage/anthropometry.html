@@ -17,8 +17,8 @@
 {% else %}
 
     {% if first_metrics %}
-        <h5>Первое измерение</h5>
-        <table class="table table-bordered text-center">
+        <table class="table table-bordered caption-top text-center">
+            <caption><h5>Первое измерение</h5></caption>
             <thead class="table-light">
                 <tr>
                     <th>Дата</th>
@@ -46,8 +46,9 @@
         </table><br>
     {% endif %}
 
-    <h5>Последние измерения</h5>
-    <table class="table table-bordered text-center">
+    
+    <table class="table table-bordered caption-top text-center">
+        <caption><h5>Последние измерения</h5></caption>
         <thead class="table-light">
             <tr>
                 <th>Дата</th>
@@ -76,22 +77,27 @@
         </tbody>
     </table><br>
 
+    <!-- Кнопка показа всех записей -->
     {% if metrics.count > 3 %}
-        <form method="get">
-            <input type="hidden" name="show_all" value="True">
-            <button type="submit" class="btn btn-info btn_rigth">Все записи</button>
-        </form>
+        {% if show_all == 'True' %}
+            <button type="button" class="btn btn-info btn_rigth" id="btn_hide_all">Скрыть все записи</button>
+        {% else %}
+            <form method="get">
+                <input type="hidden" name="show_all" value="True">
+                <button type="submit" class="btn btn-info btn_rigth" id="btn_show_all">Все записи</button>
+            </form>
+        {% endif %}
     {% endif %}
 
 {% endif %}
 
-<button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button><br><br>
+<button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button>
 
-<p class="text-danger">{{ error }}</p>
+<p class="text-danger text-center">{{ error }}</p><br>
 
 <!-- форма внесения новой записи -->
 <form method="post" action="" class="anthropometry_form hidden_element" id="add_anthropo_form">
-    <h3>Внесение новых данных</h3><br>
+    <h3 class="text-center">Внесение новых данных</h3><br>
     {% csrf_token %}
     <div class="form-group row">
         <label class="col-sm-3 col-form-label">{{ metrics_form.date.label }}</label>
@@ -131,36 +137,36 @@
 <br><br>
 
 <!-- Все записи -->
-{% if show_all %}
-    <h5>Все измерения</h5>
-    <table class="table table-bordered text-center">
-        <thead class="table-light">
-            <tr>
-                <th>Дата</th>
-                <th>Плечо</th>
-                <th>Грудь</th>
-                <th>Талия</th>
-                <th>Живот</th>
-                <th>Ягодицы</th>
-                <th>Бедро</th>
-                <th>Голень</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for metric in metrics %}
-            <tr>
-                <td>{{ metric.date|default_if_none:"-" }}</td>
-                <td>{{ metric.shoulder|default_if_none:"-" }}</td>
-                <td>{{ metric.chest|default_if_none:"-" }}</td>
-                <td>{{ metric.waist|default_if_none:"-" }}</td>
-                <td>{{ metric.belly|default_if_none:"-" }}</td>
-                <td>{{ metric.buttocks|default_if_none:"-" }}</td>
-                <td>{{ metric.hip|default_if_none:"-" }}</td>
-                <td>{{ metric.shin|default_if_none:"-" }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table><br>
+{% if show_all == 'True' %}
+<table class="table table-bordered table-hover caption-top text-center" id="all_anthropo_table">
+    <caption><h5>Все измерения</h5></caption>
+    <thead class="table-light">
+        <tr>
+            <th>Дата</th>
+            <th>Плечо</th>
+            <th>Грудь</th>
+            <th>Талия</th>
+            <th>Живот</th>
+            <th>Ягодицы</th>
+            <th>Бедро</th>
+            <th>Голень</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for metric in metrics|dictsort:"date" %}
+        <tr>
+            <td>{{ metric.date|default_if_none:"-" }}</td>
+            <td>{{ metric.shoulder|default_if_none:"-" }}</td>
+            <td>{{ metric.chest|default_if_none:"-" }}</td>
+            <td>{{ metric.waist|default_if_none:"-" }}</td>
+            <td>{{ metric.belly|default_if_none:"-" }}</td>
+            <td>{{ metric.buttocks|default_if_none:"-" }}</td>
+            <td>{{ metric.hip|default_if_none:"-" }}</td>
+            <td>{{ metric.shin|default_if_none:"-" }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table><br>
 {% endif %}
 
 

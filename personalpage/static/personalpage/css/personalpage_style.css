@@ -16,6 +16,8 @@ footer {
 #week_calendar_table {
     width: 523px;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .select_date {
@@ -37,10 +39,17 @@ footer {
 
 .addmeasure_form {
     max-width: 523px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .anthropometry_form {
-    max-width: 327px;
+    max-width: 385px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .hidden_element {
@@ -241,7 +250,9 @@ input[type="radio"]:focus {
     padding: 6px;
 }
 
-
+caption {
+    color: black;
+}
 
 .period_select {
     display: flex;

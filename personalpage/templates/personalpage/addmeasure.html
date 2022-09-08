@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container">
-    <h1>Внесение данных о физических показателях</h1><br>
+    <h1 class="text-center">Внесение данных о физических показателях</h1><br>
 
     <!-- недельный календарик -->
     <table class="table table-bordered border-primary" id="week_calendar_table">
@@ -27,45 +27,45 @@
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Дата:</label>
             <div class="col-sm-9">{{ measure_form.date }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Самочувствие:</label>
             <div class="col-sm-9">{{ measure_form.feel }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Масса:</label>
             <div class="col-sm-9">{{ measure_form.weight }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Жирность:</label>
             <div class="col-sm-9">{{ measure_form.fat }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Пульс в покое:</label>
             <div class="col-sm-9">{{ measure_form.pulse }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Давление:</label>
             <div class="col-sm-4">{{ measure_form.pressure_upper }}</div>
             <h3 class="col-sm-1 text-center">/</h3>
             <div class="col-sm-4">{{ measure_form.pressure_lower }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Калории:</label>
             <div class="col-sm-9">{{ measure_form.calories }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Белки:</label>
             <div class="col-sm-9">{{ measure_form.protein }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Жиры:</label>
             <div class="col-sm-9">{{ measure_form.fats }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Углеводы:</label>
             <div class="col-sm-9">{{ measure_form.carbohydrates }}</div>
-        </div>
+        </div><br>
         <div class="form-group row">
             <p class="col-sm-3"></p>
             <p class="col-sm-9 text-muted">{{ fatsecret_status }}</p>
@@ -76,11 +76,11 @@
         {{ measure_form.comment }}<br>
         
         <button class="btn btn-primary btn_rigth" type="submit">Сохранить</button>
+        <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
     </form>
     {% endfor %}
 <br>
 
-<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary backbtn_leftup">Вернуться</button></a>
     
     <p>* для корректной работы статистик необходимо вносить данные хотя бы раз в неделю</p>
     <p>* данные кбжу можно вносить и редактировать, но они все равно обновятся на данные из FatSecret, если удастся</p>
