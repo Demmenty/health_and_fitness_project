@@ -268,8 +268,33 @@ table {
     width: auto !important;
 }
 
-.comment_pic {
+.comment_btn {
     cursor: pointer;
+    mix-blend-mode: luminosity;
+}
+
+.container_commentform {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: -408px;
+    backface-visibility: hidden;
+    background-color: aliceblue;
+    max-width: 352px;
+    float: right;
+    margin-right: 5.2%;
+    margin-left: 5.2%;
+}
+
+.sm_square_btn {
+    height: 22px;
+    width: 22px;
+    line-height: 5px;
+    padding: 2px;
+}
+
+.commentbtn_container {
+    margin-top: 5px;
 }
 
 .borderless{

@@ -82,13 +82,18 @@
             <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
             <td>{{ day.pulse|default_if_none:"" }}</td>
             {% if show_pressure %}
-                <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}{{ day.pressure_upper }}/{{ day.pressure_lower }}{% else %}{% endif %}</td>
+                <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                        {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                    {% endif %}</td>
             {% endif%}
             <td>{{ day.calories|default_if_none:"" }}</td>
             <td>{{ day.protein|default_if_none:"" }}</td>
             <td>{{ day.fats|default_if_none:"" }}</td>
             <td>{{ day.carbohydrates|default_if_none:"" }}</td>
-            <td class="borderless"><img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="comment_pic" id="" title="показать комментарий"></td>
+            <td class="borderless">
+                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
+                class="comment_btn" value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+            </td>
         </tr>
         {% endfor %}
         <tr class="table-light">
@@ -111,6 +116,22 @@
 <p>* среднее КБЖУ считается без учета сегодняшнего дня</p><br>
 
 
+<!-- всплывающие по кнопке комменты -->
+{% for comment in week_comments_forms %}
+<div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+    <form method="post" class="d-flex flex-column">
+        {% csrf_token %}
+        {{ comment.comment }}{{ comment.date }}
+        <div class="d-flex justify-content-between align-items-center commentbtn_container">
+            <button class="btn btn-outline-primary sm_square_btn" type="button" id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}" onclick="closeComment(event)">&#10006</button>
+            <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
+        </div>
+    </form>
+</div>
+{% endfor %}
+
+
+<br><br>
 <!-- Статистика за произвольную дату -->
 {% if selected_period %}
 <table class="table table-bordered table-hover caption-top align-middle text-center">

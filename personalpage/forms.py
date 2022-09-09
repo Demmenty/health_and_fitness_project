@@ -78,6 +78,24 @@ class MeasurementForm(ModelForm):
         }
 
 
+class MeasurementCommentForm(ModelForm):
+    class Meta:
+        model = Measurement
+        fields = ['comment',
+                  'date',
+                  ]
+        widgets = {
+            'date': DateInput(attrs={
+            'class': 'form-control-plaintext',
+            'type': 'hidden',
+            'readonly': True,
+            }),
+            'comment': Textarea(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
 class QuestionaryForm(ModelForm):
     class Meta:
         model = Questionary

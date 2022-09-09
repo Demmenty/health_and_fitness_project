@@ -1,7 +1,7 @@
 from calendar import month
 from django.shortcuts import render, redirect
 from .models import Anthropometry, Measurement, Questionary, FatSecretEntry
-from .forms import AnthropometryForm, MeasurementForm, QuestionaryForm
+from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
@@ -181,6 +181,12 @@ def personalpage(request):
     if any(day.pressure_upper for day in week):
         show_pressure = True
 
+    # список комментов за неделю
+    week_comments_forms = []
+    for day in reversed(week):
+        comment_form = MeasurementCommentForm(instance=day)
+        week_comments_forms.append(comment_form)
+
 
     # статистика за выбранный период
     if request.GET.get('selectperiod'):
@@ -200,10 +206,27 @@ def personalpage(request):
         avg_period = ""
         period = ""
 
+    # редактирование комментария
+    if request.method == 'POST':
+        # получаем форму из запроса
+        form = MeasurementCommentForm(request.POST)
+        # проверяем на корректность
+        if form.is_valid():
+            # получаем дату из формы
+            comment_date = form.cleaned_data['date']
+            # получаем запись из БД с этим числом
+            measure = Measurement.objects.get(date=comment_date, user=request.user) 
+            # перезаписываем
+            form = MeasurementCommentForm(request.POST, instance=measure)
+            form.save()
+            return redirect('personalpage')
+            
+
     data = {
         'today_measure': today_measure,
         'week': week,
         'show_pressure': show_pressure,
+        'week_comments_forms': week_comments_forms,
         'selected_period': selected_period,
         'show_pressure_period': show_pressure_period,
         'period': period,
