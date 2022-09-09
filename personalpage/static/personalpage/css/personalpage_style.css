@@ -273,17 +273,22 @@ table {
     mix-blend-mode: luminosity;
 }
 
+#id_comment:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
 .container_commentform {
     border: 1px solid black;
     border-radius: 10px;
     padding: 5px;
-    margin-top: -408px;
     backface-visibility: hidden;
     background-color: aliceblue;
     max-width: 352px;
-    float: right;
-    margin-right: 5.2%;
-    margin-left: 5.2%;
+    position: absolute;
+    z-index: 10;
+    top: 82%;
+    left: 1084px;
 }
 
 .sm_square_btn {
@@ -296,6 +301,12 @@ table {
 .commentbtn_container {
     margin-top: 5px;
 }
+
+.comment_header {
+    width: 280px;
+    cursor: move;
+}
+
 
 .borderless{
     border: 1px solid white !important;

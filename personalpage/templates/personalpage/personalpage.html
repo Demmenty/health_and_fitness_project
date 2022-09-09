@@ -124,12 +124,14 @@
         {{ comment.comment }}{{ comment.date }}
         <div class="d-flex justify-content-between align-items-center commentbtn_container">
             <button class="btn btn-outline-primary sm_square_btn" type="button" id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}" onclick="closeComment(event)">&#10006</button>
+            <div id="comment{{ forloop.counter }}header" class="comment_header">&nbsp</div>
             <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
         </div>
     </form>
 </div>
 {% endfor %}
 
+  
 
 <br><br>
 <!-- Статистика за произвольную дату -->
