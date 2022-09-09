@@ -68,9 +68,6 @@ footer {
 }
 
 
-.error_message {
-    color: crimson;
-}
 
 .tablerow_name {
     text-align: left;
@@ -278,4 +275,14 @@ table {
 .borderless{
     border: 1px solid white !important;
     background-color: white !important;
+}
+
+.addmeasure_borderform {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    padding: 22px;
+}
+
+.container_addmeasure {
+    max-width: min-content;
 }

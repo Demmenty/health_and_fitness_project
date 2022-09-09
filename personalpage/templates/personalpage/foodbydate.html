@@ -49,12 +49,22 @@
             <th class="text-center">{{ day_total.carbohydrate }}</th>
         </tr>
     </tbody>
-</table>
-<br><br>
+</table><br>
+    
+<!-- Кнопки след и пред день -->
+<div class="d-flex flex-row justify-content-between">
+    <form method = "get">
+        <input type="hidden" name="date" value="{{ prev_date }}">
+        <button type="submit" class="btn btn-outline-primary">предыдущий день</button>
+    </form>
+    <form method = "get">
+        <input type="hidden" name="date" value="{{ next_date }}">
+        <button type="submit" class="btn btn-outline-primary">следующий день</button>
+    </form>
+</div><br>
 
 <!-- топчики -- добавить margin -->
 <h3 class="text-center">Топ по количеству</h3><br>
-
 <ol>
 <table class="table">
     <thead class="table-light">
@@ -80,7 +90,6 @@
 <br>
 
 <h3 class="text-center">Топ по калориям</h3><br>
-
 <ol>
 <table class="table">
     <thead class="table-light">
@@ -124,7 +133,6 @@
     </p><br>
     {% endfor %}
     <!-- добавить кнопку сохранить но не считать -->
-
     <button type="submit" class="btn btn-info">Сохранить и пересчитать</button>
 </form>
 <br>
@@ -136,23 +144,12 @@
 {% endif %}
 <br>
 
-
 <!-- Выбор сводки за другое число -->
-<div class="d-flex flex-row justify-content-between">
-    <form method = "get">
-        <input type="hidden" name="date" value="{{ prev_date }}">
-        <button type="submit" class="btn btn-outline-primary">предыдущий день</button>
-    </form>
-    <form method = "get" class="d-flex text-nowrap">
-        <input type="date" class="form-control text-center" name="date" id="input_briefdate">
-        <button type="submit" class="btn btn-info d-inline" name="submit">ОК</button>
-    </form>
-    <form method = "get">
-        <input type="hidden" name="date" value="{{ next_date }}">
-        <button type="submit" class="btn btn-outline-primary">следующий день</button>
-    </form>
-</div>
-<br><br>
+<form method = "get" class="d-flex align-items-baseline text-nowrap btn_rigth">
+    <h5>Выбор даты:&nbsp&nbsp&nbsp</h5>
+    <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+    <button type="submit" class="btn btn-info d-inline" name="submit">ОК</button>
+</form>
 
 <!-- Кнопка возврата -->
 <a href="{% url 'mealjournal' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>

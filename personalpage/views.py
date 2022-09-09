@@ -177,9 +177,10 @@ def personalpage(request):
     avg_week = make_avg_for_period(request.user, period=7)
     # измерялось ли давление (отображать или нет)
     show_pressure = False
+    show_pressure_period = False
     if any(day.pressure_upper for day in week):
         show_pressure = True
-    
+
 
     # статистика за выбранный период
     if request.GET.get('selectperiod'):
@@ -187,7 +188,10 @@ def personalpage(request):
         # средние значения измерений за произвольный период
         avg_period = make_avg_for_period(request.user, period=selected_period)
         # список измерений за этот период
-        period = reversed(Measurement.objects.filter(user=request.user)[:selected_period])
+        period = Measurement.objects.filter(user=request.user)[:selected_period]
+        # измерялось ли давление (отображать или нет)
+        if any(day.pressure_upper for day in period):
+            show_pressure_period = True
         # красивый формат
         selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
     
@@ -201,6 +205,7 @@ def personalpage(request):
         'week': week,
         'show_pressure': show_pressure,
         'selected_period': selected_period,
+        'show_pressure_period': show_pressure_period,
         'period': period,
         'avg_week': avg_week,
         'avg_period': avg_period,
@@ -435,7 +440,7 @@ def addmeasure(request):
                                                  date=datetime.combine(measure_date, time()))
                     except GeneralError as e:
                         # добавить инфо об ошибке на страницу!
-                        print("Произошла ошибка при попытке отправки данных о весе в FatSecret:/n"
+                        print("Произошла ошибка при попытке отправки данных о весе в FatSecret:"
                             + str(type(e)) + str(e))
 
             # сохранение формы
@@ -462,7 +467,7 @@ def addmeasure(request):
             data = {
                 'fatsecret_status': fatsecret_status,
                 'week_measureforms': week_measureforms,
-                'error': 'Данные введены некорректно. Попробуйте ввести их еще раз.',
+                'error': 'Данные введены некорректно. Попробуйте еще раз.',
                 'week_calendar': week_calendar,
                 }
             return render(request, 'personalpage/addmeasure.html', data)
@@ -687,7 +692,7 @@ def mealjournal(request):
             food_entries_month = ""
 
         # для поля выбора
-        previous_day = str(date.today() - timedelta(days=1))
+        today_day = str(date.today())
         previous_month = str(date.today() + relativedelta(months=-1))[0:7]
 
         data = {
@@ -697,7 +702,7 @@ def mealjournal(request):
             'food_entry': food_entry,
             'day_total': day_total,
             'count_meal_in_category': count_meal_in_category,
-            'previous_day': previous_day,
+            'today_day': today_day,
             'previous_month': previous_month,
             'user_not_connected': False,
         }

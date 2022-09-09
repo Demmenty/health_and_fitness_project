@@ -96,7 +96,7 @@
 <!-- Выбор сводки за другое число -->
 <h5>Нужна сводка за другое число?</h5>
 <form action = "{% url 'foodbydate' %}" method = "get">
-    <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ previous_day }}">
+    <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
     <button type="submit" class="btn btn-info" name="submit">Получить</button>
 </form>
 <br><br>
