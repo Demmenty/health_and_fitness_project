@@ -3,27 +3,34 @@ commentForm = document.getElementById("comment1");
 
 // показать\скрыть коммент соответствующей даты
 function changeComment(event) {
-    // открытая форма скрывается
-    commentForm.classList.add("hidden_element");
-    // соответствующая ей кнопка сереет
-    commentNum = commentForm.getAttribute('id')[7];
-    commentBtn = document.getElementById("comment_btn" + commentNum);
-    commentBtn.style.mixBlendMode = "luminosity";
+    // если нажата кнопка, у которой уже есть тень
+    if (event.target.classList.contains('comment_btn_pressed')) {
+        // открытая форма скрывается
+        commentForm.classList.add("hidden_element");
+        // убираем её тень
+        event.target.classList.remove('comment_btn_pressed');
+    }
+    else {
+        // открытая форма скрывается
+        commentForm.classList.add("hidden_element");
+        // находим соответствующую её кнопку
+        commentNum = commentForm.getAttribute('id')[7];
+        commentBtn = document.getElementById("comment_btn" + commentNum);
+        // убираем её тень
+        commentBtn.classList.remove('comment_btn_pressed');
 
-    // нажатая кнопка окрашивается
-    event.target.style.mixBlendMode = "unset";
+        // нажатая кнопка получает тень
+        event.target.classList.add('comment_btn_pressed');
 
-    // находим номер нажатой кнопки
-    commentNum = event.target.getAttribute('id')[11];
-
-    // находим форму по номеру
-    commentForm = document.getElementById("comment" + commentNum);
-    // показываем эту форму
-    commentForm.classList.remove("hidden_element");
-
-    dragElement(commentForm);
+        // находим соответствующую нажатой кнопке форму
+        commentNum = event.target.getAttribute('id')[11];
+        commentForm = document.getElementById("comment" + commentNum);
+        // показываем эту форму
+        commentForm.classList.remove("hidden_element");
+        // активируем её перетаскивание
+        dragElement(commentForm);
+    }
 }
-
 commentButtons.forEach ( btn => {
     btn.addEventListener('click', changeComment, false); 
 })
@@ -32,7 +39,6 @@ commentButtons.forEach ( btn => {
 function closeComment(event) {
     // находим номер нажатой кнопки
     commentNum = event.target.getAttribute("id")[17];
-
     // находим соответствующую форму
     commentForm = document.getElementById("comment" + commentNum);
     // и скрываем
@@ -40,19 +46,17 @@ function closeComment(event) {
 
     // находим соответствующую кнопку
     commentBtn = document.getElementById("comment_btn" + commentNum);
-    // и закрашиваем
-    commentBtn.style.mixBlendMode = "luminosity";
+    // и убираем ее тень
+    commentBtn.classList.remove('comment_btn_pressed');
 }
 
-
+// функция перетаскивания
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(elmnt.id + "header")) {
-    console.log("yep")
     // если присутствует, заголовок - это место, откуда вы перемещаете DIV:
     document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
   } else {
-    console.log("no")
     // в противном случае переместите DIV из любого места внутри DIV:
     elmnt.onmousedown = dragMouseDown;
   }

@@ -92,7 +92,8 @@
             <td>{{ day.carbohydrates|default_if_none:"" }}</td>
             <td class="borderless">
                 <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
-                class="comment_btn" value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                {% if day.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
+                value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
             </td>
         </tr>
         {% endfor %}
