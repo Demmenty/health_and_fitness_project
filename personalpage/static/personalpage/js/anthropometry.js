@@ -10,9 +10,11 @@ btnAnthropoHide = document.getElementById("btn_hide_anthropo");
 
 function showForm() {
     anthropoForm.classList.remove("hidden_element");
+    btnAnthropoAdd.innerHTML = "&#9998;";
 }
 function hideForm() {
     anthropoForm.classList.add("hidden_element");
+    btnAnthropoAdd.textContent = "Добавить запись";
 }
 btnAnthropoAdd.addEventListener('click', showForm, false);
 btnAnthropoHide.addEventListener('click', hideForm, false);
