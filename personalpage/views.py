@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from fatsecret import Fatsecret, GeneralError
 import pickle
+from django.http import JsonResponse
 
 
 def make_session(user):
@@ -171,7 +172,7 @@ def personalpage(request):
     else:
         today_measure = ''
 
-    # список данных измерений за неделю
+    # список измерений за неделю
     week = Measurement.objects.filter(user=request.user)[:7]
     # средние значения измерений за неделю 
     avg_week = make_avg_for_period(request.user, period=7)
@@ -181,7 +182,7 @@ def personalpage(request):
     if any(day.pressure_upper for day in week):
         show_pressure = True
 
-    # список комментов за неделю
+    # список форм для комментов за неделю
     week_comments_forms = []
     for day in reversed(week):
         comment_form = MeasurementCommentForm(instance=day)
@@ -206,20 +207,21 @@ def personalpage(request):
         avg_period = ""
         period = ""
 
-    # редактирование комментария
-    if request.method == 'POST':
-        # получаем форму из запроса
-        form = MeasurementCommentForm(request.POST)
-        # проверяем на корректность
-        if form.is_valid():
-            # получаем дату из формы
-            comment_date = form.cleaned_data['date']
-            # получаем запись из БД с этим числом
-            measure = Measurement.objects.get(date=comment_date, user=request.user) 
-            # перезаписываем
-            form = MeasurementCommentForm(request.POST, instance=measure)
-            form.save()
-            return redirect('personalpage')
+    # # редактирование комментария
+    # if request.method == 'POST':
+    #     # получаем форму из запроса
+    #     form = MeasurementCommentForm(request.POST)
+    #     # проверяем на корректность
+    #     if form.is_valid():
+    #         # получаем дату из формы
+    #         comment_date = form.cleaned_data['date']
+    #         # получаем запись из БД с этим числом
+    #         measure = Measurement.objects.get(date=comment_date, user=request.user) 
+    #         # перезаписываем
+    #         form = MeasurementCommentForm(request.POST, instance=measure)
+    #         form.save()
+    #         return redirect('personalpage')
+
             
 
     data = {
@@ -236,6 +238,30 @@ def personalpage(request):
         'error': "",
     }
     return render(request, 'personalpage/personalpage.html', data)
+
+
+# тестовые тесты
+def commentsave(request):
+    """"""
+    # получаем форму из запроса
+    form = MeasurementCommentForm(request.POST)
+    # проверяем на корректность
+    if form.is_valid():
+        # получаем дату из формы
+        comment_date = form.cleaned_data['date']
+        # получаем запись из БД с этим числом
+        measure = Measurement.objects.get(date=comment_date, user=request.user) 
+        # перезаписываем
+        form = MeasurementCommentForm(request.POST, instance=measure)
+        form.save()
+        new_comment = form.cleaned_data['comment']
+        data = {
+            "comment_save": 'комментарий сохранен',
+            'new_comment': new_comment,
+        }
+        return JsonResponse(data, status=200)
+
+
 
 
 def questionary(request):

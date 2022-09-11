@@ -4,6 +4,9 @@ from datetime import date
 from .models import Measurement, Questionary, Anthropometry
 from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
 
+# можно указать fields = '__all__'
+# проверить и исправить
+
 class MeasurementForm(ModelForm):
     class Meta:
         model = Measurement

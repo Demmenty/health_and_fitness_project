@@ -10,4 +10,5 @@ urlpatterns = [
     path('foodbydate/', views.foodbydate, name='foodbydate'),
     path('foodbymonth/', views.foodbymonth, name='foodbymonth'),
     path('anthropometry/', views.anthropometry, name='anthropometry'),
+    path('commentsave/', views.commentsave, name='commentsave'),
 ]
