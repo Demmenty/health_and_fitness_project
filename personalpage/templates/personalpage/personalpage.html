@@ -129,7 +129,7 @@
         {{ comment.comment }}{{ comment.date }}
         <div class="d-flex justify-content-between align-items-center commentbtn_container">
             <button class="btn btn-outline-primary sm_square_btn" type="button" id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}" onclick="closeComment(event)">&#10006</button>
-            <div id="comment{{ forloop.counter }}header" class="comment_header">&nbsp</div>
+            <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
             <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
         </div>
     </form>
@@ -144,13 +144,14 @@
         // отслеживаем событие отправки формы
         $('.commentForm').submit(function () {
             
-            // это старый коммент
-            // console.log($(this).children('textarea').text());
-
-            // находим номер коммента по id формы
-            commentNum = $(this).attr('id')[11];
-            // находим соотв. кнопку
-            commentBtn = document.getElementById("comment_btn" + commentNum);
+            // ID формы
+            formId = $(this).attr('id');
+            // соответствующий коммент
+            comment = $("#" + formId + " > #id_comment")[0];
+            // соответствующая кнопка
+            commentBtn = document.getElementById("comment_btn" + formId[11]);
+            // соответствующее поле для надписи о сохранении
+            commentStatusField = document.getElementById("comment" + formId[11] + "header");
 
             // создаем AJAX-вызов
             $.ajax({
@@ -161,18 +162,31 @@
                 // После успешного завершения запросов запускается одна из колбэк-функций success или error.
                 success: function (response) {
                     if (response.new_comment == '') {
-                        // если новый коммент пуст
-                        // делаем его кнопку серой
-                        commentBtn.classList.add('luminosity');
+                        // если новый коммент пуст - делаем его кнопку серой
+                        commentBtn.classList.add('luminosity'); 
                     }
                     else {
-                        // если новый коммент не пуст
-                        // делаем его кнопку синей
+                        // если новый коммент не пуст - делаем его кнопку синей
                         commentBtn.classList.remove('luminosity');
                     }
+                    // голубая подсветка коммента и статуса
+                    comment.classList.add('comment_saved');
+                    commentStatusField.textContent = 'сохранено';
+                    commentStatusField.classList.add('comment_saved');
+                    setTimeout(() => {
+                        comment.classList.remove('comment_saved');
+                        commentStatusField.classList.remove('comment_saved');
+                    }, 1000);
                     },
                 error: function (response) {
-                    alert("что-то пошло не так");
+                    // красная подсветка коммента и статуса
+                    comment.classList.add('comment_not_saved');
+                    commentStatusField.textContent = 'не сохранено';
+                    commentStatusField.classList.add('comment_not_saved');
+                    setTimeout(() => {
+                        comment.classList.remove('comment_not_saved');
+                        commentStatusField.classList.remove('comment_not_saved');
+                    }, 1000);
                     }
             });
             // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.

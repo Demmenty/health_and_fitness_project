@@ -256,7 +256,6 @@ def commentsave(request):
         form.save()
         new_comment = form.cleaned_data['comment']
         data = {
-            "comment_save": 'комментарий сохранен',
             'new_comment': new_comment,
         }
         return JsonResponse(data, status=200)

@@ -277,6 +277,27 @@ table {
 .noluminosity {
     mix-blend-mode: none;
 }
+
+.comment_saved {
+    color: #00c0f0 !important;
+    transition: all 1s ease !important;
+}
+.comment_not_saved {
+    color: #ff1943 !important;
+    transition: all 1s ease !important;
+}
+
+#id_comment {
+    transition: color 1s ease;
+}
+
+.comment_header {
+    width: 280px;
+    cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+
 .comment_btn_pressed {
     box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%);
     background-color: rgb(13 110 253 / 20%);
@@ -312,10 +333,6 @@ table {
     margin-top: 5px;
 }
 
-.comment_header {
-    width: 280px;
-    cursor: move;
-}
 
 
 .borderless{
