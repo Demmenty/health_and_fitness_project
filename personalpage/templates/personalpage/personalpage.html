@@ -30,7 +30,7 @@
             <tr><th class="tablerow_name">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
             <tr><th class="tablerow_name">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
             <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
-            {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td>{{ today_measure.comment }}</td></tr>{% endif %}
+            {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>{% endif %}
         </table>
         <p class="error_message">{{ error }}</p>
     </div><br>
@@ -146,12 +146,14 @@
             
             // ID формы
             formId = $(this).attr('id');
+            // номер коммента
+            commentNum = formId[11];
             // соответствующий коммент
             comment = $("#" + formId + " > #id_comment")[0];
             // соответствующая кнопка
-            commentBtn = document.getElementById("comment_btn" + formId[11]);
+            commentBtn = document.getElementById("comment_btn" + commentNum);
             // соответствующее поле для надписи о сохранении
-            commentStatusField = document.getElementById("comment" + formId[11] + "header");
+            commentStatusField = document.getElementById("comment" + commentNum + "header");
 
             // создаем AJAX-вызов
             $.ajax({
@@ -177,6 +179,15 @@
                         comment.classList.remove('comment_saved');
                         commentStatusField.classList.remove('comment_saved');
                     }, 1000);
+                    // меняем текст коммента в таблице за сегодня
+                    if (document.getElementById("today_comment") && (commentNum == '7')) {
+                        document.getElementById("today_comment").textContent = response.new_comment;
+                    }
+                    else {
+                        console.log('хуй');
+                    }
+                    
+
                     },
                 error: function (response) {
                     // красная подсветка коммента и статуса
