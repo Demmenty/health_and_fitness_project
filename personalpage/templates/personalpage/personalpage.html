@@ -17,7 +17,7 @@
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
-    <div class="table-responsive today_measure_table">
+    <div class="table-responsive today_measure_table" id="today_measure_table">
         <table class="table table-bordered caption-top table-fixed text-center">
             <caption><h3>Данные измерений за сегодня</h3></caption>
             <tr><th class="tablerow_name">Дата</th><td>{{ today_measure.date }}</td></tr>
@@ -30,7 +30,8 @@
             <tr><th class="tablerow_name">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
             <tr><th class="tablerow_name">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
             <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
-            {% if today_measure.comment %}<tr><th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>{% endif %}
+            {% if today_measure.comment %}<tr id="tr_today_comment">{% else %}<tr id="tr_today_comment" class="hidden_element">{% endif %}
+                <th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>
         </table>
         <p class="error_message">{{ error }}</p>
     </div><br>
@@ -166,10 +167,19 @@
                     if (response.new_comment == '') {
                         // если новый коммент пуст - делаем его кнопку серой
                         commentBtn.classList.add('luminosity'); 
+                        // меняем поле коммента в таблице за сегодня
+                        if (document.getElementById("today_measure_table") && (commentNum == '7')) {
+                            document.getElementById("tr_today_comment").classList.add('hidden_element');
+                        }
                     }
                     else {
                         // если новый коммент не пуст - делаем его кнопку синей
                         commentBtn.classList.remove('luminosity');
+                        // меняем поле коммента в таблице за сегодня
+                        if (document.getElementById("today_measure_table") && (commentNum == '7')) {
+                            document.getElementById("tr_today_comment").classList.remove('hidden_element');
+                            document.getElementById("today_comment").textContent = response.new_comment;
+                        }
                     }
                     // голубая подсветка коммента и статуса
                     comment.classList.add('comment_saved');
@@ -179,14 +189,6 @@
                         comment.classList.remove('comment_saved');
                         commentStatusField.classList.remove('comment_saved');
                     }, 1000);
-                    // меняем текст коммента в таблице за сегодня
-                    if (document.getElementById("today_comment") && (commentNum == '7')) {
-                        document.getElementById("today_comment").textContent = response.new_comment;
-                    }
-                    else {
-                        console.log('хуй');
-                    }
-                    
 
                     },
                 error: function (response) {
