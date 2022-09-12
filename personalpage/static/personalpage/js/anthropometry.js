@@ -24,9 +24,6 @@ allAnthropoTable = document.getElementById("all_anthropo_table");
 btnHideAll = document.getElementById("btn_hide_all");
 
 function hideORshowAll() {
-    console.log('функция сработала по кнопке');
-    console.log('значение кнопки - ' + btnHideAll.textContent);
-
     if (btnHideAll.textContent == 'Скрыть все записи') {
         console.log('кнопка скрытия записей нажата');
         allAnthropoTable.classList.add("hidden_element");
@@ -39,7 +36,20 @@ function hideORshowAll() {
     }
 }
 if (btnHideAll != null) {
-    console.log('кнопка активна!');
     btnHideAll.addEventListener('click', hideORshowAll, false);
 }
 
+// все кнопки открытия фоток
+showPhotoBtns = document.querySelectorAll(".show_photo_btn");
+
+function hideORshowPhoto(event) {
+    event.target.classList.add('shadow');
+    console.log(event.target.id);
+    // находим соотв. фото
+    photo = document.getElementById(event.target.id.slice(4));
+    photo.classList.remove("hidden_element");
+}
+
+showPhotoBtns.forEach ( btn => {
+    btn.addEventListener('click', hideORshowPhoto, false); 
+})

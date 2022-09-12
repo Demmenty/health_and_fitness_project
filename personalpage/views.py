@@ -1,4 +1,4 @@
-from calendar import month
+import pickle
 from django.shortcuts import render, redirect
 from .models import Anthropometry, Measurement, Questionary, FatSecretEntry
 from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm
@@ -6,7 +6,6 @@ from time import sleep
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from fatsecret import Fatsecret, GeneralError
-import pickle
 from django.http import JsonResponse
 
 
@@ -240,9 +239,8 @@ def personalpage(request):
     return render(request, 'personalpage/personalpage.html', data)
 
 
-# тестовые тесты
 def commentsave(request):
-    """"""
+    """Сохранение коммента через ajax"""
     # получаем форму из запроса
     form = MeasurementCommentForm(request.POST)
     # проверяем на корректность
@@ -259,8 +257,6 @@ def commentsave(request):
             'new_comment': new_comment,
         }
         return JsonResponse(data, status=200)
-
-
 
 
 def questionary(request):
@@ -1289,7 +1285,6 @@ def anthropometry(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
-
     # таблица сделанных измерений
     metrics = Anthropometry.objects.filter(user=request.user)
     if metrics.exists():
@@ -1318,18 +1313,21 @@ def anthropometry(request):
     # сохранение полученной формы
     if request.method == 'POST':
         # получаем форму из запроса
-        form = AnthropometryForm(request.POST)
+        form = AnthropometryForm(request.POST, request.FILES)
 
         # проверяем на корректность
         if form.is_valid():
+            print('форма валидна')
+
             # получаем дату из формы
             form_date = form.cleaned_data['date']
+
             if form_date <= date.today():
                 try:
                     # если за это число есть - переписываем
                     exist_metrics = Anthropometry.objects.get(date=form_date,
-                                                                user=request.user)
-                    form = AnthropometryForm(request.POST, instance=exist_metrics)
+                                                                user=request.user)                      
+                    form = AnthropometryForm(request.POST, request.FILES, instance=exist_metrics)
                     form.save()
                 except Anthropometry.DoesNotExist:
                     # сохраняем новую запись

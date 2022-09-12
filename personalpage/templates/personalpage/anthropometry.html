@@ -29,6 +29,7 @@
                     <th>Ягодицы</th>
                     <th>Бедро</th>
                     <th>Голень</th>
+                    <td class="borderless">&nbsp</td>
                 </tr>
             </thead>
             <tbody>
@@ -41,7 +42,19 @@
                     <td>{{ first_metrics.buttocks|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.hip|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.shin|default_if_none:"-" }}</td>
+                    <td class="borderless">
+                        {% if first_metrics.photo %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                        class="show_photo_btn" value="" id="btn_photo_first_metrics">
+                        {% else %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                        class="show_photo_btn luminosity" value="" id="btn_photo_first_metrics">
+                        {% endif %}
+                    </td>
                 </tr>
+                <div class="container_photo hidden_element" id="photo_first_metrics">
+                    <img src="/media/{{ first_metrics.photo }}">
+                </div>
             </tbody>
         </table><br>
     {% endif %}
@@ -59,6 +72,7 @@
                 <th>Ягодицы</th>
                 <th>Бедро</th>
                 <th>Голень</th>
+                <td class="borderless">&nbsp</td>
             </tr>
         </thead>
         <tbody>
@@ -72,10 +86,26 @@
                 <td>{{ metrics.buttocks|default_if_none:"-" }}</td>
                 <td>{{ metrics.hip|default_if_none:"-" }}</td>
                 <td>{{ metrics.shin|default_if_none:"-" }}</td>
+                <td class="borderless">
+                    {% if metrics.photo %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                    class="show_photo_btn" value="" id="btn_photo_metrics{{ forloop.counter }}">
+                    {% else %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                    class="show_photo_btn luminosity" value="" id="btn_photo_metrics{{ forloop.counter }}">
+                    {% endif %}
+                </td>
             </tr>
-        {% endfor %}
+            <!--  -->
+            <div class="container_photo hidden_element" id="photo_metrics{{ forloop.counter }}">
+                <img src="/media/{{ metrics.photo }}">
+            </div>
+            <!--  -->
+            {% endfor %}
         </tbody>
     </table><br>
+
+
 
     <!-- Кнопка показа всех записей -->
     {% if metrics.count > 3 %}
@@ -92,12 +122,13 @@
 {% endif %}
 
 <!-- кнопка добавление записи -->
-<a href="#error_addanthropo"><button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button></a>
+<a href="#status_addanthropo"><button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button></a>
 
-<p class="text-danger text-center" id="error_addanthropo">{{ error }}</p><br>
+<p class="text-danger text-center" id="status_addanthropo">{{ error }}</p><br>
 
 <!-- форма внесения новой записи -->
-<form method="post" action="" class="anthropometry_form hidden_element" id="add_anthropo_form">
+<!-- Включение свойства enctype для формы обеспечивает правильное прикрепление загруженного файла к запросу -->
+<form method="post" action="" class="anthropometry_form hidden_element" id="add_anthropo_form" enctype="multipart/form-data">
     <h3 class="text-center">Внесение новых данных</h3><br>
     {% csrf_token %}
     <div class="form-group row">
@@ -132,6 +163,10 @@
         <label class="col-sm-3 col-form-label">{{ metrics_form.shin.label }}</label>
         <div class="col-sm-9">{{ metrics_form.shin }}</div>
     </div><br>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">{{ metrics_form.photo.label }}</label>
+        <div class="col-sm-9">{{ metrics_form.photo }}</div>
+    </div><br>
     <button type="submit" class="btn btn-info btn_rigth">Сохранить</button>
     <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
 </form>
@@ -151,6 +186,7 @@
             <th>Ягодицы</th>
             <th>Бедро</th>
             <th>Голень</th>
+            <td class="borderless">&nbsp</td>
         </tr>
     </thead>
     <tbody>
@@ -164,6 +200,20 @@
             <td>{{ metric.buttocks|default_if_none:"-" }}</td>
             <td>{{ metric.hip|default_if_none:"-" }}</td>
             <td>{{ metric.shin|default_if_none:"-" }}</td>
+            <td class="borderless">
+                {% if metric.photo %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                class="show_photo_btn" value="" id="btn_photo_metric{{ forloop.counter }}">
+                {% else %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                class="show_photo_btn luminosity" value="" id="btn_photo_metric{{ forloop.counter }}">
+                {% endif %}
+            </td>
+            <!--  -->
+            <div class="container_photo hidden_element" id="photo_metric{{ forloop.counter }}">
+            <img src="/media/{{ metrics.photo }}">
+            </div>
+            <!--  -->
         </tr>
     {% endfor %}
     </tbody>

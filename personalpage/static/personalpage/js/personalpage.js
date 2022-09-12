@@ -4,11 +4,11 @@ commentForm = document.getElementById("comment1");
 // показать\скрыть коммент соответствующей даты
 function changeComment(event) {
     // если нажата кнопка, у которой уже есть тень
-    if (event.target.classList.contains('comment_btn_pressed')) {
+    if (event.target.classList.contains('shadow')) {
         // открытая форма скрывается
         commentForm.classList.add("hidden_element");
         // убираем её тень
-        event.target.classList.remove('comment_btn_pressed');
+        event.target.classList.remove('shadow');
     }
     else {
         // открытая форма скрывается
@@ -17,10 +17,10 @@ function changeComment(event) {
         commentNum = commentForm.getAttribute('id')[7];
         commentBtn = document.getElementById("comment_btn" + commentNum);
         // убираем её тень
-        commentBtn.classList.remove('comment_btn_pressed');
+        commentBtn.classList.remove('shadow');
 
         // нажатая кнопка получает тень
-        event.target.classList.add('comment_btn_pressed');
+        event.target.classList.add('shadow');
 
         // находим соответствующую нажатой кнопке форму
         commentNum = event.target.getAttribute('id')[11];
@@ -47,7 +47,7 @@ function closeComment(event) {
     // находим соответствующую кнопку
     commentBtn = document.getElementById("comment_btn" + commentNum);
     // и убираем ее тень
-    commentBtn.classList.remove('comment_btn_pressed');
+    commentBtn.classList.remove('shadow');
 }
 
 // функция перетаскивания

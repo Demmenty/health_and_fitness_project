@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from tkinter import CASCADE
 from django.db import models
 from datetime import date
@@ -92,6 +93,7 @@ class Anthropometry(models.Model):
     buttocks = models.DecimalField('Ягодицы', max_digits=4, decimal_places=1, null=True, blank=True)
     hip = models.DecimalField('Бедро', max_digits=4, decimal_places=1, null=True, blank=True)
     shin = models.DecimalField('Голень', max_digits=4, decimal_places=1, null=True, blank=True)
+    photo = models.ImageField('Фото', upload_to="personalpage/img/clients/%Y/%d.%m", max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Антропометрия клиента {self.user} за {self.date}"

@@ -5,7 +5,7 @@ from .models import Measurement, Questionary, Anthropometry
 from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
 
 # можно указать fields = '__all__'
-# проверить и исправить
+# исправить ? хотя наглядность лучше..
 
 class MeasurementForm(ModelForm):
     class Meta:
@@ -23,7 +23,6 @@ class MeasurementForm(ModelForm):
                   'fats',
                   'carbohydrates',
                   ]
-
         widgets = {
             'feel': NumberInput(attrs={
                 'class': 'form-control',
@@ -288,6 +287,7 @@ class AnthropometryForm(ModelForm):
             'buttocks',
             'hip',
             'shin',
+            'photo',
         ]
         widgets = {
             'date': DateInput(attrs={
