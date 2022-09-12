@@ -6,17 +6,17 @@
 {% block content %}
 
 <div class="container container_addmeasure">
-    <h1 class="text-center">Внесение данных о физических показателях</h1><br>
+    <h1 class="text-center">Внесение физических показателей</h1><br>
+    
+    <!-- недельный календарик -->
+    <div id="week_calendar">
+        {% for selected_date in week_calendar %}
+        <div class="date_selection" value="{{ selected_date }}">{{ selected_date|date:'D j'|upper }}</div>
+        {% endfor %}
+    </div>
+
     <div class="addmeasure_borderform">
-        <!-- недельный календарик -->
-        <table class="table table-bordered border-primary" id="week_calendar_table">
-            <tr>
-                {% for selected_date in week_calendar %}
-                <td class="select_date" value="{{ selected_date }}">{{ selected_date|date:'D - j' }}</td>
-                {% endfor %}
-            </tr>
-        </table>
-        
+
         {% if error %}<h5 class="text-danger text-center">{{ error }}</h3><br>{% endif %}
         
         <!-- форма для редактирования записи -->
@@ -24,53 +24,52 @@
         <form method="post" class="hidden_element addmeasure_form" id="{{ measure_form.date.value }}">
             {% csrf_token %}
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Дата:</label>
-                <div class="col-sm-9">{{ measure_form.date }}</div>
+                <label class="col-sm-4 col-form-label">Дата:</label>
+                <div class="col-sm-8">{{ measure_form.date }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Самочувствие:</label>
-                <div class="col-sm-9">{{ measure_form.feel }}</div>
+                <label class="col-sm-4 col-form-label">Самочувствие:</label>
+                <div class="col-sm-8">{{ measure_form.feel }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Масса:</label>
-                <div class="col-sm-9">{{ measure_form.weight }}</div>
+                <label class="col-sm-4 col-form-label">Масса:</label>
+                <div class="col-sm-8">{{ measure_form.weight }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Жирность:</label>
-                <div class="col-sm-9">{{ measure_form.fat }}</div>
+                <label class="col-sm-4 col-form-label">Жирность:</label>
+                <div class="col-sm-8">{{ measure_form.fat }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Пульс в покое:</label>
-                <div class="col-sm-9">{{ measure_form.pulse }}</div>
+                <label class="col-sm-4 col-form-label">Пульс в покое:</label>
+                <div class="col-sm-8">{{ measure_form.pulse }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Давление:</label>
-                <div class="col-sm-4">{{ measure_form.pressure_upper }}</div>
-                <h3 class="col-sm-1 text-center">/</h3>
-                <div class="col-sm-4">{{ measure_form.pressure_lower }}</div>
+                <label class="col-sm-4 col-form-label">Давление:</label>
+                <div class="col-sm-4 pressure_upper">{{ measure_form.pressure_upper }}</div>
+                <div class="col-sm-4 pressure_lower">{{ measure_form.pressure_lower }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Калории:</label>
-                <div class="col-sm-9">{{ measure_form.calories }}</div>
+                <label class="col-sm-4 col-form-label">Калории:</label>
+                <div class="col-sm-8">{{ measure_form.calories }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Белки:</label>
-                <div class="col-sm-9">{{ measure_form.protein }}</div>
+                <label class="col-sm-4 col-form-label">Белки:</label>
+                <div class="col-sm-8">{{ measure_form.protein }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Жиры:</label>
-                <div class="col-sm-9">{{ measure_form.fats }}</div>
+                <label class="col-sm-4 col-form-label">Жиры:</label>
+                <div class="col-sm-8">{{ measure_form.fats }}</div>
             </div><br>
             <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Углеводы:</label>
-                <div class="col-sm-9">{{ measure_form.carbohydrates }}</div>
+                <label class="col-sm-4 col-form-label">Углеводы:</label>
+                <div class="col-sm-8">{{ measure_form.carbohydrates }}</div>
             </div><br>
             <div class="form-group row">
-                <p class="col-sm-3"></p>
+                <p class="col-sm-4"></p>
                 {% if fatsecret_status == 'FatSecret подключен' %}
-                <p class="col-sm-9 text-info">{{ fatsecret_status }}</p>
+                <p class="col-sm-8 text-info">{{ fatsecret_status }}</p>
                 {% else %}
-                <p class="col-sm-9 text-danger">{{ fatsecret_status }}</p>
+                <p class="col-sm-8 text-danger">{{ fatsecret_status }}</p>
                 {% endif %}
             </div>
         

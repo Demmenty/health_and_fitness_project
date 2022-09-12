@@ -13,26 +13,38 @@ footer {
     background-color: #bce0ed;
 }
 
-#week_calendar_table {
-    width: 523px;
+
+#week_calendar {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    justify-content: space-around;
+    flex-flow: wrap;
+    max-width: fit-content;
 }
 
-.select_date {
-    cursor: pointer;
+.date_selection {
     background-color: white;
     color: black;
+    cursor: pointer;
+    border: 1px solid dodgerblue;
+    width: 69px;
+    height: 45px;
+    padding: 5px 5px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin: 0 4px 15px 4px;
 }
-
-.select_date:hover {
+.date_selection:hover {
     cursor: pointer;
     background-color: dodgerblue;
     color: white;
 }
 .selected_date {
-    cursor: pointer;
     background-color: dodgerblue !important;
     color: white !important;
 }
@@ -238,9 +250,12 @@ input[type="radio"]:focus {
     opacity: 1;
 }
 
-/* #id_pressure_upper, #id_pressure_lower {
-    width: 47.5%;
-} */
+@media screen and (max-width: 576px) {
+    .pressure_upper, .pressure_lower {
+    width: 50%;
+    }
+}
+
 
 #input_period {
     max-width: 70px;
@@ -345,7 +360,12 @@ table {
     border-radius: 10px;
     padding: 22px;
 }
+@media screen and (min-width: 992px) {
+    .container_addmeasure {
+        max-width: 720px !important;
+    }
+}
 
 .container_addmeasure {
-    max-width: min-content;
+    max-width: fit-content;
 }
