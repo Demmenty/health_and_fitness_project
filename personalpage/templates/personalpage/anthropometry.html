@@ -91,9 +91,10 @@
 
 {% endif %}
 
-<button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button>
+<!-- кнопка добавление записи -->
+<a href="#error_addanthropo"><button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button></a>
 
-<p class="text-danger text-center">{{ error }}</p><br>
+<p class="text-danger text-center" id="error_addanthropo">{{ error }}</p><br>
 
 <!-- форма внесения новой записи -->
 <form method="post" action="" class="anthropometry_form hidden_element" id="add_anthropo_form">
