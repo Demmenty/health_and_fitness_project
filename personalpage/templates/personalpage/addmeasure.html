@@ -24,8 +24,8 @@
         <form method="post" class="hidden_element addmeasure_form" id="{{ measure_form.date.value }}">
             {% csrf_token %}
             <div class="form-group row">
-                <label class="col-sm-4 col-form-label">Дата:</label>
-                <div class="col-sm-8">{{ measure_form.date }}</div>
+                <label class="col-sm-4 col-form-label date_field">Дата:</label>
+                <div class="col-sm-8 date_label">{{ measure_form.date }}</div>
             </div><br>
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Самочувствие:</label>

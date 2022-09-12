@@ -23,6 +23,11 @@ footer {
     flex-flow: wrap;
     max-width: fit-content;
 }
+@media screen and (min-width: 768px) {
+    #week_calendar {
+        margin-bottom: -40px;
+    }
+}
 
 .date_selection {
     background-color: white;
@@ -38,6 +43,7 @@ footer {
     justify-content: center;
     border-radius: 10px;
     margin: 0 4px 15px 4px;
+    box-shadow: 0 0 3px 1px #9fbfc5;
 }
 .date_selection:hover {
     cursor: pointer;
@@ -62,6 +68,7 @@ footer {
     border: 1px solid #dee2e6;
     border-radius: 10px;
     padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
 }
 
 .hidden_element {
@@ -254,6 +261,12 @@ input[type="radio"]:focus {
     .pressure_upper, .pressure_lower {
     width: 50%;
     }
+    .addmeasure_form .date_field {
+        width: 40%;
+    }
+    .addmeasure_form .date_label {
+        width: 60%;
+    }
 }
 
 
@@ -355,14 +368,20 @@ table {
     background-color: white !important;
 }
 
+
+
 .addmeasure_borderform {
     border: 1px solid #ced4da;
     border-radius: 10px;
     padding: 22px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
 }
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 768px) {
     .container_addmeasure {
-        max-width: 720px !important;
+        max-width: 689px !important;
+    }
+    .addmeasure_borderform {
+        padding-top: 43px !important;
     }
 }
 
