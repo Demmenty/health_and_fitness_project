@@ -13,6 +13,12 @@ footer {
     background-color: #bce0ed;
 }
 
+.my-hover:hover {
+    outline-color: #8f8f8f !important;
+    outline-style: auto !important;
+    outline-width: 1px !important;
+}
+
 
 #week_calendar {
     text-align: center;
@@ -62,7 +68,7 @@ footer {
 }
 
 .anthropometry_form {
-    max-width: 385px;
+    max-width: 500px;
     margin-left: auto;
     margin-right: auto;
     border: 1px solid #dee2e6;
@@ -327,9 +333,16 @@ table {
 }
 
 .shadow {
-    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%);
+    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
     background-color: rgb(13 110 253 / 20%);
     border-radius: 3px;
+}
+
+.show_photo_btn {
+    cursor: pointer;
+}
+.show_photo_btn.luminosity {
+    cursor: default;
 }
 
 #id_comment:focus {
@@ -350,11 +363,39 @@ table {
     left: 1084px;
 }
 
+.container_photo {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: aliceblue;
+    min-width: 300px;
+    max-width: 600px;
+    position: absolute;
+    /* настроить индексы в зависимости от даты фото */
+    z-index: 2;
+    top: 40%;
+    left: 42%;
+}
+
+.container_photo img {
+    border-radius: 10px;
+    width: -webkit-fill-available;
+}
+.container_photo p {
+    margin-bottom: 4px;
+    cursor: default;
+}
+
 .sm_square_btn {
     height: 22px;
     width: 22px;
     line-height: 5px;
     padding: 2px;
+}
+
+.close_photo_btn {
+    float: right;
 }
 
 .commentbtn_container {

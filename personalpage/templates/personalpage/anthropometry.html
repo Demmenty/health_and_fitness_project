@@ -29,7 +29,7 @@
                     <th>Ягодицы</th>
                     <th>Бедро</th>
                     <th>Голень</th>
-                    <td class="borderless">&nbsp</td>
+                    <th>Фото</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,19 +42,48 @@
                     <td>{{ first_metrics.buttocks|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.hip|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.shin|default_if_none:"-" }}</td>
-                    <td class="borderless">
-                        {% if first_metrics.photo %}
+                    <td>
+                        {% if first_metrics.photo_1 %}
                         <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
-                        class="show_photo_btn" value="" id="btn_photo_first_metrics">
+                        class="show_photo_btn" id="btn_photo_1_first_metrics{{ forloop.counter }}">
+                        <div class="container_photo hidden_element" id="photo_1_first_metrics{{ forloop.counter }}">
+                            <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                            id="close_photo_1_first_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                            <p class="text-center">{{ first_metrics.date }}</p>
+                            <img src="{{ first_metrics.photo_1.url }}">
+                        </div>
                         {% else %}
                         <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
-                        class="show_photo_btn luminosity" value="" id="btn_photo_first_metrics">
+                        class="show_photo_btn luminosity" id="btn_photo_1_metrics{{ forloop.counter }}">
+                        {% endif %}
+                        {% if first_metrics.photo_2 %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                        class="show_photo_btn" id="btn_photo_2_first_metrics{{ forloop.counter }}">
+                        <div class="container_photo hidden_element" id="photo_2_first_metrics{{ forloop.counter }}">
+                            <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                            id="close_photo_2_first_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                            <p class="text-center">{{ first_metrics.date }}</p>
+                            <img src="{{ first_metrics.photo_2.url }}">
+                        </div>
+                        {% else %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                        class="show_photo_btn luminosity" id="btn_photo_2_metrics{{ forloop.counter }}">
+                        {% endif %}
+                        {% if first_metrics.photo_3 %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                        class="show_photo_btn" id="btn_photo_3_first_metrics{{ forloop.counter }}">
+                        <div class="container_photo hidden_element" id="photo_3_first_metrics{{ forloop.counter }}">
+                            <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                            id="close_photo_3_first_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                            <p class="text-center">{{ first_metrics.date }}</p>
+                            <img src="{{ first_metrics.photo_3.url }}">
+                        </div>
+                        {% else %}
+                        <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                        class="show_photo_btn luminosity" id="btn_photo_3_metrics{{ forloop.counter }}">
                         {% endif %}
                     </td>
                 </tr>
-                <div class="container_photo hidden_element" id="photo_first_metrics">
-                    <img src="/media/{{ first_metrics.photo }}">
-                </div>
             </tbody>
         </table><br>
     {% endif %}
@@ -72,7 +101,7 @@
                 <th>Ягодицы</th>
                 <th>Бедро</th>
                 <th>Голень</th>
-                <td class="borderless">&nbsp</td>
+                <th>Фото</th>
             </tr>
         </thead>
         <tbody>
@@ -86,25 +115,51 @@
                 <td>{{ metrics.buttocks|default_if_none:"-" }}</td>
                 <td>{{ metrics.hip|default_if_none:"-" }}</td>
                 <td>{{ metrics.shin|default_if_none:"-" }}</td>
-                <td class="borderless">
-                    {% if metrics.photo %}
+                <td>
+                    {% if metrics.photo_1 %}
                     <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
-                    class="show_photo_btn" value="" id="btn_photo_metrics{{ forloop.counter }}">
+                    class="show_photo_btn" value="" id="btn_photo_1_metrics{{ forloop.counter }}">
+                    <div class="container_photo hidden_element" id="photo_1_metrics{{ forloop.counter }}">
+                        <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                        id="close_photo_1_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                        <p class="text-center">{{ metrics.date }}</p>
+                        <img src="{{ metrics.photo_1.url }}">
+                    </div>
                     {% else %}
                     <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
-                    class="show_photo_btn luminosity" value="" id="btn_photo_metrics{{ forloop.counter }}">
+                    class="show_photo_btn luminosity" value="" id="btn_photo_1_metrics{{ forloop.counter }}">
+                    {% endif %}
+                    {% if metrics.photo_2 %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                    class="show_photo_btn" value="" id="btn_photo_2_metrics{{ forloop.counter }}">
+                    <div class="container_photo hidden_element" id="photo_2_metrics{{ forloop.counter }}">
+                        <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                        id="close_photo_2_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                        <p class="text-center">{{ metrics.date }}</p>
+                        <img src="{{ metrics.photo_2.url }}">
+                    </div>
+                    {% else %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                    class="show_photo_btn luminosity" value="" id="btn_photo_2_metrics{{ forloop.counter }}">
+                    {% endif %}
+                    {% if metrics.photo_3 %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                    class="show_photo_btn" value="" id="btn_photo_3_metrics{{ forloop.counter }}">
+                    <div class="container_photo hidden_element" id="photo_3_metrics{{ forloop.counter }}">
+                        <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                        id="close_photo_3_metrics{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                        <p class="text-center">{{ metrics.date }}</p>
+                        <img src="{{ metrics.photo_3.url }}">
+                    </div>
+                    {% else %}
+                    <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                    class="show_photo_btn luminosity" value="" id="btn_photo_3_metrics{{ forloop.counter }}">
                     {% endif %}
                 </td>
             </tr>
-            <!--  -->
-            <div class="container_photo hidden_element" id="photo_metrics{{ forloop.counter }}">
-                <img src="/media/{{ metrics.photo }}">
-            </div>
-            <!--  -->
             {% endfor %}
         </tbody>
     </table><br>
-
 
 
     <!-- Кнопка показа всех записей -->
@@ -164,8 +219,16 @@
         <div class="col-sm-9">{{ metrics_form.shin }}</div>
     </div><br>
     <div class="form-group row">
-        <label class="col-sm-3 col-form-label">{{ metrics_form.photo.label }}</label>
-        <div class="col-sm-9">{{ metrics_form.photo }}</div>
+        <label class="col-sm-12 form-label">{{ metrics_form.photo_1.label }}</label>
+        <div class="col-sm-12">{{ metrics_form.photo_1 }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-12 form-label">{{ metrics_form.photo_2.label }}</label>
+        <div class="col-sm-12">{{ metrics_form.photo_2 }}</div>
+    </div><br>
+    <div class="form-group row">
+        <label class="col-sm-12 form-label">{{ metrics_form.photo_3.label }}</label>
+        <div class="col-sm-12">{{ metrics_form.photo_3 }}</div>
     </div><br>
     <button type="submit" class="btn btn-info btn_rigth">Сохранить</button>
     <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
@@ -174,7 +237,7 @@
 
 <!-- Все записи -->
 {% if show_all == 'True' %}
-<table class="table table-bordered table-hover caption-top text-center" id="all_anthropo_table">
+<table class="table table-bordered caption-top text-center" id="all_anthropo_table">
     <caption><h5>Все измерения</h5></caption>
     <thead class="table-light">
         <tr>
@@ -186,12 +249,12 @@
             <th>Ягодицы</th>
             <th>Бедро</th>
             <th>Голень</th>
-            <td class="borderless">&nbsp</td>
+            <th>Фото</th>
         </tr>
     </thead>
     <tbody>
     {% for metric in metrics|dictsort:"date" %}
-        <tr>
+        <tr class="my-hover">
             <td>{{ metric.date|default_if_none:"-" }}</td>
             <td>{{ metric.shoulder|default_if_none:"-" }}</td>
             <td>{{ metric.chest|default_if_none:"-" }}</td>
@@ -200,20 +263,47 @@
             <td>{{ metric.buttocks|default_if_none:"-" }}</td>
             <td>{{ metric.hip|default_if_none:"-" }}</td>
             <td>{{ metric.shin|default_if_none:"-" }}</td>
-            <td class="borderless">
-                {% if metric.photo %}
+            <td>
+                {% if metric.photo_1 %}
                 <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
-                class="show_photo_btn" value="" id="btn_photo_metric{{ forloop.counter }}">
+                class="show_photo_btn" value="" id="btn_photo_1_metric{{ forloop.counter }}">
+                <div class="container_photo hidden_element" id="photo_1_metric{{ forloop.counter }}">
+                    <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                    id="close_photo_1_metric{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                    <p class="text-center">{{ metric.date }}</p>
+                    <img src="{{ metric.photo_1.url }}">
+                </div>
                 {% else %}
                 <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
-                class="show_photo_btn luminosity" value="" id="btn_photo_metric{{ forloop.counter }}">
+                class="show_photo_btn luminosity" value="" id="btn_photo_1_metric{{ forloop.counter }}">
+                {% endif %}
+                {% if metric.photo_2 %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                class="show_photo_btn" value="" id="btn_photo_2_metric{{ forloop.counter }}">
+                <div class="container_photo hidden_element" id="photo_2_metric{{ forloop.counter }}">
+                    <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                    id="close_photo_2_metric{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                    <p class="text-center">{{ metric.date }}</p>
+                    <img src="{{ metric.photo_2.url }}">
+                </div>
+                {% else %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                class="show_photo_btn luminosity" value="" id="btn_photo_2_metric{{ forloop.counter }}">
+                {% endif %}
+                {% if metric.photo_3 %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото"
+                class="show_photo_btn" value="" id="btn_photo_3_metric{{ forloop.counter }}">
+                <div class="container_photo hidden_element" id="photo_3_metric{{ forloop.counter }}">
+                    <button class="btn btn-outline-primary sm_square_btn close_photo_btn" type="button" 
+                    id="close_photo_3_metric{{ forloop.counter }}" onclick="closePhoto(event)">&#10006</button>
+                    <p class="text-center">{{ metric.date }}</p>
+                    <img src="{{ metric.photo_3.url }}">
+                </div>
+                {% else %}
+                <img src="{% static 'personalpage/img/photo_pic.png' %}" title="фото отсутствует"
+                class="show_photo_btn luminosity" value="" id="btn_photo_3_metric{{ forloop.counter }}">
                 {% endif %}
             </td>
-            <!--  -->
-            <div class="container_photo hidden_element" id="photo_metric{{ forloop.counter }}">
-            <img src="/media/{{ metrics.photo }}">
-            </div>
-            <!--  -->
         </tr>
     {% endfor %}
     </tbody>

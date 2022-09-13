@@ -2,7 +2,7 @@ from msilib.schema import CheckBox
 from tkinter import Widget
 from datetime import date
 from .models import Measurement, Questionary, Anthropometry
-from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
+from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput, ClearableFileInput
 
 # можно указать fields = '__all__'
 # исправить ? хотя наглядность лучше..
@@ -287,7 +287,9 @@ class AnthropometryForm(ModelForm):
             'buttocks',
             'hip',
             'shin',
-            'photo',
+            'photo_1',
+            'photo_2',
+            'photo_3',
         ]
         widgets = {
             'date': DateInput(attrs={
@@ -328,5 +330,14 @@ class AnthropometryForm(ModelForm):
                 'class': 'form-control d-inline',
                 'min': '0',
                 'max': '100',
+            }),
+            'photo_1': ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
+            'photo_2': ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
+            'photo_3': ClearableFileInput(attrs={
+                'class': 'form-control',
             }),
         }

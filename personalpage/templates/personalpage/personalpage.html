@@ -56,7 +56,6 @@
     <caption><h3>Данные измерений за неделю</h3></caption>
     <thead class="table-light">
         <tr>
-            <!-- сделать всплывающие комменты -->
             <th>Дата</th>
             <th>День</th>
             <th>Самочувствие</th>
@@ -75,7 +74,7 @@
     </thead>
     <tbody>
         {% for day in week|dictsort:"date" %}
-        <tr>
+        <tr class="my-hover">
             <td>{{ day.date|date:"j b" }}</td>
             <td>{{ day.date|date:"D" }}</td>
             <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
@@ -118,8 +117,6 @@
 <p>* среднее КБЖУ считается без учета сегодняшнего дня</p><br>
 
 
-<!-- <textarea name="comment" cols="40" rows="10" class="form-control"
-     id="id_comment">aaafdfdfvvvvоо</textarea> -->
 
 
 <!-- всплывающие по кнопке комменты -->
@@ -129,7 +126,9 @@
         {% csrf_token %}
         {{ comment.comment }}{{ comment.date }}
         <div class="d-flex justify-content-between align-items-center commentbtn_container">
-            <button class="btn btn-outline-primary sm_square_btn" type="button" id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}" onclick="closeComment(event)">&#10006</button>
+            <button class="btn btn-outline-primary sm_square_btn" type="button" 
+            id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
+            onclick="closeComment(event)">&#10006</button>
             <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
             <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
         </div>
@@ -209,12 +208,10 @@
 </script>
 
 
-  
-
 <br><br>
 <!-- Статистика за произвольную дату -->
 {% if selected_period %}
-<table class="table table-bordered table-hover caption-top align-middle text-center">
+<table class="table table-bordered caption-top align-middle text-center">
     <caption><h3>Данные измерений за {{ selected_period }}</h3></caption>
     <tr class="table-light"> 
         <th>Дата</th>
@@ -232,7 +229,7 @@
         <th>Углеводы</th>
     </tr>
     {% for day in period|dictsort:"date" %}
-    <tr>
+    <tr class="my-hover">
         <td>{{ day.date|date:"j b" }}</td>
         <td>{{ day.date|date:"D" }}</td>
         <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>

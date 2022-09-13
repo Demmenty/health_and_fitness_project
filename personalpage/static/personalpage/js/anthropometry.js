@@ -25,12 +25,10 @@ btnHideAll = document.getElementById("btn_hide_all");
 
 function hideORshowAll() {
     if (btnHideAll.textContent == 'Скрыть все записи') {
-        console.log('кнопка скрытия записей нажата');
         allAnthropoTable.classList.add("hidden_element");
         btnHideAll.textContent = 'Показать все записи';
     }
     else {
-        console.log('кнопка показа записей нажата');
         allAnthropoTable.classList.remove("hidden_element");
         btnHideAll.textContent = 'Скрыть все записи';
     }
@@ -39,17 +37,123 @@ if (btnHideAll != null) {
     btnHideAll.addEventListener('click', hideORshowAll, false);
 }
 
-// все кнопки открытия фоток
+
+// показ\скрытие фото по кнопке-иконке
 showPhotoBtns = document.querySelectorAll(".show_photo_btn");
 
 function hideORshowPhoto(event) {
-    event.target.classList.add('shadow');
-    console.log(event.target.id);
-    // находим соотв. фото
-    photo = document.getElementById(event.target.id.slice(4));
-    photo.classList.remove("hidden_element");
+    // проверка, что кнопка синяя, значит фото есть
+    if (!event.target.classList.contains('luminosity')) {
+        // если нажата кнопка, у которой уже есть тень
+        if (event.target.classList.contains('shadow')) {
+            // скрывается соответствующее ей фото
+            photo = document.getElementById(event.target.id.slice(4));
+            photo.classList.add("hidden_element");
+            // убираем её тень
+            event.target.classList.remove('shadow');
+        }
+        // если нажата кнопка, у которой нет тени
+        else {
+            // добавляем кнопке тень
+            event.target.classList.add('shadow');
+            // показываем соотв. фото
+            photo = document.getElementById(event.target.id.slice(4));
+            photo.classList.remove("hidden_element");
+            // добавляем перетаскивание
+            dragElement(photo);
+        }
+    }
 }
-
 showPhotoBtns.forEach ( btn => {
     btn.addEventListener('click', hideORshowPhoto, false); 
 })
+
+
+// добавить изменение z-индекса на > при клике на фото
+photoContainers = document.querySelectorAll(".container_photo");
+var maxZ = 2;
+
+function getUpper(event) {
+    if (event.target.tagName == 'DIV') {
+        photoWindow = event.target;
+    }
+    else {
+        photoWindow = event.target.parentNode;
+    }
+ 
+    console.log("индекс нажатого окна = " + photoWindow.style.zIndex);
+
+    // если у цели <= max
+    if (parseInt(photoWindow.style.zIndex) <= maxZ) {
+        console.log('у цели <= max, но не 2');
+        maxZ = maxZ + 1;
+        photoWindow.style.zIndex = maxZ;
+        console.log('функция прошла, теперь у цели ' + photoWindow.style.zIndex);
+    }
+
+    // если у цели пуст индекс (он = 2) или > max
+    else {
+        console.log('у цели индекс 2 или > max');
+        maxZ = maxZ + 1;
+        photoWindow.style.zIndex = maxZ;
+        console.log('функция прошла, теперь у цели ' + photoWindow.style.zIndex);
+    }
+    
+}
+photoContainers.forEach ( container => {
+    container.addEventListener('click', getUpper, false); 
+})
+
+
+// закрывание окошка фото на крестик
+function closePhoto(event) {
+    // находим соответствующее окошко фото и скрываем
+    photo = document.getElementById(event.target.getAttribute("id").slice(6));
+    photo.classList.add("hidden_element");
+
+    // находим соответствующую кнопку-иконку и убираем ее тень
+    photoBtn = document.getElementById("btn_" + event.target.getAttribute("id").slice(6));
+    photoBtn.classList.remove('shadow');
+}
+
+
+// функция перетаскивания
+function dragElement(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    // перемещение DIV из любого места внутри DIV:
+    elmnt.onmousedown = dragMouseDown;
+    
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // получить положение курсора мыши при запуске:
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      // вызов функции при каждом перемещении курсора:
+      document.onmousemove = elementDrag;
+      // поднимаем наверх
+      getUpper(e);
+    }
+  
+    function elementDrag(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // вычислить новую позицию курсора:
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      // установите новое положение элемента:
+      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+  
+    function closeDragElement() {
+      // остановка перемещения при отпускании кнопки мыши:
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
+  }
+  
