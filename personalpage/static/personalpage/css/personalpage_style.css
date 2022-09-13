@@ -372,10 +372,10 @@ table {
     min-width: 300px;
     max-width: 600px;
     position: absolute;
-    /* настроить индексы в зависимости от даты фото */
     z-index: 2;
     top: 40%;
     left: 42%;
+    box-shadow: 0 0 8px 1px #00000052;
 }
 
 .container_photo img {

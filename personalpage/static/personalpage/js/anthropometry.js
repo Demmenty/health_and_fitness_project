@@ -61,6 +61,8 @@ function hideORshowPhoto(event) {
             photo.classList.remove("hidden_element");
             // добавляем перетаскивание
             dragElement(photo);
+            // достаем его наверх
+            getUpper(photo);
         }
     }
 }
@@ -74,11 +76,16 @@ photoContainers = document.querySelectorAll(".container_photo");
 var maxZ = 2;
 
 function getUpper(event) {
-    if (event.target.tagName == 'DIV') {
-        photoWindow = event.target;
+    if (event.target) {
+        if (event.target.tagName == 'DIV') {
+            photoWindow = event.target;
+        }
+        else {
+            photoWindow = event.target.parentNode;
+        }
     }
     else {
-        photoWindow = event.target.parentNode;
+        photoWindow = event;
     }
  
     console.log("индекс нажатого окна = " + photoWindow.style.zIndex);
