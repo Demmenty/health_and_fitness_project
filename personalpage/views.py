@@ -246,9 +246,8 @@ def commentsave(request):
 def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
 
-    print(request.POST)
-
     status = "инфа сохранена, круто!"
+    saved_food_id = []
 
     with open('personalpage/food_cache.pickle', 'rb') as file:
         food_cache = pickle.load(file)
@@ -256,31 +255,28 @@ def foodmetricsave(request):
     index_number = 0
     while True:
         index_number += 1
-        print('цикл', index_number)
         if request.POST.get("metric_serving_amount_"+str(index_number)) is None :
-            print('цикл окончен')
             break
 
-        elif request.POST.get("metric_serving_amount_"+str(index_number)) == "" :
+        elif (request.POST.get("metric_serving_amount_"+str(index_number)) == "" or 
+              request.POST.get("metric_serving_amount_"+str(index_number)) == "0") :
             status = "поле оставлено пустым, алло!"
         
         else:
             food_id = request.POST["food_id_"+str(index_number)]
+            saved_food_id.append("food_id_"+str(index_number))
             metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
             metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
             serving_id = request.POST["serving_id_"+str(index_number)]
-            print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
 
             if type(food_cache[food_id]['servings']['serving']) is dict:
                 food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
                 food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-                print('инфа записана в food_cache')
             else:
                 for dic in food_cache[food_id]['servings']['serving']:
                     if dic['serving_id'] == serving_id:
                         dic["metric_serving_amount"] = metric_serving_amount
                         dic["metric_serving_unit"] = metric_serving_unit
-                        print('инфа записана в food_cache')
                         break
             
 
@@ -289,6 +285,7 @@ def foodmetricsave(request):
 
     data = {
         'status': status,
+        'saved_food_id': saved_food_id,
     }
     return JsonResponse(data, status=200)
 
@@ -706,7 +703,8 @@ def mealjournal(request):
                     prods_without_info[food['food_id']] = {
                         'food_entry_name': food['food_entry_name'],
                         'serving_description': food['serving'].get('serving_description', 'порция'),
-                        'serving_id': food['serving_id'] }
+                        'serving_id': food['serving_id'],
+                        'calories_per_serving': food['serving'].get('calories', food['calories']) }
                 else:
                     # если в инфе метрика есть - считаем и добавляем к общему подсчету
                     food['norm_amount'] = int(float(food['number_of_units']) *
@@ -836,39 +834,6 @@ def foodbydate(request):
     with open('personalpage/food_cache.pickle', 'rb') as file:
         food_cache = pickle.load(file)
 
-    # POST-запрос
-    if request.method == 'POST':
-        # предусмотреть вариант, когда продуктов несколько!
-        # попавшиеся: id '4652615',  id '20214325'
-        # может отредактировать total_by_prod ? b top_calories
-        # занести данные в кеш
-        # в prod_without_info занести еще инфо о количестве вхождений для расчета
-        print('пост-запрос получен')
-        # prods_without_info = {}
-        index_number = 1
-        while True:
-            print('цикл', index_number)
-            if request.POST.get("metric_serving_amount_"+str(index_number)):
-                food_id = request.POST["food_id_"+str(index_number)]
-                metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
-                metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
-                serving_id = request.POST["serving_id_"+str(index_number)]
-                print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
-
-                if type(food_cache[food_id]['servings']['serving']) is dict:
-                    food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-                    food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-                    print('инфа записана в food_cache')
-                else:
-                    for dic in food_cache[food_id]['servings']['serving']:
-                        if dic['serving_id'] == serving_id:
-                            dic["metric_serving_amount"] = metric_serving_amount
-                            dic["metric_serving_unit"] = metric_serving_unit
-                            print('инфа записана в food_cache')
-                            break
-                index_number += 1
-            else:
-                break
 
     # продукты, для которых нет инфо о граммовке порции
     prods_without_info = {}
@@ -960,7 +925,8 @@ def foodbydate(request):
                 prods_without_info[food['food_id']] = {
                     'food_entry_name': food['food_entry_name'],
                     'serving_description': food['serving'].get('serving_description', 'порция'),
-                    'serving_id': food['serving_id'] }
+                    'serving_id': food['serving_id'],
+                    'calories_per_serving': food['serving'].get('calories', food['calories']) }
             else:
                 # если в инфе метрика есть - считаем и добавляем к общему подсчету
                 food['norm_amount'] = int(float(food['number_of_units']) *
@@ -1091,48 +1057,6 @@ def foodbymonth(request):
     top_amount = ""
     # продукты, для которых нет инфо о граммовке порции
     prods_without_info = {}
-
-    # POST-запрос
-    if request.method == 'POST':
-        # попавшиеся: id '4652615',  id '20214325'
-        # может отредактировать total_by_prod ? b top_calories
-        # занести данные в кеш
-        # в prod_without_info занести еще инфо о количестве вхождений для расчета
-
-        with open('personalpage/food_cache.pickle', 'rb') as file:
-            food_cache = pickle.load(file)
-
-        # prods_without_info = {}
-        index_number = 1
-        while True:
-            print('цикл', index_number)
-            if request.POST.get("metric_serving_amount_"+str(index_number)):
-                food_id = request.POST["food_id_"+str(index_number)]
-                metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
-                metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
-                serving_id = request.POST["serving_id_"+str(index_number)]
-                print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
-
-                if type(food_cache[food_id]['servings']['serving']) is dict:
-                    food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-                    food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-                    print('инфа записана в food_cache')
-                else:
-                    for dic in food_cache[food_id]['servings']['serving']:
-                        if dic['serving_id'] == serving_id:
-                            dic["metric_serving_amount"] = metric_serving_amount
-                            dic["metric_serving_unit"] = metric_serving_unit
-                            print('инфа записана в food_cache')
-                            break
-                index_number += 1
-            else:
-                break
-
-        with open('personalpage/food_cache.pickle', 'wb') as f:
-                pickle.dump(food_cache, f)
-
-        if request.POST.get('justsave'):
-            return redirect('mealjournal')
 
     # создание ТОП-списков! (если нажать на кнопку)
     if request.GET.get('top_create', False):

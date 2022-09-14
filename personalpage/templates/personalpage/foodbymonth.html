@@ -42,11 +42,10 @@
 
 {% if top_calories %}
 
-<!-- топчики -- добавить margin справа -->
-<h3 class="text-center">Топ по количеству</h3><br>
-
-<ol>
-<table class="table">
+<!-- топчики -->
+<ol class="top_table_ol">
+<table class="table top_table caption-top">
+    <caption><h3 class="text-center">Топ по количеству</h3></caption>
     <thead class="table-light">
         <tr>
             <th></th>
@@ -69,10 +68,9 @@
 </ol>
 <br>
 
-<h3 class="text-center">Топ по калориям</h3><br>
-
-<ol>
-<table class="table">
+<ol class="top_table_ol">
+<table class="table top_table caption-top">
+    <caption><h3 class="text-center">Топ по калориям</h3></caption>
     <thead class="table-light">
         <tr>
             <th></th>
@@ -97,31 +95,94 @@
 
 <!-- если не посчитались какие-то продукты -->
 {% if prods_without_info %}
-<h3>Некоторые продукты не удалось нормально посчитать!</h3>
-<p>Укажите их граммовку, пожалуйста</p>
-<form method="POST" action="">
-    {% csrf_token %}
-    {% for prod, value in prods_without_info.items %}
-    <p><b>Продукт: </b> {{ value.food_entry_name }}</p>
-    <p>{{ value.serving_description }} = 
-        <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
-        <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
-        <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
-        <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
-            <option value="g">г</option>
-            <option value="ml">мл</option>
-        </select>
-    </p>
-    <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p><br>
-    {% endfor %}
-    <!-- добавить кнопку сохранить но не считать -->
-    <button type="submit" class="btn btn-info" name="justsave" value="True">Сохранить и вернуться</button>
-    <button type="submit" class="btn btn-info">Сохранить и пересчитать</button>
-</form>
-<br>
+<h4 class="text-center">Некоторые продукты не удалось посчитать!</h4><br>
+<div class="add_metric_container">
+    <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
+    <form method="POST" action="" class="add_metric_form">
+        {% csrf_token %}
+        {% for prod, value in prods_without_info.items %}
+        <div id="food_id_{{ value.index_number }}">
+            <hr>
+            <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+            <p>{{ value.serving_description }} = 
+                <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+                <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+                <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+                <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+                    <option value="g">г</option>
+                    <option value="ml">мл</option>
+                </select>
+            </p>
+            <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
+        </div>
+        {% endfor %}
+        <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
+        
+        <button type="submit" class="btn btn-info">Сохранить</button>
+        <button type="button" class="btn btn-info hidden_element" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
+    </form>
+</div><br>
+
+<!-- сохранение введенной метрики -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // отслеживаем событие отправки формы
+        $('.add_metric_form').submit(function () {
+            
+            // поле для надписи о сохранении
+           statusBtn = document.getElementById('foodmetricsave_status');
+           recalcBtn = document.getElementById('recalculation_btn');
+
+            // создаем AJAX-вызов
+            $.ajax({
+                data: $(this).serialize(), // получаем данные формы
+                type: $(this).attr('method'), // метод отправки запроса
+                url: "{% url 'foodmetricsave' %}", // функция обработки
+                
+                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
+                success: function (response) {
+                    if (response.status == "инфа сохранена, круто!") {
+                        // добавляем кнопку пересчета
+                        recalcBtn.classList.remove('hidden_element');
+                        // показываем синий статус
+                        statusBtn.textContent = response.status;
+                        statusBtn.style.color = "#00c0f0";
+                        }
+                    else {
+                        // показываем фиолетовый статус
+                        if (statusBtn.textContent = response.status) {
+                            statusBtn.style.color = "#0065fd00";
+                            setTimeout(() => {
+                                statusBtn.style.color = "#9d00ff";
+                            }, 500);
+                        }
+                        else {
+                           statusBtn.textContent = response.status;
+                           statusBtn.style.color = "#9d00ff"; 
+                        }
+                        // скрываем продукты, инфо о кот. все-таки сохранилась
+                        if (response.saved_food_id) {
+                            response.saved_food_id.forEach (food_id => {
+                                document.getElementById(food_id).classList.add('hidden_element');
+                            // добавляем кнопку пересчета
+                            recalcBtn.classList.remove('hidden_element');
+                            })
+                        }
+                    }
+                    },
+                error: function (response) {
+                    // показываем красный статус
+                    statusBtn.textContent = 'произошла ошибка';
+                    statusBtn.style.color = "#ff1943";
+                    }
+            });
+            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+            return false;
+        });
+    })    
+</script>
 {% endif %}
-
-
 
 
 {% else %}

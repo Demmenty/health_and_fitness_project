@@ -91,18 +91,24 @@ footer {
     float: right;
 }
 
-.another_date_container {
+#another_date_container_mealjournal {
     width: 310px;
     float: right;
     margin-right: 40px;
     margin-top: -10px;
 }
 
+#another_date_container_foodbydate {
+    width: 310px;
+    float: right;
+    margin-top: -8px;
+}
+
 #back_btn_mealjournal {
     margin-top: -18px;
 }
 
-#text_warning_nometrics {
+#text_warning_nometrics_mealjournal {
     margin-top: 28px;
 }
 
@@ -121,6 +127,21 @@ footer {
     max-width: 500px;
 }
 
+.top_table {
+    box-shadow: 0 0 1px 1px #dee2e6;
+}
+
+.top_table_ol {
+    padding-right: 109px;
+    padding-left: 109px;
+}
+
+@media screen and (max-width: 991px) {
+    .top_table_ol {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
 
 
 .tablerow_name {

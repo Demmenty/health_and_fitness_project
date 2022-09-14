@@ -63,22 +63,26 @@
 
 <!-- если не посчитались какие-то продукты -->
 {% if prods_without_info %}
-<h4 class="text-center" id="text_warning_nometrics">Некоторые продукты не удалось посчитать!</h4><br>
+<h4 class="text-center" id="text_warning_nometrics_mealjournal">Некоторые продукты не удалось посчитать!</h4><br>
 <div class="add_metric_container">
-    <h5 class="text-center">Укажите их граммовку, пожалуйста</h5><hr>
+    <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
     <form method="POST" action="" class="add_metric_form">
         {% csrf_token %}
         {% for prod, value in prods_without_info.items %}
-        <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
-        <p>{{ value.serving_description }} = 
-            <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
-            <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
-            <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
-            <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
-                <option value="g">г</option>
-                <option value="ml">мл</option>
-            </select>
-        </p>
+        <div id="food_id_{{ value.index_number }}">
+            <hr>
+            <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+            <p>{{ value.serving_description }} = 
+                <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+                <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+                <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+                <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+                    <option value="g">г</option>
+                    <option value="ml">мл</option>
+                </select>
+            </p>
+            <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
+        </div>
         {% endfor %}
         <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
         
@@ -96,6 +100,8 @@
             
             // поле для надписи о сохранении
            statusBtn = document.getElementById('foodmetricsave_status');
+            // кнопка пересчета
+           recalcBtn = document.getElementById('recalculation_btn');
 
             // создаем AJAX-вызов
             $.ajax({
@@ -107,20 +113,36 @@
                 success: function (response) {
                     if (response.status == "инфа сохранена, круто!") {
                         // добавляем кнопку пересчета
-                        document.getElementById('recalculation_btn').classList.remove('hidden_element');
+                        recalcBtn.classList.remove('hidden_element');
                         // показываем синий статус
                         statusBtn.textContent = response.status;
                         statusBtn.style.color = "#00c0f0";
                         }
                     else {
                         // показываем фиолетовый статус
-                        statusBtn.textContent = response.status;
-                        statusBtn.style.color = "#9d00ff";
+                        if (statusBtn.textContent = response.status) {
+                            statusBtn.style.color = "#0065fd00";
+                            setTimeout(() => {
+                                statusBtn.style.color = "#9d00ff";
+                            }, 500);
+                        }
+                        else {
+                           statusBtn.textContent = response.status;
+                           statusBtn.style.color = "#9d00ff"; 
+                        }
+                        // скрываем продукты, инфо о кот. все-таки сохранилась
+                        if (response.saved_food_id) {
+                            response.saved_food_id.forEach (food_id => {
+                                document.getElementById(food_id).classList.add('hidden_element');
+                            // добавляем кнопку пересчета
+                            recalcBtn.classList.remove('hidden_element');
+                            })
+                        }
                     }
                     },
                 error: function (response) {
                     // показываем красный статус
-                    statusBtn.textContent = 'произошла залупа';
+                    statusBtn.textContent = 'произошла ошибка';
                     statusBtn.style.color = "#ff1943";
                     }
             });
@@ -138,8 +160,8 @@
 <br>
 
 <!-- Выбор сводки за другое число -->
-<div class="another_date_container">
-    <h5 class="text-center">Нужна сводка за другое число?</h5>
+<div id="another_date_container_mealjournal">
+    <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
     <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex justify-content-between">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
         <button type="submit" class="btn btn-info" name="submit">Получить</button>
@@ -188,8 +210,8 @@
 
 
 <!-- Выбор сводки за другой месяц-->
-<div class="another_date_container">
-    <h5 class="text-center">Нужна сводка за другой месяц?</h5>
+<div id="another_date_container_mealjournal">
+    <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
     <form action = "{% url 'foodbymonth' %}" method = "get" class="d-flex justify-content-between">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
         <button type="submit" class="btn btn-info" name="submit">Получить</button>
@@ -198,7 +220,6 @@
 <br>
 <hr>
 <br>
-
 
 <!-- Кнопка возврата -->
 <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary" id="back_btn_mealjournal">Вернуться</button></a>
