@@ -76,6 +76,7 @@ photoContainers = document.querySelectorAll(".container_photo");
 var maxZ = 2;
 
 function getUpper(event) {
+    // определение цели
     if (event.target) {
         if (event.target.tagName == 'DIV') {
             photoWindow = event.target;
@@ -87,25 +88,11 @@ function getUpper(event) {
     else {
         photoWindow = event;
     }
- 
-    console.log("индекс нажатого окна = " + photoWindow.style.zIndex);
 
-    // если у цели <= max
-    if (parseInt(photoWindow.style.zIndex) <= maxZ) {
-        console.log('у цели <= max, но не 2');
-        maxZ = maxZ + 1;
-        photoWindow.style.zIndex = maxZ;
-        console.log('функция прошла, теперь у цели ' + photoWindow.style.zIndex);
+    // изменеие Z-индекса
+    if ((parseInt(photoWindow.style.zIndex) < maxZ) || (photoWindow.style.zIndex == "")) {
+        photoWindow.style.zIndex = ++maxZ;
     }
-
-    // если у цели пуст индекс (он = 2) или > max
-    else {
-        console.log('у цели индекс 2 или > max');
-        maxZ = maxZ + 1;
-        photoWindow.style.zIndex = maxZ;
-        console.log('функция прошла, теперь у цели ' + photoWindow.style.zIndex);
-    }
-    
 }
 photoContainers.forEach ( container => {
     container.addEventListener('click', getUpper, false); 
