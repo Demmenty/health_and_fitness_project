@@ -205,23 +205,7 @@ def personalpage(request):
         selected_period = ""
         avg_period = ""
         period = ""
-
-    # # редактирование комментария
-    # if request.method == 'POST':
-    #     # получаем форму из запроса
-    #     form = MeasurementCommentForm(request.POST)
-    #     # проверяем на корректность
-    #     if form.is_valid():
-    #         # получаем дату из формы
-    #         comment_date = form.cleaned_data['date']
-    #         # получаем запись из БД с этим числом
-    #         measure = Measurement.objects.get(date=comment_date, user=request.user) 
-    #         # перезаписываем
-    #         form = MeasurementCommentForm(request.POST, instance=measure)
-    #         form.save()
-    #         return redirect('personalpage')
-
-            
+   
 
     data = {
         'today_measure': today_measure,
@@ -257,6 +241,56 @@ def commentsave(request):
             'new_comment': new_comment,
         }
         return JsonResponse(data, status=200)
+
+
+def foodmetricsave(request):
+    """Сохранение введенной метрики еды через ajax"""
+
+    print(request.POST)
+
+    status = "инфа сохранена, круто!"
+
+    with open('personalpage/food_cache.pickle', 'rb') as file:
+        food_cache = pickle.load(file)
+
+    index_number = 0
+    while True:
+        index_number += 1
+        print('цикл', index_number)
+        if request.POST.get("metric_serving_amount_"+str(index_number)) is None :
+            print('цикл окончен')
+            break
+
+        elif request.POST.get("metric_serving_amount_"+str(index_number)) == "" :
+            status = "поле оставлено пустым, алло!"
+        
+        else:
+            food_id = request.POST["food_id_"+str(index_number)]
+            metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
+            metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
+            serving_id = request.POST["serving_id_"+str(index_number)]
+            print(food_id, metric_serving_amount, metric_serving_unit, serving_id)
+
+            if type(food_cache[food_id]['servings']['serving']) is dict:
+                food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
+                food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
+                print('инфа записана в food_cache')
+            else:
+                for dic in food_cache[food_id]['servings']['serving']:
+                    if dic['serving_id'] == serving_id:
+                        dic["metric_serving_amount"] = metric_serving_amount
+                        dic["metric_serving_unit"] = metric_serving_unit
+                        print('инфа записана в food_cache')
+                        break
+            
+
+    with open('personalpage/food_cache.pickle', 'wb') as f:
+            pickle.dump(food_cache, f)
+
+    data = {
+        'status': status,
+    }
+    return JsonResponse(data, status=200)
 
 
 def questionary(request):
@@ -527,6 +561,7 @@ def addmeasure(request):
 
 # id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха
 # удаление записей о продуктах без метрики для тестов - раскомментить
+
 # with open('personalpage/food_cache.pickle', 'rb') as f:
 #     food_cache = pickle.load(f)
 #     del food_cache['4652615']
@@ -755,34 +790,6 @@ def mealjournal(request):
             'user_not_connected': False,
         }
         return render(request, 'personalpage/mealjournal.html', data)
-
-
-    # POST-запрос
-    if request.method == 'POST':
-        # предусмотреть вариант, когда продуктов несколько!
-        # попавшиеся: id '4652615' (184г),  id '20214325' (?)
-        food_id = request.POST["food_id"]
-        metric_serving_amount = request.POST["metric_serving_amount"]
-        metric_serving_unit = request.POST["metric_serving_unit"]
-        serving_id = request.POST["serving_id"]
-
-        with open('personalpage/food_cache.pickle', 'rb') as file:
-            food_cache = pickle.load(file)
-
-        if type(food_cache[food_id]['servings']['serving']) is dict:
-            food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-            food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-        else:
-            for dic in food_cache[food_id]['servings']['serving']:
-                if dic['serving_id'] == serving_id:
-                    dic["metric_serving_amount"] = metric_serving_amount
-                    dic["metric_serving_unit"] = metric_serving_unit
-                    break
-
-        with open('personalpage/food_cache.pickle', 'wb') as f:
-                pickle.dump(food_cache, f)
-        
-        return redirect('mealjournal')
 
 
 def foodbydate(request):

@@ -77,6 +77,35 @@ footer {
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
 
+.add_metric_container {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+
+#recalculation_btn {
+    float: right;
+}
+
+.another_date_container {
+    width: 310px;
+    float: right;
+    margin-right: 40px;
+    margin-top: -10px;
+}
+
+#back_btn_mealjournal {
+    margin-top: -18px;
+}
+
+#text_warning_nometrics {
+    margin-top: 28px;
+}
+
 .hidden_element {
     display: none !important;
 }
@@ -328,6 +357,11 @@ table {
 .comment_header {
     width: 280px;
     cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+
+#foodmetricsave_status {
     transition: all 1s ease;
     color: #0065fd00;
 }
