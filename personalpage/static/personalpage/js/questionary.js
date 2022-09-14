@@ -4,8 +4,8 @@ par416RadioButtons = document.querySelectorAll(".par416_radio");
 par416expField = document.getElementById("id_parameter416_exp");
 confirmСheckbox = document.getElementById("id_confirm");
 
+// функция регулирования радиокнопок да\нет
 function ChangeSimpleAnswer(event) {
-    // функция регулирования радиокнопок да\нет
     // находим нажатую кнопку
     currentBtn = event.target;
     // находим соответствующее ему поле ввода
@@ -14,8 +14,8 @@ function ChangeSimpleAnswer(event) {
     inputField.value = currentBtn.value;
 }
 
+// функция регулирования радиокнопок да\нет с доп.полем в случае да
 function ChangeAnswer(event) {
-    // функция регулирования радиокнопок да\нет с доп.полем в случае да
     // находим нажатую кнопку
     currentBtn = event.target;
     // находим соответствующее ему поле ввода
@@ -32,8 +32,8 @@ function ChangeAnswer(event) {
     }
 }
 
+// функция для кнопок параметра 4.16
 function par416ChangeAnswer(event) {
-    // функция для кнопок параметра 4.16
     // находим нажатую кнопку
     currentBtn = event.target;
     // находим соответствующее ему поле ввода
@@ -49,19 +49,27 @@ function par416ChangeAnswer(event) {
         par416expField.classList.remove("hidden_element");
     }
 }
-function ConfirmCheck(event) {
-    // функция регулировки кнопки отправки в зависимости от кнопки подтверждения
-    document.getElementById('submit_btn_questionary').disabled = !event.target.checked;
+
+// регулировка кнопки отправки в зависимости от кнопки подтверждения
+document.getElementById('submit_btn_questionary').disabled = !confirmСheckbox.checked;
+function ConfirmCheck() {
+    document.getElementById('submit_btn_questionary').disabled = !confirmСheckbox.checked;
 }
 
-
+// применение прослушивателей к кнопкам и установка начальных э.. видимостей
 simpleRadioButtons.forEach (radioButton => {
     radioButton.addEventListener('change', ChangeSimpleAnswer, false);
 })
 complexRadioButtons.forEach (radioButton => {
     radioButton.addEventListener('change', ChangeAnswer, false);
+    if ((radioButton.checked) && (radioButton.value !== 'no')) {
+        document.getElementById("id_" + radioButton.name).classList.remove("hidden_element");
+    }
 })
 par416RadioButtons.forEach (radioButton => {
     radioButton.addEventListener('change', par416ChangeAnswer, false);
+    if ((radioButton.checked) && (radioButton.value !== 'no')) {
+        par416expField.classList.remove("hidden_element");
+    }
 })
 confirmСheckbox.addEventListener('change', ConfirmCheck, false);

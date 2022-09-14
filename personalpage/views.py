@@ -138,9 +138,9 @@ def personalpage(request):
 
     # существоВание анкеты
     try:
-        questionary_existing = Questionary.objects.get(user=request.user)
+        questionary = Questionary.objects.get(user=request.user)
     except Questionary.DoesNotExist:
-        questionary_existing = ''
+        questionary = ''
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
@@ -233,7 +233,7 @@ def personalpage(request):
         'period': period,
         'avg_week': avg_week,
         'avg_period': avg_period,
-        'questionary_existing': questionary_existing,
+        'questionary': questionary,
         'error': "",
     }
     return render(request, 'personalpage/personalpage.html', data)
@@ -270,15 +270,17 @@ def questionary(request):
     if request.method == 'GET':
         # проверяем, есть ли у клиента уже анкета
         try:
-            questionary_existing = Questionary.objects.get(user=request.user)
+            questionary = Questionary.objects.get(user=request.user)
             # создаем форму на ее основе
-            form = QuestionaryForm(instance=questionary_existing)
+            form = QuestionaryForm(instance=questionary)
         except Questionary.DoesNotExist:
+            questionary = ""
              # или создаем пустую форму
             form = QuestionaryForm()
 
         # рендерим страницу с формой
         data = {
+            'questionary': questionary,
             'form': form,
             'error': '',
         }
@@ -292,8 +294,8 @@ def questionary(request):
         if form.is_valid():
             try:
                 # пробуем получить анкету из БД
-                questionary_existing = Questionary.objects.get(user=request.user)
-                form = QuestionaryForm(request.POST, instance=questionary_existing)
+                questionary = Questionary.objects.get(user=request.user)
+                form = QuestionaryForm(request.POST, instance=questionary)
                 form.save()
                 return redirect('personalpage')
             except Questionary.DoesNotExist:
@@ -306,13 +308,15 @@ def questionary(request):
         else:
             # проверяем, есть ли у клиента уже анкета
             try:
-                questionary_existing = Questionary.objects.get(user=request.user)
+                questionary = Questionary.objects.get(user=request.user)
                 # создаем форму на ее основе
-                form = QuestionaryForm(instance=questionary_existing)
+                form = QuestionaryForm(instance=questionary)
             except Questionary.DoesNotExist:
+                questionary = ""
                 # или создаем пустую форму
                 form = QuestionaryForm()
             data = {
+                'questionary': questionary,
                 'form': form,
                 'error': 'Данные введены некорректно. Попробуйте ещё раз.',
             }
