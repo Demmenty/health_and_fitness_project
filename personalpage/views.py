@@ -1001,13 +1001,36 @@ def foodbymonth(request):
      # месяц, за который нужно посчитать стату,
      # введенный на предыдущей странице
     briefmonth = request.GET.get('month')
-    # проверка, что значение введено (ибо его можно удалить)
-    if briefmonth is None:
+    if briefmonth is None or not briefmonth:
         return redirect('mealjournal')
+
+    # заготовки для html
+    year = int(briefmonth[0:4])
+    month = int(briefmonth[-2:])
+    
+    if month == 1:
+        prev_month = f"{year - 1}-12"
+        next_month = f"{year}-02"
+    elif month == 9:
+        prev_month = f"{year}-08"
+        next_month = f"{year}-10"
+    elif month == 10:
+        prev_month = f"{year}-09"
+        next_month = f"{year}-11"
+    elif month == 11:
+        prev_month = f"{year}-10"
+        next_month = f"{year}-12"
+    elif month == 12:
+        prev_month = f"{year}-11"
+        next_month = f"{year + 1}-01"
+    else:
+        prev_month = f"{year}-0{month - 1}"
+        next_month = f"{year}-0{month + 1}"
 
     try:
         # форматируем формат введенного месяца для FS
         briefmonth = datetime.strptime(briefmonth, "%Y-%m")
+        print('форматированнный briefmont:', briefmonth)
         # получаем нужные данные от FS за месяц
         food_entries_month = fs.food_entries_get_month(date=briefmonth)
         sleep(3)
@@ -1208,6 +1231,8 @@ def foodbymonth(request):
             'fat': avg_fat,
             'carbo': avg_carbo,
         },
+        'prev_month': prev_month,
+        'next_month': next_month,
         'prods_without_info': prods_without_info,
         }
     return render(request, 'personalpage/foodbymonth.html', data)

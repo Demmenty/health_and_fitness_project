@@ -112,6 +112,23 @@ footer {
     margin-top: 28px;
 }
 
+.month_header {
+    border: 1px solid #cfcfcf;
+    padding: 7px 13px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+.date_header {
+    border: 1px solid #cfcfcf;
+    padding: 7px 13px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .hidden_element {
     display: none !important;
 }
@@ -496,4 +513,10 @@ table {
 
 .container_addmeasure {
     max-width: fit-content;
+}
+
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
 }

@@ -7,7 +7,7 @@
 {% block content %}
 
 <!-- Сводка за выбраннный месяц-->
-<h3 class="text-center">{{ briefmonth|date:'F Y' }}</h3><br>
+<h3 class="month_header">{{ briefmonth|date:'F Y' }}</h3><br>
 {% if food_entries_month %}
 
 <table class="table table-bordered table-hover text-center">
@@ -40,58 +40,22 @@
     </tbody>
 </table><br>
 
-{% if top_calories %}
+{% else %}
+<p class="text-center">Данные отсутствуют</p>
+{% endif %}
 
-<!-- топчики -->
-<ol class="top_table_ol">
-<table class="table top_table caption-top">
-    <caption><h3 class="text-center">Топ по количеству</h3></caption>
-    <thead class="table-light">
-        <tr>
-            <th></th>
-            <th>Название продукта</th>
-            <th class="text-center">Съедено</th>
-            <th class="text-center">Получено калорий</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for product, value in top_amount.items %}
-        <tr>
-            <td></td>
-            <td><li>{% translate product %}</li></td>
-            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
-            <td class="text-center">{{ value.calories }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</ol>
-<br>
-
-<ol class="top_table_ol">
-<table class="table top_table caption-top">
-    <caption><h3 class="text-center">Топ по калориям</h3></caption>
-    <thead class="table-light">
-        <tr>
-            <th></th>
-            <th>Название продукта</th>
-            <th class="text-center">Съедено</th>
-            <th class="text-center">Получено калорий</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for product, value in top_calories.items %}
-        <tr>
-            <td></td>
-            <td><li>{% translate product %}</li></td>
-            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
-            <td class="text-center">{{ value.calories }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</ol>
-<br>
+<!-- Кнопки след и пред день -->
+<div class="d-flex flex-row justify-content-between">
+    <form method = "get">
+        <input type="hidden" name="month" value="{{ prev_month }}">
+        <button type="submit" class="btn btn-outline-primary">предыдущий месяц</button>
+    </form>
+    <hr>
+    <form method = "get">
+        <input type="hidden" name="month" value="{{ next_month }}">
+        <button type="submit" class="btn btn-outline-primary">следующий месяц</button>
+    </form>
+</div>
 
 <!-- если не посчитались какие-то продукты -->
 {% if prods_without_info %}
@@ -185,32 +149,93 @@
 {% endif %}
 
 
+{% if top_calories %}
+<!-- топчики -->
+<ol class="top_table_ol">
+<table class="table top_table caption-top">
+    <caption><h3 class="text-center">Топ по количеству</h3></caption>
+    <thead class="table-light">
+        <tr>
+            <th></th>
+            <th>Название продукта</th>
+            <th class="text-center">Съедено</th>
+            <th class="text-center">Получено калорий</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product, value in top_amount.items %}
+        <tr>
+            <td></td>
+            <td><li>{% translate product %}</li></td>
+            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.calories }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</ol>
+<br>
+
+<ol class="top_table_ol">
+<table class="table top_table caption-top">
+    <caption><h3 class="text-center">Топ по калориям</h3></caption>
+    <thead class="table-light">
+        <tr>
+            <th></th>
+            <th>Название продукта</th>
+            <th class="text-center">Съедено</th>
+            <th class="text-center">Получено калорий</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for product, value in top_calories.items %}
+        <tr>
+            <td></td>
+            <td><li>{% translate product %}</li></td>
+            <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+            <td class="text-center">{{ value.calories }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</ol>
+<br>
+
+
 {% else %}
+{% if food_entries_month %}
 <!-- кНопка посчитать ТОП -->
-<form action="{% url 'foodbymonth' %}" method="get">
+<form action="{% url 'foodbymonth' %}" method="get" class="d-flex justify-content-center" id="calc_top_btn">
     <input type="month" class="hidden_element" name="month" id="input_briefmonth" value="{{ briefmonth|date:'Y-m' }}">
     <input type="checkbox" class="hidden_element" name="top_create" value="True" id="" checked>
-    <button type="submit" class="btn btn-info" name="submit">посчитать ТОП-продукты</button></h5>
-    <p>* займет несколько минут</p>
+    <button type="submit" class="btn btn-info" name="submit" onclick="waiting()">посчитать ТОП-продукты</button></h5>
 </form>
+
+<div id="waiting_calculating" class="waiting_container d-flex flex-column hidden_element">
+    <img src="{% static 'personalpage\img\cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+    <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
+</div>
 <br><br>
+{% endif %}
 {% endif %}
 
-{% else %}
-<p>Данные за выбранный месяц отсутствуют</p>
-{% endif %}
-<br><br>
+
 
 <!-- Выбор сводки за другой месяц -->
-<h5>Нужна сводка за другой месяц?</h5>
-<form action = "{% url 'foodbymonth' %}" method = "get">
-    <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-    <button type="submit" class="btn btn-info" name="submit">Получить</button>
-</form>
-<br><br>
+<hr>
+<br>
+<div id="another_date_container_foodbydate">
+    <h5 class="text-center">Сводка за другой месяц</h5>
+    <form action="" method ="get" class="d-flex justify-content-between">
+        <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
+        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+    </form>
+</div>
+<br>
 
 <!-- Кнопка возврата -->
 <a href="{% url 'mealjournal' %}"><button class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button></a>
 
 
+<script src="{% static 'personalpage/js/foodbymonth.js' %}"></script>
 {% endblock %}
