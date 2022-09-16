@@ -1007,7 +1007,7 @@ def foodbymonth(request):
     # заготовки для html
     year = int(briefmonth[0:4])
     month = int(briefmonth[-2:])
-    
+
     if month == 1:
         prev_month = f"{year - 1}-12"
         next_month = f"{year}-02"
