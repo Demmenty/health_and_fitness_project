@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homepage',
-    'authorization',
     'personalpage',
     'controlpage',
     'django_cleanup',

@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
+from django.http import JsonResponse
 
 # Create your views here.
 def homepage(request):
@@ -11,30 +12,30 @@ def homepage(request):
     data = {
         'registration_form': UserCreationForm(),
         'login_form': AuthenticationForm,
-        'error': '',
         }
 
     return render(request, 'homepage/homepage.html', data)
 
 
 def registration(request):
-        
+
     if request.method == 'POST':
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
-                user.save()
-                login(request, user)
-                return redirect('personalpage')
-            except IntegrityError:
-                error = 'К сожалению, это имя уже занято :('
+        # проверка соответствия требованиям
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+
+            user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
+            user.save()
+            login(request, user)
+            result = 'успешный успех'
+
         else:
-            error = 'Пароли не совпадают!'
+            result = form.errors
 
         data = {
-            'error': error,
+            'result': result,
         }
-        return render(request, 'homepage/homepage.html', data)
+        return JsonResponse(data, status=200)
 
 
 def loginuser(request):
@@ -42,14 +43,18 @@ def loginuser(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            error = 'Пароль или имя введены неверно'
+            result = 'Пароль или логин введены неверно'
             data = {
-                'error': error,
+                'result': result,
             }
-            return render(request, 'homepage/homepage.html', data)
+            return JsonResponse(data, status=200)
         else:
             login(request, user)
-            return redirect('personalpage')
+            result = 'успешный успех'
+            data = {
+                'result': result,
+            }
+            return JsonResponse(data, status=200)
 
 
 def logoutuser(request):
