@@ -83,7 +83,7 @@
         <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
         
         <button type="submit" class="btn btn-info">Сохранить</button>
-        <button type="button" class="btn btn-info hidden_element" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
+        <button type="button" class="btn btn-info hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
     </form>
 </div><br>
 
@@ -212,7 +212,7 @@
 </form>
 
 <div id="waiting_calculating" class="waiting_container d-flex flex-column hidden_element">
-    <img src="{% static 'personalpage\img\cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+    <img src="{% static 'personalpage/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
     <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
 </div>
 <br><br>
@@ -224,7 +224,7 @@
 <!-- Выбор сводки за другой месяц -->
 <hr>
 <br>
-<div id="another_date_container_foodbydate">
+<div id="another_date_container">
     <h5 class="text-center">Сводка за другой месяц</h5>
     <form action="" method ="get" class="d-flex justify-content-between">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">

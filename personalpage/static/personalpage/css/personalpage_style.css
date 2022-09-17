@@ -1,25 +1,129 @@
+/* общее */
 *, ::after, ::before {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-
-header {
-    background-color: #bce0ed;
+.hidden_element {
+    display: none !important;
 }
-
-footer {
-    background-color: #bce0ed;
+.width_unset {
+    width: auto !important;
 }
-
 .my-hover:hover {
     outline-color: #8f8f8f !important;
     outline-style: auto !important;
     outline-width: 1px !important;
 }
+.add_metric_container {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+.btn_rigth {
+    float: right;
+}
+#another_date_container {
+    width: 310px;
+    float: right;
+    margin-top: -8px;
+}
+.top_table {
+    box-shadow: 0 0 1px 1px #dee2e6;
+}
+.top_table_ol {
+    padding-right: 109px;
+    padding-left: 109px;
+}
+
+@media screen and (max-width: 991px) {
+    .top_table_ol {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+input[type="radio"] {
+    border-radius: 50%;
+    border: 1px solid #ced4da;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 6px;
+}
+input[type="radio"]:checked {
+    background-color: white;
+    border: solid 6px #0d6efd;
+}
+input[type="radio"]:hover {
+    cursor: pointer;
+}
+input[type="radio"]:focus {
+    border-color: #0d6efd;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #0d6efd40;
+}
+.backbtn_leftup {
+    margin-top: -36px;
+}
+#input_briefdate {
+    max-width: 200px;
+    display: inline;
+}
+
+#input_briefmonth {
+    max-width: 200px;
+    display: inline;
+}
+caption {
+    color: black;
+}
+table {
+    cursor: default;
+}
+.luminosity {
+    mix-blend-mode: luminosity;
+}
+.noluminosity {
+    mix-blend-mode: none;
+}
+#foodmetricsave_status {
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+.sm_square_btn {
+    height: 22px;
+    width: 22px;
+    line-height: 5px;
+    padding: 2px;
+}
+.borderless{
+    border: 1px solid white !important;
+    background-color: white !important;
+}
+/* общее */
 
 
+/* layout */
+header {
+    background-color: #bce0ed;
+}
+footer {
+    background-color: #bce0ed;
+    margin-top: 1.5rem!important;
+}
+/* layout */
+
+
+/* addmeasure */
 #week_calendar {
     text-align: center;
     margin-left: auto;
@@ -34,7 +138,6 @@ footer {
         margin-bottom: -40px;
     }
 }
-
 .date_selection {
     background-color: white;
     color: black;
@@ -60,13 +163,47 @@ footer {
     background-color: dodgerblue !important;
     color: white !important;
 }
-
 .addmeasure_form {
     max-width: 523px;
     margin-left: auto;
     margin-right: auto;
 }
+#id_calories, #id_protein, #id_fats, #id_carbohydrates {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+@media screen and (max-width: 576px) {
+    .pressure_upper, .pressure_lower {
+    width: 50%;
+    }
+    .addmeasure_form .date_field {
+        width: 40%;
+    }
+    .addmeasure_form .date_label {
+        width: 60%;
+    }
+}
+.addmeasure_borderform {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    padding: 22px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+@media screen and (min-width: 768px) {
+    .container_addmeasure {
+        max-width: 689px !important;
+    }
+    .addmeasure_borderform {
+        padding-top: 43px !important;
+    }
+}
+.container_addmeasure {
+    max-width: fit-content;
+}
+/* addmeasure */
 
+
+/* anthropometry */
 .anthropometry_form {
     max-width: 500px;
     margin-left: auto;
@@ -76,42 +213,69 @@ footer {
     padding: 20px;
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
-
-.add_metric_container {
-    max-width: max-content;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
+.td_photo_btns {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
-
-#recalculation_btn {
+.show_photo_btn.shadow {
+    box-shadow: 0 1px 4px 4px rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+    -webkit-filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+}
+.show_photo_btn {
+    cursor: pointer;
+}
+.show_photo_btn.luminosity {
+    cursor: default;
+}
+.container_photo {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: aliceblue;
+    min-width: 300px;
+    max-width: 600px;
+    position: absolute;
+    z-index: 2;
+    top: 40%;
+    left: 10%;
+    right: 10%;
+    box-shadow: 0 0 8px 1px #00000052;
+}
+.container_photo img {
+    border-radius: 10px;
+    width: -webkit-fill-available;
+}
+.container_photo p {
+    margin-bottom: 4px;
+    cursor: default;
+}
+.close_photo_btn {
     float: right;
 }
+/* anthropometry */
 
+
+/* mealjournal */
 #another_date_container_mealjournal {
     width: 310px;
     float: right;
     margin-right: 40px;
     margin-top: -10px;
 }
-
-#another_date_container_foodbydate {
-    width: 310px;
-    float: right;
-    margin-top: -8px;
-}
-
 #back_btn_mealjournal {
     margin-top: -18px;
 }
-
 #text_warning_nometrics_mealjournal {
     margin-top: 28px;
 }
+/* mealjournal */
 
+
+/* foodbymonth */
 .month_header {
     border: 1px solid #cfcfcf;
     padding: 7px 13px;
@@ -120,6 +284,15 @@ footer {
     margin-left: auto;
     margin-right: auto;
 }
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+/* foodbymonth */
+
+
+/* foodbydate */
 .date_header {
     border: 1px solid #cfcfcf;
     padding: 7px 13px;
@@ -128,55 +301,77 @@ footer {
     margin-left: auto;
     margin-right: auto;
 }
+/* foodbydate */
 
-.hidden_element {
-    display: none !important;
-}
 
-.week_statistic {
-    display: flex;
-    flex-direction: row;
-    height: auto;
-    cursor: default;
-}
-
+/* personalpage */
 .today_measure_table {
     max-width: 500px;
 }
-
-.top_table {
-    box-shadow: 0 0 1px 1px #dee2e6;
-}
-
-.top_table_ol {
-    padding-right: 109px;
-    padding-left: 109px;
-}
-
-@media screen and (max-width: 991px) {
-    .top_table_ol {
-        padding-right: 0;
-        padding-left: 0;
-    }
-}
-
-
 .tablerow_name {
     text-align: left;
     width: 150px;
 }
-
-.comment_text {
-    font-size: 14px;
+#input_period {
+    max-width: 70px;
+    padding: 6px;
 }
-
-.weekday_text {
-    font-size: 14px;
+.period_select {
+    display: flex;
+    max-width: 380px;
+    align-items: baseline;
+    justify-content: space-between;
+    white-space: nowrap;
+    flex-flow: wrap;
 }
+#id_comment:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+.comment_btn {
+    cursor: pointer; 
+}
+.commentbtn_container {
+    margin-top: 5px;
+}
+.comment_saved {
+    color: #00c0f0 !important;
+    transition: all 1s ease !important;
+}
+.comment_not_saved {
+    color: #ff1943 !important;
+    transition: all 1s ease !important;
+}
+#id_comment {
+    transition: color 1s ease;
+}
+.comment_header {
+    width: 280px;
+    cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+.comment_btn.shadow {
+    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+}
+.container_commentform {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: aliceblue;
+    max-width: 352px;
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 1084px;
+}
+/* personalpage */
 
 
-/* анкета */
-
+/* questionary */
 .fullname_question {
     display: flex;
     flex-direction: row;
@@ -190,11 +385,9 @@ footer {
     white-space: nowrap;
     align-items: center;
 }
-
 #id_fullname {
     margin-left: 1rem;
 }
-
 #id_birth_date_day {
     margin-left: 5rem;
     width: 5rem;
@@ -208,7 +401,6 @@ footer {
     width: 6rem;
     text-align: center;
 }
-
 .boolquestion {
     display: flex;
     flex-direction: row;
@@ -229,7 +421,6 @@ footer {
     align-items: center;
     justify-content: space-between;
 }
-
 .confirmquestion {
     padding: 0.375rem 0.75rem;
     border: 1px solid #ced4da;
@@ -237,7 +428,6 @@ footer {
     display: flex;
     justify-content: space-between;
 }
-
 .boolanswers {
     display: flex;
     flex-direction: row;
@@ -245,278 +435,28 @@ footer {
     justify-content: space-between;
     font-size: 20px;
 }
-
-
 .exp_question {
     margin-right: 3rem;
     margin-bottom: unset;
     white-space: nowrap;
 }
-
 .question {
     margin-right: 3rem;
     margin-bottom: unset;
 }
-
 .radioanswers {
     display: flex;
     flex-direction: column;
 }
-
 .radioanswer {
     display: flex;
     padding: 1px;
 }
-
 .label_for_radio {
     margin-left: 10px;
 }
-
 .radioanswer_line {
     display: flex;
     margin: 10px 15px;
 }
-
-
-input[type="radio"] {
-    border-radius: 50%;
-    border: 1px solid #ced4da;
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
-    background-color: #ffffff;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin-top: 6px;
-}
-input[type="radio"]:checked {
-    background-color: white;
-    border: solid 6px #0d6efd;
-}
-input[type="radio"]:hover {
-    cursor: pointer;
-}
-input[type="radio"]:focus {
-    border-color: #0d6efd;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #0d6efd40;
-}
-
-.form-check-input {
-    min-width: 1em;
-}
-
-.btn_rigth {
-    float: right;
-}
-
-.backbtn_leftup {
-    margin-top: -36px;
-}
-
-#input_briefdate {
-    max-width: 200px;
-    display: inline;
-}
-
-#input_briefmonth {
-    max-width: 200px;
-    display: inline;
-}
-
-#id_calories, #id_protein, #id_fats, #id_carbohydrates {
-    background-color: #e9ecef;
-    opacity: 1;
-}
-
-@media screen and (max-width: 576px) {
-    .pressure_upper, .pressure_lower {
-    width: 50%;
-    }
-    .addmeasure_form .date_field {
-        width: 40%;
-    }
-    .addmeasure_form .date_label {
-        width: 60%;
-    }
-}
-
-
-#input_period {
-    max-width: 70px;
-    padding: 6px;
-}
-
-caption {
-    color: black;
-}
-
-table {
-    cursor: default;
-}
-
-.period_select {
-    display: flex;
-    max-width: 380px;
-    align-items: baseline;
-    justify-content: space-between;
-    white-space: nowrap;
-    flex-flow: wrap;
-}
-
-.width_unset {
-    width: auto !important;
-}
-
-.comment_btn {
-    cursor: pointer; 
-}
-.luminosity {
-    mix-blend-mode: luminosity;
-}
-.noluminosity {
-    mix-blend-mode: none;
-}
-
-.comment_saved {
-    color: #00c0f0 !important;
-    transition: all 1s ease !important;
-}
-.comment_not_saved {
-    color: #ff1943 !important;
-    transition: all 1s ease !important;
-}
-
-#id_comment {
-    transition: color 1s ease;
-}
-
-.comment_header {
-    width: 280px;
-    cursor: move;
-    transition: all 1s ease;
-    color: #0065fd00;
-}
-
-#foodmetricsave_status {
-    transition: all 1s ease;
-    color: #0065fd00;
-}
-
-.td_photo_btns {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-.show_photo_btn.shadow {
-    box-shadow: 0 1px 4px 4px rgb(13 110 253 / 20%) !important;
-    background-color: rgb(13 110 253 / 20%);
-    border-radius: 3px;
-    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
-    -webkit-filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
-}
-.comment_btn.shadow {
-    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
-    background-color: rgb(13 110 253 / 20%);
-    border-radius: 3px;
-}
-
-.show_photo_btn {
-    cursor: pointer;
-}
-.show_photo_btn.luminosity {
-    cursor: default;
-}
-
-#id_comment:focus {
-    border-color: #ced4da;
-    box-shadow: none;
-}
-
-.container_commentform {
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 5px;
-    backface-visibility: hidden;
-    background-color: aliceblue;
-    max-width: 352px;
-    position: absolute;
-    z-index: 10;
-    top: 100%;
-    left: 1084px;
-}
-
-.container_photo {
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 5px;
-    backface-visibility: hidden;
-    background-color: aliceblue;
-    min-width: 300px;
-    max-width: 600px;
-    position: absolute;
-    z-index: 2;
-    top: 40%;
-    left: 10%;
-    right: 10%;
-    box-shadow: 0 0 8px 1px #00000052;
-}
-
-.container_photo img {
-    border-radius: 10px;
-    width: -webkit-fill-available;
-}
-.container_photo p {
-    margin-bottom: 4px;
-    cursor: default;
-}
-
-.sm_square_btn {
-    height: 22px;
-    width: 22px;
-    line-height: 5px;
-    padding: 2px;
-}
-
-.close_photo_btn {
-    float: right;
-}
-
-.commentbtn_container {
-    margin-top: 5px;
-}
-
-
-
-.borderless{
-    border: 1px solid white !important;
-    background-color: white !important;
-}
-
-
-
-.addmeasure_borderform {
-    border: 1px solid #ced4da;
-    border-radius: 10px;
-    padding: 22px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
-}
-@media screen and (min-width: 768px) {
-    .container_addmeasure {
-        max-width: 689px !important;
-    }
-    .addmeasure_borderform {
-        padding-top: 43px !important;
-    }
-}
-
-.container_addmeasure {
-    max-width: fit-content;
-}
-
-#cat_with_coffee {
-    height: 122px;
-    width: 152px;
-    align-self: center;
-}
+/* questionary */

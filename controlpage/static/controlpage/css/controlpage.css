@@ -1,0 +1,158 @@
+/* общее */
+*, ::after, ::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+.hidden_element {
+    display: none !important;
+}
+input[type="radio"] {
+    border-radius: 50%;
+    border: 1px solid #ced4da;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 6px;
+}
+input[type="radio"]:checked {
+    background-color: white;
+    border: solid 6px #0d6efd;
+}
+input[type="radio"]:hover {
+    cursor: pointer;
+}
+input[type="radio"]:focus {
+    border-color: #0d6efd;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #0d6efd40;
+}
+.btn_rigth {
+    float: right;
+}
+/* общее */
+
+
+/* layout */
+header {
+    background-color: #bce0ed;
+}
+footer {
+    background-color: #bce0ed;
+    margin-top: 1.5rem!important;
+}
+/* layout */
+
+
+/* controlpage */
+#fluffy_cat {
+    height: 154px;
+    z-index: 3;
+    position: absolute;
+    right: 15px;
+    margin-top: -93px;
+}
+#pillow_blue {
+    height: 85px;
+    z-index: 2;
+    position: absolute;
+    right: 0;
+    margin-top: 0;
+}
+/* controlpage */
+
+
+/* questionary */
+.fullname_question {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    white-space: nowrap;
+    align-items: center;
+}
+.birthdate_question {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    align-items: center;
+}
+#id_fullname {
+    margin-left: 1rem;
+}
+#id_birth_date_day {
+    margin-left: 5rem;
+    width: 5rem;
+    text-align: center;
+}
+#id_birth_date_month {
+    width: 9rem;
+    text-align: center;
+}
+#id_birth_date_year {
+    width: 6rem;
+    text-align: center;
+}
+.boolquestion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+.openquestion {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+.openquestion_line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.confirmquestion {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    display: flex;
+    justify-content: space-between;
+}
+.boolanswers {
+    display: flex;
+    flex-direction: row;
+    min-width: 7em;
+    justify-content: space-between;
+    font-size: 20px;
+}
+.exp_question {
+    margin-right: 3rem;
+    margin-bottom: unset;
+    white-space: nowrap;
+}
+.question {
+    margin-right: 3rem;
+    margin-bottom: unset;
+}
+.radioanswers {
+    display: flex;
+    flex-direction: column;
+}
+.radioanswer {
+    display: flex;
+    padding: 1px;
+}
+.label_for_radio {
+    margin-left: 10px;
+}
+.radioanswer_line {
+    display: flex;
+    margin: 10px 15px;
+}
+/* questionary */

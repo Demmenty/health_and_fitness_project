@@ -9,8 +9,28 @@
 
     <h3>Мои клиенты</h3>
     {% for client in clients %}
-        <button type="button" class="btn btn-outline-primary" value="{{ client.username }}">{{ client.username }}</button>
+        <form method="get" action="{% url 'clientpage' %}">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
+            <input type="hidden" value="{{ client.username }}" name="clientname">
+            <button type="submit" class="btn btn-outline-primary">{{ client.username }}</button>
+        </form><br>
     {% endfor %}
 </div>
+
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+
+<img src="{% static 'controlpage/img/cat.gif' %}" id="fluffy_cat">
+<img src="{% static 'controlpage/img/pillow-blue.png' %}" id="pillow_blue">
 
 {% endblock %}

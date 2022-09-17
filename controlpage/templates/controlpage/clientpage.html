@@ -1,0 +1,25 @@
+{% extends 'controlpage/layout.html' %}
+{% load static %}
+
+{% block title %}{{ clientname }}: фитнес-контроль{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center">Клиент {{ clientname }}</h1>
+
+    <!-- анкета -->
+    {% if questionary %}
+    <form method="get" action="{% url 'client_questionary' %}">
+        <input type="hidden" value="{{ client_id }}" name="client_id">
+        <input type="hidden" value="{{ clientname }}" name="clientname">
+        <button type="submit" class="btn btn-info">Анкета здоровья</button>
+    </form>
+    {% else %}
+    <p>Анкета здоровья не заполнена</p>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}
