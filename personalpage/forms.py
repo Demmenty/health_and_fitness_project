@@ -142,7 +142,7 @@ class QuestionaryForm(ModelForm):
             ]
         widgets = {
             'fullname': TextInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control fs-5 text-center',
             }),
             'birth_date': SelectDateWidget(
                 years=range(1920, 2020),
