@@ -48,7 +48,7 @@ def loginuser(request):
             return JsonResponse(data, status=200)
         else:
             login(request, user)
-            result = 'успешный успех'
+            result = 'доступ разрешен'
             data = {
                 'result': result,
             }

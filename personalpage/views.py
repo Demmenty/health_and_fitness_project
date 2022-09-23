@@ -17,12 +17,12 @@ def make_session(user):
     fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
 
-def make_avg_for_period(user, period=7):
+def make_avg_for_period(user_id, period=7):
     """Составляет словарь из средних значений по
        каждому ежедневному измерению за неделю.
        Нужно передать user и period = кол-во дней
     """
-    set = reversed(Measurement.objects.filter(user=user)[:period])
+    set = reversed(Measurement.objects.filter(user=user_id)[:period])
     avg_data = {
         'avg_feel': 0,
         'avg_weight': 0,
@@ -174,10 +174,9 @@ def personalpage(request):
     # список измерений за неделю
     week = Measurement.objects.filter(user=request.user)[:7]
     # средние значения измерений за неделю 
-    avg_week = make_avg_for_period(request.user, period=7)
+    avg_week = make_avg_for_period(request.user.id, period=7)
     # измерялось ли давление (отображать или нет)
     show_pressure = False
-    show_pressure_period = False
     if any(day.pressure_upper for day in week):
         show_pressure = True
 
@@ -187,8 +186,8 @@ def personalpage(request):
         comment_form = MeasurementCommentForm(instance=day)
         week_comments_forms.append(comment_form)
 
-
     # статистика за выбранный период
+    show_pressure_period = False
     if request.GET.get('selectperiod'):
         selected_period = int(request.GET.get('selectperiod'))
         # средние значения измерений за произвольный период
@@ -200,7 +199,6 @@ def personalpage(request):
             show_pressure_period = True
         # красивый формат
         selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
-    
     else:
         selected_period = ""
         avg_period = ""

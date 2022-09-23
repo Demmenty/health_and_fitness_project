@@ -8,6 +8,19 @@
 .hidden_element {
     display: none !important;
 }
+table {
+    cursor: default;
+}
+.luminosity {
+    mix-blend-mode: luminosity;
+}
+.noluminosity {
+    mix-blend-mode: none;
+}
+.borderless{
+    border: 1px solid white !important;
+    background-color: white !important;
+}
 input[type="radio"] {
     border-radius: 50%;
     border: 1px solid #ced4da;
@@ -33,6 +46,12 @@ input[type="radio"]:focus {
 }
 .btn_rigth {
     float: right;
+}
+.sm_square_btn {
+    height: 22px;
+    width: 22px;
+    line-height: 5px;
+    padding: 2px;
 }
 /* общее */
 
@@ -66,6 +85,45 @@ footer {
     filter: drop-shadow(10px 8px 3px rgba(0,0,0,0.5));
 }
 /* controlpage */
+
+
+/* clientpage */
+.comment_header {
+    width: 280px;
+    cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+    margin-right: auto;
+    margin-left: auto;
+}
+.comment_btn.shadow {
+    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+}
+.comment_btn {
+    cursor: pointer; 
+}
+.comment_container {
+    background-color: white;
+    border: 1px solid #cfd6e1;
+    border-radius: 7px;
+    padding: 5px;
+    cursor: default;
+}
+.container_commentform {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: aliceblue;
+    max-width: 352px;
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 1084px;
+}
+/* clientpage */
 
 
 /* questionary */

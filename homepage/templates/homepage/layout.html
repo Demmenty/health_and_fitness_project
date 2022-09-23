@@ -90,7 +90,7 @@
                     
                     // После успешного завершения запросов запускается одна из колбэк-функций success или error.
                     success: function (response) {
-                      if (response.result == 'успешный успех') {
+                      if (response.result == 'доступ разрешен') {
                         resultField.style.color = "#00000000";
                         resultField.style.color = "#00c0f0";
                         resultField.textContent = response.result;
