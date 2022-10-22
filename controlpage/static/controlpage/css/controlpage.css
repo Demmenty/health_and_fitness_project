@@ -11,12 +11,6 @@
 table {
     cursor: default;
 }
-.luminosity {
-    mix-blend-mode: luminosity;
-}
-.noluminosity {
-    mix-blend-mode: none;
-}
 .borderless{
     border: 1px solid white !important;
     background-color: white !important;
@@ -91,8 +85,13 @@ footer {
     background-color: rgb(13 110 253 / 20%);
     border-radius: 3px;
 }
-.comment_btn {
-    cursor: pointer; 
+.comment_btn.luminosity {
+    cursor: default; 
+    mix-blend-mode: luminosity;
+}
+.comment_btn.noluminosity {
+    cursor: pointer;
+    mix-blend-mode: none;
 }
 .comment_container {
     background-color: white;
@@ -110,8 +109,8 @@ footer {
     max-width: 352px;
     position: absolute;
     z-index: 10;
-    top: 100%;
-    left: 1084px;
+    top: 60%;
+    left: 60%;
 }
 /* clientpage */
 
