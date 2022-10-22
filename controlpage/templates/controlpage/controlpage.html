@@ -4,18 +4,17 @@
 {% block title %}Тотальный фитнес-контроль{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-center">Страница самого лучшего фитнес-тренера</h1>
 
-    <h3>Мои клиенты</h3>
-    {% for client in clients %}
-        <form method="get" action="{% url 'clientpage' %}">
-            <input type="hidden" value="{{ client.id }}" name="client_id">
-            <input type="hidden" value="{{ client.username }}" name="clientname">
-            <button type="submit" class="btn btn-outline-primary">{{ client.username }}</button>
-        </form><br>
-    {% endfor %}
-</div>
+<h1 class="text-center">Страница самого лучшего фитнес-тренера</h1>
+
+<h3>Мои клиенты</h3>
+{% for client in clients %}
+    <form method="get" action="{% url 'clientpage' %}">
+        <input type="hidden" value="{{ client.id }}" name="client_id">
+        <input type="hidden" value="{{ client.username }}" name="clientname">
+        <button type="submit" class="btn btn-outline-primary">{{ client.username }}</button>
+    </form><br>
+{% endfor %}
 
 <BR>
 <BR>

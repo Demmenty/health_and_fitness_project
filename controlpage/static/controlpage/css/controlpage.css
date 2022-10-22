@@ -235,4 +235,12 @@ input[type="radio"]:hover {
 #text_warning_nometrics_mealjournal {
     margin-top: 28px;
 }
+#input_briefdate {
+    max-width: 200px;
+    display: inline;
+}
+#input_briefmonth {
+    max-width: 200px;
+    display: inline;
+}
 /* mealjournal */
