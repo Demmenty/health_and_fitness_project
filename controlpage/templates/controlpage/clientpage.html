@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container">
-    <h1 class="text-center">Клиент {{ clientname }}</h1>
+    <h2 class="text-center clientname">{{ clientname }}</h2>
 
     <!-- анкета -->
     {% if questionary %}
@@ -17,6 +17,19 @@
     </form>
     {% else %}
     <p>Анкета здоровья не заполнена</p>
+    {% endif %}
+
+    <br>
+
+    <!-- дневник питания -->
+    {% if fs_connected %}
+    <form method="get" action="{% url 'client_mealjournal' %}">
+        <input type="hidden" value="{{ client_id }}" name="client_id">
+        <input type="hidden" value="{{ clientname }}" name="clientname">
+        <button type="submit" class="btn btn-info">Дневник питания</button>
+    </form>
+    {% else %}
+    <p>FatSecret не подключен</p>
     {% endif %}
 
     <br>

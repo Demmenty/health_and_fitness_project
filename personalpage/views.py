@@ -9,6 +9,12 @@ from fatsecret import Fatsecret, GeneralError
 from django.http import JsonResponse
 
 
+# данные fatsecret - засунуть в бд!!!
+consumer_key = '96509fd6591d4fb384386e1b75516777'
+consumer_secret = 'cb1398ad47344691b092cabce5647116'
+fs = Fatsecret(consumer_key, consumer_secret)
+
+
 def make_session(user):
     """создание сессии с FatSecret Api для переданного пользователя"""
     global fs
@@ -118,10 +124,6 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
-# данные fatsecret - засунуть в бд
-consumer_key = '96509fd6591d4fb384386e1b75516777'
-consumer_secret = 'cb1398ad47344691b092cabce5647116'
-fs = Fatsecret(consumer_key, consumer_secret)
 
 
 # My views
