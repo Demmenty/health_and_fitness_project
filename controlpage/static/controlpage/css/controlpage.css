@@ -70,19 +70,9 @@ footer {
 /* controlpage */
 #fluffy_cat {
     height: 154px;
-    z-index: 3;
     position: absolute;
     right: 15px;
     margin-top: -93px;
-    filter: drop-shadow(1px 7px 3px rgba(0,0,0,0.5));
-}
-#pillow_blue {
-    height: 85px;
-    z-index: 2;
-    position: absolute;
-    right: 0;
-    margin-top: 0;
-    filter: drop-shadow(10px 8px 3px rgba(0,0,0,0.5));
 }
 /* controlpage */
 
