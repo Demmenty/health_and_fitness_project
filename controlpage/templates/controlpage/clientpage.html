@@ -7,6 +7,13 @@
 
 <h2 class="text-center clientname">{{ clientname }}</h2>
 
+
+
+<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">Пуньк</button>
+<br><br>
+
+
+
 <!-- анкета -->
 {% if questionary %}
 <form method="get" action="{% url 'client_questionary' %}">
@@ -25,8 +32,11 @@
 <form method="get" action="{% url 'client_mealjournal' %}">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-info">Дневник питания</button>
+    <button type="submit" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#load_cat">Дневник питания</button>
 </form>
+
+
+
 {% else %}
 <p>FatSecret не подключен</p>
 {% endif %}

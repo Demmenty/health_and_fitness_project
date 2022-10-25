@@ -65,6 +65,35 @@ h2.clientname {
 caption {
     color: black;
 }
+.modal.fade.cat_with_coffee {
+    right: 0;
+    bottom: 0;
+    left: unset;
+    top: unset;
+    height: auto;
+    width: auto;
+}
+.modal-dialog.cat_with_coffee {
+    
+}
+.cat_with_coffee { 
+    max-width: 380px;
+    width: 70%;  
+    filter: drop-shadow(3px 0px 3px #0000004e);
+    text-align: end;
+}
+.modal-backdrop {
+    transition: all 1.5s ease;
+    --bs-backdrop-bg: #61696e;
+    --bs-backdrop-opacity: 0.4;
+}
+.modal.fade .modal-dialog {
+    transform: translate(200px,0px);
+    transition: transform 2s ease-out;
+}
+.modal.show .modal-dialog {
+    transform: none;
+}
 /* общее */
 
 

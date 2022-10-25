@@ -160,7 +160,7 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br><hr><br>
@@ -212,7 +212,7 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>

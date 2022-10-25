@@ -52,14 +52,14 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="hidden" name="month" value="{{ prev_month }}">
-        <button type="submit" class="btn btn-outline-primary">предыдущий месяц</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">предыдущий месяц</button>
     </form>
     <hr>
     <form method = "get">
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="hidden" name="month" value="{{ next_month }}">
-        <button type="submit" class="btn btn-outline-primary">следующий месяц</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">следующий месяц</button>
     </form>
 </div>
 
@@ -221,7 +221,7 @@
 </form>
 
 <div id="waiting_calculating" class="waiting_container d-flex flex-column hidden_element">
-    <img src="{% static 'personalpage/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+    <img src="{% static 'general/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
     <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
 </div>
 <br><br>
@@ -239,7 +239,7 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>
