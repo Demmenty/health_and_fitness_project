@@ -15,6 +15,21 @@ consumer_secret = 'cb1398ad47344691b092cabce5647116'
 fs = Fatsecret(consumer_key, consumer_secret)
 
 
+# # для очистки файла кеша - раскомментировать
+# with open('personalpage/food_cache.pickle', 'wb') as f:
+#     pickle.dump({}, f)
+
+# id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха
+# удаление записей о продуктах без метрики для тестов - раскомментить
+
+# with open('personalpage/food_cache.pickle', 'rb') as f:
+#     food_cache = pickle.load(f)
+#     del food_cache['4652615']
+#     del food_cache['62258251']
+# with open('personalpage/food_cache.pickle', 'wb') as f:
+#     pickle.dump(food_cache, f)
+
+
 def make_session(user):
     """создание сессии с FatSecret Api для переданного пользователя"""
     global fs
@@ -550,21 +565,6 @@ def addmeasure(request):
                 'week_calendar': week_calendar,
                 }
             return render(request, 'personalpage/addmeasure.html', data)
-
-
-# # для очистки файла кеша - раскомментировать
-# with open('personalpage/food_cache.pickle', 'wb') as f:
-#     pickle.dump({}, f)
-
-# id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха
-# удаление записей о продуктах без метрики для тестов - раскомментить
-
-# with open('personalpage/food_cache.pickle', 'rb') as f:
-#     food_cache = pickle.load(f)
-#     del food_cache['4652615']
-#     del food_cache['62258251']
-# with open('personalpage/food_cache.pickle', 'wb') as f:
-#     pickle.dump(food_cache, f)
 
 
 def fatsecretauth(request):

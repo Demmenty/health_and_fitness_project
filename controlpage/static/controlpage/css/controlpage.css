@@ -11,9 +11,17 @@
 table {
     cursor: default;
 }
+.width_unset {
+    width: auto !important;
+}
 .borderless{
     border: 1px solid white !important;
     background-color: white !important;
+}
+.my-hover:hover {
+    outline-color: #8f8f8f !important;
+    outline-style: auto !important;
+    outline-width: 1px !important;
 }
 input[type="radio"] {
     border-radius: 50%;
@@ -53,6 +61,9 @@ h2.clientname {
     margin-right: auto;
     padding: 0.375rem 0.75rem;
     color: #0066c9;
+}
+caption {
+    color: black;
 }
 /* общее */
 
@@ -229,6 +240,11 @@ input[type="radio"]:hover {
     margin-right: 40px;
     margin-top: -10px;
 }
+#another_date_container {
+    width: 310px;
+    float: right;
+    margin-top: -8px;
+}
 #back_btn_mealjournal {
     margin-top: -18px;
 }
@@ -242,5 +258,53 @@ input[type="radio"]:hover {
 #input_briefmonth {
     max-width: 200px;
     display: inline;
+}
+.date_header {
+    border: 1px solid #cfcfcf;
+    padding: 7px 13px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+.month_header {
+    border: 1px solid #cfcfcf;
+    padding: 7px 13px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+.top_table {
+    box-shadow: 0 0 1px 1px #dee2e6;
+}
+.top_table_ol {
+    padding-right: 109px;
+    padding-left: 109px;
+}
+
+@media screen and (max-width: 991px) {
+    .top_table_ol {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+.add_metric_container {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+#foodmetricsave_status {
+    transition: all 1s ease;
+    color: #0065fd00;
 }
 /* mealjournal */
