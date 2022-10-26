@@ -6,10 +6,14 @@
 
 {% block content %}
 
-<h2 class="text-center clientname">{{ clientname }}</h2>
+<form method="get" action="{% url 'clientpage' %}">
+    <input type="hidden" value="{{ client_id }}" name="client_id">
+    <input type="hidden" value="{{ clientname }}" name="clientname">
+    <button type="submit" class="btn btn-outline-primary button_clientname"><h2 class="m-0">{{ clientname }}</h2></button>
+</form><br>
 
 <!-- Сводка за выбраннный месяц-->
-<h3 class="month_header">{{ briefmonth|date:'F Y' }}</h3><br>
+<h3 class="month_header">{{ briefmonth|date:'F Y' }}</h3>
 {% if food_entries_month %}
 
 <table class="table table-bordered table-hover text-center">

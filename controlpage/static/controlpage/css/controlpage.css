@@ -8,6 +8,9 @@
 .hidden_element {
     display: none !important;
 }
+.pointer {
+    cursor: pointer;
+}
 table {
     cursor: default;
 }
@@ -56,11 +59,17 @@ input[type="radio"]:focus {
     padding: 2px;
 }
 h2.clientname {
-    width: max-content;
-    margin-left: auto;
-    margin-right: auto;
+    cursor: default;
+    margin-bottom: 0;
     padding: 0.375rem 0.75rem;
-    color: #0066c9;
+    --bs-btn-color: #0d6efd;
+    display: inline-block;
+    color: var(--bs-btn-color);
+    text-decoration: none;
+    vertical-align: middle;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 caption {
     color: black;
@@ -72,9 +81,6 @@ caption {
     top: unset;
     height: auto;
     width: auto;
-}
-.modal-dialog.cat_with_coffee {
-    
 }
 .cat_with_coffee { 
     max-width: 380px;
@@ -94,6 +100,12 @@ caption {
 .modal.show .modal-dialog {
     transform: none;
 }
+.button_clientname {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
 /* общее */
 
 
@@ -289,20 +301,12 @@ input[type="radio"]:hover {
     display: inline;
 }
 .date_header {
-    border: 1px solid #cfcfcf;
     padding: 7px 13px;
-    border-radius: 10px;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }
 .month_header {
-    border: 1px solid #cfcfcf;
     padding: 7px 13px;
-    border-radius: 10px;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }
 #cat_with_coffee {
     height: 122px;

@@ -121,6 +121,7 @@ def client_questionary(request):
     
     data = {
         'clientname': clientname,
+        'client_id': client_id,
         'questionary': questionary,
         'form': form,
     }
