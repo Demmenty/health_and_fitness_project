@@ -161,8 +161,10 @@ def personalpage(request):
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
+    print(today_set)
     if today_set:
         today_measure = today_set[0]
+        print(today_measure)
         try:
             # сверяем\записываем данные кбжу из FS
             make_session(request.user)
@@ -179,8 +181,8 @@ def personalpage(request):
                 # если нет - то будет "нет данных"
         
             except KeyError:
-                # если keyerror значит записей за месяц нет
-                today_measure = ''
+                ...
+                # если keyerror значит данных о еде за месяц нет
 
         except FatSecretEntry.DoesNotExist:
             ...
