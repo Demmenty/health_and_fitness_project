@@ -60,12 +60,12 @@
 <div class="d-flex flex-row justify-content-between">
     <form method = "get">
         <input type="hidden" name="date" value="{{ prev_date }}">
-        <button type="submit" class="btn btn-outline-primary">предыдущий день</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">предыдущий день</button>
     </form>
     <hr>
     <form method = "get">
         <input type="hidden" name="date" value="{{ next_date }}">
-        <button type="submit" class="btn btn-outline-primary">следующий день</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">следующий день</button>
     </form>
 </div>
 
@@ -224,7 +224,7 @@
     <h5 class="text-center">Сводка за другое число</h5>
     <form action="" method = "get" class="d-flex justify-content-between">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate">
-        <button type="submit" class="btn btn-info d-inline" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info d-inline" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>

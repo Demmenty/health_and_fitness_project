@@ -74,6 +74,9 @@ h2.clientname {
 caption {
     color: black;
 }
+/* общее */
+
+/* загрузочный кот */
 .modal.fade.cat_with_coffee {
     right: 0;
     bottom: 0;
@@ -105,9 +108,7 @@ caption {
     left: 50%;
     transform: translate(-50%, 0);
 }
-
-/* общее */
-
+/* загрузочный кот */
 
 /* layout */
 header {

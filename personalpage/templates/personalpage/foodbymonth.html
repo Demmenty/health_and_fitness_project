@@ -48,12 +48,12 @@
 <div class="d-flex flex-row justify-content-between">
     <form method = "get">
         <input type="hidden" name="month" value="{{ prev_month }}">
-        <button type="submit" class="btn btn-outline-primary">предыдущий месяц</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">предыдущий месяц</button>
     </form>
     <hr>
     <form method = "get">
         <input type="hidden" name="month" value="{{ next_month }}">
-        <button type="submit" class="btn btn-outline-primary">следующий месяц</button>
+        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">следующий месяц</button>
     </form>
 </div>
 
@@ -228,7 +228,7 @@
     <h5 class="text-center">Сводка за другой месяц</h5>
     <form action="" method ="get" class="d-flex justify-content-between">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>

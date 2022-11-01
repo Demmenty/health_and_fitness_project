@@ -164,7 +164,7 @@
     <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
     <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex justify-content-between">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br><hr><br>
@@ -214,7 +214,7 @@
     <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
     <form action = "{% url 'foodbymonth' %}" method = "get" class="d-flex justify-content-between">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-info" name="submit">Получить</button>
+        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>
