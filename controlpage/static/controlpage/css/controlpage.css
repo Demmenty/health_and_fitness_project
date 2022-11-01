@@ -172,6 +172,18 @@ footer {
     top: 60%;
     left: 60%;
 }
+.period_select {
+    display: flex;
+    max-width: 380px;
+    align-items: baseline;
+    justify-content: space-between;
+    white-space: nowrap;
+    flex-flow: wrap;
+}
+#input_period {
+    max-width: 70px;
+    padding: 6px;
+}
 /* clientpage */
 
 

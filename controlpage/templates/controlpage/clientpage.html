@@ -95,6 +95,7 @@
     <p>За сегодня измерений не сделано.</p>
     {% endif %}
 
+    {% if not selected_period %}
     {% if week_measures %}
     <!-- неделя -->
     <table class="table table-bordered caption-top align-middle text-center">
@@ -174,11 +175,76 @@
     {% else %}
     <p>Измерения отсутствуют.</p>
     {% endif %}
+    {% endif %}
 
 </div>
 
 
-<br>
+<!-- Статистика за произвольную дату -->
+{% if selected_period %}
+<table class="table table-bordered caption-top align-middle text-center">
+    <caption><h3>Данные измерений за {{ selected_period }}</h3></caption>
+    <tr class="table-light"> 
+        <th>Дата</th>
+        <th>День</th>
+        <th>Самочувствие</th>
+        <th>Масса</th>
+        <th>Жирность</th>
+        <th>Пульс</th>
+        {% if show_pressure_period %}
+            <th>Давление</th>
+        {% endif%}
+        <th>Калории</th>
+        <th>Белки</th>
+        <th>Жиры</th>
+        <th>Углеводы</th>
+    </tr>
+    {% for day in period|dictsort:"date" %}
+    <tr class="my-hover">
+        <td>{{ day.date|date:"j b" }}</td>
+        <td>{{ day.date|date:"D" }}</td>
+        <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+        <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+        <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+        <td>{{ day.pulse|default_if_none:"" }}</td>
+        {% if show_pressure_period %}
+            <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                    {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                {% endif %}</td>
+        {% endif%}
+        <td>{{ day.calories|default_if_none:"" }}</td>
+        <td>{{ day.protein|default_if_none:"" }}</td>
+        <td>{{ day.fats|default_if_none:"" }}</td>
+        <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="table-light">
+        <th colspan="2">В среднем:</th>
+        <th>{{ avg_period.avg_feel|default:"" }}</th>
+        <th>{{ avg_period.avg_weight|default:"" }}</th>
+        <th>{{ avg_period.avg_fat|default:"" }}</th>
+        <th>{{ avg_period.avg_pulse|default:"" }}</th>
+        {% if show_pressure_period %}
+            <th>{{ avg_period.avg_pressure|default:"" }}</th>
+        {% endif%}
+        <th>{{ avg_period.avg_calories|default:"" }}</th>
+        <th>{{ avg_period.avg_protein|default:"" }}</th>
+        <th>{{ avg_period.avg_fats|default:"" }}</th>
+        <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
+    </tr>
+</table><br>
+{% endif %}
+
+<!-- Выбор дней статистики -->
+<form action="" method="get" class="period_select">
+    <input type="hidden" value="{{ client_id }}" name="client_id">
+    <input type="hidden" value="{{ clientname }}" name="clientname">
+    <h5>Статистика за
+    <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
+    дней</h5>
+    <button type="submit" class="btn btn-info d-inline" name="submit">Получить</button></h5>
+</form>
+<br><br>
 
 <!-- Кнопка возврата -->
 <a href="{% url 'controlpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>

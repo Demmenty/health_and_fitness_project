@@ -24,7 +24,26 @@ def make_session(user):
     fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
 
 
-# Create your views here.
+def get_noun_ending(number, one, two, five):
+    """Функция возвращает вариант слова с правильным окончанием
+       в зависимости от числа
+       Нужно передать число и соответствующие варианты
+       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
+    """
+    n = abs(number)
+    n %= 100
+    if 20 >= n >= 5:
+        return five
+    n %= 10
+    if n == 1:
+        return one
+    if 4 >= n >= 2:
+        return two
+    return five
+
+
+# My views
+
 def controlpage(request):
     """Личный кабинет Параболы"""
 
@@ -89,6 +108,23 @@ def clientpage(request):
     if any(day.pressure_upper for day in week_measures):
         show_pressure_week = True
     
+    # статистика за выбранный период
+    show_pressure_period = False
+    if request.GET.get('selectperiod'):
+        selected_period = int(request.GET.get('selectperiod'))
+        # средние значения измерений за произвольный период
+        avg_period = make_avg_for_period(client_id, period=selected_period)
+        # список измерений за этот период
+        period = Measurement.objects.filter(user=client_id)[:selected_period]
+        # измерялось ли давление (отображать или нет)
+        if any(day.pressure_upper for day in period):
+            show_pressure_period = True
+        # красивый формат
+        selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
+    else:
+        selected_period = ""
+        avg_period = ""
+        period = ""
 
     data = {
         'clientname': clientname,
@@ -97,8 +133,13 @@ def clientpage(request):
         'fs_connected': fs_connected,
         'today_measure': today_measure,
         'week_measures': week_measures,
+        'selected_period': selected_period,
+        'period': period,
         'avg_week': avg_week,
+        'avg_period': avg_period,
         'show_pressure_week': show_pressure_week,
+        'show_pressure_period': show_pressure_period,
+
     }
     return render(request, 'controlpage/clientpage.html', data)
 

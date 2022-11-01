@@ -140,8 +140,8 @@ def get_noun_ending(number, one, two, five):
 
 
 
-
 # My views
+
 def personalpage(request):
     """Личный кабинет клиента"""
 
@@ -378,7 +378,6 @@ def addmeasure(request):
 
     # ГЕНЕРАЦИЯ ФОРМ на 7 дней
     week_measureforms = []
-
     # получаем общие данные кбжу из FS за посл. 7дней в food_data
     food_data = []
     try:
@@ -518,12 +517,13 @@ def addmeasure(request):
                                 fs.weight_update(current_weight_kg=float(measure_weight),
                                                  date=datetime.combine(measure_date, time()))
                         except KeyError:
+                            # если keyerror значит весов за этот месяц еще не внесено
                             if date.today().day >=3:
                                 fs.weight_update(current_weight_kg=float(measure_weight),
                                                  date=datetime.combine(measure_date, time()))
                             else:
                                 try:
-                                    measure_month_weight = fs.weights_get_month(date=measure_date)
+                                    measure_month_weight = fs.weights_get_month(date=datetime.combine(measure_date, time()))
                                     last_date_weight = measure_month_weight[-1]['date_int']
                                     last_date_weight = date(1970, 1 ,1) + timedelta(days=int(last_date_weight))
                                     if last_date_weight < measure_date:
