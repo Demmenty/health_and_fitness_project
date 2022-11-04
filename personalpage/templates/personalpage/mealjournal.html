@@ -10,9 +10,26 @@
 
 <!-- Кнопка соединения с FS -->
 {% if user_not_connected %}
-<a href="{% url 'fatsecretauth' %}"><button class='btn btn-info'>Привязать FatSecret</button></a><br><br>
-<p>Ваш аккаунт на FatSecret должен быть подтвержденным.</p>
-<p>Если не получается, попробуйте сначала войти в него на <a href="https://www.fatsecret.com" target="_blank">FatSecret</a></p>
+<p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение FatSecret.</p>
+<p>FatSecret бесплатен и прост в использовании.</p>
+<p>Вам нужно будет лишь вести дневник питания, а вся необходимая для анализа информация будет собираться нами автоматически.</p>
+
+<ol>
+    <li>Установите приложение:</li><br>
+    <div>
+        <a target="blank" href="https://itunes.apple.com/ru/app/calorie-counter-by-fatsecret/id347184248?mt=8" style="text-decoration:none">
+            <img src="https://a.ftscrt.com/static/images/mobi/ios/Download_on_the_App_Store_Badge_RU_RGB_blk_100317.svg">
+        </a>
+        &nbsp;&nbsp;
+        <a target="blank" href="https://play.google.com/store/apps/details?id=com.fatsecret.android" style="text-decoration:none">
+            <img src="https://a.ftscrt.com/static/images/mobi/android/ru_get_2.svg">
+        </a>
+    </div><br>
+    <li>Войдите в свой аккаунт на сайте <a href="https://www.fatsecret.com/Auth.aspx?pa=s" target="_blank" style="text-decoration:none">FatSecret</a>. Возможно, его потребуется подтвердить.</li><br>
+    <li>Свяжите свои аккаунты в прочный союз с помощью этой кнопки:</li><br>
+    <a href="{% url 'fatsecretauth' %}"><button class='btn btn-info'>Привязать FatSecret</button></a>
+</ol>
+<br>
 
 {% else %}
 
