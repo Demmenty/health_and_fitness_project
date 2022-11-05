@@ -309,6 +309,71 @@ footer {
 #text_warning_nometrics_mealjournal {
     margin-top: 28px;
 }
+.fatsecret_ref {
+    color: #36bd30;
+    text-decoration: none;
+    font-weight: 500;
+}
+.fatsecret_ref:hover {
+    color: #288023;
+}
+
+@media screen and (max-width: 341px) {
+    #fsapp_googleplay {
+        margin-top: 10px;
+    }
+}
+
+.container_fs_photo {
+    justify-content: end;
+}
+.fs_photo {
+    width: 144px;
+    margin-left: 1rem;
+    margin-bottom: 0px;
+    margin-top: 6px;
+}
+@media screen and (max-width: 1399px) {
+    .fs_photo {
+        width: 159px;
+    }
+}
+@media screen and (max-width: 1199px) {
+    #fs_photo3 {
+        display: none;
+    }
+}
+@media screen and (max-width: 991px) {
+    .fs_photo {
+        width: 133px;
+    }
+}
+@media screen and (max-width: 767.5px) {
+    #fs_photo2 {
+        display: none;
+    }
+    .fs_photo {
+        width: 187px;
+    }
+}
+@media screen and (max-width: 546px) {
+    #fs_photo3, #fs_photo2, #fs_photo1 {
+        display: unset;
+        width: 33%;
+    }
+    .fs_photo {
+        width: -webkit-fill-available;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    #container_fs_connection {
+        flex-direction: column-reverse;
+    }
+    #container_fs_photo {
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+}
 /* mealjournal */
 
 
