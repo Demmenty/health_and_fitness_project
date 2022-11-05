@@ -13,7 +13,7 @@
 {% else %}
 <h3>Пожалуйста, заполните анкету</h3>
 {% endif %}
-<a href="{% url 'questionary' %}"><button class="btn btn-info">Анкета</button></a><br><br>
+<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета</button></a><br><br>
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
@@ -35,18 +35,18 @@
         </table>
         <p class="error_message">{{ error }}</p>
     </div><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Редактировать записи</button></a><br><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Редактировать записи</button></a><br><br>
 {% else %}
     <p>За сегодня измерений не сделано.</p><br>
     <p>Данные необходимо вносить каждый день!</p><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-info'>Добавить запись</button></a><br><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Добавить запись</button></a><br><br>
 {% endif %}
 
 <!-- дневник питания -->
-<a href="{% url 'mealjournal' %}"><button class='btn btn-info' data-bs-toggle="modal" data-bs-target="#load_cat">Дневник питания</button></a>
+<a href="{% url 'mealjournal' %}"><button class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#load_cat">Дневник питания</button></a>
 
 <!-- дневник антропометрии -->
-<a href="{% url 'anthropometry' %}"><button class='btn btn-info'>Антропометрия</button></a><br><br>
+<a href="{% url 'anthropometry' %}"><button class='btn btn-primary'>Антропометрия</button></a><br><br>
 <br>
 
 
@@ -268,7 +268,7 @@
     <h5>Статистика за
     <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
     дней</h5>
-    <button type="submit" class="btn btn-info d-inline" name="submit">Получить</button></h5>
+    <button type="submit" class="btn btn-primary d-inline" name="submit">Получить</button></h5>
 </form>
 <br><br>
 

@@ -165,11 +165,11 @@
     <!-- Кнопка показа всех записей -->
     {% if metrics.count > 3 %}
         {% if show_all == 'True' %}
-            <button type="button" class="btn btn-info btn_rigth" id="btn_hide_all">Скрыть все записи</button>
+            <button type="button" class="btn btn-primary btn_rigth" id="btn_hide_all">Скрыть все записи</button>
         {% else %}
             <form method="get">
                 <input type="hidden" name="show_all" value="True">
-                <button type="submit" class="btn btn-info btn_rigth" id="btn_show_all">Все записи</button>
+                <button type="submit" class="btn btn-primary btn_rigth" id="btn_show_all">Все записи</button>
             </form>
         {% endif %}
     {% endif %}
@@ -177,7 +177,7 @@
 {% endif %}
 
 <!-- кнопка добавление записи -->
-<a href="#status_addanthropo"><button type="button" class="btn btn-info" id="btn_add_anthropo">Добавить запись</button></a>
+<a href="#status_addanthropo"><button type="button" class="btn btn-primary" id="btn_add_anthropo">Добавить запись</button></a>
 
 <p class="text-danger text-center" id="status_addanthropo">{{ error }}</p><br>
 
@@ -230,7 +230,7 @@
         <label class="col-sm-12 form-label">{{ metrics_form.photo_3.label }}</label>
         <div class="col-sm-12">{{ metrics_form.photo_3 }}</div>
     </div><br>
-    <button type="submit" class="btn btn-info btn_rigth">Сохранить</button>
+    <button type="submit" class="btn btn-primary btn_rigth">Сохранить</button>
     <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
 </form>
 <br><br>

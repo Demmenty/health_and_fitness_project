@@ -12,7 +12,7 @@
 <form method="get" action="{% url 'client_questionary' %}">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-info">Анкета здоровья</button>
+    <button type="submit" class="btn btn-primary">Анкета здоровья</button>
 </form>
 {% else %}
 <p>Анкета здоровья не заполнена</p>
@@ -25,7 +25,7 @@
 <form method="get" action="{% url 'client_mealjournal' %}">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#load_cat">Дневник питания</button>
+    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#load_cat">Дневник питания</button>
 </form>
 
 
@@ -242,7 +242,7 @@
     <h5>Статистика за
     <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
     дней</h5>
-    <button type="submit" class="btn btn-info d-inline" name="submit">Получить</button></h5>
+    <button type="submit" class="btn btn-primary d-inline" name="submit">Получить</button></h5>
 </form>
 <br><br>
 

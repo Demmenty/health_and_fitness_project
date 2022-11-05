@@ -84,8 +84,8 @@
         {% endfor %}
         <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
         
-        <button type="submit" class="btn btn-info">Сохранить</button>
-        <button type="button" class="btn btn-info hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
     </form>
 </div>
 
@@ -164,7 +164,7 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
-        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+        <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br><hr><br>
@@ -216,7 +216,7 @@
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-info" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+        <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
 <br>

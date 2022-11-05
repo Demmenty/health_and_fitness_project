@@ -18,12 +18,12 @@
 
     <header>
       <div class="container">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-          <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
+          <a href="/" class="d-flex align-items-center mb-2 mb-md-0">
             <img src="{% static 'general/img/Logo.png' %}" alt="logo" width="100">
           </a>
               
-          <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <ul class="nav col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="#" class="nav-link px-2 link-dark">Обо мне</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Рецепты</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Блог</a></li>
@@ -31,7 +31,7 @@
             <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
           </ul>
     
-          <div class="col-md-3 text-end">
+          <div class="text-end">
             {% if user.is_authenticated %}
               <h2>Привет, {{ user.username }}!</h2>
               <a href="{{ 'personalpage' }}"><button type="button" class="btn btn-primary">Личный кабинет</button></a>
@@ -45,7 +45,7 @@
             {% endif %}
           </div>
 
-        </header>
+        </div>
       </div>
     </header>
 
@@ -214,15 +214,55 @@
 
     <footer>
       <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top">
-          <div class="col-md-4 d-flex align-items-center">
-            <span class="mb-3 mb-md-0 text-muted">© 2022 Company, Inc</span>
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+          <div class="d-flex flex-column">
+            <div class="p-2 d-flex align-items-center">
+              <span class="mb-3 mb-md-0 me-2 text-white">Поддержка сайта</span>
+            </div>
+            <div class="px-2 d-flex">
+              <a href="mailto:demmenty@gmail.com" target="_blank" class="mail_ref">Demmenty@gmail.com</a>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://wa.me/79273719237" target="_blank"><img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+              </div>
+            </div>
           </div>
-      
-          <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-            <li>Контакты</li>
-          </ul>
-        </footer>
+          <div class="d-flex align-items-center">
+            <span class="mb-3 mb-md-0 text-white">© 2022 ИП Рябов Р.А.</span>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+              <span class="p-2 mb-3 mb-md-0 me-2 text-white">Контакты эксперта</span>
+            </div>
+            <div class="px-2 d-flex">
+              <a href="mailto:parrabolla@mail.ru" target="_blank" class="mail_ref">Parrabolla@mail.ru</a>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://t.me/parrrabollla" target="_blank"><img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://wa.me/79603280691" target="_blank"><img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://discord.gg/CDrXhVA" target="_blank"><img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank"><img src="{% static 'general/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://vk.com/id37037617" target="_blank"><img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
       

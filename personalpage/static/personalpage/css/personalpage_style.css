@@ -5,6 +5,31 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+
+/* стиль кнопок */
+.btn-primary {
+    --bs-btn-bg: #5271ff !important;
+    --bs-btn-border-color: #5271ff !important;
+    --bs-btn-hover-color: #f6f6f6 !important;
+    --bs-btn-hover-bg: #3f54b2 !important;
+    --bs-btn-hover-border-color: #3f54b2 !important;
+    --bs-btn-active-bg: #5271ff !important;
+    --bs-btn-active-border-color: #5271ff !important;
+    --bs-btn-disabled-bg: #5271ff !important;
+    --bs-btn-disabled-border-color: #5271ff !important;
+}
+.btn-outline-primary {
+    --bs-btn-color: #5271ff !important;
+    --bs-btn-border-color: #5271ff !important;
+    --bs-btn-hover-bg: #5271ff !important;
+    --bs-btn-hover-border-color: #5271ff !important;
+    --bs-btn-active-bg: #5271ff !important;
+    --bs-btn-active-border-color: #5271ff !important;
+    --bs-btn-disabled-color: #5271ff !important;
+    --bs-btn-disabled-border-color: #5271ff !important;
+}
+/* стиль кнопок */
+
 .hidden_element {
     display: none !important;
 }
@@ -98,6 +123,7 @@ table {
 }
 .noluminosity {
     mix-blend-mode: none;
+    filter: hue-rotate(36deg);
 }
 #foodmetricsave_status {
     transition: all 1s ease;
@@ -112,11 +138,6 @@ table {
 .borderless{
     border: 1px solid white !important;
     background-color: white !important;
-}
-
-.contact_ico {
-    height: 25px;
-    filter: drop-shadow(0px 0px 5px #ffffff);
 }
 /* общее */
 
@@ -156,11 +177,35 @@ table {
 
 /* layout */
 header {
-    background-color: #bce0ed;
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+main {
+    padding-top: 120px;
 }
 footer {
-    background-color: #bce0ed;
+    background-color: #5271ff;
     margin-top: 1.5rem!important;
+    border-top-color: #e5e5e5;
+    border-top-style: solid;
+    border-top-width: 3px;
+}
+.mail_ref {
+    color: #b9b9b9;
+    text-decoration: none;
+}
+.mail_ref:hover {
+    color: black;
+}
+.contact_ico {
+    height: 25px;
+    filter: invert(1);
+}
+.contact_ico:hover {
+    filter: brightness();
 }
 /* layout */
 
@@ -184,7 +229,7 @@ footer {
     background-color: white;
     color: black;
     cursor: pointer;
-    border: 1px solid dodgerblue;
+    border: 1px solid #5271ff;
     width: 69px;
     height: 45px;
     padding: 5px 5px;
@@ -198,11 +243,11 @@ footer {
 }
 .date_selection:hover {
     cursor: pointer;
-    background-color: dodgerblue;
+    background-color: #5271ff;
     color: white;
 }
 .selected_date {
-    background-color: dodgerblue !important;
+    background-color: #5271ff !important;
     color: white !important;
 }
 .addmeasure_form {
@@ -437,6 +482,7 @@ footer {
 }
 .comment_btn {
     cursor: pointer; 
+    filter: hue-rotate(36deg);
 }
 .commentbtn_container {
     margin-top: 5px;
@@ -473,7 +519,7 @@ footer {
     position: absolute;
     z-index: 10;
     top: 100%;
-    left: 1084px;
+    left: 600px;
 }
 /* personalpage */
 

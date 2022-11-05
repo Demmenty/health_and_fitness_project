@@ -6,13 +6,37 @@
 }
 
 header {
-    background-color: #bfd5ef;
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+main {
+    padding-top: 120px;
+}
+footer {
+    background-color: #5271ff;
+    margin-top: 1.5rem!important;
+    border-top-color: #e5e5e5;
+    border-top-style: solid;
+    border-top-width: 3px;
+}
+.mail_ref {
+    color: #b9b9b9;
+    text-decoration: none;
+}
+.mail_ref:hover {
+    color: black;
+}
+.contact_ico {
+    height: 25px;
+    filter: invert(1);
+}
+.contact_ico:hover {
+    filter: brightness();
 }
 
-footer {
-    background-color: #bfd5ef;
-    margin-top: 1.5rem!important;
-}
 
 .hidden_element {
     display: none !important;
@@ -76,3 +100,27 @@ footer {
     display: block;
     text-align: center;
 }
+
+/* стиль кнопок */
+.btn-primary {
+    --bs-btn-bg: #5271ff !important;
+    --bs-btn-border-color: #5271ff !important;
+    --bs-btn-hover-color: #f6f6f6 !important;
+    --bs-btn-hover-bg: #3f54b2 !important;
+    --bs-btn-hover-border-color: #3f54b2 !important;
+    --bs-btn-active-bg: #5271ff !important;
+    --bs-btn-active-border-color: #5271ff !important;
+    --bs-btn-disabled-bg: #5271ff !important;
+    --bs-btn-disabled-border-color: #5271ff !important;
+}
+.btn-outline-primary {
+    --bs-btn-color: #5271ff !important;
+    --bs-btn-border-color: #5271ff !important;
+    --bs-btn-hover-bg: #5271ff !important;
+    --bs-btn-hover-border-color: #5271ff !important;
+    --bs-btn-active-bg: #5271ff !important;
+    --bs-btn-active-border-color: #5271ff !important;
+    --bs-btn-disabled-color: #5271ff !important;
+    --bs-btn-disabled-border-color: #5271ff !important;
+}
+/* стиль кнопок */
