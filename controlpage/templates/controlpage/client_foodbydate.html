@@ -6,14 +6,8 @@
 
 {% block content %}
 
-<form method="get" action="{% url 'clientpage' %}">
-    <input type="hidden" value="{{ client_id }}" name="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-outline-primary button_clientname"><h2 class="m-0">{{ clientname }}</h2></button>
-</form><br>
-
 <!-- Сводка за выбраннную дату -->
-<h3 class="date_header">{{ briefdate|date:"l" }} {{ briefdate|date }}</h3>
+<h3 class="text-center p-2">{{ briefdate|date:"l" }} {{ briefdate|date }}</h3>
 {% if food_entry %}
 
 <table class="table table-bordered">

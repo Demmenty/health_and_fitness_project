@@ -1,0 +1,106 @@
+{% extends 'controlpage/layout.html' %}
+{% load static %}
+
+{% block title %}{{ clientname }}: антропометрия{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Дневник антропометрии</h1><br>
+
+{% if not metrics %}
+    <p class="text-center">Измерения отсутствуют</p><br>
+
+{% else %}
+    <!-- таблица первых измерений -->
+    {% if first_metrics %}
+        <table class="table table-bordered caption-top text-center">
+            <caption><h5>Первое измерение</h5></caption>
+            <thead class="table-light">
+                <tr>
+                    <th>Дата</th>
+                    <th>Плечо</th>
+                    <th>Грудь</th>
+                    <th>Талия</th>
+                    <th>Живот</th>
+                    <th>Ягодицы</th>
+                    <th>Бедро</th>
+                    <th>Голень</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ first_metrics.date }}</td>
+                    <td>{{ first_metrics.shoulder|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.chest|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.waist|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.belly|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.buttocks|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.hip|default_if_none:"-" }}</td>
+                    <td>{{ first_metrics.shin|default_if_none:"-" }}</td>
+                </tr>
+            </tbody>
+        </table><br>
+    {% endif %}
+    <!-- таблица последних измерений -->
+    <table class="table table-bordered caption-top text-center">
+        <caption><h5>Последние измерения</h5></caption>
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Плечо</th>
+                <th>Грудь</th>
+                <th>Талия</th>
+                <th>Живот</th>
+                <th>Ягодицы</th>
+                <th>Бедро</th>
+                <th>Голень</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for metrics in prev_metrics %}
+            <tr>
+                <td>{{ metrics.date|default_if_none:"-" }}</td>
+                <td>{{ metrics.shoulder|default_if_none:"-" }}</td>
+                <td>{{ metrics.chest|default_if_none:"-" }}</td>
+                <td>{{ metrics.waist|default_if_none:"-" }}</td>
+                <td>{{ metrics.belly|default_if_none:"-" }}</td>
+                <td>{{ metrics.buttocks|default_if_none:"-" }}</td>
+                <td>{{ metrics.hip|default_if_none:"-" }}</td>
+                <td>{{ metrics.shin|default_if_none:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table><br>
+
+    <!-- таблица всех измерений -->  
+    <table class="table table-bordered caption-top text-center" id="all_anthropo_table">
+        <caption><h5>Все измерения</h5></caption>
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>Плечо</th>
+                <th>Грудь</th>
+                <th>Талия</th>
+                <th>Живот</th>
+                <th>Ягодицы</th>
+                <th>Бедро</th>
+                <th>Голень</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for metric in metrics|dictsort:"date" %}
+            <tr class="my-hover">
+                <td>{{ metric.date|default_if_none:"-" }}</td>
+                <td>{{ metric.shoulder|default_if_none:"-" }}</td>
+                <td>{{ metric.chest|default_if_none:"-" }}</td>
+                <td>{{ metric.waist|default_if_none:"-" }}</td>
+                <td>{{ metric.belly|default_if_none:"-" }}</td>
+                <td>{{ metric.buttocks|default_if_none:"-" }}</td>
+                <td>{{ metric.hip|default_if_none:"-" }}</td>
+                <td>{{ metric.shin|default_if_none:"-" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

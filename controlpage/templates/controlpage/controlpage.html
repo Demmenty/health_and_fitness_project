@@ -5,9 +5,8 @@
 
 {% block content %}
 
-<h1 class="text-center">Страница самого лучшего фитнес-тренера</h1>
+<h2 class="text-center">Мои клиенты</h2>
 
-<h3>Мои клиенты</h3>
 {% for client in clients %}
     <form method="get" action="{% url 'clientpage' %}">
         <input type="hidden" value="{{ client.id }}" name="client_id">
@@ -16,19 +15,5 @@
     </form><br>
 {% endfor %}
 
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-<BR>
-
-<img src="{% static 'controlpage/img/cat.gif' %}" id="fluffy_cat">
 
 {% endblock %}

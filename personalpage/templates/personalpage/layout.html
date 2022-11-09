@@ -16,22 +16,22 @@
 
 <body>
   
-  <header>
+  <header class="border-bottom">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-2 mb-md-0 text-dark text-decoration-none">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+        <a href="/" class="d-flex align-items-center mb-2 mb-md-0">
           <img src="{% static 'general/img/Logo.svg' %}" alt="logo" width="100">
         </a>
   
-        <ul class="nav col-md-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 link-dark">Обо мне</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Рецепты</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Блог</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Прайс-лист</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
+        <ul class="nav justify-content-center align-items-center">
+          <li><a href="#" class="nav_link">данные</a></li>
+          <li><a href="{% url 'addmeasure' %}" class="nav_link">измерения</a></li>
+          <li><a href="{% url 'mealjournal' %}" class="nav_link">питание</a></li>
+          <li><a href="#" class="nav_link">тренировки</a></li>
+          <li><a href="{% url 'anthropometry' %}" class="nav_link">антропометрия</a></li>
         </ul>
           
-        <div class=" text-end">
+        <div class="text-end">
           <form method="POST" action="{% url 'logoutuser' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-primary">Выйти</button>

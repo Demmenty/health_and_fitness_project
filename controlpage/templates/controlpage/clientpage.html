@@ -5,8 +5,6 @@
 
 {% block content %}
 
-<h2 class="text-center clientname">{{ clientname }}</h2>
-<br><br>
 <!-- анкета -->
 {% if questionary %}
 <form method="get" action="{% url 'client_questionary' %}">
@@ -169,7 +167,7 @@
             </tr>
         </tbody>
     </table>
-    <p>* среднее КБЖУ считается без учета сегодняшнего дня</p><br>
+    <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p><br>
 
 
     {% else %}

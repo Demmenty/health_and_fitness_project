@@ -6,6 +6,55 @@
     font-family: 'Roboto', sans-serif;
 }
 
+/* header */
+header {
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+.nav_link_container {
+    width: 140px;
+    height: 50px;
+}
+.nav_link {
+    color: #545454;
+    text-decoration: none;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    font-weight: 500;
+}
+.nav_link:hover {
+    color: #5271ff;
+}
+/* main */
+main {
+    padding-top: 120px;
+}
+/* footer */
+footer {
+    background-color: #5271ff;
+    border-top-color: #b9b9b9;
+    border-top-style: solid;
+    border-top-width: 3px;
+    margin-top: 2rem;
+}
+.mail_ref {
+    color: #b9b9b9;
+    text-decoration: none;
+}
+.mail_ref:hover {
+    color: black;
+}
+.contact_ico {
+    height: 25px;
+    filter: invert(1);
+}
+.contact_ico:hover {
+    filter: brightness();
+}
+
 /* стиль кнопок */
 .btn-primary {
     --bs-btn-bg: #5271ff !important;
@@ -30,6 +79,9 @@
 }
 /* стиль кнопок */
 
+.royal_blue {
+    color: #5271ff;
+}
 .hidden_element {
     display: none !important;
 }
@@ -179,39 +231,6 @@ table {
 }
 /* загрузочный кот */
 
-/* layout */
-header {
-    background-color: #ffffff;
-    margin-bottom: 1rem;
-    position: fixed;
-    width: 100%;
-    z-index: 100;
-}
-main {
-    padding-top: 120px;
-}
-footer {
-    background-color: #5271ff;
-    margin-top: 1.5rem!important;
-    border-top-color: #c6c6c6;
-    border-top-style: solid;
-    border-top-width: 3px;
-}
-.mail_ref {
-    color: #b9b9b9;
-    text-decoration: none;
-}
-.mail_ref:hover {
-    color: black;
-}
-.contact_ico {
-    height: 25px;
-    filter: invert(1);
-}
-.contact_ico:hover {
-    filter: brightness();
-}
-/* layout */
 
 
 /* addmeasure */
@@ -312,11 +331,12 @@ footer {
     box-shadow: 0 1px 4px 4px rgb(13 110 253 / 20%) !important;
     background-color: rgb(13 110 253 / 20%);
     border-radius: 3px;
-    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
-    -webkit-filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5)) hue-rotate(36deg);
+    -webkit-filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5)) hue-rotate(36deg);
 }
 .show_photo_btn {
     cursor: pointer;
+    filter: hue-rotate(36deg);
 }
 .show_photo_btn.luminosity {
     cursor: default;
@@ -326,7 +346,7 @@ footer {
     border-radius: 10px;
     padding: 5px;
     backface-visibility: hidden;
-    background-color: aliceblue;
+    background-color: #ebefff;
     min-width: 300px;
     max-width: 600px;
     position: absolute;
@@ -432,32 +452,13 @@ footer {
 
 
 /* foodbymonth */
-.month_header {
-    border: 1px solid #cfcfcf;
-    padding: 7px 13px;
-    border-radius: 10px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
+
 #cat_with_coffee {
     height: 122px;
     width: 152px;
     align-self: center;
 }
 /* foodbymonth */
-
-
-/* foodbydate */
-.date_header {
-    border: 1px solid #cfcfcf;
-    padding: 7px 13px;
-    border-radius: 10px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
-/* foodbydate */
 
 
 /* personalpage */
@@ -518,7 +519,7 @@ footer {
     border-radius: 10px;
     padding: 5px;
     backface-visibility: hidden;
-    background-color: aliceblue;
+    background-color: #ebefff;
     max-width: 352px;
     position: absolute;
     z-index: 10;

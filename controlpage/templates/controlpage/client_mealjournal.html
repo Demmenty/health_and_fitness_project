@@ -6,13 +6,7 @@
 
 {% block content %}
 
-<h1 class="text-center">Дневник питания</h1>
-<form method="get" action="{% url 'clientpage' %}">
-    <input type="hidden" value="{{ client_id }}" name="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-outline-primary button_clientname"><h2 class="m-0">{{ clientname }}</h2></button>
-</form>
-<br>
+<h2 class="text-center">Дневник питания</h2>
 
 <!-- Сводка за сегодня - авто -->
 <h3>Сегодня</h3>

@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h1 class="text-center">Дневник питания</h1><br>
+<h2 class="text-center">Дневник питания</h2><br>
 
 <!-- Кнопка соединения с FS -->
 {% if user_not_connected %}
@@ -266,10 +266,6 @@
 <br>
 <hr>
 <br>
-
-<!-- Кнопка возврата -->
-<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary" id="back_btn_mealjournal">Вернуться</button></a>
-
 
 {% endif %}
 

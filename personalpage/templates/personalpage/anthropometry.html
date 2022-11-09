@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h1 class="text-center">Дневник антропометрии</h1><br>
+<h2 class="text-center">Дневник антропометрии</h2><br>
 
 <!-- таблица сделанных измерений -->
 
@@ -176,10 +176,17 @@
 
 {% endif %}
 
-<!-- кнопка добавление записи -->
-<a href="#status_addanthropo"><button type="button" class="btn btn-primary" id="btn_add_anthropo">Добавить запись</button></a>
+<div class="d-flex mb-4">
+    <!-- кнопка добавление записи -->
+    <a href="#status_addanthropo"><button type="button" class="btn btn-primary me-3" id="btn_add_anthropo">Добавить запись</button></a>
+    <!-- предоставление доступа к фото -->
+    <div class="confirmquestion">
+        <p class="question">Доступ эксперта к фото</p>
+        <input type="checkbox" name="photo_access" class="form-check-input" id="photo_access">
+    </div>
+</div>
 
-<p class="text-danger text-center" id="status_addanthropo">{{ error }}</p><br>
+<p class="text-danger text-center mb-3" id="status_addanthropo">{{ error }}</p>
 
 <!-- форма внесения новой записи -->
 <!-- Включение свойства enctype для формы обеспечивает правильное прикрепление загруженного файла к запросу -->
@@ -229,7 +236,8 @@
     <div class="form-group row">
         <label class="col-sm-12 form-label">{{ metrics_form.photo_3.label }}</label>
         <div class="col-sm-12">{{ metrics_form.photo_3 }}</div>
-    </div><br>
+    </div>
+    <p class="text-muted mt-2 mb-3"><span class="royal_blue">&#9658;</span> тренер не имеет доступа к фотографиям</p>
     <button type="submit" class="btn btn-primary btn_rigth">Сохранить</button>
     <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
 </form>
@@ -309,11 +317,6 @@
     </tbody>
 </table><br>
 {% endif %}
-
-
-<!-- Кнопка возврата -->
-<a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary">Вернуться</button></a>
-
 
 <script src="{% static 'personalpage/js/anthropometry.js' %}"></script>
 {% endblock %}

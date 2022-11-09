@@ -16,25 +16,47 @@
 
 <body>
 
-  <header>
+  <header class="border-bottom">
     <div class="container">
-      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+        <a href="/" class="d-flex align-items-center mb-2 mb-md-0">
           <img src="{% static 'general/img/Logo.svg' %}" alt="logo" width="100">
         </a>
+
+        {% if clientname %}
+        <a href="{% url 'controlpage' %}" class="clientname">{{ clientname }}</a>
   
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 link-dark">Обо мне</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Рецепты</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Блог</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">Прайс-лист</a></li>
-          <li><a href="#" class="nav-link px-2 link-dark">FAQ</a></li>
+        <ul class="nav justify-content-center align-items-center">
+          <li><a href="#" class="nav_link">данные</a></li>
+          <li>
+            <form method="get" action="{% url 'clientpage' %}">
+              <input type="hidden" value="{{ client_id }}" name="client_id">
+              <input type="hidden" value="{{ clientname }}" name="clientname">
+              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">измерения</button>
+            </form>
+          </li>
+          <li>
+            <form method="get" action="{% url 'client_mealjournal' %}">
+              <input type="hidden" value="{{ client_id }}" name="client_id">
+              <input type="hidden" value="{{ clientname }}" name="clientname">
+              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">дневник питания</button>
+            </form>
+          </li>
+          <li><a href="#" class="nav_link">тренировки</a></li>
+          <li>
+            <form method="get" action="{% url 'client_anthropometry' %}">
+              <input type="hidden" value="{{ client_id }}" name="client_id">
+              <input type="hidden" value="{{ clientname }}" name="clientname">
+              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">антропометрия</button>
+            </form>
+          </li>
         </ul>
+        {% endif %}
   
-        <div class="col-md-3 text-end">
+        <div class="text-end">
           <form method="POST" action="{% url 'logoutuser' %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-outline-primary">Выйти</button>
+              <button type="submit" class="btn btn-outline-primary ms-2">Выйти</button>
           </form>
       </header>
     </div>       
@@ -53,14 +75,6 @@
         <img src="{% static 'general/img/cat_with_coffee.gif' %}" class="cat_with_coffee">
     </div>
   </div>
-
-  <footer>
-    <div class="container">
-      <footer class="border-top d-flex flex-wrap align-items-center justify-content-center py-3">
-        <div>чаты с клиентами</div>
-      </footer>
-    </div>
-  </footer>
 
 </body>
 

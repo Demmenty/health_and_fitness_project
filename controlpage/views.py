@@ -1,7 +1,7 @@
 import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from personalpage.models import Measurement, Questionary, FatSecretEntry
+from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry
 from personalpage.forms import QuestionaryForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
@@ -833,3 +833,40 @@ def client_foodbymonth(request):
         }
     return render(request, 'controlpage/client_foodbymonth.html', data)
 
+
+def client_anthropometry(request):
+    """Антропометрические данные клиента"""
+
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+
+    clientname = request.GET['clientname']
+    client_id = request.GET['client_id']
+
+    # таблица сделанных измерений
+    metrics = Anthropometry.objects.filter(user=client_id)
+    if metrics.exists():
+        if len(metrics) == 1:
+            first_metrics = ''
+            prev_metrics = [metrics[0]]
+        elif len(metrics) == 2:
+            first_metrics = metrics.earliest()
+            prev_metrics = [metrics.latest()]
+        else:
+            first_metrics = metrics.earliest()
+            prev_metrics = reversed(metrics[0:2])
+    else:
+        first_metrics = ''
+        prev_metrics = ''
+
+    data = {
+        'clientname': clientname,
+        'client_id': client_id,
+        'first_metrics': first_metrics,
+        'prev_metrics': prev_metrics,
+        'metrics': metrics,
+    }
+    return render(request, 'controlpage/client_anthropometry.html', data)
