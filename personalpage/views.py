@@ -570,7 +570,7 @@ def addmeasure(request):
 
 
 def fatsecretauth(request):
-    """Подключение к FatSecret"""
+    """Привязка к аккаунту FatSecret"""
 
     if request.GET.get('oauth_verifier', None):
         # получаем данные от response FatSecret

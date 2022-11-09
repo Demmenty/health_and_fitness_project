@@ -100,6 +100,10 @@ input[type="radio"]:focus {
     min-height: 20px;
     margin-top: 0px;
 }
+.form-check-input:checked {
+    background-color: #5271ff !important;
+    border-color: #5271ff !important;
+}
 .backbtn_leftup {
     margin-top: -36px;
 }
