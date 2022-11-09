@@ -12,12 +12,25 @@ header {
     width: 100%;
     z-index: 100;
 }
+.nav_link_container {
+    width: 140px;
+    height: 50px;
+}
+.nav_link {
+    color: #545454;
+    text-decoration: none;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    font-weight: 500;
+}
+.nav_link:hover {
+    color: #5271ff;
+}
 main {
     padding-top: 120px;
 }
 footer {
     background-color: #5271ff;
-    margin-top: 1.5rem!important;
     border-top-color: #e5e5e5;
     border-top-style: solid;
     border-top-width: 3px;
@@ -124,3 +137,10 @@ footer {
     --bs-btn-disabled-border-color: #5271ff !important;
 }
 /* стиль кнопок */
+
+
+#why_section {
+    height: 1306px;
+    background-image: linear-gradient(to bottom, #f4e9ed, #5271ff);
+    width: 100%;
+}

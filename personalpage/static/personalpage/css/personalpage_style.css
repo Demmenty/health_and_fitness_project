@@ -85,13 +85,13 @@ input[type="radio"] {
 }
 input[type="radio"]:checked {
     background-color: white;
-    border: solid 6px #0d6efd;
+    border: solid 6px #5271ff;
 }
 input[type="radio"]:hover {
     cursor: pointer;
 }
 input[type="radio"]:focus {
-    border-color: #0d6efd;
+    border-color: #5271ff;
     outline: 0;
     box-shadow: 0 0 0 0.25rem #0d6efd40;
 }
@@ -189,7 +189,7 @@ main {
 footer {
     background-color: #5271ff;
     margin-top: 1.5rem!important;
-    border-top-color: #e5e5e5;
+    border-top-color: #c6c6c6;
     border-top-style: solid;
     border-top-width: 3px;
 }
