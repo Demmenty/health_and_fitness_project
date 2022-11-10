@@ -217,12 +217,4 @@
 <hr>
 <br>
 
-<!-- Кнопка возврата -->
-<form method="get" action="{% url 'clientpage' %}">
-    <input type="hidden" value="{{ client_id }}" name="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-outline-primary">Вернуться</button>
-</form><br>
-
-
 {% endblock %}

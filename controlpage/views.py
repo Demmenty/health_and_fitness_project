@@ -862,11 +862,15 @@ def client_anthropometry(request):
         first_metrics = ''
         prev_metrics = ''
 
+    # показ всех записей
+    show_all = request.GET.get('show_all')
+
     data = {
         'clientname': clientname,
         'client_id': client_id,
         'first_metrics': first_metrics,
         'prev_metrics': prev_metrics,
         'metrics': metrics,
+        'show_all': show_all,
     }
     return render(request, 'controlpage/client_anthropometry.html', data)

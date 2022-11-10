@@ -5,17 +5,13 @@
 {% block title %}Антропометрия{% endblock %}
 
 {% block content %}
-
 <h2 class="text-center">Дневник антропометрии</h2><br>
 
-<!-- таблица сделанных измерений -->
-
 {% if not metrics %}
-
-    <p class="text-center">Данные измерений отсутствуют</p><br>
+<p class="text-center">Данные измерений отсутствуют</p><br>
 
 {% else %}
-
+    <!-- таблица первых измерений -->
     {% if first_metrics %}
         <table class="table table-bordered caption-top text-center">
             <caption><h5>Первое измерение</h5></caption>
@@ -88,7 +84,7 @@
         </table><br>
     {% endif %}
 
-    
+    <!-- таблица последних измерений -->
     <table class="table table-bordered caption-top text-center">
         <caption><h5>Последние измерения</h5></caption>
         <thead class="table-light">
@@ -160,7 +156,6 @@
             {% endfor %}
         </tbody>
     </table><br>
-
 
     <!-- Кнопка показа всех записей -->
     {% if metrics.count > 3 %}
@@ -243,7 +238,7 @@
 </form>
 <br><br>
 
-<!-- Все записи -->
+<!-- таблица всех измерений -->
 {% if show_all == 'True' %}
 <table class="table table-bordered caption-top text-center" id="all_anthropo_table">
     <caption><h5>Все измерения</h5></caption>
