@@ -161,10 +161,8 @@ def personalpage(request):
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
-    print(today_set)
     if today_set:
         today_measure = today_set[0]
-        print(today_measure)
         try:
             # сверяем\записываем данные кбжу из FS
             make_session(request.user)
@@ -1032,7 +1030,6 @@ def foodbymonth(request):
     try:
         # форматируем формат введенного месяца для FS
         briefmonth = datetime.strptime(briefmonth, "%Y-%m")
-        print('форматированнный briefmont:', briefmonth)
         # получаем нужные данные от FS за месяц
         food_entries_month = fs.food_entries_get_month(date=briefmonth)
         sleep(3)
@@ -1085,7 +1082,6 @@ def foodbymonth(request):
 
     # создание ТОП-списков! (если нажать на кнопку)
     if request.GET.get('top_create', False):
-        print('считаю топ')
 
         # итоговые вес и калории по каждому продукту
         total_by_prod = {}
@@ -1279,8 +1275,6 @@ def anthropometry(request):
 
         # проверяем на корректность
         if form.is_valid():
-            print('форма валидна')
-
             # получаем дату из формы
             form_date = form.cleaned_data['date']
 
