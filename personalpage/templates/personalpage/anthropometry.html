@@ -159,27 +159,67 @@
 
     <!-- Кнопка показа всех записей -->
     {% if metrics.count > 3 %}
-        {% if show_all == 'True' %}
-            <button type="button" class="btn btn-primary btn_rigth" id="btn_hide_all">Скрыть все записи</button>
-        {% else %}
-            <form method="get">
-                <input type="hidden" name="show_all" value="True">
-                <button type="submit" class="btn btn-primary btn_rigth" id="btn_show_all">Все записи</button>
-            </form>
-        {% endif %}
+    {% if show_all == 'True' %}
+    <button type="button" class="btn btn-primary btn_rigth" id="btn_hide_all">Скрыть все записи</button>
+    {% else %}
+    <form method="get">
+        <input type="hidden" name="show_all" value="True">
+        <button type="submit" class="btn btn-primary btn_rigth" id="btn_show_all">Все записи</button>
+    </form>
     {% endif %}
-
-{% endif %}
-
-<div class="d-flex mb-4">
-    <!-- кнопка добавление записи -->
-    <a href="#status_addanthropo"><button type="button" class="btn btn-primary me-3" id="btn_add_anthropo">Добавить запись</button></a>
-    <!-- предоставление доступа к фото -->
-    <div class="confirmquestion">
-        <p class="question">Доступ эксперта к фото</p>
-        <input type="checkbox" name="photo_access" class="form-check-input" id="photo_access">
+    {% endif %}
+    
+    {% endif %}
+    
+    <div class="d-flex mb-4">
+        <!-- кнопка добавление записи -->
+        <a href="#status_addanthropo"><button type="button" class="btn btn-primary me-3" id="btn_add_anthropo">Добавить запись</button></a>
+        <!-- предоставление доступа к фото -->
+        <form method="post" class="confirmquestion" id="photo_access_form">
+            {% csrf_token %}
+            {{ photoaccess_form }}
+        </form>
+        <p class="text-danger align-self-center text-center mx-2 mb-0" id="photo_access_error"></p>
     </div>
-</div>
+    
+
+<!-- обработка галочки о предоставлении доступа к фото -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // отслеживаем событие отправки формы
+        $('#id_photo_access').change(function () {
+            
+            // уведомление о доступности фото
+            photoAccessStatus = document.getElementById("photo_access_status");
+
+            // создаем AJAX-вызов
+            $.ajax({
+                data: $('#photo_access_form').serialize(), // получаем данные формы
+                type: $('#photo_access_form').attr('method'), // метод отправки запроса
+                url: "{% url 'photoaccess_change' %}", // функция обработки
+                
+                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
+                success: function (response) {
+                    console.log(response.accessible);
+                    if (response.accessible) {
+                        console.log('ffff');
+                        photoAccessStatus.textContent = " эксперт имеет доступ к фотографиям";
+                    }
+                    else {
+                        console.log('aaaa');
+                        photoAccessStatus.textContent = " эксперт не имеет доступа к фотографиям";
+                    }
+                    },
+                error: function (response) {
+                    error = document.getElementById("photo_access_error");
+                    error.textContent = "произошла ошибка!";
+                    }
+            });
+            return false;
+        });
+    })    
+</script>
 
 <p class="text-danger text-center mb-3" id="status_addanthropo">{{ error }}</p>
 
@@ -232,7 +272,12 @@
         <label class="col-sm-12 form-label">{{ metrics_form.photo_3.label }}</label>
         <div class="col-sm-12">{{ metrics_form.photo_3 }}</div>
     </div>
-    <p class="text-muted mt-2 mb-3"><span class="royal_blue">&#9658;</span> тренер не имеет доступа к фотографиям</p>
+    <!-- условие доступа -->
+    {% if accessibility %}
+    <p class="text-muted mt-2 mb-3"><span class="royal_blue">&#9658;</span><span id="photo_access_status"> эксперт имеет доступ к фотографиям</span></p>
+    {% else %}
+    <p class="text-muted mt-2 mb-3"><span class="royal_blue">&#9658;</span><span id="photo_access_status"> эксперт не имеет доступа к фотографиям</span></p>
+    {% endif %}
     <button type="submit" class="btn btn-primary btn_rigth">Сохранить</button>
     <button type="button" class="btn btn-outline-primary" id="btn_hide_anthropo">Отмена</button>
 </form>

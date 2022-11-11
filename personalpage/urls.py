@@ -12,4 +12,5 @@ urlpatterns = [
     path('anthropometry/', views.anthropometry, name='anthropometry'),
     path('commentsave/', views.commentsave, name='commentsave'),
     path('foodmetricsave/', views.foodmetricsave, name='foodmetricsave'),
+    path('photoaccess_change/', views.photoaccess_change, name='photoaccess_change'),
 ]

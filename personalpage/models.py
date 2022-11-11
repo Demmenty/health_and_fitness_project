@@ -4,7 +4,8 @@ from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
 
-# Create your models here.
+
+# модель для ежедневных измерений
 class Measurement(models.Model):
     weight = models.DecimalField('Вес', max_digits=4, decimal_places=1, null=True, blank=True, help_text='Ваш вес в килограммах')
     fat = models.DecimalField('Жир', max_digits=3, decimal_places=1, null=True, blank=True, help_text='Количество жировой массы в процентах от массы тела')
@@ -28,6 +29,7 @@ class Measurement(models.Model):
         #при запросе должна быть сортировка по убыванию даты
 
 
+# модель для данных анкеты здоровья
 class Questionary(models.Model):
     date = models.DateField('Дата заполнения', auto_now_add=True, help_text='Дата заполнения')
     date_update = models.DateField('Дата обновления', auto_now=True, help_text='Дата последнего редактирования')
@@ -74,6 +76,7 @@ class Questionary(models.Model):
         return f"Анкета клиента {self.user}"
 
 
+# модель для данных входа в FatSecret
 class FatSecretEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     oauth_token = models.CharField(max_length=255, null=True, blank=True)
@@ -83,6 +86,7 @@ class FatSecretEntry(models.Model):
         return f"Данные для использования FS клиента {self.user}"
 
 
+# модель для данных антропометрических измерений
 class Anthropometry(models.Model):
     date = models.DateField('Дата', default=date.today)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -104,4 +108,9 @@ class Anthropometry(models.Model):
         ordering = ['-date']
         #при запросе должна быть сортировка по убыванию даты
         get_latest_by = "date"
-        
+
+
+# модель для хранения настроек пользователей
+class UserSettings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    photo_access = models.BooleanField('Доступ эксперта к фото', default=False)

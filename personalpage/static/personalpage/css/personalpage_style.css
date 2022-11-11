@@ -367,6 +367,9 @@ table {
 .close_photo_btn {
     float: right;
 }
+#id_photo_access {
+    margin-left: 1rem;
+}
 /* anthropometry */
 
 

@@ -24,8 +24,7 @@
                     <th>Ягодицы</th>
                     <th>Бедро</th>
                     <th>Голень</th>
-                    <!-- условие! -->
-                    {% if True %}
+                    {% if accessibility %}
                     <th>Фото</th>
                     {% endif %}
                 </tr>
@@ -40,8 +39,7 @@
                     <td>{{ first_metrics.buttocks|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.hip|default_if_none:"-" }}</td>
                     <td>{{ first_metrics.shin|default_if_none:"-" }}</td>
-                    <!-- условие! -->
-                    {% if True %}
+                    {% if accessibility %}
                     <td class="td_photo_btns">
                         {% if first_metrics.photo_1 %}
                         <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото" width="30"
@@ -102,8 +100,7 @@
                 <th>Ягодицы</th>
                 <th>Бедро</th>
                 <th>Голень</th>
-                <!-- условие! -->
-                {% if True %}
+                {% if accessibility %}
                 <th>Фото</th>
                 {% endif %}
             </tr>
@@ -119,8 +116,7 @@
                 <td>{{ metrics.buttocks|default_if_none:"-" }}</td>
                 <td>{{ metrics.hip|default_if_none:"-" }}</td>
                 <td>{{ metrics.shin|default_if_none:"-" }}</td>
-                <!-- условие! -->
-                {% if True %}
+                {% if accessibility %}
                 <td class="td_photo_btns">
                     {% if metrics.photo_1 %}
                     <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото" width="30"
@@ -196,8 +192,7 @@
                 <th>Ягодицы</th>
                 <th>Бедро</th>
                 <th>Голень</th>
-                <!-- условие! -->
-                {% if True %}
+                {% if accessibility %}
                 <th>Фото</th>
                 {% endif %}
             </tr>
@@ -213,8 +208,7 @@
                 <td>{{ metric.buttocks|default_if_none:"-" }}</td>
                 <td>{{ metric.hip|default_if_none:"-" }}</td>
                 <td>{{ metric.shin|default_if_none:"-" }}</td>
-                <!-- условие! -->
-                {% if True %}
+                {% if accessibility %}
                 <td class="td_photo_btns">
                     {% if metric.photo_1 %}
                     <img src="{% static 'personalpage/img/photo_pic.png' %}" title="показать фото" width="30"

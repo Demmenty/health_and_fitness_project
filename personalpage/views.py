@@ -1,7 +1,7 @@
 import pickle
 from django.shortcuts import render, redirect
-from .models import Anthropometry, Measurement, Questionary, FatSecretEntry
-from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm
+from .models import Anthropometry, Measurement, Questionary, FatSecretEntry, UserSettings
+from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm, PhotoAccessForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
@@ -1309,6 +1309,16 @@ def anthropometry(request):
         }
         return render(request, 'personalpage/anthropometry.html', data)
 
+    # форма для настройки доступа к фото
+    try:
+        photoaccess_instance = UserSettings.objects.get(user=request.user)
+    except UserSettings.DoesNotExist:
+        photoaccess_instance = UserSettings.objects.create(user=request.user)
+
+    photoaccess_form = PhotoAccessForm(instance=photoaccess_instance)
+    # проверка текущей настройки достпуности фото
+    accessibility = photoaccess_instance.photo_access
+
     data = {
         'first_metrics': first_metrics,
         'prev_metrics': prev_metrics,
@@ -1316,5 +1326,25 @@ def anthropometry(request):
         'metrics': metrics,
         'show_all': show_all,
         'error': error,
+        'photoaccess_form': photoaccess_form,
+        'accessibility': accessibility,
     }
     return render(request, 'personalpage/anthropometry.html', data)
+
+
+def photoaccess_change(request):
+    """Обработка изменения настройки доступа к фото в антропометрии"""
+    # получаем форму из запроса
+    form = PhotoAccessForm(request.POST)
+    # проверяем на корректность
+    if form.is_valid():
+        # записываем значение в базу
+        instance = UserSettings.objects.get(user=request.user)
+        form = PhotoAccessForm(request.POST, instance=instance)
+        form.save()
+
+        accessible = form.cleaned_data['photo_access']
+        data = {
+            'accessible': accessible,
+            }
+        return JsonResponse(data, status=200)

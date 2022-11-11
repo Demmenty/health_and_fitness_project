@@ -1,7 +1,7 @@
 import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry
+from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings
 from personalpage.forms import QuestionaryForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
@@ -865,6 +865,14 @@ def client_anthropometry(request):
     # показ всех записей
     show_all = request.GET.get('show_all')
 
+    # проверка текущей настройки достпуности фото
+    try:
+        photoaccess_instance = UserSettings.objects.get(user=client_id)
+    except UserSettings.DoesNotExist:
+        photoaccess_instance = UserSettings.objects.create(user=client_id)
+        
+    accessibility = photoaccess_instance.photo_access
+
     data = {
         'clientname': clientname,
         'client_id': client_id,
@@ -872,5 +880,6 @@ def client_anthropometry(request):
         'prev_metrics': prev_metrics,
         'metrics': metrics,
         'show_all': show_all,
+        'accessibility': accessibility,
     }
     return render(request, 'controlpage/client_anthropometry.html', data)
