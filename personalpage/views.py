@@ -475,7 +475,6 @@ def addmeasure(request):
         print('возникла GeneralError')
         print(error)
         print(type(error))
-        print()
 
     # создание форм на основе записей в Measureforms
     for i in range(7):
@@ -524,8 +523,6 @@ def addmeasure(request):
             measure_form = MeasurementForm(instance=measure)
 
         week_measureforms.append(measure_form)
-
-
 
     # КАЛЕНДАРЬ для выбора даты
     week_calendar = []
@@ -595,7 +592,7 @@ def addmeasure(request):
                 # сформируем форму на ее основе и перезаписываем
                 form = MeasurementForm(request.POST, instance=measure)
                 form.save()
-                return redirect('personalpage')
+                return redirect('measurements')
 
             # если записи за число нет - это странно
             except Measurement.DoesNotExist:

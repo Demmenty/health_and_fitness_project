@@ -10,7 +10,7 @@
 <!-- сегодня -->
 {% if today_measure %}
     <table class="table table-bordered caption-top align-middle text-center">
-        <caption class="text-body"><h3>Сегодня</h3></caption>
+        <caption class="text-body"><h4>Сегодня</h4></caption>
         <thead class="table-light">
             <tr>
                 <th>Дата</th>
@@ -57,14 +57,14 @@
         </div><br>
     {% endif %}
 {% else %}
-    <p>За сегодня измерений не сделано.</p>
+    <p>За сегодня измерений не сделано</p>
 {% endif %}
 
 <!-- неделя -->
 {% if not selected_period %}
     {% if week_measures %}
         <table class="table table-bordered caption-top align-middle text-center">
-            <caption class="text-body"><h3>Неделя</h3></caption>
+            <caption class="text-body"><h4>Неделя</h4></caption>
             <thead class="table-light">
                 <tr>
                     <th>Дата</th>
@@ -144,7 +144,7 @@
 <!-- произвольный период -->
 {% if selected_period %}
     <table class="table table-bordered caption-top align-middle text-center">
-        <caption><h3>Данные измерений за {{ selected_period }}</h3></caption>
+        <caption><h4>Данные измерений за {{ selected_period }}</h4></caption>
         <tr class="table-light"> 
             <th>Дата</th>
             <th>День</th>

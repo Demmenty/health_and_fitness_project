@@ -30,10 +30,8 @@
 
 <br>
 
-<!-- ежедневные показатели -->
-<div class="measurements_container">
-    <!-- сегодня -->
-    {% if today_measure %}
+<!-- физические показатели сегодня  -->
+{% if today_measure %}
     <table class="table table-bordered caption-top align-middle text-center">
         <caption class="text-body"><h4>Сегодня</h4></caption>
         <thead class="table-light">
@@ -45,13 +43,12 @@
                 <th>Жирность</th>
                 <th>Пульс</th>
                 {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                <th>Давление</th>
+                    <th>Давление</th>
                 {% endif %}
                 <th>Калории</th>
                 <th>Белки</th>
                 <th>Жиры</th>
                 <th>Углеводы</th>
-                <td class="borderless">&nbsp</td>
             </tr>
         </thead>
         <tbody>
@@ -69,26 +66,22 @@
                 <td>{{ today_measure.protein|default_if_none:"" }}</td>
                 <td>{{ today_measure.fats|default_if_none:"" }}</td>
                 <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
-                <td class="borderless">
-                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
-                    {% if today_measure.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
-                    value="{{ today_measure.date }}" id="comment_btn_today_measure">
-                </td>
             </tr>
         </tbody>
     </table>
-
-    <!-- всплывающий коммент за сегодня -->
-    <div class="container_commentform hidden_element" id="comment_today_measure">
-        <div class="comment_container">
-            {{ today_measure.comment }}
-        </div>
-    </div>
-
-    {% else %}
-    <p>&#10006; За сегодня измерений не сделано.</p>
+    {% if today_measure.comment %}
+        <div class="d-flex align-items-center">
+            <div class="col-1 text-center">
+                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+            </div>
+            <div class="border border-grey rounded col-11 p-2 px-3">
+                {{ today_measure.comment }}
+            </div>
+        </div><br>
     {% endif %}
-</div>
+{% else %}
+    <p>&#10006; За сегодня измерений не сделано</p>
+{% endif %}
 
 
 {% endblock %}
