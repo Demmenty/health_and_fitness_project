@@ -904,7 +904,7 @@ def client_anthropometry(request):
     try:
         photoaccess_instance = UserSettings.objects.get(user=client_id)
     except UserSettings.DoesNotExist:
-        photoaccess_instance = UserSettings.objects.create(user=client_id)
+        photoaccess_instance = UserSettings.objects.create(user_id=client_id)
         
     accessibility = photoaccess_instance.photo_access
 

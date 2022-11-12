@@ -5,7 +5,9 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-
+.border-grey {
+    border-color: #dee2e6;
+}
 /* header */
 header {
     background-color: #ffffff;
@@ -651,7 +653,3 @@ table {
 }
 /* questionary */
 
-/* measurements */
-#today_comment {
-    width: 80%;
-}

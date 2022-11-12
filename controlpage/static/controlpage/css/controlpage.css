@@ -198,6 +198,14 @@ caption {
     mix-blend-mode: none;
     filter: hue-rotate(36deg);
 }
+.luminosity {
+    mix-blend-mode: luminosity;
+}
+.noluminosity {
+    mix-blend-mode: none;
+    filter: hue-rotate(36deg);
+}
+
 .comment_container {
     background-color: white;
     border: 1px solid #cfd6e1;
@@ -449,3 +457,8 @@ input[type="radio"]:hover {
     float: right;
 }
 /* anthropometry */
+
+/* measurements */
+.border-grey {
+    border-color: #dee2e6;
+}

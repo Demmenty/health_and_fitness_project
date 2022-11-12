@@ -20,7 +20,7 @@
                 <th>Жирность</th>
                 <th>Пульс</th>
                 {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                <th>Давление</th>
+                    <th>Давление</th>
                 {% endif %}
                 <th>Калории</th>
                 <th>Белки</th>
@@ -47,12 +47,17 @@
         </tbody>
     </table>
 
-    <table class="table table-bordered align-middle">
-        <tr>
-            <th class="table-light text-center">Комментарий</th>
-            <td class="px-3" id="today_comment">{{ today_measure.comment }}</td>
-        </tr>
-    </table>
+    {% if today_measure.comment %}
+    <div class="d-flex align-items-center">
+        <div class="col-1 text-center">
+            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+        </div>
+        <div class="border border-grey rounded col-11 p-2" id="today_comment">
+            {{ today_measure.comment }}
+        </div>
+    </div><br>
+    {% endif %}
+
     <a href="{% url 'addmeasure' %}"><button class='btn btn-primary float-end'>Редактировать</button></a>
 {% else %}
     <p>За сегодня измерений не сделано.</p>

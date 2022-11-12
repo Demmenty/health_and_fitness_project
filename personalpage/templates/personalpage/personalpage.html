@@ -9,17 +9,18 @@
 
 <!-- ссылка на анкету -->
 {% if questionary %}
-<h3>Ваша анкета</h3>
+<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета здоровья</button></a>
 {% else %}
-<h3>Пожалуйста, заполните анкету</h3>
+<p>&#10006; Анкета здоровья не заполнена</p>
+<a href="{% url 'questionary' %}"><button class="btn btn-primary">Заполнить</button></a>
 {% endif %}
-<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета здоровья</button></a><br><br>
+<br><br>
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
     <div class="table-responsive today_measure_table" id="today_measure_table">
         <table class="table table-bordered caption-top table-fixed text-center">
-            <caption><h3>Данные измерений за сегодня</h3></caption>
+            <caption><h4>Показатели за сегодня</h4></caption>
             <tr><th class="tablerow_name">Дата</th><td>{{ today_measure.date }}</td></tr>
             <tr><th class="tablerow_name">Самочувствие</th><td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td></tr>
             <tr><th class="tablerow_name">Вес</th><td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td></tr>
@@ -34,11 +35,10 @@
                 <th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>
         </table>
     </div><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Редактировать записи</button></a><br><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Редактировать</button></a><br><br>
 {% else %}
-    <p>За сегодня измерений не сделано.</p><br>
-    <p>Данные необходимо вносить каждый день!</p><br>
-    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Добавить запись</button></a><br><br>
+    <p>&#10006; За сегодня измерений не сделано.</p><br>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary'>Добавить</button></a><br><br>
 {% endif %}
 
 

@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<h2>Контроль физических показателей</h2><br>
+<h2 class="text-center">Контроль физических показателей</h2><br>
 
 <!-- ежедневные показатели -->
 <div class="measurements_container">
@@ -22,13 +22,12 @@
                 <th>Жирность</th>
                 <th>Пульс</th>
                 {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                <th>Давление</th>
+                    <th>Давление</th>
                 {% endif %}
                 <th>Калории</th>
                 <th>Белки</th>
                 <th>Жиры</th>
                 <th>Углеводы</th>
-                <td class="borderless">&nbsp</td>
             </tr>
         </thead>
         <tbody>
@@ -46,21 +45,20 @@
                 <td>{{ today_measure.protein|default_if_none:"" }}</td>
                 <td>{{ today_measure.fats|default_if_none:"" }}</td>
                 <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
-                <td class="borderless">
-                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
-                    {% if today_measure.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
-                    value="{{ today_measure.date }}" id="comment_btn_today_measure">
-                </td>
             </tr>
         </tbody>
     </table>
 
-    <!-- всплывающий коммент за сегодня -->
-    <div class="container_commentform hidden_element" id="comment_today_measure">
-        <div class="comment_container">
+    {% if today_measure.comment %}
+    <div class="d-flex align-items-center">
+        <div class="col-1 text-center">
+            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+        </div>
+        <div class="border border-grey rounded col-11 p-2">
             {{ today_measure.comment }}
         </div>
-    </div>
+    </div><br>
+    {% endif %}
 
     {% else %}
     <p>За сегодня измерений не сделано.</p>
@@ -80,7 +78,7 @@
                 <th>Жирность</th>
                 <th>Пульс</th>
                 {% if show_pressure_week %}
-                <th>Давление</th>
+                    <th>Давление</th>
                 {% endif %}
                 <th>Калории</th>
                 <th>Белки</th>
@@ -146,7 +144,6 @@
     <p>Измерения отсутствуют.</p>
     {% endif %}
     {% endif %}
-
 </div>
 
 <!-- Статистика за произвольную дату -->
@@ -167,6 +164,7 @@
         <th>Белки</th>
         <th>Жиры</th>
         <th>Углеводы</th>
+        <td class="borderless">&nbsp</td>
     </tr>
     {% for day in period|dictsort:"date" %}
     <tr class="my-hover">
@@ -185,7 +183,21 @@
         <td>{{ day.protein|default_if_none:"" }}</td>
         <td>{{ day.fats|default_if_none:"" }}</td>
         <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+        <td class="borderless">
+            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+            {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+            {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+            value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+        </td>
     </tr>
+
+    <!-- всплывающие комменты за выбранный период -->
+    <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+        <div class="comment_container">
+            {{ day.comment }}
+        </div>
+    </div>
+
     {% endfor %}
     <tr class="table-light">
         <th colspan="2">В среднем:</th>
@@ -200,18 +212,19 @@
         <th>{{ avg_period.avg_protein|default:"" }}</th>
         <th>{{ avg_period.avg_fats|default:"" }}</th>
         <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
+        <td class="borderless">&nbsp</td>
     </tr>
 </table><br>
 {% endif %}
 
 <!-- Выбор дней статистики -->
-<form action="" method="get" class="period_select">
+<form action="" method="get" class="period_select float-end">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
     <h5>Статистика за
     <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
     дней</h5>
-    <button type="submit" class="btn btn-primary d-inline" name="submit">Получить</button></h5>
+    <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
 </form>
 <br><br>
 
