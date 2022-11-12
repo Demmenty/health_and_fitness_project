@@ -14,7 +14,7 @@ function changeComment(event) {
         // открытая форма скрывается
         commentForm.classList.add("hidden_element");
         // находим соответствующую её кнопку
-        commentNum = commentForm.getAttribute('id')[7];
+        commentNum = commentForm.getAttribute('id').slice(7);
         commentBtn = document.getElementById("comment_btn" + commentNum);
         // убираем её тень
         commentBtn.classList.remove('shadow');
@@ -23,7 +23,7 @@ function changeComment(event) {
         event.target.classList.add('shadow');
 
         // находим соответствующую нажатой кнопке форму
-        commentNum = event.target.getAttribute('id')[11];
+        commentNum = event.target.getAttribute('id').slice(11);
         commentForm = document.getElementById("comment" + commentNum);
         // показываем эту форму
         commentForm.classList.remove("hidden_element");
@@ -38,7 +38,7 @@ commentButtons.forEach ( btn => {
 // закрывание окошка коммента на крестик
 function closeComment(event) {
     // находим номер нажатой кнопки
-    commentNum = event.target.getAttribute("id")[17];
+    commentNum = event.target.getAttribute("id").slice(17);
     // находим соответствующую форму
     commentForm = document.getElementById("comment" + commentNum);
     // и скрываем

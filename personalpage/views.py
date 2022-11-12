@@ -251,6 +251,7 @@ def measurements(request):
 
     # статистика за выбранный период
     show_pressure_period = False
+    period_comments_forms = []
     if request.GET.get('selectperiod'):
         selected_period = int(request.GET.get('selectperiod'))
         # средние значения измерений за произвольный период
@@ -261,7 +262,13 @@ def measurements(request):
         if any(day.pressure_upper for day in period):
             show_pressure_period = True
         # красивый формат
-        selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
+        selected_period = (str(selected_period) + " " +
+                           get_noun_ending(selected_period, 'день', 'дня', 'дней'))
+        # список форм для комментов
+        for day in reversed(period):
+            comment_form = MeasurementCommentForm(instance=day)
+            period_comments_forms.append(comment_form)
+
     else:
         selected_period = ""
         avg_period = ""
@@ -272,6 +279,7 @@ def measurements(request):
         'week': week,
         'show_pressure': show_pressure,
         'week_comments_forms': week_comments_forms,
+        'period_comments_forms': period_comments_forms,
         'selected_period': selected_period,
         'show_pressure_period': show_pressure_period,
         'period': period,
