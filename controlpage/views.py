@@ -75,6 +75,9 @@ def clientpage(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
 
+    # дата регистрации
+    date_joined = User.objects.get(username=clientname).date_joined.date()
+
     # существоВание анкеты
     try:
         questionary = Questionary.objects.get(user_id=client_id)
@@ -87,6 +90,41 @@ def clientpage(request):
         fs_connected = True
     except FatSecretEntry.DoesNotExist:
         fs_connected = False
+
+    # измерения за сегодня
+    try:
+        today_measure = Measurement.objects.get(date__exact=date.today(), user_id=client_id)
+        if (today_measure.feel is None and today_measure.weight is None and
+            today_measure.fat is None and today_measure.pulse is None and
+            (today_measure.pressure_upper is None or today_measure.pressure_lower is None) and
+            today_measure.calories is None and today_measure.comment == "") :
+            today_measure = ''
+    except Measurement.DoesNotExist:
+        today_measure = ''
+
+
+    data = {
+        'clientname': clientname,
+        'client_id': client_id,
+        'questionary': questionary,
+        'fs_connected': fs_connected,
+        'today_measure': today_measure,
+        'date_joined': date_joined,
+    }
+    return render(request, 'controlpage/clientpage.html', data)
+
+
+def client_measurements(request):
+    """Страница отслеживания ежедневных измерений"""
+
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+    
+    clientname = request.GET['clientname']
+    client_id = request.GET['client_id']
 
     # измерения за сегодня
     try:
@@ -129,8 +167,6 @@ def clientpage(request):
     data = {
         'clientname': clientname,
         'client_id': client_id,
-        'questionary': questionary,
-        'fs_connected': fs_connected,
         'today_measure': today_measure,
         'week_measures': week_measures,
         'selected_period': selected_period,
@@ -139,9 +175,8 @@ def clientpage(request):
         'avg_period': avg_period,
         'show_pressure_week': show_pressure_week,
         'show_pressure_period': show_pressure_period,
-
     }
-    return render(request, 'controlpage/clientpage.html', data)
+    return render(request, 'controlpage/client_measurements.html', data)
 
 
 

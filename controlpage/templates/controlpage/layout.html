@@ -27,9 +27,15 @@
         <a href="{% url 'controlpage' %}" class="clientname">{{ clientname }}</a>
   
         <ul class="nav justify-content-center align-items-center">
-          <li><a href="#" class="nav_link">данные</a></li>
           <li>
             <form method="get" action="{% url 'clientpage' %}">
+              <input type="hidden" value="{{ client_id }}" name="client_id">
+              <input type="hidden" value="{{ clientname }}" name="clientname">
+              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">главная</button>
+            </form>
+          </li>
+          <li>
+            <form method="get" action="{% url 'client_measurements' %}">
               <input type="hidden" value="{{ client_id }}" name="client_id">
               <input type="hidden" value="{{ clientname }}" name="clientname">
               <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">измерения</button>

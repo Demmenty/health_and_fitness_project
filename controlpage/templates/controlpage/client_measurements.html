@@ -1,0 +1,219 @@
+{% extends 'controlpage/layout.html' %}
+{% load static %}
+
+{% block title %}{{ clientname }}: измерения{% endblock %}
+
+{% block content %}
+
+<h2>Контроль физических показателей</h2><br>
+
+<!-- ежедневные показатели -->
+<div class="measurements_container">
+    <!-- сегодня -->
+    {% if today_measure %}
+    <table class="table table-bordered caption-top align-middle text-center">
+        <caption class="text-body"><h3>Сегодня</h3></caption>
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>День</th>
+                <th>Самочувствие</th>
+                <th>Масса</th>
+                <th>Жирность</th>
+                <th>Пульс</th>
+                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                <th>Давление</th>
+                {% endif %}
+                <th>Калории</th>
+                <th>Белки</th>
+                <th>Жиры</th>
+                <th>Углеводы</th>
+                <td class="borderless">&nbsp</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ today_measure.date|date:"j b" }}</td>
+                <td>{{ today_measure.date|date:"D" }}</td>
+                <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
+                <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
+                <td>{{ today_measure.pulse|default_if_none:"" }}</td>
+                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                {% endif %}
+                <td>{{ today_measure.calories|default_if_none:"" }}</td>
+                <td>{{ today_measure.protein|default_if_none:"" }}</td>
+                <td>{{ today_measure.fats|default_if_none:"" }}</td>
+                <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
+                <td class="borderless">
+                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
+                    {% if today_measure.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
+                    value="{{ today_measure.date }}" id="comment_btn_today_measure">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- всплывающий коммент за сегодня -->
+    <div class="container_commentform hidden_element" id="comment_today_measure">
+        <div class="comment_container">
+            {{ today_measure.comment }}
+        </div>
+    </div>
+
+    {% else %}
+    <p>За сегодня измерений не сделано.</p>
+    {% endif %}
+
+    {% if not selected_period %}
+    {% if week_measures %}
+    <!-- неделя -->
+    <table class="table table-bordered caption-top align-middle text-center">
+        <caption class="text-body"><h3>Неделя</h3></caption>
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>День</th>
+                <th>Самочувствие</th>
+                <th>Масса</th>
+                <th>Жирность</th>
+                <th>Пульс</th>
+                {% if show_pressure_week %}
+                <th>Давление</th>
+                {% endif %}
+                <th>Калории</th>
+                <th>Белки</th>
+                <th>Жиры</th>
+                <th>Углеводы</th>
+                <td class="borderless">&nbsp</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in week_measures|dictsort:"date" %}
+            <tr class="my-hover">
+                <td>{{ day.date|date:"j b" }}</td>
+                <td>{{ day.date|date:"D" }}</td>
+                <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                <td>{{ day.pulse|default_if_none:"" }}</td>
+                {% if show_pressure_week %}
+                    <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                            {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                        {% endif %}</td>
+                {% endif%}
+                <td>{{ day.calories|default_if_none:"" }}</td>
+                <td>{{ day.protein|default_if_none:"" }}</td>
+                <td>{{ day.fats|default_if_none:"" }}</td>
+                <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+                <td class="borderless">
+                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+                    {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+                    {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+                    value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                </td>
+            </tr>
+            
+            <!-- всплывающие комменты за неделю -->
+            <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+                <div class="comment_container">
+                    {{ day.comment }}
+                </div>
+            </div>
+
+            {% endfor %}
+            <tr class="table-light">
+                <th colspan="2">В среднем:</th>
+                <th>{{ avg_week.avg_feel|default:"" }}</th>
+                <th>{{ avg_week.avg_weight|default:"" }}</th>
+                <th>{{ avg_week.avg_fat|default:"" }}</th>
+                <th>{{ avg_week.avg_pulse|default:"" }}</th>
+                {% if show_pressure_week %}
+                    <th>{{ avg_week.avg_pressure|default:"" }}</th>
+                {% endif%}
+                <th>{{ avg_week.avg_calories|default:"" }}</th>
+                <th>{{ avg_week.avg_protein|default:"" }}</th>
+                <th>{{ avg_week.avg_fats|default:"" }}</th>
+                <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
+                <td class="borderless">&nbsp</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p><br>
+
+    {% else %}
+    <p>Измерения отсутствуют.</p>
+    {% endif %}
+    {% endif %}
+
+</div>
+
+<!-- Статистика за произвольную дату -->
+{% if selected_period %}
+<table class="table table-bordered caption-top align-middle text-center">
+    <caption><h3>Данные измерений за {{ selected_period }}</h3></caption>
+    <tr class="table-light"> 
+        <th>Дата</th>
+        <th>День</th>
+        <th>Самочувствие</th>
+        <th>Масса</th>
+        <th>Жирность</th>
+        <th>Пульс</th>
+        {% if show_pressure_period %}
+            <th>Давление</th>
+        {% endif%}
+        <th>Калории</th>
+        <th>Белки</th>
+        <th>Жиры</th>
+        <th>Углеводы</th>
+    </tr>
+    {% for day in period|dictsort:"date" %}
+    <tr class="my-hover">
+        <td>{{ day.date|date:"j b" }}</td>
+        <td>{{ day.date|date:"D" }}</td>
+        <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+        <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+        <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+        <td>{{ day.pulse|default_if_none:"" }}</td>
+        {% if show_pressure_period %}
+            <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                    {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                {% endif %}</td>
+        {% endif%}
+        <td>{{ day.calories|default_if_none:"" }}</td>
+        <td>{{ day.protein|default_if_none:"" }}</td>
+        <td>{{ day.fats|default_if_none:"" }}</td>
+        <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="table-light">
+        <th colspan="2">В среднем:</th>
+        <th>{{ avg_period.avg_feel|default:"" }}</th>
+        <th>{{ avg_period.avg_weight|default:"" }}</th>
+        <th>{{ avg_period.avg_fat|default:"" }}</th>
+        <th>{{ avg_period.avg_pulse|default:"" }}</th>
+        {% if show_pressure_period %}
+            <th>{{ avg_period.avg_pressure|default:"" }}</th>
+        {% endif%}
+        <th>{{ avg_period.avg_calories|default:"" }}</th>
+        <th>{{ avg_period.avg_protein|default:"" }}</th>
+        <th>{{ avg_period.avg_fats|default:"" }}</th>
+        <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
+    </tr>
+</table><br>
+{% endif %}
+
+<!-- Выбор дней статистики -->
+<form action="" method="get" class="period_select">
+    <input type="hidden" value="{{ client_id }}" name="client_id">
+    <input type="hidden" value="{{ clientname }}" name="clientname">
+    <h5>Статистика за
+    <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
+    дней</h5>
+    <button type="submit" class="btn btn-primary d-inline" name="submit">Получить</button></h5>
+</form>
+<br><br>
+
+<script src="{% static 'controlpage/js/clientpage.js' %}"></script>
+{% endblock %}

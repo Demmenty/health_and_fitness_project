@@ -188,6 +188,52 @@ def personalpage(request):
     else:
         today_measure = ''
 
+    data = {
+        'today_measure': today_measure,
+        'questionary': questionary,
+    }
+    return render(request, 'personalpage/personalpage.html', data)
+
+
+def measurements(request):
+    """Страница отслеживания ежедневных измерений"""
+    # если аноним - пусть регается
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
+    # Парабола перенаправляется на свою страницу
+    if request.user.username == 'Parrabolla':
+        return redirect('controlpage') 
+
+    #измерения за сегодня
+    today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
+    if today_set:
+        today_measure = today_set[0]
+        try:
+            # сверяем\записываем данные кбжу из FS
+            make_session(request.user)
+            try:
+                # получаем из FS последнюю запись за текущий месяц
+                food_data = fs.food_entries_get_month()[-1]
+                # если посл.запись - сегодня, то записываем ее данные
+                if food_data['date_int'] == str((date.today() - date(1970, 1, 1)).days):
+                    today_measure.calories = food_data['calories']
+                    today_measure.protein = food_data['protein']
+                    today_measure.fats = food_data['fat']
+                    today_measure.carbohydrates = food_data['carbohydrate']
+                    today_measure.save()
+                # если нет - то будет "нет данных"
+        
+            except KeyError:
+                ...
+                # если keyerror значит данных о еде за месяц нет
+
+        except FatSecretEntry.DoesNotExist:
+            ...
+            # если FS не подключен
+    else:
+        today_measure = ''
+
     # список измерений за неделю
     week = Measurement.objects.filter(user=request.user)[:7]
     # средние значения измерений за неделю 
@@ -220,7 +266,6 @@ def personalpage(request):
         selected_period = ""
         avg_period = ""
         period = ""
-   
 
     data = {
         'today_measure': today_measure,
@@ -232,10 +277,8 @@ def personalpage(request):
         'period': period,
         'avg_week': avg_week,
         'avg_period': avg_period,
-        'questionary': questionary,
-        'error': "",
     }
-    return render(request, 'personalpage/personalpage.html', data)
+    return render(request, 'personalpage/measurements.html', data)    
 
 
 def commentsave(request):

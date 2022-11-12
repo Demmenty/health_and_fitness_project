@@ -1,0 +1,279 @@
+{% extends 'personalpage/layout.html' %}
+{% load static %}
+
+{% block title %}Контроль показателей{% endblock %}
+
+{% block content %}
+
+<h2 class="text-center">Контроль физических показателей</h2><br>
+
+<!-- сегодня -->
+{% if today_measure %}
+    <table class="table table-bordered caption-top align-middle text-center" id="today_measure_table">
+        <caption class="text-body"><h4>Сегодня</h4></caption>
+        <thead class="table-light">
+            <tr>
+                <th>Дата</th>
+                <th>День</th>
+                <th>Самочувствие</th>
+                <th>Масса</th>
+                <th>Жирность</th>
+                <th>Пульс</th>
+                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                <th>Давление</th>
+                {% endif %}
+                <th>Калории</th>
+                <th>Белки</th>
+                <th>Жиры</th>
+                <th>Углеводы</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ today_measure.date|date:"j b" }}</td>
+                <td>{{ today_measure.date|date:"D" }}</td>
+                <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
+                <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
+                <td>{{ today_measure.pulse|default_if_none:"" }}</td>
+                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                {% endif %}
+                <td>{{ today_measure.calories|default_if_none:"" }}</td>
+                <td>{{ today_measure.protein|default_if_none:"" }}</td>
+                <td>{{ today_measure.fats|default_if_none:"" }}</td>
+                <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered align-middle">
+        <tr>
+            <th class="table-light text-center">Комментарий</th>
+            <td class="px-3" id="today_comment">{{ today_measure.comment }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary float-end'>Редактировать</button></a>
+{% else %}
+    <p>За сегодня измерений не сделано.</p>
+    <a href="{% url 'addmeasure' %}"><button class='btn btn-primary float-end'>Добавить</button></a>
+{% endif %}
+
+<!-- измерения за неделю-->
+<table class="week_table table table-bordered caption-top align-middle text-center">
+    <caption><h4>Неделя</h4></caption>
+    <thead class="table-light">
+        <tr>
+            <th>Дата</th>
+            <th>День</th>
+            <th>Самочувствие</th>
+            <th>Масса</th>
+            <th>Жирность</th>
+            <th>Пульс</th>
+            {% if show_pressure %}
+                <th>Давление</th>
+            {% endif %}
+            <th>Калории</th>
+            <th>Белки</th>
+            <th>Жиры</th>
+            <th>Углеводы</th>
+            <td class="borderless">&nbsp</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in week|dictsort:"date" %}
+        <tr class="my-hover">
+            <td>{{ day.date|date:"j b" }}</td>
+            <td>{{ day.date|date:"D" }}</td>
+            <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+            <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+            <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+            <td>{{ day.pulse|default_if_none:"" }}</td>
+            {% if show_pressure %}
+                <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                        {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                    {% endif %}</td>
+            {% endif%}
+            <td>{{ day.calories|default_if_none:"" }}</td>
+            <td>{{ day.protein|default_if_none:"" }}</td>
+            <td>{{ day.fats|default_if_none:"" }}</td>
+            <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+            <td class="borderless">
+                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
+                {% if day.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
+                value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+            </td>
+        </tr>
+        {% endfor %}
+        <tr class="table-light">
+            <th colspan="2">В среднем:</th>
+            <th>{{ avg_week.avg_feel|default:"" }}</th>
+            <th>{{ avg_week.avg_weight|default:"" }}</th>
+            <th>{{ avg_week.avg_fat|default:"" }}</th>
+            <th>{{ avg_week.avg_pulse|default:"" }}</th>
+            {% if show_pressure %}
+                <th>{{ avg_week.avg_pressure|default:"" }}</th>
+            {% endif%}
+            <th>{{ avg_week.avg_calories|default:"" }}</th>
+            <th>{{ avg_week.avg_protein|default:"" }}</th>
+            <th>{{ avg_week.avg_fats|default:"" }}</th>
+            <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
+            <td class="borderless">&nbsp</td>
+        </tr>
+    </tbody>
+</table>
+<p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p><br>
+
+<!-- всплывающие по кнопке комменты -->
+{% for comment in week_comments_forms %}
+<div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+    <form method="post" class="d-flex flex-column commentForm" id="commentForm{{ forloop.counter }}">
+        {% csrf_token %}
+        {{ comment.comment }}{{ comment.date }}
+        <div class="d-flex justify-content-between align-items-center commentbtn_container">
+            <button class="btn btn-outline-primary sm_square_btn" type="button" 
+            id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
+            onclick="closeComment(event)">&#10006</button>
+            <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
+            <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
+        </div>
+    </form>
+</div>
+{% endfor %}
+
+<!-- сохранение комментария -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // отслеживаем событие отправки формы
+        $('.commentForm').submit(function () {
+            
+            // ID формы
+            formId = $(this).attr('id');
+            // номер коммента
+            commentNum = formId[11];
+            // соответствующий коммент
+            comment = $("#" + formId + " > #id_comment")[0];
+            // соответствующая кнопка
+            commentBtn = document.getElementById("comment_btn" + commentNum);
+            // соответствующее поле для надписи о сохранении
+            commentStatusField = document.getElementById("comment" + commentNum + "header");
+
+            // создаем AJAX-вызов
+            $.ajax({
+                data: $(this).serialize(), // получаем данные формы
+                type: $(this).attr('method'), // метод отправки запроса
+                url: "{% url 'commentsave' %}", // функция обработки
+                
+                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
+                success: function (response) {
+                    // меняем поле коммента в таблице за сегодня
+                    if (document.getElementById("today_measure_table") && (commentNum == '7')) {
+                            document.getElementById("today_comment").textContent = response.new_comment;
+                        }
+
+                    if (response.new_comment == '') {
+                        // если новый коммент пуст - делаем его кнопку серой
+                        commentBtn.classList.add('luminosity'); 
+                    }
+                    else {
+                        // если новый коммент не пуст - делаем его кнопку синей
+                        commentBtn.classList.remove('luminosity');
+                    }
+
+                    // голубая подсветка коммента и статуса
+                    comment.classList.add('comment_saved');
+                    commentStatusField.textContent = 'сохранено';
+                    commentStatusField.classList.add('comment_saved');
+                    setTimeout(() => {
+                        comment.classList.remove('comment_saved');
+                        commentStatusField.classList.remove('comment_saved');
+                    }, 1000);
+
+                    },
+
+                error: function (response) {
+                    // красная подсветка коммента и статуса
+                    comment.classList.add('comment_not_saved');
+                    commentStatusField.textContent = 'не сохранено';
+                    commentStatusField.classList.add('comment_not_saved');
+                    setTimeout(() => {
+                        comment.classList.remove('comment_not_saved');
+                        commentStatusField.classList.remove('comment_not_saved');
+                    }, 1000);
+                    }
+            });
+            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+            return false;
+        });
+    })    
+</script>
+
+<br>
+
+<!-- Статистика за произвольную дату -->
+{% if selected_period %}
+<table class="table table-bordered caption-top align-middle text-center">
+    <caption><h4>Данные за {{ selected_period }}</h4></caption>
+    <tr class="table-light"> 
+        <th>Дата</th>
+        <th>День</th>
+        <th>Самочувствие</th>
+        <th>Масса</th>
+        <th>Жирность</th>
+        <th>Пульс</th>
+        {% if show_pressure_period %}
+            <th>Давление</th>
+        {% endif%}
+        <th>Калории</th>
+        <th>Белки</th>
+        <th>Жиры</th>
+        <th>Углеводы</th>
+    </tr>
+    {% for day in period|dictsort:"date" %}
+    <tr class="my-hover">
+        <td>{{ day.date|date:"j b" }}</td>
+        <td>{{ day.date|date:"D" }}</td>
+        <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+        <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+        <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+        <td>{{ day.pulse|default_if_none:"" }}</td>
+        {% if show_pressure_period %}
+            <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                    {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                {% endif %}</td>
+        {% endif%}
+        <td>{{ day.calories|default_if_none:"" }}</td>
+        <td>{{ day.protein|default_if_none:"" }}</td>
+        <td>{{ day.fats|default_if_none:"" }}</td>
+        <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="table-light">
+        <th colspan="2">В среднем:</th>
+        <th>{{ avg_period.avg_feel|default:"" }}</th>
+        <th>{{ avg_period.avg_weight|default:"" }}</th>
+        <th>{{ avg_period.avg_fat|default:"" }}</th>
+        <th>{{ avg_period.avg_pulse|default:"" }}</th>
+        {% if show_pressure_period %}
+            <th>{{ avg_period.avg_pressure|default:"" }}</th>
+        {% endif%}
+        <th>{{ avg_period.avg_calories|default:"" }}</th>
+        <th>{{ avg_period.avg_protein|default:"" }}</th>
+        <th>{{ avg_period.avg_fats|default:"" }}</th>
+        <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
+    </tr>
+</table><br>
+{% endif %}
+
+<!-- Выбор дней статистики -->
+<form action="" method="get" class="period_select m-auto float-end">
+    <h5>Статистика за
+    <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
+    дней</h5>
+    <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
+</form>
+<br><br>
+
+<script src="{% static 'personalpage/js/measurements.js' %}"></script>
+{% endblock %}

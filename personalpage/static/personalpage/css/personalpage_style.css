@@ -195,6 +195,12 @@ table {
     border: 1px solid white !important;
     background-color: white !important;
 }
+.clientname {
+    color: #5271ff;
+    text-decoration: none;
+    vertical-align: middle;
+    font-weight: 600;
+}
 /* общее */
 
 /* загрузочный кот */
@@ -526,8 +532,8 @@ table {
     max-width: 352px;
     position: absolute;
     z-index: 10;
-    top: 100%;
-    left: 600px;
+    top: 50%;
+    left: 50%;
 }
 /* personalpage */
 
@@ -644,3 +650,8 @@ table {
     margin-bottom: auto;
 }
 /* questionary */
+
+/* measurements */
+#today_comment {
+    width: 80%;
+}
