@@ -532,7 +532,7 @@ table {
     backface-visibility: hidden;
     background-color: #ebefff;
     max-width: 352px;
-    position: absolute;
+    position: fixed;
     z-index: 10;
     top: 50%;
     left: 50%;
