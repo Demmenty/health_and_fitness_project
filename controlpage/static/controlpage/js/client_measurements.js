@@ -83,3 +83,20 @@ function dragElement(elmnt) {
     document.onmousemove = null;
   }
 }
+
+// кнопка открытия настроек цветов
+colorSettingsBtn = document.getElementById('colorsettings_btn');
+// форма настроек цветов
+colorSettingsForm = document.getElementById('color_settings_form');
+
+function openColorSettings() {
+    if (colorSettingsForm.classList.contains("hidden_element")) {
+      colorSettingsForm.classList.remove('hidden_element');
+      colorSettingsBtn.textContent = 'Скрыть настройки';
+    }
+    else {
+      colorSettingsForm.classList.add('hidden_element');
+      colorSettingsBtn.textContent = 'Настройка цвета';
+    }
+}
+colorSettingsBtn.addEventListener('click', openColorSettings, false);

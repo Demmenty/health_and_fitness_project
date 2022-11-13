@@ -29,6 +29,35 @@ class Measurement(models.Model):
         #при запросе должна быть сортировка по убыванию даты
 
 
+# модель для вариантов окрашивания показателей
+class MeasureColor(models.Model):
+    color = models.CharField('Цвет фона', max_length=20, default='#ffffff00')
+    meaning = models.CharField('Значение фона', max_length=100)
+
+    def __str__(self):
+        return f"{self.color} - {self.meaning}"
+
+
+# модель для показателей измерений
+class MeasureIndex(models.Model):
+    index_name = models.CharField('Показатель здоровья', max_length=50)
+
+    def __str__(self):
+        return f"Показатель: {self.index_name}"
+
+
+# модель для соответствия цвета, показателей и клиента
+class MeasureColorField(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    index = models.ForeignKey(MeasureIndex, on_delete=models.CASCADE)
+    color = models.ForeignKey(MeasureColor, on_delete=models.CASCADE, default='1')
+    low_limit = models.DecimalField('Нижняя граница включительно', max_digits=5, decimal_places=1, null=True, blank=True, default=None)
+    upper_limit = models.DecimalField('Верхняя граница включительно', max_digits=5, decimal_places=1, null=True, blank=True, default=None)
+
+    def __str__(self):
+        return f"Настройки цвета для клиента {self.user}: {self.color}, {self.index}"
+
+
 # модель для данных анкеты здоровья
 class Questionary(models.Model):
     date = models.DateField('Дата заполнения', auto_now_add=True, help_text='Дата заполнения')

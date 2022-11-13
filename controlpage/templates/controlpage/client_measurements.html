@@ -214,7 +214,7 @@
 {% endif %}
 
 <!-- Выбор дней статистики -->
-<form action="" method="get" class="period_select float-end">
+<form action="" method="get" class="period_select float-end" id="period_select_form">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
     <h5>Статистика за
@@ -223,6 +223,179 @@
     <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
 </form>
 <br><br>
+
+<!-- окрашивания показателей -->
+<!-- кнопка применения окрашивания -->
+<button class="btn btn-primary me-3">Применить цвета</button>
+<!-- кнопка делает видимым поле настройки -->
+<a href="#period_select_form"><button class="btn btn-primary" id="colorsettings_btn">Настройка цвета</button></a><br>
+<br>
+<!-- сборная форма -->
+<form method="POST" action="{% url 'color_settings_save' %}" class="hidden_element" id="color_settings_form">
+    {% csrf_token %}
+    <input type="hidden" value="{{ client_id }}" name="client_id">
+    <input type="hidden" value="{{ clientname }}" name="clientname">
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Самочувствие</h4></caption>
+        {% for form in colorset_forms|slice:":5" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Вес</h4></caption>
+        {% for form in colorset_forms|slice:"5:10" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Жирность</h4></caption>
+        {% for form in colorset_forms|slice:"10:15" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Пульс</h4></caption>
+        {% for form in colorset_forms|slice:"15:20" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Давление верхнее</h4></caption>
+        {% for form in colorset_forms|slice:"20:25" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Давление нижнее</h4></caption>
+        {% for form in colorset_forms|slice:"25:30" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Калории</h4></caption>
+        {% for form in colorset_forms|slice:"30:35" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Белки</h4></caption>
+        {% for form in colorset_forms|slice:"35:40" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Жиры</h4></caption>
+        {% for form in colorset_forms|slice:"40:45" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-borderless caption-top align-middle text-center">
+        <caption class="text-center"><h4>Углеводы</h4></caption>
+        {% for form in colorset_forms|slice:"45:50" %}
+        <tr>
+            {{ form.index }}
+            {{ form.color }}
+            <td>{{ form.low_limit }}</td>
+            <td class="fs-4">&#8804;</td>
+            <td class="text-transparent" id="color{{ forloop.counter }}">пример цвета</td>
+            <td class="fs-4">&#8804;</td>
+            <td>{{ form.upper_limit }}</td>
+        </tr>
+        {% endfor %}           
+    </table>
+
+    <button class="btn btn-primary float-end" type="submit">Сохранить</button>
+    <br><br>
+    <p class="text-muted"><span class="royal_blue">&#9658;</span> Алгоритм выбора цвета</p>
+    <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
+    <p class="text-muted ms-4 m-0">	&#10004; если условие выполняется, происходит окраска</p>
+    <p class="text-muted ms-4 m-0"> &#10006; если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
+    <p class="text-muted ms-3 m-0">Если ни одно условие не выполнено, цвет остается прозрачным</p>
+
+</form>
 
 <script src="{% static 'controlpage/js/client_measurements.js' %}"></script>
 {% endblock %}

@@ -462,3 +462,23 @@ input[type="radio"]:hover {
 .border-grey {
     border-color: #dee2e6;
 }
+
+#color1 {
+    background-color: #27de27;
+}
+#color2 {
+    background-color: #96e332;
+}
+#color3 {
+    background-color: #e3e332;
+}
+#color4 {
+    background-color: #f1b937;
+}
+#color5 {
+    background-color: #ff8063 ;
+}
+
+.text-transparent {
+    color: #ffffff00;
+}

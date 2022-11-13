@@ -1,9 +1,11 @@
 import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings
+from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings, MeasureColorField
 from personalpage.forms import QuestionaryForm
+from controlpage.forms import MeasureColorFieldForm
 from time import sleep
+from itertools import zip_longest
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from personalpage.views import make_avg_for_period
@@ -164,6 +166,18 @@ def client_measurements(request):
         avg_period = ""
         period = ""
 
+    # настройка цветовых фонов для показателей клиента
+    colorset_forms = []
+    for index_id in range(1, 11):
+        for color_id in range(2, 7):
+            try:
+                instance = MeasureColorField.objects.get(user_id=client_id, index_id=index_id, color_id=color_id)
+            except MeasureColorField.DoesNotExist:
+                instance = MeasureColorField.objects.create(user_id=client_id, index_id=index_id, color_id=color_id)
+
+            form = MeasureColorFieldForm(instance=instance)
+            colorset_forms.append(form)
+
     data = {
         'clientname': clientname,
         'client_id': client_id,
@@ -175,8 +189,46 @@ def client_measurements(request):
         'avg_period': avg_period,
         'show_pressure_week': show_pressure_week,
         'show_pressure_period': show_pressure_period,
+        'colorset_forms': colorset_forms,
     }
     return render(request, 'controlpage/client_measurements.html', data)
+
+
+def color_settings_save(request):
+    """Сохранение настроек цветов для показателей клиента"""
+
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+
+    if request.method == 'POST':
+
+        client_id = request.POST['client_id']
+        indices = request.POST.getlist('index')
+        colors = request.POST.getlist('color')
+        low_limits = request.POST.getlist('low_limit')
+        up_limits = request.POST.getlist('upper_limit')
+
+        values = zip_longest(indices, colors, low_limits, up_limits)
+
+        for index, color, low, up in values:
+
+            instance = MeasureColorField.objects.filter(user_id=client_id, index_id=index, color_id=color)
+            if not instance:
+                MeasureColorField.objects.create(user_id=client_id, index_id=index, color_id=color)
+                instance = MeasureColorField.objects.filter(user_id=client_id, index_id=index, color_id=color)
+
+            if low:
+                instance.update(low_limit=low)
+            else:
+                instance.update(low_limit=None)
+
+            if up:   
+                instance.update(upper_limit=up)
+            else:
+                instance.update(upper_limit=None)
+                
+        return redirect('controlpage')
+
 
 
 
