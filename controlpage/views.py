@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from personalpage.views import make_avg_for_period
 from fatsecret import Fatsecret, GeneralError
+from django.http import JsonResponse
 
 
 # данные fatsecret - засунуть в бд!!!
@@ -195,7 +196,7 @@ def client_measurements(request):
 
 
 def color_settings_save(request):
-    """Сохранение настроек цветов для показателей клиента"""
+    """Сохранение настроек цветов для показателей клиента через ajax"""
 
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
@@ -226,8 +227,10 @@ def color_settings_save(request):
                 instance.update(upper_limit=up)
             else:
                 instance.update(upper_limit=None)
+
+        data = {}
                 
-        return redirect('controlpage')
+        return JsonResponse(data, status=200)
 
 
 

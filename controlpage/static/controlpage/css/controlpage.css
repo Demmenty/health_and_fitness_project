@@ -482,3 +482,16 @@ input[type="radio"]:hover {
 .text-transparent {
     color: #ffffff00;
 }
+
+.form_saved {
+    color: #00c0f0 !important;
+    transition: all 1s ease !important;
+}
+.form_not_saved {
+    color: #ff1943 !important;
+    transition: all 1s ease !important;
+}
+
+#save_status {
+    transition: all 1s ease;
+}
