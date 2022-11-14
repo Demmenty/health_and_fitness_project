@@ -222,16 +222,46 @@ def color_settings_save(request):
                 instance.update(low_limit=low)
             else:
                 instance.update(low_limit=None)
-
             if up:   
                 instance.update(upper_limit=up)
             else:
                 instance.update(upper_limit=None)
 
         data = {}
-                
         return JsonResponse(data, status=200)
 
+
+def color_settings_send(request):
+    """Отправка текущих настроек цветов показателей"""
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+    
+    client_id = request.GET['client_id']
+
+    try:
+        query_set = MeasureColorField.objects.filter(user_id=client_id).order_by('index', 'color')
+
+        data = {'feel': {},
+                  'weight': {},
+                  'fat': {},
+                  'pulse': {},
+                  'pressure_upper': {},
+                  'pressure_lower': {},
+                  'calories': {},
+                  'protein': {},
+                  'fats': {},
+                  'carbohydrates': {},
+                }
+
+        for object in query_set:
+            data[str(object.index)][str(object.color.id)] = {
+                                                    'color': str(object.color),
+                                                    'low': str(object.low_limit),
+                                                    'up': str(object.upper_limit) }
+    except MeasureColorField.DoesNotExist:
+        data = {}
+
+    return JsonResponse(data, status=200)
 
 
 

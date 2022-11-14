@@ -100,3 +100,33 @@ function openColorSettings() {
     }
 }
 colorSettingsBtn.addEventListener('click', openColorSettings, false);
+
+
+// кнопка применения цветов к таблице
+getColorSettingsBtn = document.getElementById('use_colorsettings_btn');
+
+// функция получения текущих цветовых настроек
+function getColorSettings() {
+
+  client_id = document.getElementById('client_id').value;
+
+  var request = new XMLHttpRequest();
+
+  request.open("GET", "/controlpage/color_settings_send/?client_id=" + client_id);
+  request.onreadystatechange = function() {
+    if(this.readyState === 4 && this.status === 200) {
+
+        data = this.responseText;
+        if (data == '{}') {
+          console.log('no data');
+        }
+        else {
+          console.log('is data');
+        }
+
+    }
+  };
+  request.send();
+}
+
+getColorSettingsBtn.addEventListener('click', getColorSettings, false);

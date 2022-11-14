@@ -35,7 +35,7 @@ class MeasureColor(models.Model):
     meaning = models.CharField('Значение фона', max_length=100)
 
     def __str__(self):
-        return f"{self.color} - {self.meaning}"
+        return f"{self.color}"
 
 
 # модель для показателей измерений
@@ -43,7 +43,7 @@ class MeasureIndex(models.Model):
     index_name = models.CharField('Показатель здоровья', max_length=50)
 
     def __str__(self):
-        return f"Показатель: {self.index_name}"
+        return f"{self.index_name}"
 
 
 # модель для соответствия цвета, показателей и клиента

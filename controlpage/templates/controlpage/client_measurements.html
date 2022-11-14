@@ -226,7 +226,7 @@
 
 <!-- окрашивания показателей -->
 <!-- кнопка применения окрашивания -->
-<button class="btn btn-primary me-3">Применить цвета</button>
+<button class="btn btn-primary me-3" id="use_colorsettings_btn">Применить цвета</button>
 <!-- кнопка делает видимым поле настройки -->
 <a href="#period_select_form"><button class="btn btn-primary" id="colorsettings_btn">Настройка цвета</button></a><br>
 <br>
@@ -234,7 +234,7 @@
 
 <form method="POST" class="hidden_element" id="color_settings_form">
     {% csrf_token %}
-    <input type="hidden" value="{{ client_id }}" name="client_id">
+    <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
 
     <div class="d-flex flex-wrap">
@@ -428,8 +428,7 @@
     $(document).ready(function () {
         // отслеживаем событие сохранения и отправки формы
         $('#color_settings_form').submit(function () {
-
-            console.log('нажата кнопка сохранения');
+            // надпись о статусе сохранения
             status_msg = document.getElementById('save_status');
 
             $.ajax({
@@ -438,7 +437,6 @@
                 url: "{% url 'color_settings_save' %}", // функция обработки
 
                 success: function (response) {
-                    console.log('успешное сохранение');
                     status_msg.textContent = 'успешно сохранено';
                     status_msg.classList.add('form_saved');
                     setTimeout(() => {
@@ -446,7 +444,6 @@
                     }, 1500);
                 },
                 error: function (response) {
-                    console.log('что-то не получилось');
                     status_msg.textContent = 'что-то не получилось';
                     status_msg.classList.add('form_not_saved');
                     setTimeout(() => {
@@ -458,7 +455,6 @@
         });
     })
 </script>
-
 
 <script src="{% static 'controlpage/js/client_measurements.js' %}"></script>
 {% endblock %}
