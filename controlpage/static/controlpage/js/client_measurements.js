@@ -105,28 +105,102 @@ colorSettingsBtn.addEventListener('click', openColorSettings, false);
 // кнопка применения цветов к таблице
 getColorSettingsBtn = document.getElementById('use_colorsettings_btn');
 
-// функция получения текущих цветовых настроек
-function getColorSettings() {
+// функция получения и применения цветовых настроек
+function applyColorSettings() {
 
   client_id = document.getElementById('client_id').value;
 
   var request = new XMLHttpRequest();
-
   request.open("GET", "/controlpage/color_settings_send/?client_id=" + client_id);
+
   request.onreadystatechange = function() {
     if(this.readyState === 4 && this.status === 200) {
 
-        data = this.responseText;
-        if (data == '{}') {
-          console.log('no data');
+        var colorSet = JSON.parse(this.responseText);
+        
+        if (this.responseText == '{}') {
+          // если настройки не настроены
+          console.log('no settings');
         }
         else {
-          console.log('is data');
-        }
+          // если настройки настроены
+          console.log('is settings');
 
+          // проверка и применение
+          Object.keys(colorSet).forEach( key => {
+            console.log('проверка параметра', key);
+            fields = document.querySelectorAll(".td_" + key);
+
+            // каждое поле с этим индексом(ключом)
+            fields.forEach( field => {
+              value = field.getAttribute('value');
+              console.log('проверка поля со значением', value);
+
+              if (value != 'None') {
+                successful = false;
+                console.log('поле со значением', value, 'не равно None');
+                value = parseFloat(value.replace(',','.'));
+                console.log('value =', value, typeof(value));
+
+                console.log('начинаем цикл по цветам');
+                for (let i=2; i<7; i++) {
+
+                  console.log('итерация цикла, i =', i);
+
+                  var up = parseFloat(colorSet[key][i]['up']);
+                  var low = parseFloat(colorSet[key][i]['low']);
+
+                  console.log('up =', up);
+                  console.log('low =', low);
+                  
+                  if (!isNaN(up)) {
+                    console.log('up exist');
+                    if (!isNaN(low)) {
+                      console.log('low exist');
+                      if ((value >= low) && (value <= up)) {
+                        field.style.background = colorSet[key][i]['color'];
+                        console.log('условие выполнено');
+                        successful = true;
+                        break
+                      }
+                      
+                    }
+                    else {
+                      if (value <= up) {
+                        field.style.background = colorSet[key][i]['color'];
+                        console.log('условие выполнено');
+                        successful = true;
+                        break
+                      }
+                      
+                    }
+                  }
+                  else {
+                    if (!isNaN(low)) {
+                      if (value >= low) {
+                        field.style.background = colorSet[key][i]['color'];
+                        console.log('условие выполнено');
+                        successful = true;
+                        break
+                      }
+                      
+                    }
+                    
+                  }
+                }
+                if (!successful) {
+                console.log('цикл окончен (ни одно условие не выполнено)');
+                field.style.background = "#ffffff";
+                }
+              }
+              console.log('проверка значения', value, 'окончена');
+              console.log('');
+            })
+          })
+        }
     }
-  };
+  }
   request.send();
 }
 
-getColorSettingsBtn.addEventListener('click', getColorSettings, false);
+getColorSettingsBtn.addEventListener('click', applyColorSettings, false);

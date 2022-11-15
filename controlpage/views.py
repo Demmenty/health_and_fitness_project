@@ -260,7 +260,7 @@ def color_settings_send(request):
                                                     'up': str(object.upper_limit) }
     except MeasureColorField.DoesNotExist:
         data = {}
-
+    
     return JsonResponse(data, status=200)
 
 
