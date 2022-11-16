@@ -178,6 +178,13 @@ def client_measurements(request):
 
             form = MeasureColorFieldForm(instance=instance)
             colorset_forms.append(form)
+    # указанное в анкете нормальное давление
+    try:
+        norm_pressure = Questionary.objects.get(user=client_id).norm_pressure
+        if norm_pressure == 'no':
+            norm_pressure = 'не знает'
+    except Questionary.DoesNotExist:
+        norm_pressure = 'не указано'
 
     data = {
         'clientname': clientname,
@@ -191,6 +198,7 @@ def client_measurements(request):
         'show_pressure_week': show_pressure_week,
         'show_pressure_period': show_pressure_period,
         'colorset_forms': colorset_forms,
+        'norm_pressure': norm_pressure,
     }
     return render(request, 'controlpage/client_measurements.html', data)
 

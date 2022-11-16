@@ -309,7 +309,7 @@
     </div>
 
     <div class="col-12 col-md-6 p-3">
-    <table class="table table-borderless caption-top align-middle text-center">
+    <table class="table table-borderless caption-top align-middle text-center m-0">
         <caption class="text-center"><h4>Давление верхнее</h4></caption>
         {% for form in colorset_forms|slice:"20:25" %}
         <tr>
@@ -326,7 +326,7 @@
     </div>
 
     <div class="col-12 col-md-6 p-3">
-    <table class="table table-borderless caption-top align-middle text-center">
+    <table class="table table-borderless caption-top align-middle text-center m-0">
         <caption class="text-center"><h4>Давление нижнее</h4></caption>
         {% for form in colorset_forms|slice:"25:30" %}
         <tr>
@@ -340,6 +340,10 @@
         </tr>
         {% endfor %}
     </table>
+    </div>
+
+    <div class="col-12 px-4">
+        <p><span class="royal_blue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ norm_pressure }}</span></p>
     </div>
 
     <div class="col-12 col-md-6 p-3">
@@ -421,8 +425,8 @@
     <p class="text-muted ms-4 m-0">	&#10004; если условие выполняется, происходит окраска</p>
     <p class="text-muted ms-4 m-0"> &#10006; если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
     <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
-    <p class="text-muted ms-3 m-0">Давление проверяется по двум цифрам и окрашивается по худшему результату</p>
-    <p class="text-muted ms-3 m-0">Если один из параметров не выполнил ни одного условия, ячейка не окрашивается</p>
+    <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
+    <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>
 
 </form>
 
