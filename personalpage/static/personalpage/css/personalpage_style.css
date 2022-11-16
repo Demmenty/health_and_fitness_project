@@ -6,7 +6,7 @@
     font-family: 'Roboto', sans-serif;
 }
 .border-grey {
-    border-color: #dee2e6;
+    border-color: #ced4da !important;
 }
 /* header */
 header {
@@ -482,15 +482,6 @@ table {
 }
 #input_period {
     max-width: 70px;
-    padding: 6px;
-}
-.period_select {
-    display: flex;
-    max-width: 380px;
-    align-items: baseline;
-    justify-content: space-between;
-    white-space: nowrap;
-    flex-flow: wrap;
 }
 #id_comment:focus {
     border-color: #ced4da;

@@ -89,21 +89,21 @@
         <tbody>
             {% for day in week|dictsort:"date" %}
             <tr class="my-hover">
-                <td>{{ day.date|date:"j b" }}</td>
-                <td>{{ day.date|date:"D" }}</td>
-                <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                <td class="td_feel" value="{{ day.feel }}">{{ day.date|date:"j b" }}</td>
+                <td class="td_weight" value="{{ day.weight }}">{{ day.date|date:"D" }}</td>
+                <td class="td_fat" value="{{ day.fat }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                <td class="td_pulse" value="{{ day.pulse }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
                 <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
                 <td>{{ day.pulse|default_if_none:"" }}</td>
                 {% if show_pressure %}
-                    <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                    <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
                             {{ day.pressure_upper }}/{{ day.pressure_lower }}
                         {% endif %}</td>
                 {% endif%}
-                <td>{{ day.calories|default_if_none:"" }}</td>
-                <td>{{ day.protein|default_if_none:"" }}</td>
-                <td>{{ day.fats|default_if_none:"" }}</td>
-                <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+                <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
                 <td class="borderless">
                     <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" title="показать комментарий"
                     {% if day.comment %}class="comment_btn noluminosity"{% else %}class="comment_btn luminosity"{% endif %}
@@ -240,19 +240,19 @@
         <tr class="my-hover">
             <td>{{ day.date|date:"j b" }}</td>
             <td>{{ day.date|date:"D" }}</td>
-            <td>{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-            <td>{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-            <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-            <td>{{ day.pulse|default_if_none:"" }}</td>
+            <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+            <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+            <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+            <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
             {% if show_pressure_period %}
-                <td>{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
                         {{ day.pressure_upper }}/{{ day.pressure_lower }}
                     {% endif %}</td>
             {% endif%}
-            <td>{{ day.calories|default_if_none:"" }}</td>
-            <td>{{ day.protein|default_if_none:"" }}</td>
-            <td>{{ day.fats|default_if_none:"" }}</td>
-            <td>{{ day.carbohydrates|default_if_none:"" }}</td>
+            <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+            <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+            <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+            <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
             <td class="borderless">
                 <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
                 {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
@@ -297,13 +297,24 @@
     {% endfor %}
 {% endif %}
 
-<!-- Выбор дней статистики -->
-<form action="" method="get" class="period_select m-auto float-end">
-    <h5>Статистика за
-    <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
-    дней</h5>
-    <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
-</form>
+<div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
+    <!-- кнопка применения цветов -->
+    <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-3">
+        <label for="apply_colors_btn"><img src="{% static 'personalpage/img/colors_pic.svg' %}" width="70"></label>
+        <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn">
+    </div>
+
+    <!-- Выбор дней статистики -->
+    <form action="" method="get" class="d-flex flex-wrap justify-content-center">
+        <div class="d-flex align-items-center mb-3">
+            <h5 class="m-0">Статистика за</h5>
+            <input type="number" class="form-control text-center py-2 mx-3" name="selectperiod" min="1" id="input_period">
+            <h5 class="m-0">дней</h5>
+        </div>
+        <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
+    </form>
+</div>
+
 <br><br>
 
 <script src="{% static 'personalpage/js/measurements.js' %}"></script>

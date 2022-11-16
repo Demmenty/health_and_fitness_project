@@ -348,5 +348,5 @@ class PhotoAccessForm(ModelForm):
         model = UserSettings
         fields = ['photo_access',]
         widgets = {'photo_access': CheckboxInput(attrs={
-                'class': 'form-check-input',
+                'class': 'form-check-input ms-3',
                 }),}
