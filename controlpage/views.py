@@ -184,7 +184,7 @@ def client_measurements(request):
         if norm_pressure == 'no':
             norm_pressure = 'не знает'
     except Questionary.DoesNotExist:
-        norm_pressure = 'не указано'
+        norm_pressure = 'не заполнено'
 
     data = {
         'clientname': clientname,
