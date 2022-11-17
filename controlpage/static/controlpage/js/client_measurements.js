@@ -103,12 +103,12 @@ colorSettingsBtn.addEventListener('click', openColorSettings, false);
 
 
 // кнопка применения цветов к таблице
-getColorSettingsBtn = document.getElementById('use_colorsettings_btn');
+const useColorSettingsBtn = document.getElementById('use_colorsettings_btn');
 
 // функция получения и применения цветовых настроек
 function applyColorSettings() {
 
-  client_id = document.getElementById('client_id').value;
+  const client_id = document.getElementById('client_id').value;
 
   var request = new XMLHttpRequest();
   request.open("GET", "/controlpage/color_settings_send/?client_id=" + client_id);
@@ -120,15 +120,19 @@ function applyColorSettings() {
         
         if (this.responseText == '{}') {
           // если настройки не настроены
+          // ??
           console.log('no settings');
         }
         else {
-          // если настройки настроены
-          console.log('is settings');
+          let fields;
+          let value;
+          let valueLower;
+          let successful;
+          let upCheck;
+          let lowCheck;
 
-          // проверка и применение
+          // проверка и применение полученных настроек цветов
           Object.keys(colorSet).filter(key => key !== 'pressure_lower').forEach( key => {
-            console.log('проверка параметра', key);
 
             // ловим ячейки соответствующих параметров
             if (key == 'pressure_upper') {
@@ -141,45 +145,33 @@ function applyColorSettings() {
             // каждое поле с этим параметром здоровья
             fields.forEach( field => {
               value = field.getAttribute('value');
-              console.log('проверка поля со значением', value);
-              var successful = false;
+              successful = false;
 
               // проверка, что значение не пустое
               if ((value != 'None') && (value != 'None, None')) {
-                console.log('поле со значением', value, 'не равно None');
 
                 // преобразование проверяемого значения в число 
                 if (key == 'pressure_upper') {
                   value = value.split(", ");
                   valueLower = parseInt(value[1]);
                   value = parseInt(value[0]);
-                  console.log('value =', value, typeof(value));
-                  console.log('valueLower =', valueLower, typeof(valueLower));
                 }
                 else {
                   value = parseFloat(value.replace(',','.'));
-                  console.log('value =', value, typeof(value));
                 }               
-                
+
                 // проверка условий для каждого цвета по очереди
-                console.log('начинаем цикл по цветам');
                 for (let i=2; i<7; i++) {
-                  
-                  console.log('итерация цикла, i =', i);
     
                   // границы, по которым нужна проверка
-                  var up = parseFloat(colorSet[key][i]['up']);
-                  var low = parseFloat(colorSet[key][i]['low']);
-  
-                  console.log('up =', up);
-                  console.log('low =', low);
+                  upCheck = parseFloat(colorSet[key][i]['up']);
+                  lowCheck = parseFloat(colorSet[key][i]['low']);
                       
                   // проверка значения параметра соответствия условиям
-                  if (!isNaN(up)) {
-                    if (!isNaN(low)) {
-                      if ((value >= low) && (value <= up)) {
-                        successful = true;
-                        console.log('условие выполнено');                      
+                  if (!isNaN(upCheck)) {
+                    if (!isNaN(lowCheck)) {
+                      if ((value >= lowCheck) && (value <= upCheck)) {
+                        successful = true;                     
                         if (key == 'pressure_upper') {
                           // доп проверка нижнего давления
                           checkColorPressureLower(colorSet, valueLower, field, i);
@@ -191,9 +183,8 @@ function applyColorSettings() {
                       }
                     }
                     else {
-                      if (value <= up) {
+                      if (value <= upCheck) {
                         successful = true;
-                        console.log('условие выполнено');
                         if (key == 'pressure_upper') {
                           // доп проверка нижнего давления
                           checkColorPressureLower(colorSet, valueLower, field, i);
@@ -206,10 +197,9 @@ function applyColorSettings() {
                     }
                   }
                   else {
-                    if (!isNaN(low)) {
-                      if (value >= low) {                        
+                    if (!isNaN(lowCheck)) {
+                      if (value >= lowCheck) {                        
                         successful = true;
-                        console.log('условие выполнено');
                         if (key == 'pressure_upper') {
                           // доп проверка нижнего давления
                           checkColorPressureLower(colorSet, valueLower, field, i);
@@ -223,73 +213,65 @@ function applyColorSettings() {
                   }
                 }
                 if (!successful) {
-                  console.log('цикл окончен (ни одно условие не выполнено)');
+                  // цикл окончен, а ни одно условие не выполнено
                   field.style.background = "#ffffff";
                 }
               }
             })
-            console.log('проверка значения', value, 'окончена');
-            console.log('');
           })
         }
       }
   }
   request.send();
 }
-getColorSettingsBtn.addEventListener('click', applyColorSettings, false);
+useColorSettingsBtn.addEventListener('click', applyColorSettings, false);
 
 
 function checkColorPressureLower(colorSet, valueLower, field, i) {
-  console.log('проверка нижнего давления');
-  var successfulLower = false;
+
+  successfulLower = false;
   // доп проверка нижнего давления
   for (let j=2; j<7; j++) {
 
     // границы, по которым нужна проверка
-    var up = parseInt(colorSet['pressure_lower'][j]['up']);
-    var low = parseInt(colorSet['pressure_lower'][j]['low']);
+    upCheck = parseInt(colorSet['pressure_lower'][j]['up']);
+    lowCheck = parseInt(colorSet['pressure_lower'][j]['low']);
 
-    if (!isNaN(up)) {
-      if (!isNaN(low)) {
-        if ((valueLower >= low) && (valueLower <= up)) {
+    if (!isNaN(upCheck)) {
+      if (!isNaN(lowCheck)) {
+        if ((valueLower >= lowCheck) && (valueLower <= upCheck)) {
           successfulLower = true;
           if (i < j) {
-            field.style.background = colorSet['pressure_lower'][j]['color'];
-            console.log('условие выполнено, устанавливаем цвет', j);                      
+            field.style.background = colorSet['pressure_lower'][j]['color'];                     
           }
           else {
-            field.style.background = colorSet['pressure_upper'][i]['color'];
-            console.log('условие выполнено, устанавливаем цвет', i);  
+            field.style.background = colorSet['pressure_upper'][i]['color']; 
           }
           break
         }
       }
       else {
-        if (valueLower <= up) {
+        if (valueLower <= upCheck) {
           successfulLower = true;
           if (i < j) {
             field.style.background = colorSet['pressure_lower'][j]['color'];
-            console.log('условие выполнено, устанавливаем цвет', j);
           }
           else {
             field.style.background = colorSet['pressure_upper'][i]['color'];
-            console.log('условие выполнено, устанавливаем цвет', i);
           }
           break
         }
       }
     }
     else {
-      if (!isNaN(low)) {
-        if (valueLower >= low) {                        
+      if (!isNaN(lowCheck)) {
+        if (valueLower >= lowCheck) {                        
           successfulLower = true;
           if (i < j) {
             field.style.background = colorSet['pressure_lower'][j]['color'];
-            console.log('условие выполнено, устанавливаем цвет', j);
           }
           else {
             field.style.background = colorSet['pressure_upper'][i]['color'];
-            console.log('условие выполнено, устанавливаем цвет', i);
           }
           break
         }
@@ -297,7 +279,7 @@ function checkColorPressureLower(colorSet, valueLower, field, i) {
     }
   }
   if (!successfulLower) {
-    console.log('цикл окончен (ни одно условие для нижнего не выполнено)');
+    // цикл окончен, а ни одно условие для нижнего не выполнено
     field.style.background = "#ffffff";
   }
 }

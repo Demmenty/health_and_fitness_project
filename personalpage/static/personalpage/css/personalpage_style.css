@@ -8,6 +8,9 @@
 .border-grey {
     border-color: #ced4da !important;
 }
+.text-transparent {
+    color: #ffffff00;
+}
 /* header */
 header {
     background-color: #ffffff;

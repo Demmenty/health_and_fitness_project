@@ -89,12 +89,12 @@
         <tbody>
             {% for day in week|dictsort:"date" %}
             <tr class="my-hover">
-                <td class="td_feel" value="{{ day.feel }}">{{ day.date|date:"j b" }}</td>
-                <td class="td_weight" value="{{ day.weight }}">{{ day.date|date:"D" }}</td>
-                <td class="td_fat" value="{{ day.fat }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                <td class="td_pulse" value="{{ day.pulse }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-                <td>{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-                <td>{{ day.pulse|default_if_none:"" }}</td>
+                <td>{{ day.date|date:"j b" }}</td>
+                <td>{{ day.date|date:"D" }}</td>
+                <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
                 {% if show_pressure %}
                     <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
                             {{ day.pressure_upper }}/{{ day.pressure_lower }}
@@ -301,7 +301,7 @@
     <!-- кнопка применения цветов -->
     <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-3">
         <label for="apply_colors_btn"><img src="{% static 'personalpage/img/colors_pic.svg' %}" width="70"></label>
-        <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn">
+        <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" onchange="applyColors()">
     </div>
 
     <!-- Выбор дней статистики -->
@@ -315,7 +315,11 @@
     </form>
 </div>
 
-<br><br>
+<div class="d-flex hidden_element justify-content-center justify-content-md-start" id="colorset_error_container">
+    <span class="royal_blue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
+</div>
+
+<br>
 
 <script src="{% static 'personalpage/js/measurements.js' %}"></script>
 {% endblock %}
