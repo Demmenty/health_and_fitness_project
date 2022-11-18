@@ -9,7 +9,8 @@
 
 <!-- ссылка на анкету -->
 {% if questionary %}
-<a href="{% url 'questionary' %}"><button class="btn btn-primary">Анкета здоровья</button></a>
+<p>&#10004; Анкета заполнена</p>
+<a href="{% url 'questionary' %}"><button class="btn btn-primary">Редактировать</button></a>
 {% else %}
 <p>&#10006; Анкета здоровья не заполнена</p>
 <a href="{% url 'questionary' %}"><button class="btn btn-primary">Заполнить</button></a>
@@ -17,7 +18,27 @@
 <br><br>
 
 <!-- контакты клиента -->
+{% if client_contacts %}
+<p>&#10004; Контакты указаны</p>
+<button class='btn btn-primary' onclick="openContactsForm()">Редактировать</button>
+{% else %}
+<p>&#10006; Контакты не указаны</p>
+<button class='btn btn-primary' onclick="openContactsForm()">Указать</button>
+{% endif %}
 
+<br><br>
+
+<!-- форма контактов -->
+<div class="d-flex border-blueshadow rounded p-3 hidden_element" id="contacts_form_container">
+    <form method="post" id="contacts_form" class="w-100">
+        {% csrf_token %}
+        {{ contacts_form.as_p }}
+        <button class="btn btn-outline-primary" type="button" onclick="closeContactsForm()">Отмена</button>
+        <button class="btn btn-primary float-end" type="submit">Сохранить</button>
+    </form>
+</div>
+
+<br>
 
 <!-- измерения за сегодня -->
 {% if today_measure %}
@@ -45,5 +66,5 @@
 {% endif %}
 
 
-
+<script src="{% static 'personalpage/js/personalpage.js' %}"></script>
 {% endblock %}

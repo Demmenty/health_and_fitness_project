@@ -2,7 +2,7 @@ from msilib.schema import CheckBox
 from tkinter import Widget
 from datetime import date
 from .models import Measurement, Questionary, Anthropometry, UserSettings
-from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput, ClearableFileInput
+from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput, ClearableFileInput, Select
 
 # можно указать fields = '__all__'
 # исправить ? хотя наглядность лучше..
@@ -350,3 +350,40 @@ class PhotoAccessForm(ModelForm):
         widgets = {'photo_access': CheckboxInput(attrs={
                 'class': 'form-check-input ms-3',
                 }),}
+
+
+class ContactsForm(ModelForm):
+    class Meta:
+        model = UserSettings
+        fields = [
+            'telegram',
+            'whatsapp',
+            'discord',
+            'skype',
+            'vkontakte',
+            'facebook',
+            'preferred_contact',
+        ]
+        widgets = {
+            'telegram': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'whatsapp': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'discord': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'skype': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'vkontakte': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'facebook': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'preferred_contact': Select(attrs={
+                'class': 'form-control',
+            }),
+        }

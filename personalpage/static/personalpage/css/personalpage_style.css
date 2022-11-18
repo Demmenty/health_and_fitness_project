@@ -11,6 +11,13 @@
 .text-transparent {
     color: #ffffff00;
 }
+
+.border-blueshadow {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+
 /* header */
 header {
     background-color: #ffffff;
@@ -531,6 +538,12 @@ table {
     top: 50%;
     left: 50%;
 }
+
+/* форма контактов */
+#contacts_form_container {
+    max-width: 500px;
+}
+
 /* personalpage */
 
 

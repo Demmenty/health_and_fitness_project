@@ -139,7 +139,28 @@ class Anthropometry(models.Model):
         get_latest_by = "date"
 
 
-# модель для хранения настроек пользователей
+# модель для хранения настроек и контактов пользователей
 class UserSettings(models.Model):
+
+    CONTACT_CHOICES = [
+        ('TG', 'Telegram'),
+        ('WA', 'Whatsapp'),
+        ('DC', 'Discord'),
+        ('SK', 'Skype'),
+        ('VK', 'Vkontakte'),
+        ('FB', 'Facebook'),
+        ('', 'не выбрано'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     photo_access = models.BooleanField('Доступ эксперта к фото', default=False)
+    telegram = models.URLField('Telegram', max_length=250, null=True, blank=True)
+    whatsapp = models.URLField('Whatsapp', max_length=250, null=True, blank=True)
+    discord = models.URLField('Discord', max_length=250, null=True, blank=True)
+    skype = models.URLField('Skype', max_length=250, null=True, blank=True)
+    vkontakte = models.URLField('Vkontakte', max_length=250, null=True, blank=True)
+    facebook = models.URLField('Facebook', max_length=250, null=True, blank=True)
+    preferred_contact = models.CharField('Предпочтительный способ связи', choices=CONTACT_CHOICES, default='', max_length=2)
+
+    def __str__(self):
+        return f"Настройки и контакты клиента {self.user}"

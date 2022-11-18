@@ -1,7 +1,7 @@
 import pickle
 from django.shortcuts import render, redirect
 from .models import Anthropometry, Measurement, Questionary, FatSecretEntry, UserSettings
-from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm, PhotoAccessForm
+from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
@@ -148,7 +148,6 @@ def personalpage(request):
     # если аноним - пусть регается
     if request.user.is_anonymous:
         return redirect('loginuser')
-
     # Парабола перенаправляется на свою страницу
     if request.user.username == 'Parrabolla':
         return redirect('controlpage')
@@ -158,6 +157,10 @@ def personalpage(request):
         questionary = Questionary.objects.get(user=request.user)
     except Questionary.DoesNotExist:
         questionary = ''
+
+    # контакты клиента
+    contacts_form = ContactsForm()
+
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
@@ -191,6 +194,7 @@ def personalpage(request):
     data = {
         'today_measure': today_measure,
         'questionary': questionary,
+        'contacts_form': contacts_form,
     }
     return render(request, 'personalpage/personalpage.html', data)
 
