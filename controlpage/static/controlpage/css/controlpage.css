@@ -498,3 +498,26 @@ input[type="radio"]:hover {
 #colorsettings_ref:hover img {
     filter: brightness(0) invert(1); 
 }
+
+/* footer */
+footer {
+    background-color: #5271ff;
+    border-top-color: #b9b9b9;
+    border-top-style: solid;
+    border-top-width: 3px;
+    margin-top: 2rem;
+}
+.mail_ref {
+    color: #b9b9b9;
+    text-decoration: none;
+}
+.mail_ref:hover {
+    color: black;
+}
+.contact_ico {
+    height: 25px;
+    filter: invert(1);
+}
+.contact_ico:hover {
+    filter: brightness();
+}

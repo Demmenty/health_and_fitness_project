@@ -82,6 +82,49 @@
     </div>
   </div>
 
+  {% if clientname %}
+  <footer>
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+      
+        <button type="button" class="btn btn-light">Комменты для меня</button>
+          
+        <button type="button" class="btn btn-light">Комменты для клиента</button>
+        
+        <div class="d-flex flex-column">
+
+          <div class="d-flex align-items-center">
+            <span class="p-2 mb-3 mb-md-0 me-2 text-white">Контакты клиента</span>
+          </div>
+          
+          <div class="d-flex flex-row align-items-center">
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://t.me/parrrabollla" target="_blank"><img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+            </div>
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://wa.me/79603280691" target="_blank"><img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
+            </div>
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://discord.gg/CDrXhVA" target="_blank"><img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord"></a>
+            </div>
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank"><img src="{% static 'general/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype"></a>
+            </div>
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://vk.com/id37037617" target="_blank"><img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+            </div>
+            <div class="p-2 d-flex justify-content-end">
+              <a href="https://vk.com/id37037617" target="_blank"><img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook"></a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </footer>
+  {% endif %}
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
