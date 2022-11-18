@@ -85,25 +85,35 @@ function dragElement(elmnt) {
 }
 
 // кнопка открытия настроек цветов
-colorSettingsBtn = document.getElementById('colorsettings_btn');
+const colorSettingsBtn = document.getElementById('colorsettings_btn');
 // форма настроек цветов
-colorSettingsForm = document.getElementById('color_settings_form');
-
+const colorSettingsForm = document.getElementById('color_settings_form');
+// функция показа настроек цвета
 function openColorSettings() {
     if (colorSettingsForm.classList.contains("hidden_element")) {
       colorSettingsForm.classList.remove('hidden_element');
-      colorSettingsBtn.textContent = 'Скрыть настройки';
+      
     }
     else {
       colorSettingsForm.classList.add('hidden_element');
-      colorSettingsBtn.textContent = 'Настройка цвета';
+      
     }
 }
 colorSettingsBtn.addEventListener('click', openColorSettings, false);
 
-
-// кнопка применения цветов к таблице
-const useColorSettingsBtn = document.getElementById('use_colorsettings_btn');
+// функция применения цветов к измерениям согласно настройкам из БД
+function applyColors() {
+  let btn = document.getElementById("apply_colors_btn");
+  let allTableFields = document.querySelectorAll("td");
+  if (btn.checked) {
+    applyColorSettings();
+  }
+  else {
+    allTableFields.forEach( field => {
+      field.style.background = '#ffffff';
+    })
+  }
+}
 
 // функция получения и применения цветовых настроек
 function applyColorSettings() {
@@ -224,7 +234,6 @@ function applyColorSettings() {
   }
   request.send();
 }
-useColorSettingsBtn.addEventListener('click', applyColorSettings, false);
 
 
 function checkColorPressureLower(colorSet, valueLower, field, i) {

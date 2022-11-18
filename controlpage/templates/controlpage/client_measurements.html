@@ -211,26 +211,40 @@
             <td class="borderless">&nbsp</td>
         </tr>
     </table>
+    <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
     <br>
 {% endif %}
 
-<!-- Выбор дней статистики -->
-<form action="" method="get" class="period_select float-end" id="period_select_form">
-    <input type="hidden" value="{{ client_id }}" name="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-    <h5>Статистика за
-    <input type="number" class="form-control text-center d-inline" name="selectperiod" min="1" id="input_period">
-    дней</h5>
-    <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
-</form>
+
+<div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
+    <div class="d-flex mb-3">
+        <!-- кнопка применения цветов -->
+        <div class="d-flex px-3 border border-grey rounded align-items-center me-3">
+            <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="50">
+            <input type="checkbox" name="apply_colors" class="form-check-input mt-0 ms-3" id="apply_colors_btn" onchange="applyColors()">
+        </div>
+        <!-- кнопка настроек цветов -->
+        <a href="#period_select_form" id="colorsettings_ref"><button class="btn btn-outline-primary" id="colorsettings_btn">
+            <img src="{% static 'general/img/gears_royalblue.svg' %}" width="26" style="margin-top: -3px;">
+        </button></a>
+    </div>
+    
+    <!-- Выбор дней статистики -->
+    <form action="" method="get" class="d-flex flex-wrap justify-content-center mb-3" id="period_select_form">
+        <input type="hidden" value="{{ client_id }}" name="client_id">
+        <input type="hidden" value="{{ clientname }}" name="clientname">
+        <div class="d-flex align-items-center">
+            <h5 class="m-0">Статистика за</h5>
+            <input type="number" class="form-control text-center mx-3" name="selectperiod" min="1" id="input_period">
+            <h5 class="m-0">дней</h5>
+        </div>
+        <button type="submit" class="btn btn-primary d-inline ms-3" name="submit">Получить</button></h5>
+    </form>
+
+</div>
+
 <br><br>
 
-<!-- окрашивания показателей -->
-<!-- кнопка применения окрашивания -->
-<button class="btn btn-primary me-3" id="use_colorsettings_btn">Применить цвета</button>
-<!-- кнопка делает видимым поле настройки -->
-<a href="#period_select_form"><button class="btn btn-primary" id="colorsettings_btn">Настройка цвета</button></a><br>
-<br>
 <!-- огромная сборная форма -->
 
 <form method="POST" class="hidden_element" id="color_settings_form">
@@ -240,7 +254,7 @@
 
     <div class="d-flex flex-wrap">
  
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Самочувствие</h4></caption>
         {% for form in colorset_forms|slice:":5" %}
@@ -249,7 +263,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -257,7 +271,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Вес</h4></caption>
         {% for form in colorset_forms|slice:"5:10" %}
@@ -266,7 +280,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -274,7 +288,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Жирность</h4></caption>
         {% for form in colorset_forms|slice:"10:15" %}
@@ -283,7 +297,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -291,7 +305,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Пульс</h4></caption>
         {% for form in colorset_forms|slice:"15:20" %}
@@ -300,7 +314,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -308,7 +322,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center m-0">
         <caption class="text-center"><h4>Давление верхнее</h4></caption>
         {% for form in colorset_forms|slice:"20:25" %}
@@ -317,7 +331,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -325,7 +339,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center m-0">
         <caption class="text-center"><h4>Давление нижнее</h4></caption>
         {% for form in colorset_forms|slice:"25:30" %}
@@ -334,7 +348,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -346,7 +360,7 @@
         <p><span class="royal_blue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ norm_pressure }}</span></p>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Калории</h4></caption>
         {% for form in colorset_forms|slice:"30:35" %}
@@ -355,7 +369,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -363,7 +377,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Белки</h4></caption>
         {% for form in colorset_forms|slice:"35:40" %}
@@ -372,7 +386,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -380,7 +394,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Жиры</h4></caption>
         {% for form in colorset_forms|slice:"40:45" %}
@@ -389,7 +403,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>
@@ -397,7 +411,7 @@
     </table>
     </div>
 
-    <div class="col-12 col-md-6 p-3">
+    <div class="col-12 col-md-6 py-3 px-1">
     <table class="table table-borderless caption-top align-middle text-center">
         <caption class="text-center"><h4>Углеводы</h4></caption>
         {% for form in colorset_forms|slice:"45:50" %}
@@ -406,7 +420,7 @@
             {{ form.color }}
             <td>{{ form.low_limit }}</td>
             <td class="fs-4">&#8804;</td>
-            <td class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
             <td class="fs-4">&#8804;</td>
             <td>{{ form.upper_limit }}</td>
         </tr>

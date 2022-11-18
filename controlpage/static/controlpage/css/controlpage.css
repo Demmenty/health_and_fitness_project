@@ -235,7 +235,6 @@ caption {
 }
 #input_period {
     max-width: 70px;
-    padding: 6px;
 }
 /* clientpage */
 
@@ -460,7 +459,7 @@ input[type="radio"]:hover {
 
 /* measurements */
 .border-grey {
-    border-color: #dee2e6;
+    border-color: #ced4da !important;
 }
 
 #color1 {
@@ -494,4 +493,8 @@ input[type="radio"]:hover {
 
 #save_status {
     transition: all 1s ease;
+}
+
+#colorsettings_ref:hover img {
+    filter: brightness(0) invert(1); 
 }

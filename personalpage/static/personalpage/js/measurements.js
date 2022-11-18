@@ -122,7 +122,7 @@ function applyColorSettings() {
 
         if (this.responseText == '{}') {
           // если настройки не настроены
-          console.log("no response");
+          console.log("no response with color settings");
           colorsetError.textContent = "настройки цвета пока не установлены (или возникла ошибка)";
           colorsetErrorContainer.classList.remove("hidden_element");
         }
