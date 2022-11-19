@@ -203,11 +203,9 @@
                 success: function (response) {
                     console.log(response.accessible);
                     if (response.accessible) {
-                        console.log('ffff');
                         photoAccessStatus.textContent = " эксперт имеет доступ к фотографиям";
                     }
                     else {
-                        console.log('aaaa');
                         photoAccessStatus.textContent = " эксперт не имеет доступа к фотографиям";
                     }
                     },
