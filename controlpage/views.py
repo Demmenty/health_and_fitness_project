@@ -45,6 +45,36 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
+
+def get_client_contacts(client_id):
+    """Достаем контакты клиента из его настроек"""
+    try:
+        instance = UserSettings.objects.get(user_id=client_id)
+
+        fields = [
+            'telegram',
+            'whatsapp',
+            'discord',
+            'skype',
+            'vkontakte',
+            'facebook',
+        ]
+
+        for field in fields: 
+            if getattr(instance, field):
+                client_contacts = {}
+                for f in fields:
+                    client_contacts[f] = getattr(instance, f)
+                client_contacts['preferred'] = getattr(instance, 'preferred_contact')
+
+                return client_contacts
+
+        return False
+
+    except UserSettings.DoesNotExist:
+        return False
+
+
 # My views
 
 def controlpage(request):
@@ -77,6 +107,8 @@ def clientpage(request):
     
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # дата регистрации
     date_joined = User.objects.get(username=clientname).date_joined.date()
@@ -105,7 +137,6 @@ def clientpage(request):
     except Measurement.DoesNotExist:
         today_measure = ''
 
-
     data = {
         'clientname': clientname,
         'client_id': client_id,
@@ -113,6 +144,7 @@ def clientpage(request):
         'fs_connected': fs_connected,
         'today_measure': today_measure,
         'date_joined': date_joined,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/clientpage.html', data)
 
@@ -128,6 +160,8 @@ def client_measurements(request):
     
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # измерения за сегодня
     try:
@@ -199,6 +233,7 @@ def client_measurements(request):
         'show_pressure_period': show_pressure_period,
         'colorset_forms': colorset_forms,
         'norm_pressure': norm_pressure,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/client_measurements.html', data)
 
@@ -287,6 +322,8 @@ def client_questionary(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     questionary = Questionary.objects.get(user=client_id)
     form = QuestionaryForm()
@@ -296,6 +333,7 @@ def client_questionary(request):
         'client_id': client_id,
         'questionary': questionary,
         'form': form,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/client_questionary.html', data)
 
@@ -314,6 +352,8 @@ def client_mealjournal(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -497,6 +537,7 @@ def client_mealjournal(request):
         'count_meal_in_category': count_meal_in_category,
         'today_day': today_day,
         'previous_month': previous_month,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/client_mealjournal.html', data)   
 
@@ -514,6 +555,8 @@ def client_foodbydate(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -546,6 +589,7 @@ def client_foodbydate(request):
             'prev_date': prev_date,
             'next_date': next_date,
             'food_entry': food_entry,
+            'client_contacts': client_contacts,
         }
         return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -704,6 +748,7 @@ def client_foodbydate(request):
         'prev_date': prev_date,
         'next_date': next_date,
         'food_entry': food_entry,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -720,6 +765,8 @@ def client_foodbymonth(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -961,6 +1008,7 @@ def client_foodbymonth(request):
         'prev_month': prev_month,
         'next_month': next_month,
         'prods_without_info': prods_without_info,
+        'client_contacts': client_contacts,
         }
     return render(request, 'controlpage/client_foodbymonth.html', data)
 
@@ -976,6 +1024,8 @@ def client_anthropometry(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+    # контакты клиента
+    client_contacts = get_client_contacts(client_id)
 
     # таблица сделанных измерений
     metrics = Anthropometry.objects.filter(user=client_id)
@@ -1012,5 +1062,6 @@ def client_anthropometry(request):
         'metrics': metrics,
         'show_all': show_all,
         'accessibility': accessibility,
+        'client_contacts': client_contacts,
     }
     return render(request, 'controlpage/client_anthropometry.html', data)

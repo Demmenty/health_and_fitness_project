@@ -11,6 +11,9 @@
 .text-transparent {
     color: #ffffff00;
 }
+.text-light-grey {
+    color: #b9b9b9;
+}
 
 .border-blueshadow {
     border: 1px solid #ced4da;

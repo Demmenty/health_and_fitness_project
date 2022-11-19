@@ -8,6 +8,13 @@
 .royal_blue {
     color: #5271ff;
 }
+.text-light-grey {
+    color: #b9b9b9;
+}
+.border-outset {
+    border: outset;
+}
+
 /* header */
 header {
     background-color: #ffffff;
@@ -32,10 +39,16 @@ header {
 .nav_link:hover {
     color: #5271ff;
 }
+
+.border-blueshadow {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+
 /* main */
 main {
     padding-top: 130px;
-    padding-bottom: 50px;
 }
 /* стиль кнопок */
 .btn-primary {
@@ -520,4 +533,18 @@ footer {
 }
 .contact_ico:hover {
     filter: brightness();
+}
+
+#preferred_contact_ico {
+    padding: 7px;
+    border: 1px solid #7d9db1;
+    border-radius: 45px;
+    box-shadow: 0 0 8px 1px #9dc3da;
+}
+#preferred_contact_ico:hover {
+    background-color: #3f54b2;
+    cursor: pointer;
+}
+#preferred_contact_ico img:hover {
+    filter: invert(1);
 }
