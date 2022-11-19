@@ -18,7 +18,7 @@
 <br><br>
 
 <!-- контакты клиента -->
-{% if client_contacts %}
+{% if contacts_filled %}
 <p>&#10004; Контакты указаны</p>
 <button class='btn btn-primary' onclick="openContactsForm()">Редактировать</button>
 {% else %}
@@ -29,7 +29,13 @@
 <br><br>
 
 <!-- форма контактов -->
-<div class="d-flex border-blueshadow rounded p-3 hidden_element" id="contacts_form_container">
+{% if contacts_error %}
+<div class="d-flex flex-column border-blueshadow rounded p-3" id="contacts_form_container">
+{% else %}
+<div class="d-flex flex-column border-blueshadow rounded p-3 hidden_element" id="contacts_form_container">
+{% endif %}
+    <h4 class="text-center">Ссылки на способы связи</h4>
+    <p class="text-center text-danger">{{ contacts_error }}</p>
     <form method="post" id="contacts_form" class="w-100">
         {% csrf_token %}
         {{ contacts_form.as_p }}

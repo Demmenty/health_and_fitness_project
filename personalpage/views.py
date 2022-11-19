@@ -158,10 +158,48 @@ def personalpage(request):
     except Questionary.DoesNotExist:
         questionary = ''
 
-    # контакты клиента
-    contacts_form = ContactsForm()
+    # сообщение об ошибке в контактах
+    contacts_error = ''
+    # cохранение контактов клиента из формы
+    if request.method == 'POST':
+        form = ContactsForm(request.POST)
+        if form.is_valid():
+            try:
+                instance = UserSettings.objects.get(user=request.user)
+                form = ContactsForm(request.POST, instance=instance)
+                form.save()
+                return redirect('personalpage')
+            except UserSettings.DoesNotExist:
+                new_form = form.save(commit=False)
+                new_form.user = request.user
+                new_form.save()
+                return redirect('personalpage')
+        else:
+            contacts_error = 'Контакты введены некорректно. Попробуйте ещё раз.'
 
+    # форма контактов клиента
+    contacts_filled = False
+    try:
+        instance = UserSettings.objects.get(user=request.user)
+        contacts_form = ContactsForm(instance=instance)
 
+        # проверка на заполненность хотя бы 1 поля
+        fields = [
+            'telegram',
+            'whatsapp',
+            'discord',
+            'skype',
+            'vkontakte',
+            'facebook',
+        ]
+        for field in fields:
+            if getattr(instance, field):
+                contacts_filled = True
+                break
+
+    except UserSettings.DoesNotExist:
+        contacts_form = ContactsForm()
+        
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)
     if today_set:
@@ -195,8 +233,11 @@ def personalpage(request):
         'today_measure': today_measure,
         'questionary': questionary,
         'contacts_form': contacts_form,
+        'contacts_error': contacts_error,
+        'contacts_filled': contacts_filled,
     }
     return render(request, 'personalpage/personalpage.html', data)
+
 
 
 def measurements(request):

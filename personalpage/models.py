@@ -149,7 +149,7 @@ class UserSettings(models.Model):
         ('SK', 'Skype'),
         ('VK', 'Vkontakte'),
         ('FB', 'Facebook'),
-        ('', 'не выбрано'),
+        ('No', 'не выбрано'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -160,7 +160,7 @@ class UserSettings(models.Model):
     skype = models.URLField('Skype', max_length=250, null=True, blank=True)
     vkontakte = models.URLField('Vkontakte', max_length=250, null=True, blank=True)
     facebook = models.URLField('Facebook', max_length=250, null=True, blank=True)
-    preferred_contact = models.CharField('Предпочтительный способ связи', choices=CONTACT_CHOICES, default='', max_length=2)
+    preferred_contact = models.CharField('Предпочтительный способ связи', choices=CONTACT_CHOICES, default='No', max_length=2)
 
     def __str__(self):
         return f"Настройки и контакты клиента {self.user}"

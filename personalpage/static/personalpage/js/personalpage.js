@@ -7,3 +7,4 @@ function openContactsForm() {
 function closeContactsForm() {
     contactsForm.classList.add('hidden_element');
 }
+
