@@ -1,6 +1,6 @@
 import pickle
 from django.shortcuts import render, redirect
-from .models import Anthropometry, Measurement, Questionary, FatSecretEntry, UserSettings
+from .models import Anthropometry, Measurement, MeasureColorField, Questionary, FatSecretEntry, UserSettings
 from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
@@ -319,6 +319,9 @@ def measurements(request):
         avg_period = ""
         period = ""
 
+    # наличие цветовых настроек для клиента
+    colorset_exist = bool(MeasureColorField.objects.filter(user_id=request.user))
+
     data = {
         'today_measure': today_measure,
         'week': week,
@@ -330,6 +333,7 @@ def measurements(request):
         'period': period,
         'avg_week': avg_week,
         'avg_period': avg_period,
+        'colorset_exist': colorset_exist,
     }
     return render(request, 'personalpage/measurements.html', data)    
 
