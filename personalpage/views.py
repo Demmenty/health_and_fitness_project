@@ -544,7 +544,7 @@ def addmeasure(request):
             # сохраняется запись в базе
             measure_form.save()
 
-            # готовая форма на основе сущетсвующей пустой записи БД
+            # готовая форма на основе сущеcтсвующей пустой записи БД
             measure = Measurement.objects.get(date=measure_date, user=request.user)
             measure_form = MeasurementForm(instance=measure)
 

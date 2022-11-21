@@ -2,8 +2,9 @@ import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings, MeasureColorField
+from controlpage.models import Commentary
 from personalpage.forms import QuestionaryForm
-from controlpage.forms import MeasureColorFieldForm
+from controlpage.forms import MeasureColorFieldForm, CommentaryForm
 from time import sleep
 from itertools import zip_longest
 from datetime import date, datetime, timedelta, time
@@ -45,8 +46,7 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
-
-def get_client_contacts(client_id):
+def today_contacts(client_id):
     """Достаем контакты клиента из его настроек"""
     try:
         instance = UserSettings.objects.get(user_id=client_id)
@@ -73,6 +73,97 @@ def get_client_contacts(client_id):
 
     except UserSettings.DoesNotExist:
         return False
+
+
+def today_comment_form(client_id):
+    """Получение формы для комплексного комментария клиенту от эксперта
+       Дата - сегодняшняя, на другие даты меняется на странице скриптом
+    """
+    try:
+        instance = Commentary.objects.get(client=client_id, date=date.today())
+        form = CommentaryForm(instance=instance)
+    except Commentary.DoesNotExist:
+        form = CommentaryForm()
+
+    return form
+
+
+def get_commentary_form(request):
+    """Получение формы коммента для клиента
+       для выбранной на странице даты через скрипт"""
+
+    if request.user.is_anonymous:
+        data = {}
+        return JsonResponse(data, status=403)
+
+    print('получен запрос формы')
+    print(request.GET)
+
+    client_id = request.GET['client_id']
+    comment_date = request.GET['date']
+
+    try:
+        instance = Commentary.objects.get(client=client_id, date=comment_date)
+        data = {
+            'general': instance.general,
+            'measurements': instance.measurements,
+            'nutrition': instance.nutrition,
+            'workout': instance.workout,
+        }
+    except Commentary.DoesNotExist:
+        data = {
+        'general': '',
+        'measurements': '',
+        'nutrition': '',
+        'workout': '',
+        }
+
+    return JsonResponse(data, status=200)
+
+
+def save_commentary_form(request):
+    """Сохранение формы коммента для клиента через аякс-скрипт
+       Используется в controlpage/layout.html
+    """
+
+    if request.user.username != 'Parrabolla':
+        data = {}
+        return JsonResponse(data, status=403)
+
+    if request.method == 'POST':
+
+        print('запрос на сохранение коммента')
+        print(request.POST)
+
+        client_id = request.POST['client']
+        form = CommentaryForm(request.POST)
+
+        if form.is_valid():
+
+            print('форма валидна')
+
+            comment_date = form.cleaned_data['date']
+
+            try:
+                instance = Commentary.objects.get(client=client_id, date=comment_date)
+                form = CommentaryForm(request.POST, instance=instance)
+                form.save()
+                
+            except Commentary.DoesNotExist:
+                new_form = form.save(commit=False)
+                new_form.client_id = client_id
+                new_form.save()
+
+            print('форма сохранена')
+            result = 'комментарий сохранен'
+        
+        else:
+            result = 'данные некорректны'
+
+        data = {
+            'result': result,
+        }
+        return JsonResponse(data, status=200)
 
 
 # My views
@@ -108,7 +199,7 @@ def clientpage(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # дата регистрации
     date_joined = User.objects.get(username=clientname).date_joined.date()
@@ -137,6 +228,9 @@ def clientpage(request):
     except Measurement.DoesNotExist:
         today_measure = ''
 
+    # комментарий для клиента
+    client_comment_form = today_comment_form(client_id)
+
     data = {
         'clientname': clientname,
         'client_id': client_id,
@@ -145,6 +239,7 @@ def clientpage(request):
         'today_measure': today_measure,
         'date_joined': date_joined,
         'client_contacts': client_contacts,
+        'client_comment_form': client_comment_form,
     }
     return render(request, 'controlpage/clientpage.html', data)
 
@@ -161,7 +256,7 @@ def client_measurements(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # измерения за сегодня
     try:
@@ -242,7 +337,8 @@ def color_settings_save(request):
     """Сохранение настроек цветов для показателей клиента через ajax"""
 
     if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        data = {'status': 'No!'}
+        return JsonResponse(data, status=403)
 
     if request.method == 'POST':
 
@@ -323,8 +419,9 @@ def client_questionary(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
+    # ???
     questionary = Questionary.objects.get(user=client_id)
     form = QuestionaryForm()
     
@@ -353,7 +450,7 @@ def client_mealjournal(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -556,7 +653,7 @@ def client_foodbydate(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -766,7 +863,7 @@ def client_foodbymonth(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -1025,7 +1122,7 @@ def client_anthropometry(request):
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
     # контакты клиента
-    client_contacts = get_client_contacts(client_id)
+    client_contacts = today_contacts(client_id)
 
     # таблица сделанных измерений
     metrics = Anthropometry.objects.filter(user=client_id)

@@ -1,16 +1,17 @@
 from personalpage.models import MeasureColorField
 from django.forms import ModelForm, NumberInput, TextInput, HiddenInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
-
+from .models import Commentary
 
 class MeasureColorFieldForm(ModelForm):
     class Meta:
         model = MeasureColorField
-        fields = ['user',
-                  'index',
-                  'color',
-                  'low_limit',
-                  'upper_limit',
-                ]
+        fields = [
+            'user',
+            'index',
+            'color',
+            'low_limit',
+            'upper_limit',
+            ]
         widgets = {
             'user': HiddenInput(),
             'index': HiddenInput(),
@@ -22,5 +23,37 @@ class MeasureColorFieldForm(ModelForm):
             'upper_limit': NumberInput(attrs={
                 'class': 'form-control text-center',
                 'min': '0',
+            }),
+        }
+
+class CommentaryForm(ModelForm):
+    class Meta:
+        model = Commentary
+        fields = [
+            'date',
+            'client',
+            'general',
+            'measurements',
+            'nutrition',
+            'workout',
+            ]
+        widgets = {
+            'date': DateInput(attrs={
+                'class': 'form-control w-50 text-center p-1 transition_common',
+                'type': 'date',
+                'readonly': False,
+            }),
+            'client': HiddenInput(),
+            'general': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+            }),
+            'measurements': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+            }),
+            'nutrition': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+            }),
+            'workout': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
             }),
         }

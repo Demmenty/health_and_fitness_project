@@ -10,19 +10,20 @@ from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea,
 class MeasurementForm(ModelForm):
     class Meta:
         model = Measurement
-        fields = ['feel',
-                  'weight',
-                  'fat',
-                  'pulse',
-                  'pressure_upper',
-                  'pressure_lower',
-                  'comment',
-                  'date',
-                  'calories',
-                  'protein',
-                  'fats',
-                  'carbohydrates',
-                  ]
+        fields = [
+            'feel',
+            'weight',
+            'fat',
+            'pulse',
+            'pressure_upper',
+            'pressure_lower',
+            'comment',
+            'date',
+            'calories',
+            'protein',
+            'fats',
+            'carbohydrates',
+            ]
         widgets = {
             'feel': NumberInput(attrs={
                 'class': 'form-control',

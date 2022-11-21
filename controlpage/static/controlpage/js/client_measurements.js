@@ -92,11 +92,9 @@ const colorSettingsForm = document.getElementById('color_settings_form');
 function openColorSettings() {
     if (colorSettingsForm.classList.contains("hidden_element")) {
       colorSettingsForm.classList.remove('hidden_element');
-      
     }
     else {
       colorSettingsForm.classList.add('hidden_element');
-      
     }
 }
 colorSettingsBtn.addEventListener('click', openColorSettings, false);

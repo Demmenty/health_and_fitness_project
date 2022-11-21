@@ -14,6 +14,61 @@
 .border-outset {
     border: outset;
 }
+.border-blueshadow {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+
+/* коммент для клиента */
+#client_comment_form_container {
+    width: 600px;
+    background-color: #ffffff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+.comment_section {
+    color: #5271ff;
+    font-weight: 500;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #b9b9b9;
+}
+.comment_section.closed {
+    color: #545454;
+    border: none;
+}
+.comment_section.closed:hover {
+    cursor: pointer;
+    color: #5271ff;
+}
+ 
+#client_comment_form textarea {
+    border: 1px solid #b9b9b9;
+}
+#client_comment_form textarea:focus {
+   box-shadow: none;
+}
+
+#client_comment_form table {
+    border-collapse: unset !important;
+}
+
+.close_btn, .ok_btn {
+    width: 25px;
+    height: 25px;
+    --bs-btn-padding-y: unset;
+}
+
+.date_arrow:hover {
+    cursor: pointer;
+    color: #3f54b2;
+}
+
 
 /* header */
 header {
@@ -493,6 +548,9 @@ input[type="radio"]:hover {
 
 .text-transparent {
     color: #ffffff00;
+}
+.transition_common {
+    transition: all 1s ease;
 }
 
 .form_saved {
