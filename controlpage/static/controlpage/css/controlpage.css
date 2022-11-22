@@ -19,6 +19,10 @@
     border-radius: 10px;
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
+.arrow_btn:hover {
+    filter: brightness(0.7);
+    cursor: pointer;
+}
 
 /* коммент для клиента */
 #client_comment_form_container {
@@ -37,9 +41,14 @@
     border-style: solid;
     border-width: 1px;
     border-color: #b9b9b9;
+
+    z-index: 2;
+    background-color: white !important;
+    position: relative;
 }
 .comment_section.closed {
     color: #545454;
+    z-index: 0;
     border: none;
 }
 .comment_section.closed:hover {
@@ -49,12 +58,16 @@
  
 #client_comment_form textarea {
     border: 1px solid #b9b9b9;
+    z-index: 1;
+    position: relative;
+    padding-top: 15px;
 }
 #client_comment_form textarea:focus {
    box-shadow: none;
 }
 
 #client_comment_form table {
+    margin-bottom: -9px;
     border-collapse: unset !important;
 }
 
@@ -67,6 +80,11 @@
 .date_arrow:hover {
     cursor: pointer;
     color: #3f54b2;
+}
+
+.commentary_moving_part {
+    cursor: move;
+    width: -webkit-fill-available;
 }
 
 

@@ -39,7 +39,7 @@ class CommentaryForm(ModelForm):
             ]
         widgets = {
             'date': DateInput(attrs={
-                'class': 'form-control w-50 text-center p-1 transition_common',
+                'class': 'form-control text-center p-1 transition_common',
                 'type': 'date',
                 'readonly': False,
             }),

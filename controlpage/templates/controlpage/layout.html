@@ -75,19 +75,20 @@
     </div>
 
     <!-- комментарий для клиента -->
-    <br>
-    <div class="d-flex flex-column border rounded border-blueshadow px-3 py-2" id="client_comment_form_container">
+    <div class="d-flex flex-column border rounded border-blueshadow px-3 py-2 hidden_element" id="client_comment_form_container">
       <form method="post" id="client_comment_form" class="w-100">
         {% csrf_token %}
-        <div class="d-flex justify-content-center align-items-center pb-2">
-          <span class="me-2 fs-2 royal_blue date_arrow" id="prev_date_arrow" onclick="prevDate()">&#9668;</span>
+        <div class="d-flex justify-content-center align-items-center pb-3 pt-2">
+          <div class="commentary_moving_part">&nbsp;</div>
+          <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="25">
           {{ client_comment_form.date }}
-          <span class="ms-2 fs-2 royal_blue date_arrow" id="next_date_arrow" onclick="nextDate()">&#9658;</span>
+          <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="25">
+          <div class="commentary_moving_part">&nbsp;</div>
         </div>
         
         <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
 
-        <table class="table align-middle text-center">
+        <table class="table align-middle text-center px-3">
           <tr>
             <th class="comment_section closed" id="id_general_label">
               {{ client_comment_form.general.label|lower }}
@@ -111,12 +112,11 @@
         
         <div class="d-flex justify-content-between">
           <button class="btn btn-primary close_btn" type="button" onclick="closeCommentary()">&#10006;</button>
-          <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>
+          <div class="text-center text-transparent transition_common commentary_moving_part" id="commentary_status_msg"></div>
           <button class="btn btn-primary float-end ok_btn" type="submit">&#10004;</button>
         </div>
       </form>
-    </div>  
-    <br>
+    </div>
 
     <!-- сохранение комментария для клиента -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -287,8 +287,8 @@
                   
         </div>
                 
-        <button type="button" class="btn btn-light" onclick="openCommentary()">Комменты для клиента</button>
-        <button type="button" class="btn btn-light">Комменты для меня</button>
+        <button type="button" class="btn btn-light" onclick="openCommentary()">Комментарий для клиента</button>
+        <button type="button" class="btn btn-light">Комментарий для меня</button>
 
       </div>
     </div>

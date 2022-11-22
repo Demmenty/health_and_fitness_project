@@ -84,6 +84,7 @@ function dragElement(elmnt) {
   }
 }
 
+
 // кнопка открытия настроек цветов
 const colorSettingsBtn = document.getElementById('colorsettings_btn');
 // форма настроек цветов
@@ -99,6 +100,7 @@ function openColorSettings() {
 }
 colorSettingsBtn.addEventListener('click', openColorSettings, false);
 
+
 // функция применения цветов к измерениям согласно настройкам из БД
 function applyColors() {
   let btn = document.getElementById("apply_colors_btn");
@@ -112,6 +114,7 @@ function applyColors() {
     })
   }
 }
+
 
 // функция получения и применения цветовых настроек
 function applyColorSettings() {
