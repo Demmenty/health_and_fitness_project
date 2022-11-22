@@ -22,11 +22,11 @@ def registration(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
 
-            user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
+            user = User.objects.create_user(request.POST['username'],
+                                            password=request.POST['password1'])
             user.save()
             login(request, user)
             result = 'успешный успех'
-
         else:
             result = form.errors
 
@@ -34,6 +34,9 @@ def registration(request):
             'result': result,
         }
         return JsonResponse(data, status=200)
+
+    else:
+        return redirect('homepage')
 
 
 def loginuser(request):
@@ -53,10 +56,14 @@ def loginuser(request):
                 'result': result,
             }
             return JsonResponse(data, status=200)
+    else:
+        return redirect('homepage')
 
 
 def logoutuser(request):
 
     if request.method == 'POST':
         logout(request)
+        return redirect('homepage')
+    else:
         return redirect('homepage')
