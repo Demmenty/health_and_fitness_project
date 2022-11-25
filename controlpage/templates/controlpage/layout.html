@@ -31,29 +31,28 @@
             <form method="get" action="{% url 'clientpage' %}">
               <input type="hidden" value="{{ client_id }}" name="client_id">
               <input type="hidden" value="{{ clientname }}" name="clientname">
-              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">главная</button>
+              <button type="submit" class="nav_link" id="link_main">главная</button>
             </form>
           </li>
           <li>
             <form method="get" action="{% url 'client_measurements' %}">
               <input type="hidden" value="{{ client_id }}" name="client_id">
               <input type="hidden" value="{{ clientname }}" name="clientname">
-              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">измерения</button>
+              <button type="submit" class="nav_link" id="link_measurements">измерения</button>
             </form>
           </li>
           <li>
             <form method="get" action="{% url 'client_mealjournal' %}">
               <input type="hidden" value="{{ client_id }}" name="client_id">
               <input type="hidden" value="{{ clientname }}" name="clientname">
-              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">дневник питания</button>
+              <button type="submit" class="nav_link" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
             </form>
           </li>
-          <li><a href="#" class="nav_link">тренировки</a></li>
           <li>
-            <form method="get" action="{% url 'client_anthropometry' %}">
+            <form method="get" action="">
               <input type="hidden" value="{{ client_id }}" name="client_id">
               <input type="hidden" value="{{ clientname }}" name="clientname">
-              <button type="submit" class="nav_link" data-bs-toggle="modal" data-bs-target="#load_cat">антропометрия</button>
+              <button type="submit" class="nav_link" id="link_workout">тренировки</button>
             </form>
           </li>
         </ul>

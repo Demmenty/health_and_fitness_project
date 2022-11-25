@@ -6,12 +6,9 @@
 
 {% block content %}
 
-<h2 class="text-center">Дневник питания</h2><br>
-
-<!-- Кнопка соединения с FS -->
 {% if user_not_connected %}
-
-<div class="d-flex flex-column">
+    <!-- Предложение соединения с FS если не подключен -->
+    <div class="d-flex flex-column">
 
         <div class="">
             <p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение <a href="https://www.fatsecret.com" target="_blank" class="fatsecret_ref">FatSecret</a>.</p>
@@ -55,217 +52,216 @@
 
         </div>
 
-</div>
+    </div>
     
+{% else %}
+
+    <!-- Сводка за сегодня -->
+    <h3>Сегодня</h3>
+    {% if food_entry %}
+
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Категория</th>
+                    <th>Продукт</th>
+                    <th class="text-center">Количество</th>
+                    <th class="text-center">Калории</th>
+                    <th class="text-center">Белки</th>
+                    <th class="text-center">Жиры</th>
+                    <th class="text-center">Углеводы</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for category, count in count_meal_in_category.items %}
+                    {% if count > 0 %}
+                    <td rowspan="{{ count }}">{% translate category %}</td>
+                    {% endif %}
+                    {% for food in food_entry %}
+                    {% if food.meal == category %}
+                    <td>{{ food.food_entry_name }}</td>
+                    <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                    <td class="text-center">{{ food.calories }}</td>
+                    <td class="text-center">{{ food.protein }}</td>
+                    <td class="text-center">{{ food.fat }}</td>
+                    <td class="text-center">{{ food.carbohydrate }}</td> 
+                </tr>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                <tr class="table-light">
+                    <th colspan="2" class="text-end">Всего:</th>
+                    <th class="text-center">{{ day_total.amount }} g/ml</th>
+                    <th class="text-center">{{ day_total.calories }}</th>
+                    <th class="text-center">{{ day_total.protein }}</th>
+                    <th class="text-center">{{ day_total.fat }}</th>
+                    <th class="text-center">{{ day_total.carbohydrate }}</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- если не посчитались какие-то продукты -->
+        {% if prods_without_info %}
+            <h4 class="text-center" id="text_warning_nometrics_mealjournal">Некоторые продукты не удалось посчитать!</h4><br>
+            <div class="add_metric_container">
+                <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
+                <form method="POST" action="" class="add_metric_form">
+                    {% csrf_token %}
+                    {% for prod, value in prods_without_info.items %}
+                    <div id="food_id_{{ value.index_number }}">
+                        <hr>
+                        <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                        <p>{{ value.serving_description }} = 
+                            <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+                            <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+                            <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+                            <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+                                <option value="g">г</option>
+                                <option value="ml">мл</option>
+                            </select>
+                        </p>
+                        <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
+                    </div>
+                    {% endfor %}
+                    <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
+                    
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
+                </form>
+            </div>
+
+            <!-- сохранение введенной метрики -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    // отслеживаем событие отправки формы
+                    $('.add_metric_form').submit(function () {
+                        
+                        // поле для надписи о сохранении
+                    statusBtn = document.getElementById('foodmetricsave_status');
+                        // кнопка пересчета
+                    recalcBtn = document.getElementById('recalculation_btn');
+
+                        // создаем AJAX-вызов
+                        $.ajax({
+                            data: $(this).serialize(), // получаем данные формы
+                            type: $(this).attr('method'), // метод отправки запроса
+                            url: "{% url 'foodmetricsave' %}", // функция обработки
+                            
+                            // После успешного завершения запросов запускается одна из колбэк-функций success или error.
+                            success: function (response) {
+                                if (response.status == "инфа сохранена, круто!") {
+                                    // добавляем кнопку пересчета
+                                    recalcBtn.classList.remove('hidden_element');
+                                    // показываем синий статус
+                                    statusBtn.textContent = response.status;
+                                    statusBtn.style.color = "#00c0f0";
+                                    }
+                                else {
+                                    // показываем фиолетовый статус
+                                    if (statusBtn.textContent = response.status) {
+                                        statusBtn.style.color = "#0065fd00";
+                                        setTimeout(() => {
+                                            statusBtn.style.color = "#9d00ff";
+                                        }, 500);
+                                    }
+                                    else {
+                                    statusBtn.textContent = response.status;
+                                    statusBtn.style.color = "#9d00ff"; 
+                                    }
+                                    // скрываем продукты, инфо о кот. все-таки сохранилась
+                                    if (response.saved_food_id) {
+                                        response.saved_food_id.forEach (food_id => {
+                                            document.getElementById(food_id).classList.add('hidden_element');
+                                        // добавляем кнопку пересчета
+                                        recalcBtn.classList.remove('hidden_element');
+                                        })
+                                    }
+                                }
+                                },
+                            error: function (response) {
+                                // показываем красный статус
+                                statusBtn.textContent = 'произошла ошибка';
+                                statusBtn.style.color = "#ff1943";
+                                }
+                        });
+                        // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+                        return false;
+                    });
+                })    
+            </script>
+        {% endif %}
+
+    {% else %}
+        <p class="text-center">Данные отсутствуют</p>
+    {% endif %}
+
+    <br>
+
+    <!-- Выбор сводки за другое число -->
+    <div id="another_date_container_mealjournal">
+        <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
+        <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex justify-content-between">
+            <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
+            <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+        </form>
+    </div>
     
+    <br><hr><br>
 
+    <!-- Сводка за текущий месяц -->
+    <h3>Текущий месяц</h3>
+    {% if food_entries_month %}
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Дата</th>
+                    <th>Калории</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in food_entries_month %}
+                <tr>
+                    <td>{{ day.date_int|date:"j E - D" }}</td>
+                    <td>{{ day.calories }}</td>
+                    <td>{{ day.protein }}</td>
+                    <td>{{ day.fat }}</td>
+                    <td>{{ day.carbohydrate }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="table-light">
+                    <th>В среднем:</th>
+                    <th>{{ avg_month.calories }}</th>
+                    <th>{{ avg_month.protein }}</th>
+                    <th>{{ avg_month.fat }}</th>
+                    <th>{{ avg_month.carbo }}</th>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center">Данные отсутствуют</p>
+    {% endif %}
 
-{% else %}
+    <br>
 
-<!-- Сводка за сегодня - авто -->
-<h3>Сегодня</h3>
-{% if food_entry %}
+    <!-- Сводка (итоговая средняя) за последний полный месяц - сделать! -->
 
-<table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>Категория</th>
-            <th>Продукт</th>
-            <th class="text-center">Количество</th>
-            <th class="text-center">Калории</th>
-            <th class="text-center">Белки</th>
-            <th class="text-center">Жиры</th>
-            <th class="text-center">Углеводы</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            {% for category, count in count_meal_in_category.items %}
-            {% if count > 0 %}
-            <td rowspan="{{ count }}">{% translate category %}</td>
-            {% endif %}
-            {% for food in food_entry %}
-            {% if food.meal == category %}
-            <td>{{ food.food_entry_name }}</td>
-            <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
-            <td class="text-center">{{ food.calories }}</td>
-            <td class="text-center">{{ food.protein }}</td>
-            <td class="text-center">{{ food.fat }}</td>
-            <td class="text-center">{{ food.carbohydrate }}</td> 
-        </tr>
-            {% endif %}
-            {% endfor %}
-            {% endfor %}
-        <tr class="table-light">
-            <th colspan="2" class="text-end">Всего:</th>
-            <th class="text-center">{{ day_total.amount }} g/ml</th>
-            <th class="text-center">{{ day_total.calories }}</th>
-            <th class="text-center">{{ day_total.protein }}</th>
-            <th class="text-center">{{ day_total.fat }}</th>
-            <th class="text-center">{{ day_total.carbohydrate }}</th>
-        </tr>
-    </tbody>
-</table>
+    <!-- Выбор сводки за другой месяц-->
+    <div id="another_date_container_mealjournal">
+        <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
+        <form action = "{% url 'foodbymonth' %}" method = "get" class="d-flex justify-content-between">
+            <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
+            <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+        </form>
+    </div>
 
-<!-- если не посчитались какие-то продукты -->
-{% if prods_without_info %}
-<h4 class="text-center" id="text_warning_nometrics_mealjournal">Некоторые продукты не удалось посчитать!</h4><br>
-<div class="add_metric_container">
-    <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
-    <form method="POST" action="" class="add_metric_form">
-        {% csrf_token %}
-        {% for prod, value in prods_without_info.items %}
-        <div id="food_id_{{ value.index_number }}">
-            <hr>
-            <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
-            <p>{{ value.serving_description }} = 
-                <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
-                <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
-                <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
-                <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
-                    <option value="g">г</option>
-                    <option value="ml">мл</option>
-                </select>
-            </p>
-            <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
-        </div>
-        {% endfor %}
-        <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
-        
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
-    </form>
-</div>
-
-<!-- сохранение введенной метрики -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // отслеживаем событие отправки формы
-        $('.add_metric_form').submit(function () {
-            
-            // поле для надписи о сохранении
-           statusBtn = document.getElementById('foodmetricsave_status');
-            // кнопка пересчета
-           recalcBtn = document.getElementById('recalculation_btn');
-
-            // создаем AJAX-вызов
-            $.ajax({
-                data: $(this).serialize(), // получаем данные формы
-                type: $(this).attr('method'), // метод отправки запроса
-                url: "{% url 'foodmetricsave' %}", // функция обработки
-                
-                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
-                success: function (response) {
-                    if (response.status == "инфа сохранена, круто!") {
-                        // добавляем кнопку пересчета
-                        recalcBtn.classList.remove('hidden_element');
-                        // показываем синий статус
-                        statusBtn.textContent = response.status;
-                        statusBtn.style.color = "#00c0f0";
-                        }
-                    else {
-                        // показываем фиолетовый статус
-                        if (statusBtn.textContent = response.status) {
-                            statusBtn.style.color = "#0065fd00";
-                            setTimeout(() => {
-                                statusBtn.style.color = "#9d00ff";
-                            }, 500);
-                        }
-                        else {
-                           statusBtn.textContent = response.status;
-                           statusBtn.style.color = "#9d00ff"; 
-                        }
-                        // скрываем продукты, инфо о кот. все-таки сохранилась
-                        if (response.saved_food_id) {
-                            response.saved_food_id.forEach (food_id => {
-                                document.getElementById(food_id).classList.add('hidden_element');
-                            // добавляем кнопку пересчета
-                            recalcBtn.classList.remove('hidden_element');
-                            })
-                        }
-                    }
-                    },
-                error: function (response) {
-                    // показываем красный статус
-                    statusBtn.textContent = 'произошла ошибка';
-                    statusBtn.style.color = "#ff1943";
-                    }
-            });
-            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
-            return false;
-        });
-    })    
-</script>
-{% endif %}
-
-
-{% else %}
-<p class="text-center">Данные отсутствуют</p>
-{% endif %}
-<br>
-
-<!-- Выбор сводки за другое число -->
-<div id="another_date_container_mealjournal">
-    <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
-    <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex justify-content-between">
-        <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
-        <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
-    </form>
-</div>
-<br><hr><br>
-
-<!-- Сводка за текущий месяц -->
-<h3>Текущий месяц</h3>
-{% if food_entries_month %}
-    <table class="table table-bordered table-hover text-center">
-        <thead class="table-light">
-            <tr>
-                <th>Дата</th>
-                <th>Калории</th>
-                <th>Белки</th>
-                <th>Жиры</th>
-                <th>Углеводы</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for day in food_entries_month %}
-            <tr>
-                <td>{{ day.date_int|date:"j E - D" }}</td>
-                <td>{{ day.calories }}</td>
-                <td>{{ day.protein }}</td>
-                <td>{{ day.fat }}</td>
-                <td>{{ day.carbohydrate }}</td>
-            </tr>
-            {% endfor %}
-            <tr class="table-light">
-                <th>В среднем:</th>
-                <th>{{ avg_month.calories }}</th>
-                <th>{{ avg_month.protein }}</th>
-                <th>{{ avg_month.fat }}</th>
-                <th>{{ avg_month.carbo }}</th>
-            </tr>
-        </tbody>
-    </table>
-{% else %}
-<p class="text-center">Данные отсутствуют</p>
-{% endif %}
-<br>
-
-<!-- Сводка (итоговая средняя) за последний полный месяц -->
-
-
-<!-- Выбор сводки за другой месяц-->
-<div id="another_date_container_mealjournal">
-    <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
-    <form action = "{% url 'foodbymonth' %}" method = "get" class="d-flex justify-content-between">
-        <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
-        <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
-    </form>
-</div>
-<br>
-<hr>
-<br>
+    <br>
+    <hr>
+    <br>
 
 {% endif %}
 

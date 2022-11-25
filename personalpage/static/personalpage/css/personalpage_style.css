@@ -21,6 +21,10 @@
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
 
+.hover_brigh:hover {
+    filter: brightness(0.7);
+}
+
 /* header */
 header {
     background-color: #ffffff;
@@ -39,13 +43,15 @@ header {
     margin-right: 1rem;
     margin-left: 1rem;
     font-weight: 500;
+    border: none;
+    background: none;
 }
 .nav_link:hover {
     color: #5271ff;
 }
 /* main */
 main {
-    padding-top: 120px;
+    padding-top: 130px;
 }
 /* footer */
 footer {
@@ -200,11 +206,10 @@ table {
     transition: all 1s ease;
     color: #0065fd00;
 }
-.sm_square_btn {
-    height: 22px;
-    width: 22px;
-    line-height: 4px;
-    padding: 2px;
+.close_btn, .ok_btn {
+    width: 25px;
+    height: 25px;
+    --bs-btn-padding-y: unset;
 }
 .borderless{
     border: 1px solid white !important;
@@ -391,6 +396,13 @@ table {
 #id_photo_access {
     margin-left: 1rem;
 }
+
+#btn_show_all:hover {
+    filter: contrast(0.9);
+    cursor: pointer;
+}
+
+
 /* anthropometry */
 
 

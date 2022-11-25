@@ -18,22 +18,32 @@ const commentTextareas = document.querySelectorAll("#client_comment_form textare
 const inputDateComment = document.querySelector('#client_comment_form #id_date');
 // идентификация клиента
 const client_id = document.getElementById('id_client').value;
+// кнопки навигации в header
+const navLinkMain = document.getElementById('link_main');
+const navLinkMeasurements = document.getElementById('link_measurements');
+const navLinkMeal = document.getElementById('link_meal');
+const navLinkWorkout = document.getElementById('link_workout');
 
-// открытие вкладки соответственно странице
+// открытие вкладки коммента соответственно странице
+// и окрашивание навигации соответственно странице
 let pagePath = document.location.pathname;
-if (pagePath == '/controlpage/client_measurements/') {
+if ((pagePath == '/controlpage/client_measurements/') ||
+    (pagePath == '/controlpage/client_anthropometry/')) {
     commentMeasurements.classList.remove('hidden_element');
     commentMeasurementsLabel.classList.remove('closed');
+    navLinkMeasurements.classList.add('royal_blue');
 }
 else if ((pagePath == '/controlpage/client_mealjournal/') ||
          (pagePath == '/controlpage/client_foodbymonth/') ||
          (pagePath == '/controlpage/client_foodbydate/')) {
     commentNutrition.classList.remove('hidden_element');
     commentNutritionLabel.classList.remove('closed');
+    navLinkMeal.classList.add('royal_blue');
 }
 else {
     commentGeneral.classList.remove('hidden_element');
     commentGeneralLabel.classList.remove('closed');
+    navLinkMain.classList.add('royal_blue');
 }
 
 

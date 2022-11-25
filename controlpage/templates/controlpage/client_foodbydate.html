@@ -6,219 +6,222 @@
 
 {% block content %}
 
-<!-- Сводка за выбраннную дату -->
-<h3 class="text-center p-2">{{ briefdate|date:"l" }} {{ briefdate|date }}</h3>
-{% if food_entry %}
-
-<table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>Категория</th>
-            <th>Продукт</th>
-            <th class="text-center">Количество</th>
-            <th class="text-center">Калории</th>
-            <th class="text-center">Белки</th>
-            <th class="text-center">Жиры</th>
-            <th class="text-center">Углеводы</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            {% for category, count in count_meal_in_category.items %}
-            {% if count > 0 %}
-            <td rowspan="{{ count }}">{% translate category %}</td>
-            {% endif %}
-            {% for food in food_entry %}
-            {% if food.meal == category %}
-            <td>{{ food.food_entry_name }}</td>
-            <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
-            <td class="text-center">{{ food.calories }}</td>
-            <td class="text-center">{{ food.protein }}</td>
-            <td class="text-center">{{ food.fat }}</td>
-            <td class="text-center">{{ food.carbohydrate }}</td> 
-        </tr>
-            {% endif %}
-            {% endfor %}
-            {% endfor %}
-        <tr class="table-light">
-            <th colspan="2" class="text-end">Всего:</th>
-            <th class="text-center">{{ day_total.amount }} g/ml</th>
-            <th class="text-center">{{ day_total.calories }}</th>
-            <th class="text-center">{{ day_total.protein }}</th>
-            <th class="text-center">{{ day_total.fat }}</th>
-            <th class="text-center">{{ day_total.carbohydrate }}</th>
-        </tr>
-    </tbody>
-</table><br>
-
-{% else %}
-<p class="text-center">Данные отсутствуют</p><br>
-{% endif %}
-
-
-<!-- Кнопки след и пред день -->
-<div class="d-flex flex-row justify-content-between">
+<div class="d-flex justify-content-center align-items-center">
+    <!-- кнопка предыдущее число -->
     <form method = "get">
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="hidden" name="date" value="{{ prev_date }}">
-        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">предыдущий день</button>
+        <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'general/img/arrow_left_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий день" style="width: 20px;">
     </form>
-    <hr>
+    <!-- дата -->
+    <h3 class="text-center p-2">{{ briefdate|date:"l" }} {{ briefdate|date }}</h3>
+    <!-- кнопка следующее число -->
     <form method = "get">
         <input type="hidden" value="{{ client_id }}" name="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
         <input type="hidden" name="date" value="{{ next_date }}">
-        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#load_cat">следующий день</button>
+        <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'general/img/arrow_right_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий день" style="width: 20px;">
     </form>
 </div>
 
+<br>
+
+{% if food_entry %}
+    <!-- Сводка за выбраннную дату -->
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Категория</th>
+                <th>Продукт</th>
+                <th class="text-center">Количество</th>
+                <th class="text-center">Калории</th>
+                <th class="text-center">Белки</th>
+                <th class="text-center">Жиры</th>
+                <th class="text-center">Углеводы</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for category, count in count_meal_in_category.items %}
+                {% if count > 0 %}
+                <td rowspan="{{ count }}">{% translate category %}</td>
+                {% endif %}
+                {% for food in food_entry %}
+                {% if food.meal == category %}
+                <td>{{ food.food_entry_name }}</td>
+                <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                <td class="text-center">{{ food.calories }}</td>
+                <td class="text-center">{{ food.protein }}</td>
+                <td class="text-center">{{ food.fat }}</td>
+                <td class="text-center">{{ food.carbohydrate }}</td> 
+            </tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            <tr class="table-light">
+                <th colspan="2" class="text-end">Всего:</th>
+                <th class="text-center">{{ day_total.amount }} g/ml</th>
+                <th class="text-center">{{ day_total.calories }}</th>
+                <th class="text-center">{{ day_total.protein }}</th>
+                <th class="text-center">{{ day_total.fat }}</th>
+                <th class="text-center">{{ day_total.carbohydrate }}</th>
+            </tr>
+        </tbody>
+    </table>
+
+{% else %}
+    <br>
+    <p class="text-center mb-0">Данные отсутствуют</p>
+{% endif %}
+
+<br>
 
 <!-- если не посчитались какие-то продукты -->
 {% if prods_without_info %}
-<br>
-<h4 class="text-center">Некоторые продукты не удалось посчитать!</h4><br>
-<div class="add_metric_container">
-    <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
-    <form method="POST" action="" class="add_metric_form">
-        {% csrf_token %}
-        {% for prod, value in prods_without_info.items %}
-        <div id="food_id_{{ value.index_number }}">
-            <hr>
-            <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
-            <p>{{ value.serving_description }} = 
-                <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
-                <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
-                <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
-                <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
-                    <option value="g">г</option>
-                    <option value="ml">мл</option>
-                </select>
-            </p>
-            <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
-        </div>
-        {% endfor %}
-        <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
-        
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
-    </form>
-</div><br><br>
-
-<!-- сохранение введенной метрики -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // отслеживаем событие отправки формы
-        $('.add_metric_form').submit(function () {
+    <br>
+    <h4 class="text-center">Некоторые продукты не удалось посчитать!</h4><br>
+    <div class="add_metric_container">
+        <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
+        <form method="POST" action="" class="add_metric_form">
+            {% csrf_token %}
+            {% for prod, value in prods_without_info.items %}
+            <div id="food_id_{{ value.index_number }}">
+                <hr>
+                <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                <p>{{ value.serving_description }} = 
+                    <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
+                    <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
+                    <input type="number" class="form-control text-center d-inline width_unset" min="0" name="metric_serving_amount_{{ value.index_number }}">
+                    <select class="form-select d-inline width_unset" name="metric_serving_unit_{{ value.index_number }}">
+                        <option value="g">г</option>
+                        <option value="ml">мл</option>
+                    </select>
+                </p>
+                <p>Калорийность этой порции: {{ value.calories_per_serving }} ккал</p>
+            </div>
+            {% endfor %}
+            <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
             
-            // поле для надписи о сохранении
-           statusBtn = document.getElementById('foodmetricsave_status');
-            // кнопка пересчета
-           recalcBtn = document.getElementById('recalculation_btn');
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
+        </form>
+    </div><br><br>
 
-            // создаем AJAX-вызов
-            $.ajax({
-                data: $(this).serialize(), // получаем данные формы
-                type: $(this).attr('method'), // метод отправки запроса
-                url: "{% url 'foodmetricsave' %}", // функция обработки
+    <!-- сохранение введенной метрики -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // отслеживаем событие отправки формы
+            $('.add_metric_form').submit(function () {
                 
-                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
-                success: function (response) {
-                    if (response.status == "инфа сохранена, круто!") {
-                        // добавляем кнопку пересчета
-                        recalcBtn.classList.remove('hidden_element');
-                        // показываем синий статус
-                        statusBtn.textContent = response.status;
-                        statusBtn.style.color = "#00c0f0";
-                        }
-                    else {
-                        // показываем фиолетовый статус
-                        if (statusBtn.textContent = response.status) {
-                            statusBtn.style.color = "#0065fd00";
-                            setTimeout(() => {
-                                statusBtn.style.color = "#9d00ff";
-                            }, 500);
-                        }
-                        else {
-                           statusBtn.textContent = response.status;
-                           statusBtn.style.color = "#9d00ff"; 
-                        }
-                        // скрываем продукты, инфо о кот. все-таки сохранилась
-                        if (response.saved_food_id) {
-                            response.saved_food_id.forEach (food_id => {
-                                document.getElementById(food_id).classList.add('hidden_element');
+                // поле для надписи о сохранении
+            statusBtn = document.getElementById('foodmetricsave_status');
+                // кнопка пересчета
+            recalcBtn = document.getElementById('recalculation_btn');
+
+                // создаем AJAX-вызов
+                $.ajax({
+                    data: $(this).serialize(), // получаем данные формы
+                    type: $(this).attr('method'), // метод отправки запроса
+                    url: "{% url 'foodmetricsave' %}", // функция обработки
+                    
+                    // После успешного завершения запросов запускается одна из колбэк-функций success или error.
+                    success: function (response) {
+                        if (response.status == "инфа сохранена, круто!") {
                             // добавляем кнопку пересчета
                             recalcBtn.classList.remove('hidden_element');
-                            })
+                            // показываем синий статус
+                            statusBtn.textContent = response.status;
+                            statusBtn.style.color = "#00c0f0";
+                            }
+                        else {
+                            // показываем фиолетовый статус
+                            if (statusBtn.textContent = response.status) {
+                                statusBtn.style.color = "#0065fd00";
+                                setTimeout(() => {
+                                    statusBtn.style.color = "#9d00ff";
+                                }, 500);
+                            }
+                            else {
+                            statusBtn.textContent = response.status;
+                            statusBtn.style.color = "#9d00ff"; 
+                            }
+                            // скрываем продукты, инфо о кот. все-таки сохранилась
+                            if (response.saved_food_id) {
+                                response.saved_food_id.forEach (food_id => {
+                                    document.getElementById(food_id).classList.add('hidden_element');
+                                // добавляем кнопку пересчета
+                                recalcBtn.classList.remove('hidden_element');
+                                })
+                            }
                         }
-                    }
-                    },
-                error: function (response) {
-                    // показываем красный статус
-                    statusBtn.textContent = 'произошла ошибка';
-                    statusBtn.style.color = "#ff1943";
-                    }
+                        },
+                    error: function (response) {
+                        // показываем красный статус
+                        statusBtn.textContent = 'произошла ошибка';
+                        statusBtn.style.color = "#ff1943";
+                        }
+                });
+                // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+                return false;
             });
-            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
-            return false;
-        });
-    })    
-</script>
+        })    
+    </script>
 {% endif %}
 
 {% if food_entry %}
-<br>
-<!-- топчики -->
-<ol class="top_table_ol">
-<table class="table top_table caption-top">
-    <caption><h3 class="text-center">Топ по количеству</h3></caption>
-    <thead class="table-light">
-        <tr>
-            <th></th>
-            <th>Название продукта</th>
-            <th class="text-center">Съедено</th>
-            <th class="text-center">Получено калорий</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for product, value in top_amount.items %}
-        <tr>
-            <td></td>
-            <td><li>{% translate product %}</li></td>
-            <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
-            <td class="text-center">{{ value.calories }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</ol>
-<br>
+    <!-- топчики -->
+    <ol class="top_table_ol">
+    <table class="table top_table caption-top">
+        <caption><h3 class="text-center">Топ по количеству</h3></caption>
+        <thead class="table-light">
+            <tr>
+                <th></th>
+                <th>Название продукта</th>
+                <th class="text-center">Съедено</th>
+                <th class="text-center">Получено калорий</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product, value in top_amount.items %}
+            <tr>
+                <td></td>
+                <td><li>{% translate product %}</li></td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
+                <td class="text-center">{{ value.calories }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </ol>
+    <br>
 
-<ol class="top_table_ol">
-<table class="table top_table caption-top">
-    <caption><h3 class="text-center">Топ по калориям</h3></caption>
-    <thead class="table-light">
-        <tr>
-            <th></th>
-            <th>Название продукта</th>
-            <th class="text-center">Съедено</th>
-            <th class="text-center">Получено калорий</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for product, value in top_calories.items %}
-        <tr>
-            <td></td>
-            <td><li>{% translate product %}</li></td>
-            <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
-            <td class="text-center">{{ value.calories }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</ol>
+    <ol class="top_table_ol">
+    <table class="table top_table caption-top">
+        <caption><h3 class="text-center">Топ по калориям</h3></caption>
+        <thead class="table-light">
+            <tr>
+                <th></th>
+                <th>Название продукта</th>
+                <th class="text-center">Съедено</th>
+                <th class="text-center">Получено калорий</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product, value in top_calories.items %}
+            <tr>
+                <td></td>
+                <td><li>{% translate product %}</li></td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
+                <td class="text-center">{{ value.calories }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </ol>
 {% endif %}
+
 <br>
 
 <!-- Выбор сводки за другое число -->
@@ -239,7 +242,7 @@
 <form method="get" action="{% url 'client_mealjournal' %}">
     <input type="hidden" value="{{ client_id }}" name="client_id">
     <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-outline-primary" id="back_btn_questionary">Вернуться</button>
-</form><br>
+    <input type="image" name="submit" class="hover_brigh" src="{% static 'general/img/arrow_back_royalblue.svg' %}" alt="Submit" title="К дневнику питания" width="38">
+</form>
 
 {% endblock %}

@@ -1,24 +1,5 @@
-// показ и скрытие всех записей по кнопке
-allAnthropoTable = document.getElementById("all_anthropo_table");
-btnHideAll = document.getElementById("btn_hide_all");
-
-function hideORshowAll() {
-    if (btnHideAll.textContent == 'Скрыть все записи') {
-        allAnthropoTable.classList.add("hidden_element");
-        btnHideAll.textContent = 'Показать все записи';
-    }
-    else {
-        allAnthropoTable.classList.remove("hidden_element");
-        btnHideAll.textContent = 'Скрыть все записи';
-    }
-}
-if (btnHideAll != null) {
-    btnHideAll.addEventListener('click', hideORshowAll, false);
-}
-
-
 // показ\скрытие фото по кнопке-иконке
-showPhotoBtns = document.querySelectorAll(".show_photo_btn");
+const showPhotoBtns = document.querySelectorAll(".show_photo_btn");
 
 function hideORshowPhoto(event) {
     // проверка, что кнопка синяя, значит фото есть
@@ -51,7 +32,7 @@ showPhotoBtns.forEach ( btn => {
 
 
 // добавить изменение z-индекса на > при клике на фото
-photoContainers = document.querySelectorAll(".container_photo");
+const photoContainers = document.querySelectorAll(".container_photo");
 var maxZ = 2;
 
 function getUpper(event) {
@@ -128,5 +109,5 @@ function dragElement(elmnt) {
       document.onmouseup = null;
       document.onmousemove = null;
     }
-  }
+}
   

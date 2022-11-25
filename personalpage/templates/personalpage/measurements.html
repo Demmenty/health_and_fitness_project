@@ -5,8 +5,6 @@
 
 {% block content %}
 
-<h2 class="text-center">Контроль физических показателей</h2><br>
-
 <!-- сегодня -->
 {% if today_measure %}
     <table class="table table-bordered caption-top align-middle text-center" id="today_measure_table">
@@ -48,15 +46,18 @@
     </table>
 
     {% if today_measure.comment %}
-    <div class="d-flex align-items-center">
-        <div class="col-1 text-center">
-            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
-        </div>
-        <div class="border border-grey rounded col-11 p-2 px-3" id="today_comment">
-            {{ today_measure.comment }}
-        </div>
-    </div><br>
+        <div class="d-flex align-items-center" id="today_comment_container">
+    {% else %}
+        <div class="d-flex align-items-center hidden_element" id="today_comment_container">
     {% endif %}
+            <div class="col-1 text-center">
+                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+            </div>
+            <div class="border border-grey rounded col-11 p-2 px-3" id="today_comment">
+                {{ today_measure.comment }}
+            </div>
+        </div><br>
+    
 
     <a href="{% url 'addmeasure' %}"><button class='btn btn-primary float-end'>Редактировать</button></a>
 {% else %}
@@ -137,11 +138,11 @@
             {% csrf_token %}
             {{ comment.comment }}{{ comment.date }}
             <div class="d-flex justify-content-between align-items-center commentbtn_container">
-                <button class="btn btn-outline-primary sm_square_btn" type="button" 
+                <button class="btn btn-outline-primary close_btn" type="button" 
                 id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
                 onclick="closeComment(event)">&#10006</button>
                 <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
-                <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
+                <button class="btn btn-primary close_btn" type="submit">&#10003</button>
             </div>
         </form>
     </div>
@@ -155,16 +156,16 @@
         // отслеживаем событие отправки формы
         $('.commentForm').submit(function () {
             
-            // ID формы
-            formId = $(this).attr('id');
+            // ID задействованной формы
+            let formId = $(this).attr('id');
             // номер коммента
-            commentNum = formId[11];
-            // соответствующий коммент
-            comment = $("#" + formId + " > #id_comment")[0];
-            // соответствующая кнопка
-            commentBtn = document.getElementById("comment_btn" + commentNum);
+            let commentNum = formId[11];
+            // соответствующее текстовое поле
+            let commentArea = $("#" + formId + " > #id_comment")[0];
+            // соответствующая кнопка-значок комментария
+            let commentBtn = document.getElementById("comment_btn" + commentNum);
             // соответствующее поле для надписи о сохранении
-            commentStatusField = document.getElementById("comment" + commentNum + "header");
+            let commentStatusField = document.getElementById("comment" + commentNum + "header");
 
             // создаем AJAX-вызов
             $.ajax({
@@ -172,13 +173,21 @@
                 type: $(this).attr('method'), // метод отправки запроса
                 url: "{% url 'commentsave' %}", // функция обработки
                 
-                // После успешного завершения запросов запускается одна из колбэк-функций success или error.
                 success: function (response) {
                     // меняем поле коммента в таблице за сегодня
                     if (document.getElementById("today_measure_table") && (commentNum == '7')) {
-                            document.getElementById("today_comment").textContent = response.new_comment;
-                        }
+                        document.getElementById("today_comment").textContent = response.new_comment;
 
+                        let todayCommentContainer = document.getElementById("today_comment_container");
+                        if (response.new_comment == '') {
+                            todayCommentContainer.classList.add('hidden_element');
+                        }
+                        else {
+                            todayCommentContainer.classList.remove('hidden_element');
+                        }     
+                    }
+
+                    // меняем значок этого комментария
                     if (response.new_comment == '') {
                         // если новый коммент пуст - делаем его кнопку серой
                         commentBtn.classList.add('luminosity'); 
@@ -189,11 +198,11 @@
                     }
 
                     // голубая подсветка коммента и статуса
-                    comment.classList.add('comment_saved');
+                    commentArea.classList.add('comment_saved');
                     commentStatusField.textContent = 'сохранено';
                     commentStatusField.classList.add('comment_saved');
                     setTimeout(() => {
-                        comment.classList.remove('comment_saved');
+                        commentArea.classList.remove('comment_saved');
                         commentStatusField.classList.remove('comment_saved');
                     }, 1000);
 
@@ -286,11 +295,11 @@
             {% csrf_token %}
             {{ comment.comment }}{{ comment.date }}
             <div class="d-flex justify-content-between align-items-center commentbtn_container">
-                <button class="btn btn-outline-primary sm_square_btn" type="button" 
+                <button class="btn btn-outline-primary close_btn" type="button" 
                 id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
                 onclick="closeComment(event)">&#10006</button>
                 <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
-                <button class="btn btn-primary sm_square_btn" type="submit">&#10003</button>
+                <button class="btn btn-primary close_btn" type="submit">&#10003</button>
             </div>
         </form>
     </div>
@@ -304,6 +313,8 @@
         <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" onchange="applyColors()"
         {% if colorset_exist %} checked="checked"{% endif %}>
     </div>
+
+    <a href="{% url 'anthropometry' %}"><button type="button" class="btn btn-primary mx-3 mb-3">Антропометрия</button></a>
     
     <!-- Выбор дней статистики -->
     <form action="" method="get" class="d-flex flex-wrap justify-content-center">
@@ -319,8 +330,6 @@
 <div class="d-flex hidden_element justify-content-center justify-content-md-start" id="colorset_error_container">
     <span class="royal_blue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
 </div>
-
-<br>
 
 <script src="{% static 'personalpage/js/measurements.js' %}"></script>
 {% endblock %}

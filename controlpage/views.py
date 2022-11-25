@@ -443,9 +443,26 @@ def client_mealjournal(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # для поля выбора
+    today_day = str(date.today())
+    previous_month = str(date.today() + relativedelta(months=-1))[0:7]
     
-    # делаем сессию с FatSecret
-    make_session(client_id)
+    # проверка на интеграцию с FatSecret
+    try:
+        make_session(client_id)
+        client_connected = True
+    except FatSecretEntry.DoesNotExist:
+        client_connected = False
+        data = {
+            'clientname': clientname,
+            'client_id': client_id,
+            'client_connected': client_connected,
+            'today_day': today_day,
+            'previous_month': previous_month,
+            'client_contacts': client_contacts,
+            'client_comment_form': client_comment_form,
+        }
+        return render(request, 'controlpage/client_mealjournal.html', data)  
 
     # открываем сохраненные данные о продуктах из файла
     with open('personalpage/food_cache.pickle', 'rb') as file:
@@ -471,7 +488,7 @@ def client_mealjournal(request):
             'fat': 0,
             'carbohydrate': 0,
             }
-    
+
     # обработка каждой записи о продукте
     for food in food_entry:
 
@@ -557,7 +574,6 @@ def client_mealjournal(request):
         day_total['fat'] += float(food['fat'])
         day_total['carbohydrate'] += float(food['carbohydrate'])
 
-
     # записываем измененный кеш обратно в файл
     with open('personalpage/food_cache.pickle', 'wb') as f:
         pickle.dump(food_cache, f)
@@ -611,13 +627,10 @@ def client_mealjournal(request):
         # KeyError = записей нет
         food_entries_month = ""
 
-    # для поля выбора
-    today_day = str(date.today())
-    previous_month = str(date.today() + relativedelta(months=-1))[0:7]
-
     data = {
         'clientname': clientname,
         'client_id': client_id,
+        'client_connected': client_connected,
         'food_entries_month': food_entries_month,
         'prods_without_info': prods_without_info,
         'avg_month': avg_month,
@@ -630,7 +643,6 @@ def client_mealjournal(request):
         'client_comment_form': client_comment_form,
     }
     return render(request, 'controlpage/client_mealjournal.html', data)   
-
 
 
 def client_foodbydate(request):

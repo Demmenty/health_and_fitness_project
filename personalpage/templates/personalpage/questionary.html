@@ -596,7 +596,9 @@
         <button class="btn btn-primary btn_rigth" type="submit" id="submit_btn_questionary" disabled>Сохранить</button>
     </form>
 
-    <a href="{% url 'personalpage' %}"><button class="btn btn-outline-primary " id="back_btn_questionary">Вернуться</button></a>
+    <a href="{% url 'personalpage' %}">
+        <img src="{% static 'general/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="На главную">
+    </a>
 
 </div>
 

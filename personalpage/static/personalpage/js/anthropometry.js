@@ -1,45 +1,27 @@
-dateField = document.getElementById("id_date");
-initialDate = document.getElementById("initial-id_date");
-// чтобы сегодняшняя дата автозаполнялась
-dateField.value = initialDate.value;
+const newAnthropoDateField = document.getElementById("id_date");
+let initialDate = document.getElementById("initial-id_date");
+// автозаполнение сегодняшней даты для новой записи
+newAnthropoDateField.value = initialDate.value;
 
-// показ и скрытие формы ввода записи по кнопке
-anthropoForm = document.getElementById("add_anthropo_form");
-btnAnthropoAdd = document.getElementById("btn_add_anthropo");
-btnAnthropoHide = document.getElementById("btn_hide_anthropo");
+// показ и скрытие формы ввода новой записи по кнопке
+const newAnthropoForm = document.getElementById("add_anthropo_form");
+const btnNewAnthropoAdd = document.getElementById("btn_add_anthropo");
+const btnNewAnthropoHide = document.getElementById("btn_hide_anthropo");
 
 function showForm() {
-    anthropoForm.classList.remove("hidden_element");
-    btnAnthropoAdd.innerHTML = "&#9998;";
+    newAnthropoForm.classList.remove("hidden_element");
+    btnNewAnthropoAdd.innerHTML = "&#9998;";
 }
 function hideForm() {
-    anthropoForm.classList.add("hidden_element");
-    btnAnthropoAdd.textContent = "Добавить запись";
+    newAnthropoForm.classList.add("hidden_element");
+    btnNewAnthropoAdd.textContent = "Добавить запись";
 }
-btnAnthropoAdd.addEventListener('click', showForm, false);
-btnAnthropoHide.addEventListener('click', hideForm, false);
-
-// показ и скрытие всех записей по кнопке
-allAnthropoTable = document.getElementById("all_anthropo_table");
-btnHideAll = document.getElementById("btn_hide_all");
-
-function hideORshowAll() {
-    if (btnHideAll.textContent == 'Скрыть все записи') {
-        allAnthropoTable.classList.add("hidden_element");
-        btnHideAll.textContent = 'Показать все записи';
-    }
-    else {
-        allAnthropoTable.classList.remove("hidden_element");
-        btnHideAll.textContent = 'Скрыть все записи';
-    }
-}
-if (btnHideAll != null) {
-    btnHideAll.addEventListener('click', hideORshowAll, false);
-}
+btnNewAnthropoAdd.addEventListener('click', showForm, false);
+btnNewAnthropoHide.addEventListener('click', hideForm, false);
 
 
 // показ\скрытие фото по кнопке-иконке
-showPhotoBtns = document.querySelectorAll(".show_photo_btn");
+const showPhotoBtns = document.querySelectorAll(".show_photo_btn");
 
 function hideORshowPhoto(event) {
     // проверка, что кнопка синяя, значит фото есть
@@ -72,7 +54,7 @@ showPhotoBtns.forEach ( btn => {
 
 
 // добавить изменение z-индекса на > при клике на фото
-photoContainers = document.querySelectorAll(".container_photo");
+const photoContainers = document.querySelectorAll(".container_photo");
 var maxZ = 2;
 
 function getUpper(event) {
@@ -149,5 +131,5 @@ function dragElement(elmnt) {
       document.onmouseup = null;
       document.onmousemove = null;
     }
-  }
+}
   

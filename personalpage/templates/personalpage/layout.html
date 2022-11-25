@@ -24,11 +24,20 @@
         </a>
   
         <ul class="nav justify-content-center align-items-center">
-          <li><a href="{% url 'personalpage' %}" class="nav_link">главная</a></li>
-          <li><a href="{% url 'measurements' %}" class="nav_link">измерения</a></li>
-          <li><a href="{% url 'mealjournal' %}" class="nav_link">питание</a></li>
-          <li><a href="#" class="nav_link">тренировки</a></li>
-          <li><a href="{% url 'anthropometry' %}" class="nav_link">антропометрия</a></li>
+          <li>
+            <a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a>
+          </li>
+          <li>
+            <a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a>
+          </li>
+          <li>
+            <form method="get" action="{% url 'mealjournal' %}">
+              <button type="submit" class="nav_link" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+            </form>
+          </li>
+          <li>
+            <a href="#" class="nav_link" id="link_workout">тренировки</a>
+          </li>
         </ul>
           
         <div class="text-end">
@@ -118,6 +127,6 @@
 
 </body>
 
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
+<script src="{% static 'personalpage/js/layout.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 </html>
