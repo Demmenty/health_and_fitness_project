@@ -51,8 +51,9 @@
     border-radius: 10px;
     border-style: solid;
     border-width: 1px;
-    border-color: #b9b9b9;
-
+    border-color: #ced4da;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
     z-index: 2;
     background-color: white !important;
     position: relative;
@@ -68,7 +69,7 @@
 }
  
 #client_comment_form textarea {
-    border: 1px solid #b9b9b9;
+    border: 1px solid #ced4da;
     z-index: 1;
     position: relative;
     padding-top: 15px;

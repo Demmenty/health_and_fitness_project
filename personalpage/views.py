@@ -1,6 +1,7 @@
 import pickle
 from django.shortcuts import render, redirect
 from .models import Anthropometry, Measurement, MeasureColorField, Questionary, FatSecretEntry, UserSettings
+from controlpage.models import Commentary
 from .forms import AnthropometryForm, MeasurementForm, MeasurementCommentForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from time import sleep
 from datetime import date, datetime, timedelta, time
@@ -229,12 +230,22 @@ def personalpage(request):
     else:
         today_measure = ''
 
+    date_today = date.today()
+
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     data = {
         'today_measure': today_measure,
         'questionary': questionary,
         'contacts_form': contacts_form,
         'contacts_error': contacts_error,
         'contacts_filled': contacts_filled,
+        'today_commentary': today_commentary,
+        'date_today': date_today,
     }
     return render(request, 'personalpage/personalpage.html', data)
 
@@ -322,6 +333,12 @@ def measurements(request):
     # наличие цветовых настроек для клиента
     colorset_exist = bool(MeasureColorField.objects.filter(user_id=request.user))
 
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     data = {
         'today_measure': today_measure,
         'week': week,
@@ -334,6 +351,7 @@ def measurements(request):
         'avg_week': avg_week,
         'avg_period': avg_period,
         'colorset_exist': colorset_exist,
+        'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/measurements.html', data)    
 
@@ -412,6 +430,12 @@ def questionary(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     # GET-запрос
     if request.method == 'GET':
         # проверяем, есть ли у клиента уже анкета
@@ -429,6 +453,7 @@ def questionary(request):
             'questionary': questionary,
             'form': form,
             'error': '',
+            'today_commentary': today_commentary,
         }
         return render(request, 'personalpage/questionary.html', data)
 
@@ -464,6 +489,7 @@ def questionary(request):
             data = {
                 'questionary': questionary,
                 'form': form,
+                'today_commentary': today_commentary,
                 'error': 'Данные введены некорректно. Попробуйте ещё раз.',
             }
             return render(request, 'personalpage/questionary.html', data)
@@ -578,6 +604,12 @@ def addmeasure(request):
     for i in range(7):
         selected_date = date.today() - timedelta(days=(6-i))
         week_calendar.append(selected_date)
+
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
     
     # GET-запрос
     if request.method == 'GET':
@@ -585,6 +617,7 @@ def addmeasure(request):
             'fatsecret_status': fatsecret_status,
             'week_measureforms': week_measureforms,
             'week_calendar': week_calendar,
+            'today_commentary': today_commentary,
             }
         return render(request, 'personalpage/addmeasure.html', data)
 
@@ -650,6 +683,7 @@ def addmeasure(request):
                 'week_measureforms': week_measureforms,
                 'error': 'Случилось что-то непонятное, либо вы читерите :(',
                 'week_calendar': week_calendar,
+                'today_commentary': today_commentary,
                 }
                 return render(request, 'personalpage/addmeasure.html', data)
 
@@ -660,6 +694,7 @@ def addmeasure(request):
                 'week_measureforms': week_measureforms,
                 'error': 'Данные введены некорректно. Попробуйте еще раз.',
                 'week_calendar': week_calendar,
+                'today_commentary': today_commentary,
                 }
             return render(request, 'personalpage/addmeasure.html', data)
 
@@ -692,6 +727,12 @@ def mealjournal(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     # GET-запрос
     if request.method == 'GET':
 
@@ -702,6 +743,7 @@ def mealjournal(request):
             # если FS не подключен - только предложение подключить
             data = {
                 'user_not_connected': True,
+                'today_commentary': today_commentary,
             }
             return render(request, 'personalpage/mealjournal.html', data)
 
@@ -883,6 +925,7 @@ def mealjournal(request):
             'today_day': today_day,
             'previous_month': previous_month,
             'user_not_connected': False,
+            'today_commentary': today_commentary,
         }
         return render(request, 'personalpage/mealjournal.html', data)
 
@@ -910,6 +953,12 @@ def foodbydate(request):
 
     # добавить обработчик too many actions!?
 
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     # ПИТАНИЕ за выбранную дату (briefdate)
     food_entry = fs.food_entries_get(date=briefdate)
     if not food_entry:
@@ -924,6 +973,7 @@ def foodbydate(request):
             'prev_date': prev_date,
             'next_date': next_date,
             'food_entry': food_entry,
+            'today_commentary': today_commentary,
         }
         return render(request, 'personalpage/foodbydate.html', data)
 
@@ -1080,6 +1130,7 @@ def foodbydate(request):
         'prev_date': prev_date,
         'next_date': next_date,
         'food_entry': food_entry,
+        'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/foodbydate.html', data)
 
@@ -1176,6 +1227,12 @@ def foodbymonth(request):
     top_amount = ""
     # продукты, для которых нет инфо о граммовке порции
     prods_without_info = {}
+
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
 
     # создание ТОП-списков! (если нажать на кнопку)
     if request.GET.get('top_create', False):
@@ -1329,6 +1386,7 @@ def foodbymonth(request):
         'prev_month': prev_month,
         'next_month': next_month,
         'prods_without_info': prods_without_info,
+        'today_commentary': today_commentary,
         }
     return render(request, 'personalpage/foodbymonth.html', data)
 
@@ -1365,6 +1423,12 @@ def anthropometry(request):
 
     error = ""
 
+    # комментарий за сегодня от эксперта
+    try:
+        today_commentary = Commentary.objects.get(date=date.today(), client=request.user)
+    except Commentary.DoesNotExist:
+        today_commentary = ''
+
     # сохранение полученной формы
     if request.method == 'POST':
         # получаем форму из запроса
@@ -1397,6 +1461,7 @@ def anthropometry(request):
             'metrics': metrics,
             'show_all': show_all,
             'error': error,
+            'today_commentary': today_commentary,
         }
         return render(request, 'personalpage/anthropometry.html', data)
 
@@ -1419,6 +1484,7 @@ def anthropometry(request):
         'error': error,
         'photoaccess_form': photoaccess_form,
         'accessibility': accessibility,
+        'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/anthropometry.html', data)
 

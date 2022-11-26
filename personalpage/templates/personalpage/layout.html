@@ -66,10 +66,48 @@
 
   <footer>
     <div class="container px-0">
-      <div class="container py-2 d-flex justify-content-between align-items-start align-items-md-center flex-column flex-sm-row flex-sm-wrap">
 
+      <!-- аватар эксперта -->
+      <img id="expert_pic" src="{% static 'personalpage/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80" onclick="openCommentary()">
+
+      <!-- окно комментария эксперта -->
+      <div class="d-flex flex-column flex-sm-row hidden_element" id="commentary_container">
+        <div class="d-flex flex-column border rounded border-blueshadow p-3 bg-white">
+          <!-- информация коммента -->
+          <form method="post" id="commentary_form" class="">
+
+            <div class="d-flex justify-content-center align-items-center mb-2 mx-4">
+              <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
+              <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
+              <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
+            </div>
+    
+            <table class="table align-middle text-center px-0 px-sm-3">
+              <tr class="d-flex flex-wrap justify-content-around align-items-center" id="row_commentary_labels">
+                  <th class="comment_section w-50 closed" id="id_general_label">общее</th> 
+                  <th class="comment_section w-50 closed" id="id_measurements_label">измерения</th>
+                  <th class="comment_section w-50 closed" id="id_nutrition_label">питание</th>
+                  <th class="comment_section w-50 closed" id="id_workout_label">тренировки</th>
+              </tr>
+            </table>
+            
+            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_general">{{ today_commentary.general }}</div>
+            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_measurements">{{ today_commentary.measurements }}</div>
+            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
+            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
+            
+            <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>
+
+          </form>
+        </div>
+        <!-- уголок диалогового окна -->
+        <img src="{% static 'personalpage/img/dialog_part.svg' %}" class="align-self-end" id="dialog_part_svg" width="30">
+      </div>
+
+      <!-- контейнер с контактами -->
+      <div class="container py-2 d-flex justify-content-between align-items-start align-items-md-center flex-column flex-sm-row flex-sm-wrap">
         <!-- контакты эксперта -->
-        <div class="d-flex flex-column mb-5 mb-md-2" id="footer_expert_contacts">
+        <div class="d-flex flex-column mb-5 mb-md-2 order-1 order-sm-2 order-md-3" id="footer_expert_contacts">
           <div class="p-2 d-flex align-items-center">
             <span class="me-2 text-white">Контакты эксперта</span>
           </div>
@@ -98,11 +136,11 @@
           </div>
         </div>
         <!-- лицензия -->
-        <div class="d-flex align-items-center mb-5 mx-sm-auto mb-sm-2" id="footer_license">
+        <div class="d-flex align-items-center mb-5 mx-sm-auto mb-sm-2 order-2 order-sm-3 order-md-2" id="footer_license">
           <span class="mb-0 ms-2 text-white">© 2022 ИП Рябов Р.А.</span>
         </div>
         <!-- контакты поддержки -->
-        <div class="d-flex flex-column mb-1 me-sm-4 me-md-0 mb-md-2" id="footer_support_contacts">
+        <div class="d-flex flex-column mb-1 me-sm-4 me-md-0 mb-md-2 order-3 order-sm-1 order-md-1" id="footer_support_contacts">
           <div class="p-2 d-flex align-items-center">
             <span class="me-2 text-white">Поддержка сайта</span>
           </div>
@@ -121,13 +159,8 @@
             </div>
           </div>
         </div>
-
       </div>
-
-      <!-- комментарии эксперта -->
-      <div class="ch-pointer" id="expert_pic_container">
-        <img src="{% static 'personalpage/img/expert_pic.svg' %}" title="Комментарии эксперта" width="80">
-      </div>
+      
     </div>
   </footer>
 

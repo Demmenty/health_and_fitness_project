@@ -90,13 +90,20 @@ def today_commentary_form(client_id):
 
 def get_commentary_form(request):
     """Получение формы коммента для клиента
-       для выбранной на странице даты через скрипт"""
+       для выбранной на странице даты через скрипт в layout"""
 
     if request.user.is_anonymous:
         data = {}
         return JsonResponse(data, status=403)
 
-    client_id = request.GET['client_id']
+    client_id = request.GET.get('client_id', None)
+    if client_id is None:
+        client_id = request.user.id
+    else:
+        if request.user.username != 'Parrabolla':
+            data = {}
+            return JsonResponse(data, status=403)
+
     comment_date = request.GET['date']
 
     try:

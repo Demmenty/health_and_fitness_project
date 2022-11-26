@@ -79,9 +79,9 @@
         {% csrf_token %}
         <div class="d-flex justify-content-center align-items-center pb-3 pt-2">
           <div class="commentary_moving_part">&nbsp;</div>
-          <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="25">
+          <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
           {{ client_comment_form.date }}
-          <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="25">
+          <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
           <div class="commentary_moving_part">&nbsp;</div>
         </div>
         
