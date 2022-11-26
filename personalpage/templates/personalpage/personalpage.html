@@ -7,6 +7,11 @@
 
 <h2 class="clientname">{{ user.username }}</h2><br>
 
+<!-- уведомление о непрочитанных комментах -->
+{% if count_of_unread > 0 %}
+    <p class="text-danger">! Непрочитанных комментариев эксперта: {{ count_of_unread }}</p>
+{% endif %}
+
 <!-- ссылка на анкету -->
 {% if questionary %}
 <p>&#10004; Анкета заполнена</p>

@@ -18,3 +18,7 @@ class Commentary(models.Model):
 
     def __str__(self):
         return f"Комментарий для клиента {self.client} от {self.date}"
+
+    class Meta:
+        ordering = ['-date']
+        #при запросе должна быть сортировка по убыванию даты

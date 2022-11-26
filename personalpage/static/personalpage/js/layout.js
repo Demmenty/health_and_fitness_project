@@ -48,10 +48,17 @@ const inputDateComment = document.querySelector('#commentary_form #id_date');
 
 // автоматически ставим сегодняшнюю дату
 let commentDate = new Date();
-inputDateComment.valueAsDate = commentDate;
-console.log(commentDate);
 
+let dateString = commentDate.getFullYear() + "-" +
+                (commentDate.getMonth()+1) + "-" +
+                commentDate.getDate()
 
+inputDateComment.value = dateString;
+
+console.log(inputDateComment.valueAsDate);
+console.log(inputDateComment.value);
+
+                     
 // функция изменения вкладок в окошке коммента
 function changeCommentCategory(event) {
     // закрываем все вкладки и текстовые поля
@@ -118,7 +125,7 @@ function changeCommentaryForm(commentDate) {
                 commentNutrition.textContent = newCommentaryForm.nutrition;
                 commentWorkout.textContent = newCommentaryForm.workout;
                 // меняем дату в заголовке коммента
-                inputDateComment.valueAsDate = commentDate;
+                inputDateComment.value = dateString;
             }
             else if (this.status === 0) {
                 commentary_status_msg.textContent = 'нет соединения!';

@@ -68,7 +68,15 @@ commentLabels.forEach (label => {
 
 // автоматически ставим сегодняшнюю дату
 let commentDate = new Date();
-inputDateComment.valueAsDate = commentDate;
+
+let dateString = commentDate.getFullYear() + "-" +
+                (commentDate.getMonth()+1) + "-" +
+                commentDate.getDate()
+
+inputDateComment.value = dateString;
+
+console.log(inputDateComment.valueAsDate);
+console.log(inputDateComment.value);
 
 
 // работа стрелочек меняющих дату
@@ -109,7 +117,7 @@ function changeCommentaryForm(commentDate) {
                 commentNutrition.value = newCommentaryForm.nutrition;
                 commentWorkout.value = newCommentaryForm.workout;
                 // меняем дату в заголовке коммента
-                inputDateComment.valueAsDate = commentDate;
+                inputDateComment.value = dateString;
             }
             else if (this.status === 0) {
                 commentary_status_msg.textContent = 'нет соединения!';
