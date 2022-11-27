@@ -19,6 +19,8 @@ const navLinkMain = document.getElementById('link_main');
 const navLinkMeasurements = document.getElementById('link_measurements');
 const navLinkMeal = document.getElementById('link_meal');
 const navLinkWorkout = document.getElementById('link_workout');
+// сообщение об ошибке
+const commentaryStatusMsg = document.getElementById('commentary_status_msg');
 
 // открытие вкладки коммента соответственно странице
 // и окрашивание навигации соответственно странице
@@ -128,23 +130,25 @@ function changeCommentaryForm(commentDate) {
                 inputDateComment.value = dateString;
             }
             else if (this.status === 0) {
-                commentary_status_msg.textContent = 'нет соединения!';
+                commentaryStatusMsg.textContent = 'нет соединения!';
                 inputDateComment.style.background = '#f4c3be';
-                commentary_status_msg.classList.add('form_not_saved');
+                commentaryStatusMsg.classList.add('form_not_saved');
                 setTimeout(() => {
                     inputDateComment.style.background = '#ffffff';
-                    commentary_status_msg.classList.remove('form_not_saved');
+                    commentaryStatusMsg.classList.remove('form_not_saved');
+                    commentaryStatusMsg.textContent = "";
                 }, 2000);
             }
             else {
                 // непредвиденные ошибки
-                commentary_status_msg.textContent = ('возникла ошибка! статус ' + 
+                commentaryStatusMsg.textContent = ('возникла ошибка! статус ' + 
                                                       this.status + ' ' + this.statusText);
                 inputDateComment.style.background = '#f4c3be';
-                commentary_status_msg.classList.add('form_not_saved');
+                commentaryStatusMsg.classList.add('form_not_saved');
                 setTimeout(() => {
                     inputDateComment.style.background = '#ffffff';
-                    commentary_status_msg.classList.remove('form_not_saved');
+                    commentaryStatusMsg.classList.remove('form_not_saved');
+                    commentaryStatusMsg.textContent = "";
                 }, 2000);
             }
         }

@@ -11,6 +11,10 @@
 .text-transparent {
     color: #ffffff00;
 }
+.transition_common {
+    transition: all 1s ease;
+}
+
 .text-light-grey {
     color: #b9b9b9;
 }
@@ -27,6 +31,15 @@
 
 .ch-pointer:hover {
     cursor: pointer;
+}
+
+.form_saved {
+    color: #00c0f0 !important;
+    transition: all 1s ease !important;
+}
+.form_not_saved {
+    color: #ff1943 !important;
+    transition: all 1s ease !important;
 }
 
 

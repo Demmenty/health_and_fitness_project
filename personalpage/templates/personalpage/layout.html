@@ -81,6 +81,8 @@
               <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
               <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
             </div>
+
+            <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>
     
             <table class="table align-middle text-center px-0 px-sm-3">
               <tr class="d-flex flex-wrap justify-content-around align-items-center" id="row_commentary_labels">
@@ -96,8 +98,6 @@
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
             
-            <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>
-
           </form>
         </div>
         <!-- уголок диалогового окна -->
