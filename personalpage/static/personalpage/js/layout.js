@@ -281,14 +281,14 @@ function controlLabelReaded(openLabelName) {
                     if (this.status === 200) {
                         // меняем отметку на странице
                         is_read.textContent = 'true';
-
-                        
                         // если все текущие отметки = True
-                        // пересчитываем количество непрочитанного
-                        synchCountUnread();
-                        console.log('количество непрочитанного пересчитано');
-                        
-
+                        if (commentGeneralRead.textContent == 'true' &&
+                            commentMeasurementsRead.textContent == 'true' &&
+                            commentNutritionRead.textContent == 'true' &&
+                            commentWorkoutRead.textContent == 'true') {
+                            // пересчитываем количество непрочитанного
+                            synchCountUnread();
+                        }
                     }
                     // если нет соединения
                     else if (this.status === 0) {
@@ -332,7 +332,7 @@ function synchCountUnread() {
                 if (response.count_of_unread == '0') {
                     countUnread.classList.add('hidden_element');
                 }
-                // если больше, меняем значение на странцие
+                // иначе, меняем значение на странцие
                 else {
                     countUnread.classList.remove('hidden_element');
                     countUnread.textContent = response.count_of_unread;
