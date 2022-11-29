@@ -89,20 +89,14 @@ def today_commentary_form(client_id):
 
 
 def get_commentary_form(request):
-    """Получение формы коммента для клиента
+    """Получение формы коммента клиенту для эксперта
        для выбранной на странице даты через скрипт в layout"""
 
-    if request.user.is_anonymous:
+    if request.user.username != 'Parrabolla':
         data = {}
         return JsonResponse(data, status=403)
 
     client_id = request.GET.get('client_id', None)
-    if client_id is None:
-        client_id = request.user.id
-    else:
-        if request.user.username != 'Parrabolla':
-            data = {}
-            return JsonResponse(data, status=403)
 
     comment_date = request.GET['date']
 
@@ -145,13 +139,18 @@ def save_commentary_form(request):
             try:
                 instance = Commentary.objects.get(client=client_id, date=comment_date)
                 form = CommentaryForm(request.POST, instance=instance)
-                form.save()
-                
+                form = form.save(commit=False)
             except Commentary.DoesNotExist:
-                new_form = form.save(commit=False)
-                new_form.client_id = client_id
-                new_form.save()
+                form = form.save(commit=False)
+                form.client_id = client_id
 
+            # если поле не пусто, то оставить флаг о непрочитанности
+            form.general_read = not bool(form.general)
+            form.measurements_read = not bool(form.measurements)
+            form.nutrition_read = not bool(form.nutrition)
+            form.workout_read = not bool(form.workout)
+
+            form.save()
             result = 'комментарий сохранен'
         
         else:

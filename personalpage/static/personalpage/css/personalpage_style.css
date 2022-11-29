@@ -16,7 +16,12 @@
 }
 
 .text-light-grey {
-    color: #b9b9b9;
+    color: #b9b9b9 !important;
+}
+
+
+.text-royalblue {
+    color: royalblue !important;
 }
 
 .border-blueshadow {
@@ -66,7 +71,6 @@
     margin-right: 15px;
 }
 .comment_section {
-    color: #5271ff;
     font-weight: 500;
     border-radius: 10px;
     border-style: solid;
@@ -79,14 +83,14 @@
     position: relative;
 }
 .comment_section.closed {
-    color: #545454;
     z-index: 0;
     border: none;
 }
-.comment_section.closed:hover {
+.comment_section:hover {
     cursor: pointer;
-    color: #5271ff;
+    color: #5271ff !important;
 }
+
  
 .commentary_textfield {
     border: 1px solid #ced4da;

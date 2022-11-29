@@ -97,6 +97,11 @@
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_measurements">{{ today_commentary.measurements }}</div>
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
+
+            <span class="" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
+            <span class="" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
+            <span class="" id="id_nutrition_read">{{ today_commentary.nutrition_read|lower }}</span>
+            <span class="" id="id_workout_read">{{ today_commentary.workout_read|lower }}</span>
             
           </form>
         </div>

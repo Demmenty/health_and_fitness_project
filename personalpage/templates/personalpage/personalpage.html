@@ -9,7 +9,9 @@
 
 <!-- уведомление о непрочитанных комментах -->
 {% if count_of_unread > 0 %}
-    <p class="text-danger">! Непрочитанных комментариев эксперта: {{ count_of_unread }}</p>
+    <p class="text-danger" id='count_of_unread_msg'>! Непрочитанных комментариев эксперта: 
+        <span id='count_of_unread'>{{ count_of_unread }}</span>
+    </p>
 {% endif %}
 
 <!-- ссылка на анкету -->

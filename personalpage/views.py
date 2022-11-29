@@ -141,6 +141,100 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
+def get_expert_commentary(request):
+    """Получение формы коммента клиенту для клиента
+       для выбранной на странице даты через скрипт в layout"""
+
+    if request.user.is_anonymous:
+        data = {}
+        return JsonResponse(data, status=403)
+
+    client_id = request.user.id
+    comment_date = request.GET['date']
+
+    print(request)
+    print(comment_date)
+
+    try:
+        instance = Commentary.objects.get(client=client_id, date=comment_date)
+        data = {
+            'general': instance.general,
+            'measurements': instance.measurements,
+            'nutrition': instance.nutrition,
+            'workout': instance.workout,
+            'general_read': instance.general_read,
+            'measurements_read': instance.measurements_read,
+            'nutrition_read': instance.nutrition_read,
+            'workout_read': instance.workout_read,
+        }
+    except Commentary.DoesNotExist:
+        data = {
+        'general': '',
+        'measurements': '',
+        'nutrition': '',
+        'workout': '',
+        'general_read': True,
+        'measurements_read': True,
+        'nutrition_read': True,
+        'workout_read': True,
+        }
+
+    return JsonResponse(data, status=200)
+
+
+def mark_comment_readed(request):
+    """Запись инфо о том, что коммент прочитан
+       через скрипт в layout"""
+
+    if request.user.is_anonymous:
+        data = {}
+        return JsonResponse(data, status=403)
+
+    client_id = request.user.id
+    comment_date = request.GET['date']
+    labelname = request.GET['label']
+
+    # сюда не попадут запросы о несуществующих
+    # из-за фильтра в javascript - controlLabelReaded()
+    commentary = Commentary.objects.get(client=client_id, date=comment_date)
+
+    if labelname == 'general':
+        commentary.general_read = True
+    elif labelname == 'measurements':
+        commentary.measurements_read = True
+    elif labelname == 'nutrition':
+        commentary.nutrition_read = True
+    elif labelname == 'workout':
+        commentary.workout_read = True
+    
+    commentary.save()
+
+    data = {}
+
+    return JsonResponse(data, status=200)
+
+
+def get_count_unread(request):
+    """ получение количества непрочитаных комментов 
+    через скрипт в layout"""
+
+    if request.user.is_anonymous:
+        data = {}
+        return JsonResponse(data, status=403)
+
+    unread_comments = Commentary.objects.filter(
+        Q(client=request.user), 
+        Q(general_read=0) | Q(measurements_read=0) | Q(nutrition_read=0) | Q(workout_read=0) 
+    )
+    count_of_unread = unread_comments.count()
+
+    data = {
+        'count_of_unread': count_of_unread,
+    }
+    return JsonResponse(data, status=200)
+
+    
+
 
 # My views
 

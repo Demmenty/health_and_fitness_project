@@ -68,15 +68,27 @@ commentLabels.forEach (label => {
 
 // автоматически ставим сегодняшнюю дату
 let commentDate = new Date();
+let dateString = dateToString(commentDate);
 
-let dateString = commentDate.getFullYear() + "-" +
-                (commentDate.getMonth()+1) + "-" +
-                commentDate.getDate()
+function dateToString(commentDate) {
+    // превращение даты в строку, подходящую для инпут в комменте
+
+    let year = String(commentDate.getFullYear());
+    let month = String(commentDate.getMonth()+1);
+    let date = String(commentDate.getDate());
+
+    if (month.length == 1) {
+        month = '0' + month;
+    }
+    if (date.length == 1) {
+        date = '0' + date;
+    }
+
+    let dateString = year + "-" + month + "-" + date;
+    return dateString
+}
 
 inputDateComment.value = dateString;
-
-console.log(inputDateComment.valueAsDate);
-console.log(inputDateComment.value);
 
 
 // работа стрелочек меняющих дату
@@ -97,9 +109,7 @@ function nextDate() {
 function changeCommentaryForm(commentDate) {
     // запрос данных коммента за другое число из модели Commentary
     let request = new XMLHttpRequest();
-    let dateString = commentDate.getFullYear() + "-" +
-                    (commentDate.getMonth()+1) + "-" +
-                     commentDate.getDate()
+    let dateString = dateToString(commentDate);
     
     request.open("GET",
      "/controlpage/get_commentary_form/?client_id=" + client_id + "&date=" + dateString);
