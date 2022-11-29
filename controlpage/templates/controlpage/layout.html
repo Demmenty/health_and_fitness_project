@@ -122,7 +122,7 @@
     <script>
         $(document).ready(function () {
             // надпись о статусе сохранения
-            var commentary_status_msg = document.getElementById('commentary_status_msg');
+            var commentaryStatusMsg = document.getElementById('commentary_status_msg');
 
             // отслеживаем событие сохранения и отправки формы
             $('#client_comment_form').submit(function () {               
@@ -135,25 +135,25 @@
                   success: function (response) {
                     // уведомление о успешности сохранении внизу окошка коммента
                     if (response.result == 'комментарий сохранен') {
-                      commentary_status_msg.textContent = response.result;
-                      commentary_status_msg.classList.add('form_saved');
+                      commentaryStatusMsg.textContent = response.result;
+                      commentaryStatusMsg.classList.add('form_saved');
                       setTimeout(() => {
-                        commentary_status_msg.classList.remove('form_saved');
+                        commentaryStatusMsg.classList.remove('form_saved');
                       }, 1500);
                     }
                     else {
-                      commentary_status_msg.textContent = response.result;
-                      commentary_status_msg.classList.add('form_not_saved');
+                      commentaryStatusMsg.textContent = response.result;
+                      commentaryStatusMsg.classList.add('form_not_saved');
                       setTimeout(() => {
-                        commentary_status_msg.classList.remove('form_not_saved');
+                        commentaryStatusMsg.classList.remove('form_not_saved');
                       }, 1500);
                     }
                   },
                   error: function (response) {
-                      commentary_status_msg.textContent = 'не сохранено! возникла ошибка!';
-                      commentary_status_msg.classList.add('form_not_saved');
+                      commentaryStatusMsg.textContent = 'не сохранено! возникла ошибка!';
+                      commentaryStatusMsg.classList.add('form_not_saved');
                       setTimeout(() => {
-                        commentary_status_msg.classList.remove('form_not_saved');
+                        commentaryStatusMsg.classList.remove('form_not_saved');
                       }, 1500);
                   },             
               });

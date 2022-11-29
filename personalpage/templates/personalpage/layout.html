@@ -78,7 +78,7 @@
 
             <div class="d-flex justify-content-center align-items-center mb-2 mx-4">
               <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
-              <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
+              <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date" oninput="changeDateInput()">
               <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
             </div>
 
