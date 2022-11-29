@@ -69,6 +69,8 @@
 
       <!-- аватар эксперта -->
       <img id="expert_pic" src="{% static 'personalpage/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80" onclick="openCommentary()">
+      <!-- отметка о непрочитанных комментариях -->
+      <div class="rounded-circle text-center align-middle" id="count_of_unread"></div>
 
       <!-- окно комментария эксперта -->
       <div class="d-flex flex-column flex-sm-row hidden_element" id="commentary_container">
@@ -98,10 +100,10 @@
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
             <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
 
-            <span class="" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
-            <span class="" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
-            <span class="" id="id_nutrition_read">{{ today_commentary.nutrition_read|lower }}</span>
-            <span class="" id="id_workout_read">{{ today_commentary.workout_read|lower }}</span>
+            <span class="hidden_element" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
+            <span class="hidden_element" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
+            <span class="hidden_element" id="id_nutrition_read">{{ today_commentary.nutrition_read|lower }}</span>
+            <span class="hidden_element" id="id_workout_read">{{ today_commentary.workout_read|lower }}</span>
             
           </form>
         </div>

@@ -108,6 +108,19 @@
     transform: rotate(270deg) scaleX(-1);
     height: 20px;
 }
+#count_of_unread {
+    width: 23px;
+    height: 23px;
+    right: 0;
+    margin-top: 29px;
+    margin-right: 43px;
+    position: absolute;
+    border: 1px solid #c1c1c1;
+    color: dimgray;
+    background-color: white;
+    font-size: 15px;
+    font-weight: 500;
+}
 
 @media (min-width: 450px) {
     #commentary_container {
@@ -149,6 +162,11 @@
         margin-top: -357px;
         margin-right: 8px;
     }
+    #count_of_unread {
+        position: static;
+        float: right;
+        margin-right: -58px;
+    }
 }
 
 
@@ -169,7 +187,6 @@
     filter: brightness(0.7);
     cursor: pointer;
 }
-
 
 
 

@@ -31,26 +31,28 @@ const inputDateComment = document.querySelector('#client_comment_form #id_date')
 // применение настроек в зависимости от открытой страницы
 setSettingsDependPath();
 function setSettingsDependPath() {
-    if ((pagePath == '/controlpage/client_measurements/') ||
-        (pagePath == '/controlpage/client_anthropometry/')) {
-        // открытие соотв.текста комментария
-        commentMeasurements.classList.remove('hidden_element');
-        // открытие соотв.вкладки комментария
-        commentMeasurementsLabel.classList.remove('closed');
-        // окрашивание соотв.вкладки навигации в синий
-        navLinkMeasurements.classList.add('royal_blue');
-    }
-    else if ((pagePath == '/controlpage/client_mealjournal/') ||
-            (pagePath == '/controlpage/client_foodbymonth/') ||
-            (pagePath == '/controlpage/client_foodbydate/')) {
-        commentNutrition.classList.remove('hidden_element');
-        commentNutritionLabel.classList.remove('closed');
-        navLinkMeal.classList.add('royal_blue');
-    }
-    else {
-        commentGeneral.classList.remove('hidden_element');
-        commentGeneralLabel.classList.remove('closed');
-        navLinkMain.classList.add('royal_blue');
+    if (pagePath !== '/controlpage/') {
+        if ((pagePath == '/controlpage/client_measurements/') ||
+            (pagePath == '/controlpage/client_anthropometry/')) {
+            // открытие соотв.текста комментария
+            commentMeasurements.classList.remove('hidden_element');
+            // открытие соотв.вкладки комментария
+            commentMeasurementsLabel.classList.remove('closed');
+            // окрашивание соотв.вкладки навигации в синий
+            navLinkMeasurements.classList.add('royal_blue');
+        }
+        else if ((pagePath == '/controlpage/client_mealjournal/') ||
+                (pagePath == '/controlpage/client_foodbymonth/') ||
+                (pagePath == '/controlpage/client_foodbydate/')) {
+            commentNutrition.classList.remove('hidden_element');
+            commentNutritionLabel.classList.remove('closed');
+            navLinkMeal.classList.add('royal_blue');
+        }
+        else {
+            commentGeneral.classList.remove('hidden_element');
+            commentGeneralLabel.classList.remove('closed');
+            navLinkMain.classList.add('royal_blue');
+        }
     }
 }
 

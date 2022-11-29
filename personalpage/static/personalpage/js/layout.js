@@ -282,13 +282,12 @@ function controlLabelReaded(openLabelName) {
                         // меняем отметку на странице
                         is_read.textContent = 'true';
 
-                        // пересчитываем количество непрочитанного
+                        
                         // если все текущие отметки = True
-                        if (pagePath == '/personalpage/') {
-                            console.log('pagePath == personalpage');
-                            changeCountUnread();
-                            console.log('количество непрочитанного пересчитано');
-                        }
+                        // пересчитываем количество непрочитанного
+                        synchCountUnread();
+                        console.log('количество непрочитанного пересчитано');
+                        
 
                     }
                     // если нет соединения
@@ -318,8 +317,9 @@ function controlLabelReaded(openLabelName) {
 }
 
 
-function changeCountUnread() {
-    // синхронизация непрочитаных комментов
+synchCountUnread();
+function synchCountUnread() {
+    // синхронизация количества непрочитаных комментов
     let request = new XMLHttpRequest();
 
     request.open("GET", "/personalpage/get_count_unread/");
@@ -328,12 +328,13 @@ function changeCountUnread() {
         if(this.readyState === 4) {
             if (this.status === 200) {
                 let response = JSON.parse(this.responseText);
-                
+                // если количество = 0, убираем значок
                 if (response.count_of_unread == '0') {
-                    let unreadMsg = document.getElementById('count_of_unread_msg');
-                    unreadMsg.classList.add('hidden_element');
+                    countUnread.classList.add('hidden_element');
                 }
+                // если больше, меняем значение на странцие
                 else {
+                    countUnread.classList.remove('hidden_element');
                     countUnread.textContent = response.count_of_unread;
                 }
             }

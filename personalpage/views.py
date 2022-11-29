@@ -333,15 +333,6 @@ def personalpage(request):
     except Commentary.DoesNotExist:
         today_commentary = ''
 
-    # наличие непрочитанных комментов эксперта
-
-    unread_comments = Commentary.objects.filter(
-        Q(client=request.user), 
-        Q(general_read=0) | Q(measurements_read=0) | Q(nutrition_read=0) | Q(workout_read=0) 
-    )
-    count_of_unread = unread_comments.count()
-    
-
     data = {
         'today_measure': today_measure,
         'questionary': questionary,
@@ -350,7 +341,6 @@ def personalpage(request):
         'contacts_filled': contacts_filled,
         'today_commentary': today_commentary,
         'date_today': date_today,
-        'count_of_unread': count_of_unread,
     }
     return render(request, 'personalpage/personalpage.html', data)
 
