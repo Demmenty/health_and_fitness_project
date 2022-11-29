@@ -427,6 +427,7 @@ def measurements(request):
 
     # наличие цветовых настроек для клиента
     colorset_exist = bool(MeasureColorField.objects.filter(user_id=request.user))
+    print('colorset_exist = ' + str(colorset_exist))
 
     # комментарий за сегодня от эксперта
     try:

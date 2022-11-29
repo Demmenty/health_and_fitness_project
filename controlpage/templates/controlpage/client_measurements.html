@@ -254,9 +254,13 @@
 
 </div>
 
+{% if not colorset_exist %}
+<p class="text-muted" id="colorset_not_exist"><span class="royal_blue">&#10006;</span> цветовые границы не настроены</p>
+{% endif %}
 
+<span class="text-muted" id="colorset_error"></span>
 
-<!-- огромная сборная форма настроек цвета -->
+<!-- сборная форма настроек цвета -->
 <form method="POST" class="hidden_element" id="color_settings_form">
     {% csrf_token %}
     <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
@@ -454,8 +458,8 @@
 
     <p class=""><span class="royal_blue">&#9658;</span> Алгоритм выбора цвета</p>
     <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
-    <p class="text-muted ms-4 m-0">	&#10004; если условие выполняется, происходит окраска</p>
-    <p class="text-muted ms-4 m-0"> &#10006; если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
+    <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10004;</span> если условие выполняется, происходит окраска</p>
+    <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10006;</span> если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
     <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
     <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
     <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>

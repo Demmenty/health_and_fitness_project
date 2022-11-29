@@ -1,4 +1,6 @@
-commentButtons = document.querySelectorAll(".comment_btn");
+const commentButtons = document.querySelectorAll(".comment_btn");
+const colorsetError = document.getElementById("colorset_error");
+
 
 // чтобы было что закрывать при открытии первого коммента
 commentForm = document.getElementById("comment1");
@@ -116,31 +118,37 @@ function applyColors() {
 }
 
 
-// функция получения и применения цветовых настроек
 function applyColorSettings() {
-
-  const client_id = document.getElementById('client_id').value;
-
+  // функция получения и применения цветовых настроек
   var request = new XMLHttpRequest();
   request.open("GET", "/controlpage/color_settings_send/?client_id=" + client_id);
 
   request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
+    if(this.readyState === 4) {
 
-        var colorSet = JSON.parse(this.responseText);
-        
+      if (this.status === 200) {
         if (this.responseText == '{}') {
-          // если настройки не настроены
-          // ??
-          console.log('no settings');
+          // уведомление об отсутствии настроек
+          colorsetError.innerHTML = "&#10006; цветовые границы не настроены (или возникла ошибка)";
+          document.getElementById("colorset_not_exist").classList.add('hidden_element');
+          colorsetError.classList.add('form_not_saved');
+          colorsetError.classList.remove('text-muted');
+          setTimeout(() => {
+            colorsetError.classList.remove('form_not_saved');
+            colorsetError.classList.add('text-muted');
+          }, 2000);
         }
         else {
+          var colorSet = JSON.parse(this.responseText);
+
           let fields;
           let value;
           let valueLower;
           let successful;
           let upCheck;
           let lowCheck;
+
+          colorsetError.textContent = '';
 
           // проверка и применение полученных настроек цветов
           Object.keys(colorSet).filter(key => key !== 'pressure_lower').forEach( key => {
@@ -232,11 +240,33 @@ function applyColorSettings() {
           })
         }
       }
+      else if (this.status === 0) {
+        // уведомление об отсутствии соединения
+        colorsetError.innerHTML = '&#10006; нет соединения с сервером!';
+        colorsetError.classList.add('form_not_saved');
+        colorsetError.classList.remove('text-muted');
+        setTimeout(() => {
+          colorsetError.classList.remove('form_not_saved');
+          colorsetError.classList.add('text-muted');
+        }, 2000);
+      }
+      else {
+        // уведомление об ошибке
+        colorsetError.innerHTML = ('&#10006; возникла ошибка! статус ' + 
+                                      this.status + ' ' + this.statusText);
+        colorsetError.classList.add('form_not_saved');
+        colorsetError.classList.remove('text-muted');
+        setTimeout(() => {
+          colorsetError.classList.remove('form_not_saved');
+          colorsetError.classList.add('text-muted');
+        }, 2000);
+      }
+    }
   }
   request.send();
 }
 
-
+// доп проверка нижнего давления
 function checkColorPressureLower(colorSet, valueLower, field, i) {
 
   successfulLower = false;

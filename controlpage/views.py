@@ -290,17 +290,31 @@ def client_measurements(request):
         avg_period = ""
         period = ""
 
-    # настройка цветовых фонов для показателей клиента
-    colorset_forms = []
-    for index_id in range(1, 11):
-        for color_id in range(2, 7):
-            try:
-                instance = MeasureColorField.objects.get(user_id=client_id, index_id=index_id, color_id=color_id)
-            except MeasureColorField.DoesNotExist:
-                instance = MeasureColorField.objects.create(user_id=client_id, index_id=index_id, color_id=color_id)
+    # наличие цветовых настроек для клиента
+    colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
 
-            form = MeasureColorFieldForm(instance=instance)
-            colorset_forms.append(form)
+    # настройки цветовых фонов для показателей клиента
+    colorset_forms = []
+    if colorset_exist:
+        for index_id in range(1, 11):
+            for color_id in range(2, 7):
+                instance = MeasureColorField.objects.get(
+                    user_id=client_id,
+                    index_id=index_id,
+                    color_id=color_id
+                    )
+                form = MeasureColorFieldForm(instance=instance)
+                colorset_forms.append(form)
+    else:
+        for index_id in range(1, 11):
+            for color_id in range(2, 7):
+                form = MeasureColorFieldForm(initial={
+                    'user': client_id,
+                    'index': index_id,
+                    'color': color_id
+                    })
+                colorset_forms.append(form)
+
     # указанное в анкете нормальное давление
     try:
         norm_pressure = Questionary.objects.get(user=client_id).norm_pressure
@@ -320,6 +334,7 @@ def client_measurements(request):
         'avg_period': avg_period,
         'show_pressure_week': show_pressure_week,
         'show_pressure_period': show_pressure_period,
+        'colorset_exist': colorset_exist,
         'colorset_forms': colorset_forms,
         'norm_pressure': norm_pressure,
         'client_contacts': client_contacts,
@@ -345,21 +360,33 @@ def color_settings_save(request):
 
         values = zip_longest(indices, colors, low_limits, up_limits)
 
-        for index, color, low, up in values:
+        # наличие цветовых настроек для клиента
+        colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
 
-            instance = MeasureColorField.objects.filter(user_id=client_id, index_id=index, color_id=color)
-            if not instance:
-                MeasureColorField.objects.create(user_id=client_id, index_id=index, color_id=color)
-                instance = MeasureColorField.objects.filter(user_id=client_id, index_id=index, color_id=color)
+        if colorset_exist:
+            for index, color, low, up in values:
+                if not low:
+                    low = None
+                if not up:
+                    up = None
+                instance = MeasureColorField.objects.filter(
+                    user_id=client_id,
+                    index_id=index,
+                    color_id=color)
+                instance.update(low_limit=low, upper_limit=up)
 
-            if low:
-                instance.update(low_limit=low)
-            else:
-                instance.update(low_limit=None)
-            if up:   
-                instance.update(upper_limit=up)
-            else:
-                instance.update(upper_limit=None)
+        else:
+            for index, color, low, up in values:
+                if not low:
+                    low = None
+                if not up:
+                    up = None
+                MeasureColorField.objects.create(
+                    user_id=client_id,
+                    index_id=index, 
+                    color_id=color, 
+                    low_limit=low, 
+                    upper_limit=up)
 
         data = {}
         return JsonResponse(data, status=200)
@@ -375,10 +402,9 @@ def color_settings_send(request):
     if client_id == 'user':
         client_id = request.user
 
-    query_set = MeasureColorField.objects.filter(user_id=client_id).order_by('index', 'color')
-
-    if query_set:
+    colorset = MeasureColorField.objects.filter(user_id=client_id).order_by('index', 'color')
     
+    if colorset:
         data = {'feel': {},
                 'weight': {},
                 'fat': {},
@@ -390,14 +416,14 @@ def color_settings_send(request):
                 'fats': {},
                 'carbohydrates': {},
                 }
-        for object in query_set:
+        for object in colorset:
             data[str(object.index)][str(object.color.id)] = {
-                                                    'color': str(object.color),
-                                                    'low': str(object.low_limit),
-                                                    'up': str(object.upper_limit) }
+                                                'color': str(object.color),
+                                                'low': str(object.low_limit),
+                                                'up': str(object.upper_limit) }
     else:
         data = {}
-    
+
     return JsonResponse(data, status=200)
 
 

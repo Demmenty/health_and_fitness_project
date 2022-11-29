@@ -1,5 +1,9 @@
-commentButtons = document.querySelectorAll(".comment_btn");
-commentForm = document.getElementById("comment1");
+const commentButtons = document.querySelectorAll(".comment_btn");
+var commentForm = document.getElementById("comment1");
+const colorsetError = document.getElementById("colorset_error");
+const colorsetErrorContainer = document.getElementById("colorset_error_container");
+// переменная для настроек цветовых границ
+var colorSet = false;
 
 // показать\скрыть коммент соответствующей даты
 function changeComment(event) {
@@ -98,7 +102,12 @@ let allTableFields = document.querySelectorAll("td");
 // функция применения цветов к измерениям согласно настройкам из БД
 function applyColors() {
   if (btn.checked) {
-    applyColorSettings();
+    if (colorSet) {
+      applyColorSettings();
+    }
+    else {
+      getColorSettings();
+    }
   }
   else {
     allTableFields.forEach( field => {
@@ -108,185 +117,211 @@ function applyColors() {
 }
 applyColors();
 
-function applyColorSettings() {
 
-  const client_id = 'user';
-  const colorsetError = document.getElementById("colorset_error");
-  const colorsetErrorContainer = document.getElementById("colorset_error_container");
-
+function getColorSettings() {
+  // функция получения и применения цветовых настроек
   var request = new XMLHttpRequest();
-  request.open("GET", "/controlpage/color_settings_send/?client_id=" + client_id);
+  request.open("GET", "/controlpage/color_settings_send/?client_id=user");
 
   request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
+    if(this.readyState === 4) {
 
-        var colorSet = JSON.parse(this.responseText);
-
+      if (this.status === 200) {
         if (this.responseText == '{}') {
-          // если настройки не настроены
-          console.log("no response with color settings");
-          colorsetError.textContent = "настройки цвета пока не установлены (или возникла ошибка)";
+          // уведомление об отсутствии настроек
+          colorsetError.textContent = "цветовые границы пока не установлены";
           colorsetErrorContainer.classList.remove("hidden_element");
         }
         else {
-          // если настройки настроены
-          let fields;
-          let value;
-          let valueLower;
-          let successful;
-          let upCheck;
-          let lowCheck;
+          colorSet = JSON.parse(this.responseText);
 
           colorsetError.textContent = "";
           colorsetErrorContainer.classList.add("hidden_element");
 
-          // проверка и применение полученных настроек цветов
-          Object.keys(colorSet).filter(key => key !== 'pressure_lower').forEach( key => {
-
-            // ловим ячейки соответствующих параметров
-            if (key == 'pressure_upper') {
-              fields = document.querySelectorAll(".td_pressure");
-            }
-            else {
-              fields = document.querySelectorAll(".td_" + key);
-            }
-
-            // каждое поле с этим параметром здоровья
-            fields.forEach( field => {
-              value = field.getAttribute('value');
-              successful = false;
-
-              // проверка, что значение не пустое
-              if ((value != 'None') && (value != 'None, None')) {
-
-                // преобразование проверяемого значения в число 
-                if (key == 'pressure_upper') {
-                  value = value.split(", ");
-                  valueLower = parseInt(value[1]);
-                  value = parseInt(value[0]);
-                }
-                else {
-                  value = parseFloat(value.replace(',','.'));
-                }               
-
-                // проверка условий для каждого цвета по очереди
-                for (let i=2; i<7; i++) {
-    
-                  // границы, по которым нужна проверка
-                  upCheck = parseFloat(colorSet[key][i]['up']);
-                  lowCheck = parseFloat(colorSet[key][i]['low']);
-                      
-                  // проверка значения параметра соответствия условиям
-                  if (!isNaN(upCheck)) {
-                    if (!isNaN(lowCheck)) {
-                      if ((value >= lowCheck) && (value <= upCheck)) {
-                        successful = true;                     
-                        if (key == 'pressure_upper') {
-                          // доп проверка нижнего давления
-                          checkColorPressureLower(colorSet, valueLower, field, i);
-                        }
-                        else {
-                          field.style.background = colorSet[key][i]['color'];
-                        }
-                        break
-                      }
-                    }
-                    else {
-                      if (value <= upCheck) {
-                        successful = true;
-                        if (key == 'pressure_upper') {
-                          // доп проверка нижнего давления
-                          checkColorPressureLower(colorSet, valueLower, field, i);
-                        }
-                        else {
-                          field.style.background = colorSet[key][i]['color'];
-                        }
-                        break
-                      }
-                    }
-                  }
-                  else {
-                    if (!isNaN(lowCheck)) {
-                      if (value >= lowCheck) {                        
-                        successful = true;
-                        if (key == 'pressure_upper') {
-                          // доп проверка нижнего давления
-                          checkColorPressureLower(colorSet, valueLower, field, i);
-                        }
-                        else {
-                          field.style.background = colorSet[key][i]['color'];
-                        }
-                        break
-                      }
-                    }
-                  }
-                }
-                if (!successful) {
-                  // цикл окончен, а ни одно условие не выполнено
-                  field.style.background = "#ffffff";
-                }
-              }
-            })
-          })
+          applyColorSettings();
         }
       }
+      else if (this.status === 0) {
+        // уведомление об отсутствии соединения
+        colorsetError.textContent = ('нет соединения с сервером!');
+        colorsetErrorContainer.classList.remove("hidden_element");
+        colorsetError.classList.add('form_not_saved');
+          colorsetError.classList.remove('text-muted');
+          setTimeout(() => {
+            colorsetError.classList.remove('form_not_saved');
+            colorsetError.classList.add('text-muted');
+          }, 2000);
+      }
+      else {
+        // уведомление об ошибке
+        colorsetError.textContent = ('возникла ошибка! статус ' + 
+                                      this.status + ' ' + this.statusText);
+        colorsetErrorContainer.classList.remove("hidden_element");
+        colorsetError.classList.add('form_not_saved');
+          colorsetError.classList.remove('text-muted');
+          setTimeout(() => {
+            colorsetError.classList.remove('form_not_saved');
+            colorsetError.classList.add('text-muted');
+          }, 2000);
+      }
+    }   
   }
   request.send();
 }
 
-// доп проверка нижнего давления
-function checkColorPressureLower(colorSet, valueLower, field, i) {
 
-  successfulLower = false;
-  for (let j=2; j<7; j++) {
+function applyColorSettings() {
 
-    // границы, по которым нужна проверка
-    upCheck = parseInt(colorSet['pressure_lower'][j]['up']);
-    lowCheck = parseInt(colorSet['pressure_lower'][j]['low']);
+  let fields;
+  let value;
+  let valueLower;
+  let successful;
+  let upCheck;
+  let lowCheck;
 
-    if (!isNaN(upCheck)) {
-      if (!isNaN(lowCheck)) {
-        if ((valueLower >= lowCheck) && (valueLower <= upCheck)) {
-          successfulLower = true;
-          if (i < j) {
-            field.style.background = colorSet['pressure_lower'][j]['color'];                     
-          }
-          else {
-            field.style.background = colorSet['pressure_upper'][i]['color']; 
-          }
-          break
-        }
-      }
-      else {
-        if (valueLower <= upCheck) {
-          successfulLower = true;
-          if (i < j) {
-            field.style.background = colorSet['pressure_lower'][j]['color'];
-          }
-          else {
-            field.style.background = colorSet['pressure_upper'][i]['color'];
-          }
-          break
-        }
-      }
+  // проверка и применение полученных настроек цветов
+  Object.keys(colorSet).filter(key => key !== 'pressure_lower').forEach( key => {
+
+    // ловим ячейки соответствующих параметров
+    if (key == 'pressure_upper') {
+      fields = document.querySelectorAll(".td_pressure");
     }
     else {
-      if (!isNaN(lowCheck)) {
-        if (valueLower >= lowCheck) {                        
-          successfulLower = true;
-          if (i < j) {
-            field.style.background = colorSet['pressure_lower'][j]['color'];
+      fields = document.querySelectorAll(".td_" + key);
+    }
+
+    // каждое поле с этим параметром здоровья
+    fields.forEach( field => {
+      value = field.getAttribute('value');
+      successful = false;
+
+      // проверка, что значение не пустое
+      if ((value != 'None') && (value != 'None, None')) {
+
+        // преобразование проверяемого значения в число 
+        if (key == 'pressure_upper') {
+          value = value.split(", ");
+          valueLower = parseInt(value[1]);
+          value = parseInt(value[0]);
+        }
+        else {
+          value = parseFloat(value.replace(',','.'));
+        }               
+
+        // проверка условий для каждого цвета по очереди
+        for (let i=2; i<7; i++) {
+
+          // границы, по которым нужна проверка
+          upCheck = parseFloat(colorSet[key][i]['up']);
+          lowCheck = parseFloat(colorSet[key][i]['low']);
+              
+          // проверка значения параметра соответствия условиям
+          if (!isNaN(upCheck)) {
+            if (!isNaN(lowCheck)) {
+              if ((value >= lowCheck) && (value <= upCheck)) {
+                successful = true;                     
+                if (key == 'pressure_upper') {
+                  // доп проверка нижнего давления
+                  checkColorPressureLower(colorSet, valueLower, field, i);
+                }
+                else {
+                  field.style.background = colorSet[key][i]['color'];
+                }
+                break
+              }
+            }
+            else {
+              if (value <= upCheck) {
+                successful = true;
+                if (key == 'pressure_upper') {
+                  // доп проверка нижнего давления
+                  checkColorPressureLower(colorSet, valueLower, field, i);
+                }
+                else {
+                  field.style.background = colorSet[key][i]['color'];
+                }
+                break
+              }
+            }
           }
           else {
-            field.style.background = colorSet['pressure_upper'][i]['color'];
+            if (!isNaN(lowCheck)) {
+              if (value >= lowCheck) {                        
+                successful = true;
+                if (key == 'pressure_upper') {
+                  // доп проверка нижнего давления
+                  checkColorPressureLower(colorSet, valueLower, field, i);
+                }
+                else {
+                  field.style.background = colorSet[key][i]['color'];
+                }
+                break
+              }
+            }
           }
-          break
+
+          // доп проверка нижнего давления
+          function checkColorPressureLower(colorSet, valueLower, field, i) {
+
+            successfulLower = false;
+            for (let j=2; j<7; j++) {
+
+              // границы, по которым нужна проверка
+              upCheck = parseInt(colorSet['pressure_lower'][j]['up']);
+              lowCheck = parseInt(colorSet['pressure_lower'][j]['low']);
+
+              if (!isNaN(upCheck)) {
+                if (!isNaN(lowCheck)) {
+                  if ((valueLower >= lowCheck) && (valueLower <= upCheck)) {
+                    successfulLower = true;
+                    if (i < j) {
+                      field.style.background = colorSet['pressure_lower'][j]['color'];                     
+                    }
+                    else {
+                      field.style.background = colorSet['pressure_upper'][i]['color']; 
+                    }
+                    break
+                  }
+                }
+                else {
+                  if (valueLower <= upCheck) {
+                    successfulLower = true;
+                    if (i < j) {
+                      field.style.background = colorSet['pressure_lower'][j]['color'];
+                    }
+                    else {
+                      field.style.background = colorSet['pressure_upper'][i]['color'];
+                    }
+                    break
+                  }
+                }
+              }
+              else {
+                if (!isNaN(lowCheck)) {
+                  if (valueLower >= lowCheck) {                        
+                    successfulLower = true;
+                    if (i < j) {
+                      field.style.background = colorSet['pressure_lower'][j]['color'];
+                    }
+                    else {
+                      field.style.background = colorSet['pressure_upper'][i]['color'];
+                    }
+                    break
+                  }
+                }
+              }
+            }
+            if (!successfulLower) {
+              // цикл окончен, а ни одно условие для нижнего не выполнено
+              field.style.background = "#ffffff";
+            }
+          }
+        }
+        if (!successful) {
+          // цикл окончен, а ни одно условие не выполнено
+          field.style.background = "#ffffff";
         }
       }
-    }
-  }
-  if (!successfulLower) {
-    // цикл окончен, а ни одно условие для нижнего не выполнено
-    field.style.background = "#ffffff";
-  }
+    })
+  })
 }
