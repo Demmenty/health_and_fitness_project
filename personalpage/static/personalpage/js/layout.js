@@ -4,6 +4,12 @@ const navLinkMain = document.getElementById('link_main');
 const navLinkMeasurements = document.getElementById('link_measurements');
 const navLinkMeal = document.getElementById('link_meal');
 const navLinkWorkout = document.getElementById('link_workout');
+const navLinkMainDrop = document.getElementById('link_main_drop');
+const navLinkMeasurementsDrop = document.getElementById('link_measurements_drop');
+const navLinkMealDrop = document.getElementById('link_meal_drop');
+const navLinkWorkoutDrop = document.getElementById('link_workout_drop');
+// название открытой вкладки навигации dropdown
+const navLinkOpenDrop = document.getElementById('open_label_drop');
 // контейнер комментария для клиента
 const commentaryContainer = document.getElementById('commentary_container');
 // вкладки по категориям в окошке коммента отдельно
@@ -44,6 +50,9 @@ function setSettingsDependPath() {
         commentMeasurementsLabel.classList.remove('closed');
         // окрашивание соотв.вкладки навигации в синий
         navLinkMeasurements.classList.add('text-royalblue');
+        navLinkMeasurementsDrop.classList.add('hidden_element');
+        // название открытой вкладки если меню dropdown
+        navLinkOpenDrop.textContent = 'измерения';
         // определение имени открытой вкладки
         openLabelName = 'measurements';
         openLabel = commentMeasurementsLabel;
@@ -54,6 +63,8 @@ function setSettingsDependPath() {
         commentNutrition.classList.remove('hidden_element');
         commentNutritionLabel.classList.remove('closed');
         navLinkMeal.classList.add('text-royalblue');
+        navLinkMealDrop.classList.add('hidden_element');
+        navLinkOpenDrop.textContent = 'питание';
         openLabelName = 'nutrition';
         openLabel = commentNutritionLabel;
     }
@@ -61,6 +72,8 @@ function setSettingsDependPath() {
         commentGeneral.classList.remove('hidden_element');
         commentGeneralLabel.classList.remove('closed');
         navLinkMain.classList.add('text-royalblue');
+        navLinkMainDrop.classList.add('hidden_element');
+        navLinkOpenDrop.textContent = 'главная';
         openLabelName = 'general';
         openLabel = commentGeneralLabel;
     }

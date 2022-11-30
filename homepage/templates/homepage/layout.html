@@ -19,22 +19,24 @@
     <header class="border-bottom">
       <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-          <a href="/" class="d-flex align-items-center mb-2 mb-md-0">
-            <img src="{% static 'general/img/Logo.svg' %}" alt="logo" width="100">
+      
+          <a href="/" class="d-flex align-items-center col-md-2 mb-2 mb-md-0 text-dark text-decoration-none">
+              <object data="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="100" id="logo"></object>
+              <object data="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="100" id="logo_mini"></object>
           </a>
               
-          <ul class="nav justify-content-center align-items-center">
-            <li><a href="#" class="nav_link">обо мне</a></li>
-            <li><a href="#" class="nav_link">рецепты</a></li>
-            <li><a href="#" class="nav_link">блог</a></li>
-            <li><a href="#" class="nav_link">прайс-лист</a></li>
-            <li><a href="#trainer_contacts" class="nav_link">контакты</a></li>
+          <ul class="nav col-12 col-md-7 my-2 justify-content-center mb-md-0">
+            <li><a href="#" class="nav_link">о проекте</a></li>
+            <li><a href="#" class="nav_link">услуги</a></li>
+            <li><a href="#" class="nav_link">консультация</a></li>
+            <li><a href="#trainer_contacts" class="nav_link">о специалисте</a></li>
           </ul>
     
-          <div class="text-end">
+          <div class="col-md-3 text-end text-nowrap">
             {% if user.is_authenticated %}
                 <div class="d-flex">
                   <a href="{{ 'personalpage' }}"><button type="button" class="btn btn-primary ms-2">Личный кабинет</button></a>
+                  
                   <form method="POST" action="{% url 'logoutuser' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-primary ms-2">Выйти</button>

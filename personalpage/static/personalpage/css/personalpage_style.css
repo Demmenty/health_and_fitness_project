@@ -214,6 +214,61 @@ header {
 .nav_link:hover {
     color: #5271ff;
 }
+
+#open_label_drop {
+    color: #5271ff;
+    text-decoration: none;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    font-weight: 500;
+}
+
+#logo {
+    display: none;
+    pointer-events: none;
+}
+#logo_mini {
+    pointer-events: none;
+}
+@media (min-width: 768px) {
+    #logo {
+        display: unset;
+    }
+    #logo_mini {
+        display: none;
+    }
+}
+
+#nav_string {
+    display: none;
+}
+@media (min-width: 768px) {
+    #nav_string {
+        display: flex;
+    }
+    #nav_dropdown {
+        display: none !important;
+    }
+}
+
+#logout_btn {
+    display: none;
+}
+#logout_btn_pic {
+    padding-top: 5px;
+}
+#logout_btn_pic:hover img {
+    filter: brightness(1000%) contrast(100%);
+}
+@media (min-width: 450px) {
+    #logout_btn {
+        display: inline-block;
+    }
+    #logout_btn_pic {
+        display: none;
+    }
+}
+
 /* main */
 main {
     padding-top: 130px;

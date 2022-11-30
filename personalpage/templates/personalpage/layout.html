@@ -18,34 +18,53 @@
   
   <header class="border-bottom">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-        <a href="/" class="d-flex align-items-center mb-2 mb-md-0">
-          <img src="{% static 'general/img/Logo.svg' %}" alt="logo" width="100">
+      <div class="d-flex align-items-center justify-content-between py-3">
+
+        <!-- логотип -->
+        <a href="/" class="d-flex align-items-center col-md-2 mb-md-0 text-dark text-decoration-none">
+          <object data="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="100" id="logo"></object>
+          <object data="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="100" id="logo_mini"></object>
         </a>
-  
-        <ul class="nav justify-content-center align-items-center">
-          <li>
-            <a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a>
-          </li>
-          <li>
-            <a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a>
-          </li>
+        <!-- навигация просто строкой -->
+        <ul class="nav col-md-8 my-1 justify-content-center mb-md-0" id="nav_string">
+          <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
+          <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
           <li>
             <form method="get" action="{% url 'mealjournal' %}">
               <button type="submit" class="nav_link" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
             </form>
           </li>
-          <li>
-            <a href="#" class="nav_link" id="link_workout">тренировки</a>
-          </li>
+          <li><a href="#" class="nav_link" id="link_workout">тренировки</a></li>
         </ul>
-          
-        <div class="text-end">
+        <!-- навигация выпадающим меню -->
+        <div class="d-flex align-items-center justify-content-center mt-2" id="nav_dropdown">
+          <div class="dropdown">
+            <a href="#" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="me-2" id="open_label_drop"></span>
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
+              <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
+              <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements_drop">измерения</a></li>
+              <li>
+                <form method="get" action="{% url 'mealjournal' %}">
+                  <button type="submit" class="nav_link" id="link_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+                </form>
+              </li>
+              <li><a href="#" class="nav_link" id="link_workout_drop">тренировки</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- кнопка выхода -->
+        <div class="col-md-2 text-end mt-md-1">
           <form method="POST" action="{% url 'logoutuser' %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline-primary">Выйти</button>
+            <button type="submit" class="btn btn-outline-primary" id="logout_btn">Выйти</button>
+            <button type="submit" class="btn btn-outline-primary px-2" id="logout_btn_pic">
+              <img src="{% static 'general/img/logout_ico.svg' %}" width="24" aria-hidden="true">
+            </button>
           </form>
         </div>
+
       </div>
     </div>    
   </header>
