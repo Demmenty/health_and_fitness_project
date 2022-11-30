@@ -149,82 +149,6 @@
     {% endfor %}
 {% endif %}
 
-<!-- сохранение комментария -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // отслеживаем событие отправки формы
-        $('.commentForm').submit(function () {
-            
-            // ID задействованной формы
-            let formId = $(this).attr('id');
-            // номер коммента
-            let commentNum = formId[11];
-            // соответствующее текстовое поле
-            let commentArea = $("#" + formId + " > #id_comment")[0];
-            // соответствующая кнопка-значок комментария
-            let commentBtn = document.getElementById("comment_btn" + commentNum);
-            // соответствующее поле для надписи о сохранении
-            let commentStatusField = document.getElementById("comment" + commentNum + "header");
-
-            // создаем AJAX-вызов
-            $.ajax({
-                data: $(this).serialize(), // получаем данные формы
-                type: $(this).attr('method'), // метод отправки запроса
-                url: "{% url 'commentsave' %}", // функция обработки
-                
-                success: function (response) {
-                    // меняем поле коммента в таблице за сегодня
-                    if (document.getElementById("today_measure_table") && (commentNum == '7')) {
-                        document.getElementById("today_comment").textContent = response.new_comment;
-
-                        let todayCommentContainer = document.getElementById("today_comment_container");
-                        if (response.new_comment == '') {
-                            todayCommentContainer.classList.add('hidden_element');
-                        }
-                        else {
-                            todayCommentContainer.classList.remove('hidden_element');
-                        }     
-                    }
-
-                    // меняем значок этого комментария
-                    if (response.new_comment == '') {
-                        // если новый коммент пуст - делаем его кнопку серой
-                        commentBtn.classList.add('luminosity'); 
-                    }
-                    else {
-                        // если новый коммент не пуст - делаем его кнопку синей
-                        commentBtn.classList.remove('luminosity');
-                    }
-
-                    // голубая подсветка коммента и статуса
-                    commentArea.classList.add('comment_saved');
-                    commentStatusField.textContent = 'сохранено';
-                    commentStatusField.classList.add('comment_saved');
-                    setTimeout(() => {
-                        commentArea.classList.remove('comment_saved');
-                        commentStatusField.classList.remove('comment_saved');
-                    }, 1000);
-
-                    },
-
-                error: function (response) {
-                    // красная подсветка коммента и статуса
-                    comment.classList.add('comment_not_saved');
-                    commentStatusField.textContent = 'не сохранено';
-                    commentStatusField.classList.add('comment_not_saved');
-                    setTimeout(() => {
-                        comment.classList.remove('comment_not_saved');
-                        commentStatusField.classList.remove('comment_not_saved');
-                    }, 1000);
-                    }
-            });
-            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
-            return false;
-        });
-    })    
-</script>
-
 <!-- произвольный период -->
 {% if selected_period %}
     <table class="table table-bordered caption-top align-middle text-center">
@@ -333,5 +257,80 @@
 
 <br>
 
+<!-- сохранение комментария -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // отслеживаем событие отправки формы
+        $('.commentForm').submit(function () {
+            
+            // ID задействованной формы
+            let formId = $(this).attr('id');
+            // номер коммента
+            let commentNum = formId.slice(11);
+            // соответствующее текстовое поле
+            let commentArea = $("#" + formId + " > #id_comment")[0];
+            // соответствующая кнопка-значок комментария
+            let commentBtn = document.getElementById("comment_btn" + commentNum);
+            // соответствующее поле для надписи о сохранении
+            let commentStatusField = document.getElementById("comment" + commentNum + "header");
+
+            // создаем AJAX-вызов
+            $.ajax({
+                data: $(this).serialize(), // получаем данные формы
+                type: $(this).attr('method'), // метод отправки запроса
+                url: "{% url 'commentsave' %}", // функция обработки
+                
+                success: function (response) {
+                    // меняем поле коммента в таблице за сегодня
+                    if (document.getElementById("today_measure_table") && (commentNum == '7')) {
+                        document.getElementById("today_comment").textContent = response.new_comment;
+
+                        let todayCommentContainer = document.getElementById("today_comment_container");
+                        if (response.new_comment == '') {
+                            todayCommentContainer.classList.add('hidden_element');
+                        }
+                        else {
+                            todayCommentContainer.classList.remove('hidden_element');
+                        }     
+                    }
+
+                    // меняем значок этого комментария
+                    if (response.new_comment == '') {
+                        // если новый коммент пуст - делаем его кнопку серой
+                        commentBtn.classList.add('luminosity'); 
+                    }
+                    else {
+                        // если новый коммент не пуст - делаем его кнопку синей
+                        commentBtn.classList.remove('luminosity');
+                    }
+
+                    // голубая подсветка коммента и статуса
+                    commentArea.classList.add('comment_saved');
+                    commentStatusField.textContent = 'сохранено';
+                    commentStatusField.classList.add('comment_saved');
+                    setTimeout(() => {
+                        commentArea.classList.remove('comment_saved');
+                        commentStatusField.classList.remove('comment_saved');
+                    }, 1000);
+
+                    },
+
+                error: function (response) {
+                    // красная подсветка коммента и статуса
+                    comment.classList.add('comment_not_saved');
+                    commentStatusField.textContent = 'не сохранено';
+                    commentStatusField.classList.add('comment_not_saved');
+                    setTimeout(() => {
+                        comment.classList.remove('comment_not_saved');
+                        commentStatusField.classList.remove('comment_not_saved');
+                    }, 1000);
+                    }
+            });
+            // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+            return false;
+        });
+    })    
+</script>
 <script src="{% static 'personalpage/js/measurements.js' %}"></script>
 {% endblock %}
