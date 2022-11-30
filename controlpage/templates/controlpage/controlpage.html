@@ -5,8 +5,6 @@
 
 {% block content %}
 
-<h2 class="text-center">Мои клиенты</h2>
-
 {% for client in clients %}
     <form method="get" action="{% url 'clientpage' %}">
         <input type="hidden" value="{{ client.id }}" name="client_id">

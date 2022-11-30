@@ -132,6 +132,84 @@ header {
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
 
+#open_label_drop {
+    color: #5271ff;
+    text-decoration: none;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    font-weight: 500;
+}
+
+#logo {
+    display: none;
+    pointer-events: none;
+}
+#logo_mini {
+    pointer-events: none;
+}
+@media (min-width: 768px) {
+    #logo {
+        display: unset;
+    }
+    #logo_mini {
+        display: none;
+    }
+}
+
+
+#logout_btn_pic {
+    padding-top: 5px;
+    display: none;
+}
+#logout_btn_pic:hover img {
+    filter: brightness(1000%) contrast(100%);
+}
+@media (min-width: 450px) {
+    #logout_btn {
+        display: none;
+    }
+    #logout_btn_pic {
+        display: inline-block;
+    }
+}
+@media (min-width: 600px) {
+    #logout_btn {
+        display: inline-block;
+    }
+    #logout_btn_pic {
+        display: none;
+    }
+}
+
+#nav_dropdown {
+    display: none;
+}
+@media (min-width: 450px) {
+    #nav_string {
+        display: none;
+    }
+    #nav_dropdown {
+        display: flex;
+    }
+}
+@media (min-width: 992px) {
+    #nav_string {
+        display: flex;
+    }
+    #nav_dropdown {
+        display: none;
+    }
+}
+
+#header_container {
+    flex-direction: column;
+}
+@media (min-width: 450px) {
+    #header_container {
+        flex-direction: row;
+    }
+}
+
 /* main */
 main {
     padding-top: 130px;
@@ -229,6 +307,12 @@ input[type="radio"]:focus {
     vertical-align: middle;
     font-size: x-large;
     font-weight: 600;
+    margin-top: 0.5rem;
+}
+@media (min-width: 450px) {
+    .clientname {
+        margin-top: 0;
+    }
 }
 caption {
     color: black;

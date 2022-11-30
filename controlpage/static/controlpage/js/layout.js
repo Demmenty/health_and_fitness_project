@@ -22,6 +22,12 @@ const navLinkMain = document.getElementById('link_main');
 const navLinkMeasurements = document.getElementById('link_measurements');
 const navLinkMeal = document.getElementById('link_meal');
 const navLinkWorkout = document.getElementById('link_workout');
+const navLinkMainDrop = document.getElementById('link_main_drop');
+const navLinkMeasurementsDrop = document.getElementById('link_measurements_drop');
+const navLinkMealDrop = document.getElementById('link_meal_drop');
+const navLinkWorkoutDrop = document.getElementById('link_workout_drop');
+// название открытой вкладки навигации dropdown
+const navLinkOpenDrop = document.getElementById('open_label_drop');
 // сообщение об ошибке связанной с комментарием
 const commentaryStatusMsg = document.getElementById('commentary_status_msg');
 // окошко ввода даты комментария
@@ -40,6 +46,9 @@ function setSettingsDependPath() {
             commentMeasurementsLabel.classList.remove('closed');
             // окрашивание соотв.вкладки навигации в синий
             navLinkMeasurements.classList.add('royal_blue');
+            navLinkMeasurementsDrop.classList.add('hidden_element');
+            // название открытой вкладки если меню dropdown
+            navLinkOpenDrop.textContent = 'измерения';
         }
         else if ((pagePath == '/controlpage/client_mealjournal/') ||
                 (pagePath == '/controlpage/client_foodbymonth/') ||
@@ -47,11 +56,15 @@ function setSettingsDependPath() {
             commentNutrition.classList.remove('hidden_element');
             commentNutritionLabel.classList.remove('closed');
             navLinkMeal.classList.add('royal_blue');
+            navLinkMealDrop.classList.add('hidden_element');
+            navLinkOpenDrop.textContent = 'питание';
         }
         else {
             commentGeneral.classList.remove('hidden_element');
             commentGeneralLabel.classList.remove('closed');
             navLinkMain.classList.add('royal_blue');
+            navLinkMainDrop.classList.add('hidden_element');
+            navLinkOpenDrop.textContent = 'главная';
         }
     }
 }
