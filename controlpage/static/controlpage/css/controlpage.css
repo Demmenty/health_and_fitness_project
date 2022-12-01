@@ -210,10 +210,6 @@ header {
     }
 }
 
-/* main */
-main {
-    padding-top: 130px;
-}
 /* стиль кнопок */
 .btn-primary {
     --bs-btn-color: #fff;

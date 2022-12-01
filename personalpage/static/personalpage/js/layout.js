@@ -1,4 +1,6 @@
 const pagePath = document.location.pathname;
+const main = document.querySelector("main");
+const header = document.querySelector("header");
 // кнопки навигации в header страницы
 const navLinkMain = document.getElementById('link_main');
 const navLinkMeasurements = document.getElementById('link_measurements');
@@ -38,6 +40,21 @@ const inputDateComment = document.querySelector('#commentary_form #id_date');
 // количество непрочитанных комментариев
 const countUnread = document.getElementById('count_of_unread');
 
+// функция для правильного отступа от header
+var headerHeight;
+
+function setMainTopPadding() {
+    headerHeight = header.offsetHeight;
+    main.style.paddingTop = headerHeight + "px";
+}
+
+window.onload = function() {
+    setMainTopPadding();
+};
+   
+window.onresize = function() {
+    setMainTopPadding();
+};
 
 // применение настроек в зависимости от открытой страницы
 setSettingsDependPath();
