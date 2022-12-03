@@ -2,7 +2,21 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
+}
+.transition_common {
+    transition: all 1s ease;
+}
+.text-transparent {
+    color: #ffffff00;
+}
+.text-royalblue {
+    color: royalblue !important;
+}
+.text-darkgrey {
+    color: #3e3e3e;
+}
+.w-100px {
+    width: 100px;
 }
 
 /* header */
@@ -11,6 +25,7 @@ header {
     position: fixed;
     width: 100%;
     z-index: 100;
+    font-family: 'Roboto', sans-serif;
 }
 .nav_link_container {
     width: 140px;
@@ -26,7 +41,6 @@ header {
 .nav_link:hover {
     color: #5271ff;
 }
-
 #logo {
     display: none;
     pointer-events: none;
@@ -42,14 +56,15 @@ header {
         display: none;
     }
 }
-
-
 /* header */
+
+/* footer */
 footer {
     background-color: #5271ff;
     border-top-color: #b9b9b9;
     border-top-style: solid;
     border-top-width: 3px;
+    font-family: 'Roboto', sans-serif;
 }
 .mail_ref {
     color: #b9b9b9;
@@ -65,12 +80,12 @@ footer {
 .contact_ico:hover {
     filter: brightness();
 }
+/* footer */
 
-
+/* layout */
 .hidden_element {
     display: none !important;
 }
-
 .form-control {
     font-size: 1.3rem !important;
 }
@@ -129,6 +144,7 @@ footer {
     display: block;
     text-align: center;
 }
+/* layout */
 
 /* стиль кнопок */
 .btn-primary {
@@ -154,9 +170,42 @@ footer {
 }
 /* стиль кнопок */
 
+/* main */
+main {
+    font-family: 'Poppins', sans-serif !important;
+}
 
-#why_section {
-    height: 1306px;
-    background-image: linear-gradient(to bottom, #fff5f9, #b9c5ff);
-    width: 100%;
+#welcome_section {
+    height: 90vh;
+}
+
+#why_section, #consult_section {
+    background-image: linear-gradient(to bottom right, #fceef2, #fff7ff, #faf7ff, #e1e2ff);
+}
+#what_section {
+    background: grey url('img/background2.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.home_ico {
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+    align-items: flex-start;
+    padding-top: 5px;
+}
+
+#consultation_form .helptext {
+    text-align: end;
+    font-size: smaller;
+}
+
+#consultation_form .form-control:focus + .helptext {
+    color: grey;
+}
+
+#consultation_form p {
+    margin-bottom: 0.5rem;
 }

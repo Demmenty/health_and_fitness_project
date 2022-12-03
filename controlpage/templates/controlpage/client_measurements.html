@@ -5,67 +5,12 @@
 
 {% block content %}
 
-<!-- измерения за сегодня -->
-<section name="today_measurements">
-    {% if today_measure %}
-        <table class="table table-bordered caption-top align-middle text-center">
-            <caption class="text-body"><h4>Сегодня</h4></caption>
-            <thead class="table-light">
-                <tr>
-                    <th>Дата</th>
-                    <th>День</th>
-                    <th>Самочувствие</th>
-                    <th>Масса</th>
-                    <th>Жирность</th>
-                    <th>Пульс</th>
-                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                        <th>Давление</th>
-                    {% endif %}
-                    <th>Калории</th>
-                    <th>Белки</th>
-                    <th>Жиры</th>
-                    <th>Углеводы</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ today_measure.date|date:"j b" }}</td>
-                    <td>{{ today_measure.date|date:"D" }}</td>
-                    <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
-                    <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
-                    <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
-                    <td>{{ today_measure.pulse|default_if_none:"" }}</td>
-                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                    <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
-                    {% endif %}
-                    <td>{{ today_measure.calories|default_if_none:"" }}</td>
-                    <td>{{ today_measure.protein|default_if_none:"" }}</td>
-                    <td>{{ today_measure.fats|default_if_none:"" }}</td>
-                    <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
-                </tr>
-            </tbody>
-        </table>
-        {% if today_measure.comment %}
-            <div class="d-flex align-items-center">
-                <div class="col-1 text-center">
-                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
-                </div>
-                <div class="border border-grey rounded col-11 p-2 px-3">
-                    {{ today_measure.comment }}
-                </div>
-            </div><br>
-        {% endif %}
-    {% else %}
-        <p>За сегодня измерений не сделано</p>
-    {% endif %}
-</section>
-
-<!-- измерения за неделю -->
-<section name="week_measurements">
-    {% if not selected_period %}
-        {% if week_measures %}
+<div class="container">
+    <!-- измерения за сегодня -->
+    <section name="today_measurements">
+        {% if today_measure %}
             <table class="table table-bordered caption-top align-middle text-center">
-                <caption class="text-body"><h4>Неделя</h4></caption>
+                <caption class="text-body"><h4>Сегодня</h4></caption>
                 <thead class="table-light">
                     <tr>
                         <th>Дата</th>
@@ -74,397 +19,454 @@
                         <th>Масса</th>
                         <th>Жирность</th>
                         <th>Пульс</th>
-                        {% if show_pressure_week %}
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
                             <th>Давление</th>
                         {% endif %}
                         <th>Калории</th>
                         <th>Белки</th>
                         <th>Жиры</th>
                         <th>Углеводы</th>
-                        <td class="borderless">&nbsp</td>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for day in week_measures|dictsort:"date" %}
-                    <tr class="my-hover">
-                        <td>{{ day.date|date:"j b" }}</td>
-                        <td>{{ day.date|date:"D" }}</td>
-                        <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                        <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-                        <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-                        <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
-                        {% if show_pressure_week %}
-                            <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
-                                    {{ day.pressure_upper }}/{{ day.pressure_lower }}
-                                {% endif %}</td>
-                        {% endif%}
-                        <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
-                        <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
-                        <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
-                        <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
-                        <td class="borderless">
-                            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
-                            {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
-                            {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
-                            value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
-                        </td>
-                    </tr>
-                    
-                    <!-- всплывающие комменты за неделю -->
-                    <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
-                        <div class="comment_container">
-                            {{ day.comment }}
-                        </div>
-                    </div>
-
-                    {% endfor %}
-                    <!-- среднее арифметическое -->
-                    <tr class="table-light">
-                        <th colspan="2">В среднем:</th>
-                        <th>{{ avg_week.avg_feel|default:"" }}</th>
-                        <th>{{ avg_week.avg_weight|default:"" }}</th>
-                        <th>{{ avg_week.avg_fat|default:"" }}</th>
-                        <th>{{ avg_week.avg_pulse|default:"" }}</th>
-                        {% if show_pressure_week %}
-                            <th>{{ avg_week.avg_pressure|default:"" }}</th>
-                        {% endif%}
-                        <th>{{ avg_week.avg_calories|default:"" }}</th>
-                        <th>{{ avg_week.avg_protein|default:"" }}</th>
-                        <th>{{ avg_week.avg_fats|default:"" }}</th>
-                        <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
-                        <td class="borderless">&nbsp</td>
+                    <tr>
+                        <td>{{ today_measure.date|date:"j b" }}</td>
+                        <td>{{ today_measure.date|date:"D" }}</td>
+                        <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
+                        <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                        <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
+                        <td>{{ today_measure.pulse|default_if_none:"" }}</td>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                        <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                        {% endif %}
+                        <td>{{ today_measure.calories|default_if_none:"" }}</td>
+                        <td>{{ today_measure.protein|default_if_none:"" }}</td>
+                        <td>{{ today_measure.fats|default_if_none:"" }}</td>
+                        <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
                     </tr>
                 </tbody>
             </table>
+            {% if today_measure.comment %}
+                <div class="d-flex align-items-center">
+                    <div class="col-1 text-center">
+                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+                    </div>
+                    <div class="border border-grey rounded col-11 p-2 px-3">
+                        {{ today_measure.comment }}
+                    </div>
+                </div><br>
+            {% endif %}
+        {% else %}
+            <p>За сегодня измерений не сделано</p>
+        {% endif %}
+    </section>
+
+    <!-- измерения за неделю -->
+    <section name="week_measurements">
+        {% if not selected_period %}
+            {% if week_measures %}
+                <table class="table table-bordered caption-top align-middle text-center">
+                    <caption class="text-body"><h4>Неделя</h4></caption>
+                    <thead class="table-light">
+                        <tr>
+                            <th>Дата</th>
+                            <th>День</th>
+                            <th>Самочувствие</th>
+                            <th>Масса</th>
+                            <th>Жирность</th>
+                            <th>Пульс</th>
+                            {% if show_pressure_week %}
+                                <th>Давление</th>
+                            {% endif %}
+                            <th>Калории</th>
+                            <th>Белки</th>
+                            <th>Жиры</th>
+                            <th>Углеводы</th>
+                            <td class="borderless">&nbsp</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for day in week_measures|dictsort:"date" %}
+                        <tr class="my-hover">
+                            <td>{{ day.date|date:"j b" }}</td>
+                            <td>{{ day.date|date:"D" }}</td>
+                            <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                            <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                            <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                            <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
+                            {% if show_pressure_week %}
+                                <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                                        {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                                    {% endif %}</td>
+                            {% endif%}
+                            <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                            <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                            <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                            <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
+                            <td class="borderless">
+                                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+                                {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+                                {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+                                value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                            </td>
+                        </tr>
+                        
+                        <!-- всплывающие комменты за неделю -->
+                        <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+                            <div class="comment_container">
+                                {{ day.comment }}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                        <!-- среднее арифметическое -->
+                        <tr class="table-light">
+                            <th colspan="2">В среднем:</th>
+                            <th>{{ avg_week.avg_feel|default:"" }}</th>
+                            <th>{{ avg_week.avg_weight|default:"" }}</th>
+                            <th>{{ avg_week.avg_fat|default:"" }}</th>
+                            <th>{{ avg_week.avg_pulse|default:"" }}</th>
+                            {% if show_pressure_week %}
+                                <th>{{ avg_week.avg_pressure|default:"" }}</th>
+                            {% endif%}
+                            <th>{{ avg_week.avg_calories|default:"" }}</th>
+                            <th>{{ avg_week.avg_protein|default:"" }}</th>
+                            <th>{{ avg_week.avg_fats|default:"" }}</th>
+                            <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
+                            <td class="borderless">&nbsp</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
+                <br>
+            {% else %}
+                <p>Измерения отсутствуют.</p>
+            {% endif %}
+        {% endif %}
+    </section>
+
+    <!-- измерения за произвольный период -->
+    <section name="some_period_measurements">
+        {% if selected_period %}
+            <table class="table table-bordered caption-top align-middle text-center">
+                <caption><h4>Данные измерений за {{ selected_period }}</h4></caption>
+                <tr class="table-light"> 
+                    <th>Дата</th>
+                    <th>День</th>
+                    <th>Самочувствие</th>
+                    <th>Масса</th>
+                    <th>Жирность</th>
+                    <th>Пульс</th>
+                    {% if show_pressure_period %}
+                        <th>Давление</th>
+                    {% endif%}
+                    <th>Калории</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                    <td class="borderless">&nbsp</td>
+                </tr>
+                {% for day in period|dictsort:"date" %}
+                <tr class="my-hover">
+                    <td>{{ day.date|date:"j b" }}</td>
+                    <td>{{ day.date|date:"D" }}</td>
+                    <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                    <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                    <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                    <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
+                    {% if show_pressure_period %}
+                        <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                                {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                            {% endif %}</td>
+                    {% endif%}
+                    <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                    <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                    <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                    <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
+                    <td class="borderless">
+                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+                        {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+                        {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+                        value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                    </td>
+                </tr>
+
+                <!-- всплывающие комменты за период -->
+                <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+                    <div class="comment_container">
+                        {{ day.comment }}
+                    </div>
+                </div>
+
+                {% endfor %}
+                <tr class="table-light">
+                    <th colspan="2">В среднем:</th>
+                    <th>{{ avg_period.avg_feel|default:"" }}</th>
+                    <th>{{ avg_period.avg_weight|default:"" }}</th>
+                    <th>{{ avg_period.avg_fat|default:"" }}</th>
+                    <th>{{ avg_period.avg_pulse|default:"" }}</th>
+                    {% if show_pressure_period %}
+                        <th>{{ avg_period.avg_pressure|default:"" }}</th>
+                    {% endif%}
+                    <th>{{ avg_period.avg_calories|default:"" }}</th>
+                    <th>{{ avg_period.avg_protein|default:"" }}</th>
+                    <th>{{ avg_period.avg_fats|default:"" }}</th>
+                    <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
+                    <td class="borderless">&nbsp</td>
+                </tr>
+            </table>
             <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
             <br>
-        {% else %}
-            <p>Измерения отсутствуют.</p>
         {% endif %}
-    {% endif %}
-</section>
+    </section>
 
-<!-- измерения за произвольный период -->
-<section name="some_period_measurements">
-    {% if selected_period %}
-        <table class="table table-bordered caption-top align-middle text-center">
-            <caption><h4>Данные измерений за {{ selected_period }}</h4></caption>
-            <tr class="table-light"> 
-                <th>Дата</th>
-                <th>День</th>
-                <th>Самочувствие</th>
-                <th>Масса</th>
-                <th>Жирность</th>
-                <th>Пульс</th>
-                {% if show_pressure_period %}
-                    <th>Давление</th>
-                {% endif%}
-                <th>Калории</th>
-                <th>Белки</th>
-                <th>Жиры</th>
-                <th>Углеводы</th>
-                <td class="borderless">&nbsp</td>
-            </tr>
-            {% for day in period|dictsort:"date" %}
-            <tr class="my-hover">
-                <td>{{ day.date|date:"j b" }}</td>
-                <td>{{ day.date|date:"D" }}</td>
-                <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-                <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-                <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
-                {% if show_pressure_period %}
-                    <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">{% if day.pressure_upper is not None and day.pressure_lower is not None %}
-                            {{ day.pressure_upper }}/{{ day.pressure_lower }}
-                        {% endif %}</td>
-                {% endif%}
-                <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
-                <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
-                <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
-                <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
-                <td class="borderless">
-                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
-                    {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
-                    {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
-                    value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
-                </td>
-            </tr>
-
-            <!-- всплывающие комменты за период -->
-            <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
-                <div class="comment_container">
-                    {{ day.comment }}
-                </div>
+    <div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
+        <div class="d-flex mb-3">
+            <!-- кнопка применения цветов -->
+            <div class="d-flex px-3 border border-grey rounded align-items-center me-3">
+                <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
+                <input type="checkbox" name="apply_colors" class="form-check-input mt-0 ms-3" id="apply_colors_btn" onchange="applyColors()">
             </div>
-
-            {% endfor %}
-            <tr class="table-light">
-                <th colspan="2">В среднем:</th>
-                <th>{{ avg_period.avg_feel|default:"" }}</th>
-                <th>{{ avg_period.avg_weight|default:"" }}</th>
-                <th>{{ avg_period.avg_fat|default:"" }}</th>
-                <th>{{ avg_period.avg_pulse|default:"" }}</th>
-                {% if show_pressure_period %}
-                    <th>{{ avg_period.avg_pressure|default:"" }}</th>
-                {% endif%}
-                <th>{{ avg_period.avg_calories|default:"" }}</th>
-                <th>{{ avg_period.avg_protein|default:"" }}</th>
-                <th>{{ avg_period.avg_fats|default:"" }}</th>
-                <th>{{ avg_period.avg_carbohydrates|default:"" }}</th>
-                <td class="borderless">&nbsp</td>
-            </tr>
-        </table>
-        <p class="text-muted"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
-        <br>
-    {% endif %}
-</section>
-
-<div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
-    <div class="d-flex mb-3">
-        <!-- кнопка применения цветов -->
-        <div class="d-flex px-3 border border-grey rounded align-items-center me-3">
-            <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
-            <input type="checkbox" name="apply_colors" class="form-check-input mt-0 ms-3" id="apply_colors_btn" onchange="applyColors()">
+            <!-- кнопка настроек цветов -->
+            <a href="#period_select_form" id="colorsettings_ref"><button class="btn btn-outline-primary" id="colorsettings_btn">
+                <img src="{% static 'general/img/gears_royalblue.svg' %}" width="26" style="margin-top: -3px;">
+            </button></a>
         </div>
-        <!-- кнопка настроек цветов -->
-        <a href="#period_select_form" id="colorsettings_ref"><button class="btn btn-outline-primary" id="colorsettings_btn">
-            <img src="{% static 'general/img/gears_royalblue.svg' %}" width="26" style="margin-top: -3px;">
-        </button></a>
-    </div>
 
-    <div class="mx-3 mb-3">
-        <form method="get" action="{% url 'client_anthropometry' %}">
+        <div class="mx-3 mb-3">
+            <form method="get" action="{% url 'client_anthropometry' %}">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <button type="submit" class="btn btn-primary">Антропометрия</button>
+            </form>
+        </div>
+        
+        <!-- Выбор дней статистики -->
+        <form action="" method="get" class="d-flex flex-wrap justify-content-center" id="period_select_form">
             <input type="hidden" value="{{ client_id }}" name="client_id">
             <input type="hidden" value="{{ clientname }}" name="clientname">
-            <button type="submit" class="btn btn-primary">Антропометрия</button>
+            <div class="d-flex align-items-center mb-3">
+                <h5 class="m-0">Статистика за</h5>
+                <input type="number" class="form-control text-center mx-3" name="selectperiod" min="1" id="input_period">
+                <h5 class="m-0">дней</h5>
+            </div>
+            <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
         </form>
+
     </div>
-    
-    <!-- Выбор дней статистики -->
-    <form action="" method="get" class="d-flex flex-wrap justify-content-center" id="period_select_form">
-        <input type="hidden" value="{{ client_id }}" name="client_id">
+
+    {% if not colorset_exist %}
+    <p class="text-muted" id="colorset_not_exist"><span class="royal_blue">&#10006;</span> цветовые границы не настроены</p>
+    {% endif %}
+
+    <span class="text-muted" id="colorset_error"></span>
+
+    <!-- сборная форма настроек цвета -->
+    <form method="POST" class="hidden_element" id="color_settings_form">
+        {% csrf_token %}
+        <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
         <input type="hidden" value="{{ clientname }}" name="clientname">
-        <div class="d-flex align-items-center mb-3">
-            <h5 class="m-0">Статистика за</h5>
-            <input type="number" class="form-control text-center mx-3" name="selectperiod" min="1" id="input_period">
-            <h5 class="m-0">дней</h5>
+
+        <div class="d-flex flex-wrap">
+    
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Самочувствие</h4></caption>
+            {% for form in colorset_forms|slice:":5" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
         </div>
-        <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Вес</h4></caption>
+            {% for form in colorset_forms|slice:"5:10" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Жирность</h4></caption>
+            {% for form in colorset_forms|slice:"10:15" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Пульс</h4></caption>
+            {% for form in colorset_forms|slice:"15:20" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center m-0">
+            <caption class="text-center"><h4>Давление верхнее</h4></caption>
+            {% for form in colorset_forms|slice:"20:25" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center m-0">
+            <caption class="text-center"><h4>Давление нижнее</h4></caption>
+            {% for form in colorset_forms|slice:"25:30" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 px-4">
+            <p><span class="royal_blue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ norm_pressure }}</span></p>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Калории</h4></caption>
+            {% for form in colorset_forms|slice:"30:35" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Белки</h4></caption>
+            {% for form in colorset_forms|slice:"35:40" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Жиры</h4></caption>
+            {% for form in colorset_forms|slice:"40:45" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <div class="col-12 col-md-6 py-3 px-1">
+        <table class="table table-borderless caption-top align-middle text-center">
+            <caption class="text-center"><h4>Углеводы</h4></caption>
+            {% for form in colorset_forms|slice:"45:50" %}
+            <tr>
+                {{ form.index }}
+                {{ form.color }}
+                <td>{{ form.low_limit }}</td>
+                <td class="fs-4">&#8804;</td>
+                <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                <td class="fs-4">&#8804;</td>
+                <td>{{ form.upper_limit }}</td>
+            </tr>
+            {% endfor %}           
+        </table>
+        </div>
+
+        </div>
+
+        <p class="text-center m-0 text-transparent" id="save_status">&nbsp;</p>
+
+        <!-- блок кнопок -->
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="#top">
+                <img src="{% static 'general/img/arrow_up_royalblue.svg' %}" class="hover_brigh" width="38" title="Наверх">
+            </a>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </div>
+
+        <br><br>
+
+        <p class=""><span class="royal_blue">&#9658;</span> Алгоритм выбора цвета</p>
+        <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
+        <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10004;</span> если условие выполняется, происходит окраска</p>
+        <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10006;</span> если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
+        <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
+        <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
+        <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>
+
     </form>
-
 </div>
-
-{% if not colorset_exist %}
-<p class="text-muted" id="colorset_not_exist"><span class="royal_blue">&#10006;</span> цветовые границы не настроены</p>
-{% endif %}
-
-<span class="text-muted" id="colorset_error"></span>
-
-<!-- сборная форма настроек цвета -->
-<form method="POST" class="hidden_element" id="color_settings_form">
-    {% csrf_token %}
-    <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-
-    <div class="d-flex flex-wrap">
- 
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Самочувствие</h4></caption>
-        {% for form in colorset_forms|slice:":5" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Вес</h4></caption>
-        {% for form in colorset_forms|slice:"5:10" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Жирность</h4></caption>
-        {% for form in colorset_forms|slice:"10:15" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Пульс</h4></caption>
-        {% for form in colorset_forms|slice:"15:20" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center m-0">
-        <caption class="text-center"><h4>Давление верхнее</h4></caption>
-        {% for form in colorset_forms|slice:"20:25" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center m-0">
-        <caption class="text-center"><h4>Давление нижнее</h4></caption>
-        {% for form in colorset_forms|slice:"25:30" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 px-4">
-        <p><span class="royal_blue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ norm_pressure }}</span></p>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Калории</h4></caption>
-        {% for form in colorset_forms|slice:"30:35" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Белки</h4></caption>
-        {% for form in colorset_forms|slice:"35:40" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Жиры</h4></caption>
-        {% for form in colorset_forms|slice:"40:45" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    </div>
-
-    <div class="col-12 col-md-6 py-3 px-1">
-    <table class="table table-borderless caption-top align-middle text-center">
-        <caption class="text-center"><h4>Углеводы</h4></caption>
-        {% for form in colorset_forms|slice:"45:50" %}
-        <tr>
-            {{ form.index }}
-            {{ form.color }}
-            <td>{{ form.low_limit }}</td>
-            <td class="fs-4">&#8804;</td>
-            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-            <td class="fs-4">&#8804;</td>
-            <td>{{ form.upper_limit }}</td>
-        </tr>
-        {% endfor %}           
-    </table>
-    </div>
-
-    </div>
-
-    <p class="text-center m-0 text-transparent" id="save_status">&nbsp;</p>
-
-    <!-- блок кнопок -->
-    <div class="d-flex justify-content-between align-items-center">
-        <a href="#top">
-            <img src="{% static 'general/img/arrow_up_royalblue.svg' %}" class="hover_brigh" width="38" title="Наверх">
-        </a>
-        <button class="btn btn-primary" type="submit">Сохранить</button>
-    </div>
-
-    <br><br>
-
-    <p class=""><span class="royal_blue">&#9658;</span> Алгоритм выбора цвета</p>
-    <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
-    <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10004;</span> если условие выполняется, происходит окраска</p>
-    <p class="text-muted ms-4 m-0"><span class="royal_blue">&#10006;</span> если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
-    <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
-    <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
-    <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>
-
-</form>
 
 <!-- сохранение цветовых настроек из формы -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

@@ -99,7 +99,17 @@
             </div>
           </div>
         {% else %}
-          <a href="." class="nav_link pointer my-3">мои клиенты</a>
+          <!-- навигация главной страницы контроля -->
+          <div class="text-center my-3">
+            <a href="{% url 'controlpage' %}" class="nav_link pointer" id="link_clients">мои клиенты</a>
+
+            <a href="{% url 'consult_requests' %}" class="nav_link pointer" id="link_consult_requests">заявки
+              {% if new_consult_requests_count > 0 %}
+                <span class="rounded-circle ms-2" id="new_consult_requests_count">{{ new_consult_requests_count }}</span>
+              {% endif %}
+            </a>
+            
+          </div>
         {% endif %}
   
         <!-- кнопка выхода -->
@@ -118,10 +128,8 @@
   </header>
 
   <main>
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
+    {% block content %}
+    {% endblock %}
 
     <!-- комментарий для клиента -->
     <div class="d-flex flex-column border rounded border-blueshadow px-3 py-2 hidden_element" id="client_comment_form_container">

@@ -1,6 +1,6 @@
 from personalpage.models import MeasureColorField
 from django.forms import ModelForm, NumberInput, TextInput, HiddenInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
-from .models import Commentary
+from .models import Commentary, Consultationsignup
 
 class MeasureColorFieldForm(ModelForm):
     class Meta:
@@ -55,5 +55,33 @@ class CommentaryForm(ModelForm):
             }),
             'workout': Textarea(attrs={
                 'class': 'form-control hidden_element mb-2',
+            }),
+        }
+
+class ConsultationsignupForm(ModelForm):
+    class Meta:
+        model = Consultationsignup
+        fields = [
+            'name',
+            'age',
+            'location',
+            'email',
+            'contacts',
+        ]
+        widgets = {
+            'name': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'age': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'location': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'email': TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'contacts': TextInput(attrs={
+                'class': 'form-control',
             }),
         }

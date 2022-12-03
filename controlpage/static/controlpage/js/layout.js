@@ -67,6 +67,10 @@ function setSettingsDependPath() {
             // название открытой вкладки если меню dropdown
             navLinkOpenDrop.textContent = 'измерения';
         }
+        else if (pagePath == '/controlpage/consult_requests/') {
+            const navLinkApps = document.getElementById('link_consult_requests');
+            navLinkApps.classList.add('royal_blue');
+        }
         else if ((pagePath == '/controlpage/client_mealjournal/') ||
                 (pagePath == '/controlpage/client_foodbymonth/') ||
                 (pagePath == '/controlpage/client_foodbydate/')) {
@@ -83,6 +87,10 @@ function setSettingsDependPath() {
             navLinkMainDrop.classList.add('hidden_element');
             navLinkOpenDrop.textContent = 'главная';
         }
+    }
+    else {
+        const navLinkClients = document.getElementById('link_clients');
+        navLinkClients.classList.add('royal_blue');
     }
 }
 

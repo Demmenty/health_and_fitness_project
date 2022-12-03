@@ -5,13 +5,17 @@
 
 {% block content %}
 
-{% for client in clients %}
-    <form method="get" action="{% url 'clientpage' %}">
-        <input type="hidden" value="{{ client.id }}" name="client_id">
-        <input type="hidden" value="{{ client.username }}" name="clientname">
-        <button type="submit" class="btn btn-outline-primary">{{ client.username }}</button>
-    </form><br>
-{% endfor %}
+<div class="container">
 
+    <br>
+    {% for client in clients %}
+        <form method="get" action="{% url 'clientpage' %}">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
+            <input type="hidden" value="{{ client.username }}" name="clientname">
+            <button type="submit" class="btn btn-outline-primary rounded-pill">{{ client.username }}</button>
+        </form><br>
+    {% endfor %}
+
+</div>
 
 {% endblock %}

@@ -5,83 +5,84 @@
 
 {% block content %}
 
-<p>Дата региcтрации: {{ date_joined }}</p><br>
+<div class="container">
+    <p>Дата региcтрации: {{ date_joined }}</p><br>
 
-<!-- анкета -->
-{% if questionary %}
-<p><span class="royal_blue">&#10004;</span> Анкета здоровья заполнена</p>
-<form method="get" action="{% url 'client_questionary' %}">
-    <input type="hidden" value="{{ client_id }}" name="client_id">
-    <input type="hidden" value="{{ clientname }}" name="clientname">
-    <button type="submit" class="btn btn-primary">Анкета здоровья</button>
-</form>
-{% else %}
-<p><span class="text-danger">&#10006;</span> Анкета здоровья не заполнена</p>
-{% endif %}
-
-<br>
-
-<!-- дневник питания -->
-{% if fs_connected %}
-<p><span class="royal_blue">&#10004;</span> FatSecret подключен</p>
-{% else %}
-<p><span class="text-danger">&#10006;</span> FatSecret не подключен</p>
-{% endif %}
-
-<br>
-
-<!-- физические показатели сегодня  -->
-{% if today_measure %}
-    <table class="table table-bordered caption-top align-middle text-center">
-        <caption class="text-body"><h4>Сегодня</h4></caption>
-        <thead class="table-light">
-            <tr>
-                <th>Дата</th>
-                <th>День</th>
-                <th>Самочувствие</th>
-                <th>Масса</th>
-                <th>Жирность</th>
-                <th>Пульс</th>
-                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                    <th>Давление</th>
-                {% endif %}
-                <th>Калории</th>
-                <th>Белки</th>
-                <th>Жиры</th>
-                <th>Углеводы</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ today_measure.date|date:"j b" }}</td>
-                <td>{{ today_measure.date|date:"D" }}</td>
-                <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
-                <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
-                <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
-                <td>{{ today_measure.pulse|default_if_none:"" }}</td>
-                {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
-                {% endif %}
-                <td>{{ today_measure.calories|default_if_none:"" }}</td>
-                <td>{{ today_measure.protein|default_if_none:"" }}</td>
-                <td>{{ today_measure.fats|default_if_none:"" }}</td>
-                <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
-            </tr>
-        </tbody>
-    </table>
-    {% if today_measure.comment %}
-        <div class="d-flex align-items-center">
-            <div class="col-1 text-center">
-                <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
-            </div>
-            <div class="border border-grey rounded col-11 p-2 px-3">
-                {{ today_measure.comment }}
-            </div>
-        </div><br>
+    <!-- анкета -->
+    {% if questionary %}
+    <p><span class="royal_blue">&#10004;</span> Анкета здоровья заполнена</p>
+    <form method="get" action="{% url 'client_questionary' %}">
+        <input type="hidden" value="{{ client_id }}" name="client_id">
+        <input type="hidden" value="{{ clientname }}" name="clientname">
+        <button type="submit" class="btn btn-primary">Анкета здоровья</button>
+    </form>
+    {% else %}
+    <p><span class="text-danger">&#10006;</span> Анкета здоровья не заполнена</p>
     {% endif %}
-{% else %}
-    <p><span class="text-danger">&#10006;</span> За сегодня измерений не сделано</p>
-{% endif %}
 
+    <br>
+
+    <!-- дневник питания -->
+    {% if fs_connected %}
+    <p><span class="royal_blue">&#10004;</span> FatSecret подключен</p>
+    {% else %}
+    <p><span class="text-danger">&#10006;</span> FatSecret не подключен</p>
+    {% endif %}
+
+    <br>
+
+    <!-- физические показатели сегодня  -->
+    {% if today_measure %}
+        <table class="table table-bordered caption-top align-middle text-center">
+            <caption class="text-body"><h4>Сегодня</h4></caption>
+            <thead class="table-light">
+                <tr>
+                    <th>Дата</th>
+                    <th>День</th>
+                    <th>Самочувствие</th>
+                    <th>Масса</th>
+                    <th>Жирность</th>
+                    <th>Пульс</th>
+                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                        <th>Давление</th>
+                    {% endif %}
+                    <th>Калории</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ today_measure.date|date:"j b" }}</td>
+                    <td>{{ today_measure.date|date:"D" }}</td>
+                    <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
+                    <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                    <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
+                    <td>{{ today_measure.pulse|default_if_none:"" }}</td>
+                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                    <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                    {% endif %}
+                    <td>{{ today_measure.calories|default_if_none:"" }}</td>
+                    <td>{{ today_measure.protein|default_if_none:"" }}</td>
+                    <td>{{ today_measure.fats|default_if_none:"" }}</td>
+                    <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% if today_measure.comment %}
+            <div class="d-flex align-items-center">
+                <div class="col-1 text-center">
+                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+                </div>
+                <div class="border border-grey rounded col-11 p-2 px-3">
+                    {{ today_measure.comment }}
+                </div>
+            </div><br>
+        {% endif %}
+    {% else %}
+        <p><span class="text-danger">&#10006;</span> За сегодня измерений не сделано</p>
+    {% endif %}
+</div>
 
 {% endblock %}

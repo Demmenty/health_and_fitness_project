@@ -8,6 +8,9 @@
 .royal_blue {
     color: #5271ff !important;
 }
+.bg-royalblue {
+    background-color: royalblue;
+}
 .text-light-grey {
     color: #b9b9b9;
 }
@@ -208,6 +211,13 @@ header {
     #header_container {
         flex-direction: row;
     }
+}
+
+#new_consult_requests_count {
+    background-color: royalblue;
+    color: white;
+    border: 1px solid royalblue;
+    padding: 5px;
 }
 
 /* стиль кнопок */
