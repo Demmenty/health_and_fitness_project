@@ -2,7 +2,7 @@ import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings, MeasureColorField
-from controlpage.models import Commentary, Consultationsignup
+from controlpage.models import Commentary, ConsultationSignup
 from personalpage.forms import QuestionaryForm
 from controlpage.forms import MeasureColorFieldForm, CommentaryForm
 from time import sleep
@@ -177,7 +177,7 @@ def controlpage(request):
     # !!! clients = User.objects.exclude(username='Demmenty').exclude(username='Parrabolla')
     clients = User.objects.exclude(username='Parrabolla')
     # новые заявки на консультацию
-    new_consult_requests = Consultationsignup.objects.filter(is_read=0)
+    new_consult_requests = ConsultationSignup.objects.filter(is_read=0)
     new_consult_requests_count = new_consult_requests.count()
 
     data = {
@@ -187,7 +187,7 @@ def controlpage(request):
     return render(request, 'controlpage/controlpage.html', data)
 
 
-def consult_requests(request):
+def consult_requests_page(request):
     """Управление заявками на консультацию"""
     # проверка пользователя
     if request.user.is_anonymous:
@@ -196,9 +196,9 @@ def consult_requests(request):
         return redirect('homepage')
 
     # заявки на консультацию
-    consult_requests = Consultationsignup.objects.all()
+    consult_requests = ConsultationSignup.objects.all()
     # новые заявки на консультацию
-    new_consult_requests = Consultationsignup.objects.filter(is_read=0)
+    new_consult_requests = ConsultationSignup.objects.filter(is_read=0)
     new_consult_requests_count = new_consult_requests.count()
 
     data = {

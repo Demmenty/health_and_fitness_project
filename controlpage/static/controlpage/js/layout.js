@@ -67,7 +67,7 @@ function setSettingsDependPath() {
             // название открытой вкладки если меню dropdown
             navLinkOpenDrop.textContent = 'измерения';
         }
-        else if (pagePath == '/controlpage/consult_requests/') {
+        else if (pagePath == '/controlpage/consult_requests_page/') {
             const navLinkApps = document.getElementById('link_consult_requests');
             navLinkApps.classList.add('royal_blue');
         }

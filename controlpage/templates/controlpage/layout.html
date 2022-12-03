@@ -103,7 +103,7 @@
           <div class="text-center my-3">
             <a href="{% url 'controlpage' %}" class="nav_link pointer" id="link_clients">мои клиенты</a>
 
-            <a href="{% url 'consult_requests' %}" class="nav_link pointer" id="link_consult_requests">заявки
+            <a href="{% url 'consult_requests_page' %}" class="nav_link pointer" id="link_consult_requests">заявки
               {% if new_consult_requests_count > 0 %}
                 <span class="rounded-circle ms-2" id="new_consult_requests_count">{{ new_consult_requests_count }}</span>
               {% endif %}

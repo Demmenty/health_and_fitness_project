@@ -1,6 +1,6 @@
 from personalpage.models import MeasureColorField
 from django.forms import ModelForm, NumberInput, TextInput, HiddenInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
-from .models import Commentary, Consultationsignup
+from .models import Commentary, ConsultationSignup
 
 class MeasureColorFieldForm(ModelForm):
     class Meta:
@@ -60,7 +60,7 @@ class CommentaryForm(ModelForm):
 
 class ConsultationsignupForm(ModelForm):
     class Meta:
-        model = Consultationsignup
+        model = ConsultationSignup
         fields = [
             'name',
             'age',

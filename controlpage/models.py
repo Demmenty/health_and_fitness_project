@@ -25,7 +25,7 @@ class Commentary(models.Model):
 
 
 # модель для записей на консультацию
-class Consultationsignup(models.Model):
+class ConsultationSignup(models.Model):
     date = models.DateField('Дата заполнения заявки', auto_now_add=True)
     name = models.CharField('Имя', max_length=100, help_text='Как к вам обращаться?')
     age = models.CharField('Возраст', max_length=100, blank=True, help_text='Сколько вам лет?')
