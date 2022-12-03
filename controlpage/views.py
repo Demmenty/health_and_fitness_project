@@ -205,7 +205,7 @@ def consult_requests_page(request):
             'consult_requests': consult_requests,
             'new_consult_requests_count': new_consult_requests_count,
         }
-    return render(request, 'controlpage/consult_requests.html', data)
+    return render(request, 'controlpage/consult_requests_page.html', data)
 
 
 def clientpage(request):

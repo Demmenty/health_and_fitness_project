@@ -17,7 +17,7 @@ $(document).ready(function () {
             
             success: function (response) {
                 consultationError.classList.add('text-royalblue');
-                if (response.result == 'Заявка отправлена') {
+                if (response.result == 'Заявка получена') {
                     // сообщение об успехе
                     consultationError.textContent = response.result;
                     // заменяем имя на указанное

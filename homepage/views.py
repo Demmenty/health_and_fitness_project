@@ -16,6 +16,7 @@ def saveConsultationSignup(request):
         form = ConsultationsignupForm(request.POST)
         if form.is_valid():
             form.save()
+            result = 'Заявка получена'
         else:
             result = form.errors
 
