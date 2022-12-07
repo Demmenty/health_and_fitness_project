@@ -188,7 +188,6 @@ def controlpage(request):
 def consult_requests_page(request):
     """Управление заявками на консультацию"""
 
-    print(request)
     if request.POST:
         print(request.POST)
     if request.GET:
@@ -202,10 +201,8 @@ def consult_requests_page(request):
 
     # функция сохранения заметки к заявке консультации
     if request.POST.get('purpose') == 'save':
-        print('это пост запрос для сохранения')
         form = ConsultationBrowseForm(request.POST)
         if form.is_valid():
-            print('форма валидна')
             signup_id = request.POST.get('id')
             expert_note = form.cleaned_data['expert_note']
             instance = ConsultationSignup.objects.filter(id=signup_id)
@@ -221,8 +218,6 @@ def consult_requests_page(request):
 
     # функция удаления заявки консультации
     if request.POST.get('purpose') == 'delete':
-        print('это запрос на удаление')
-        print(request.POST)
         signup_id = request.POST.get('id')
         instance = ConsultationSignup.objects.filter(id=signup_id)
         instance.delete()
@@ -231,15 +226,11 @@ def consult_requests_page(request):
 
     # изменение отметки о том, что заявка прочитана 
     if request.GET.get('purpose') == 'make_readed':
-        print('это пост запрос для прочитанности')
-        print(request)
         signup_id = request.GET.get('id')
         instance = ConsultationSignup.objects.filter(id=signup_id)
         instance.update(is_read=1)
         data = {}
         return JsonResponse(data, status=200)
-
-    print('просто генерим страницу')
 
     # заявки на консультацию
     consult_signup_entries = ConsultationSignup.objects.all()

@@ -1,5 +1,7 @@
 // кружок уведомления о количестве новых заявок
 const newFormCount = document.getElementById('new_consult_signup_count');
+// картинка
+const mrCat = document.getElementById('cat_reading_requests');
 // переменные хранящие открытую сейчас форму и запись
 var openedForm = false;
 var openedRow = false;

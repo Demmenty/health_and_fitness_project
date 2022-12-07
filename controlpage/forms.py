@@ -124,6 +124,6 @@ class ConsultationBrowseForm(ModelForm):
             'is_read': HiddenInput(),
             'expert_note': Textarea(attrs={
                 'class': 'form-control',
-                'rows': "7",
+                'rows': "5",
             }),
         }

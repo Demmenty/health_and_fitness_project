@@ -8,20 +8,21 @@
 <div class="container">
     <br>
     {% if consult_signup_entries.count == 0 %}
-        <p class="text-center mt-3">Заявки на бесплатную консультацию отсутствуют</p>
+        <p class="text-center bg-white rounded-pill px-2 mt-3" id="p_no_signup_entries">Заявки на бесплатную консультацию отсутствуют</p>
+        <img class="" id="cat_reading_requests" src="{% static 'controlpage/img/cat_reading_requests.svg' %}">
     {% else %}
 
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-column flex-md-row">
 
             <!-- список заявок слева -->
-            <div class="d-flex flex-column align-middle w-50 me-4">
+            <div class="d-flex flex-column align-middle w-100 w-md-50 pe-md-4 pe-0 mb-4" id="consult_signup_list">
 
                 {% for consult_signup_entry in consult_signup_entries %}
                     {% if consult_signup_entry.is_read %}
-                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap border pointer p-2" 
+                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap bg-white border pointer p-2" 
                             id="signup_{{ consult_signup_entry.id }}" name="signup_row" onclick="openForm(event)">
                     {% else %}  
-                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap border pointer p-2 unread" 
+                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap bg-white border pointer p-2 unread" 
                             id="signup_{{ consult_signup_entry.id }}" name="signup_row" onclick="openForm(event)">
                     {% endif %} 
                             <span class="me-2" name="arrow">&#9658;</span>
@@ -29,11 +30,13 @@
                         </div>
                 {% endfor %}
 
+                <img class="" id="cat_reading_requests" src="{% static 'controlpage/img/cat_reading_requests.svg' %}">
+
             </div>
 
             <!-- список форм справа -->
-            <div class="d-flex flex-column w-50">
-
+            <div class="d-flex flex-column w-100 w-md-50 ">
+                
                 {% for entry, form in consult_signups_zip %}
                     <div class="hidden_element border-blueshadow bg-white p-2 transition_common" id="signup_container_{{ entry.id }}" name="signup_container">
                         <form method="POST" action="{% url 'consult_requests_page' %}" id="signup_form_{{ entry.id }}" name="signup_form">
@@ -43,7 +46,7 @@
                             <input type="hidden" name="id" value="{{ entry.id }}">
                             <input type="hidden" name="purpose" value="save">
                             {{ form.as_p }}
-                            <p class="transition_common text-center text-transparent mb-0" id="result_msg_{{ entry.id }}">&nbsp;</p>
+                            <p class="transition_common text-center text-transparent mb-1" id="result_msg_{{ entry.id }}">&nbsp;</p>
                             <button type="submit" class="btn btn-primary float-end">сохранить</button>
                             
                         </form>
@@ -60,9 +63,8 @@
                 
         </div>
     {% endif %}
-</div>
 
-<img class="float-end" id="cat_reading_requests" src="{% static 'controlpage/img/cat_reading_requests.svg' %}">
+</div>
 
 <br><br>
 
