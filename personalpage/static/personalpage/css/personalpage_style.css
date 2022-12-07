@@ -25,6 +25,9 @@
 .text-transparent {
     color: #ffffff00;
 }
+.text-danger {
+    color: #f02767 !important;
+}
 .transition_common {
     transition: all 1s ease;
 }

@@ -160,6 +160,16 @@ def save_commentary_form(request):
         return JsonResponse(data, status=200)
 
 
+def get_age(birthdate):
+    """получить количество полных лет по дню рождения"""
+    now = date.today()
+    age = now.year - birthdate.year
+    if (now.month < birthdate.month or
+       (now.month == birthdate.month and now.day < birthdate.day)):
+        age = age - 1
+    return age
+    
+
 # My views
 
 def controlpage(request):
@@ -269,11 +279,17 @@ def clientpage(request):
     # дата регистрации
     date_joined = User.objects.get(username=clientname).date_joined.date()
 
+    
     # существоВание анкеты
     try:
         questionary = Questionary.objects.get(user_id=client_id)
+        client_age = get_age(questionary.birth_date)
+        client_age = (str(client_age) + ' ' +
+                      get_noun_ending(client_age, 'год', 'года', 'лет'))
+        
     except Questionary.DoesNotExist:
         questionary = ''
+        client_age = 'неизвестно'
 
     # проверка подключения FatSecret
     try:
@@ -302,6 +318,7 @@ def clientpage(request):
         'date_joined': date_joined,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'client_age': client_age,
     }
     return render(request, 'controlpage/clientpage.html', data)
 
