@@ -7,8 +7,8 @@
 
 <div class="container">
     <br>
-    {% if new_consult_requests_count == 0 %}
-        <p class="text-center">Заявки на бесплатную консультацию отсутствуют</p>
+    {% if consult_signup_entries.count == 0 %}
+        <p class="text-center mt-3">Заявки на бесплатную консультацию отсутствуют</p>
     {% else %}
 
         <div class="d-flex flex-row">
@@ -18,14 +18,14 @@
 
                 {% for consult_signup_entry in consult_signup_entries %}
                     {% if consult_signup_entry.is_read %}
-                        <div class="d-flex my-hover-gray justify-content-between align-middle text-wrap border pointer p-2" 
+                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap border pointer p-2" 
                             id="signup_{{ consult_signup_entry.id }}" name="signup_row" onclick="openForm(event)">
                     {% else %}  
-                        <div class="d-flex my-hover-gray justify-content-between align-middle text-wrap border pointer p-2 unread" 
+                        <div class="d-flex my-hover-gray justify-content-start align-middle text-wrap border pointer p-2 unread" 
                             id="signup_{{ consult_signup_entry.id }}" name="signup_row" onclick="openForm(event)">
                     {% endif %} 
+                            <span class="me-2" name="arrow">&#9658;</span>
                             {{ consult_signup_entry }}
-                            <span>&#9658;</span>
                         </div>
                 {% endfor %}
 
@@ -35,7 +35,7 @@
             <div class="d-flex flex-column w-50">
 
                 {% for entry, form in consult_signups_zip %}
-                    <div class="hidden_element border-blueshadow p-2 transition_common" id="signup_container_{{ entry.id }}" name="signup_container">
+                    <div class="hidden_element border-blueshadow bg-white p-2 transition_common" id="signup_container_{{ entry.id }}" name="signup_container">
                         <form method="POST" action="{% url 'consult_requests_page' %}" id="signup_form_{{ entry.id }}" name="signup_form">
                             <button class="btn btn-outline-primary float-end close_btn" type="button" onclick="closeForm()">&#10006;</button>
                             {% csrf_token %}
@@ -43,17 +43,15 @@
                             <input type="hidden" name="id" value="{{ entry.id }}">
                             <input type="hidden" name="purpose" value="save">
                             {{ form.as_p }}
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span>&nbsp;</span>
-                                <span class="transition_common text-transparent" id="result_msg_{{ entry.id }}"></span>
-                                <button type="submit" class="btn btn-primary">сохранить</button>
-                            </div>
+                            <p class="transition_common text-center text-transparent mb-0" id="result_msg_{{ entry.id }}">&nbsp;</p>
+                            <button type="submit" class="btn btn-primary float-end">сохранить</button>
+                            
                         </form>
                         <form method="POST" action="{% url 'consult_requests_page' %}" id="delete_signup_form_{{ entry.id }}" name="delete_signup_form">
                             {% csrf_token %}
                             <input type="hidden" name="id" value="{{ entry.id }}">
                             <input type="hidden" name="purpose" value="delete">
-                            <button type="submit" class="btn btn-danger">🗑</button>
+                            <button type="submit" class="btn btn-danger">удалить</button>
                         </form>
                     </div>
                 {% endfor %}
@@ -62,10 +60,9 @@
                 
         </div>
     {% endif %}
-<!-- рисунок-->
-<img class="float-end" src="{% static 'controlpage/img/cat_with_laptop.svg' %}">
-
 </div>
+
+<img class="float-end" id="cat_reading_requests" src="{% static 'controlpage/img/cat_reading_requests.svg' %}">
 
 <br><br>
 

@@ -786,3 +786,16 @@ form .helptext {
 .unread {
     color: royalblue;
 }
+
+#cat_reading_requests {
+    position: absolute;
+    bottom: 15px;
+    right: 11px;
+    z-index: -1;
+}
+
+div[name='signup_row'] span[name='arrow'] {
+    color: royalblue;
+}
+
+
