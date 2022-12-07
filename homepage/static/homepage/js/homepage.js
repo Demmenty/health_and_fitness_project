@@ -36,7 +36,8 @@ $(document).ready(function () {
             error: function (response) {
                 // показ возникших ошибок при отправке
                 consultationError.textContent = ("возникла ошибка " +
-                    "( status " + response.status + " " + response.statusText + " )");
+                                                "( status " + response.status +
+                                                " " + response.statusText + " )");
                 consultationError.classList.add('text-royalblue');
             }
         });

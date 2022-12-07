@@ -33,8 +33,8 @@ class ConsultationSignup(models.Model):
     email = models.EmailField('Почта', max_length=100, blank=True, help_text='Обещаем не использовать в коварных целях!')
     contacts = models.CharField('Контакты', max_length=255, help_text='Оставьте ссылку на предпочитаемый способ связи')
     is_read = models.BooleanField('Заявка прочитана', default=False)
-    expert_comment = models.TextField('Комментарий', null=True, blank=True)
+    expert_note = models.TextField('Заметка', default='', blank=True)
 
     def __str__(self):
-        return f"Заявка № {self.id}, дата: {self.date}, имя: {self.name}"
+        return f"Заявка № {self.id} от {self.date}, {self.name}"
 

@@ -8,11 +8,20 @@
 .royal_blue {
     color: #5271ff !important;
 }
+.text-royalblue {
+    color: #5271ff !important;
+}
 .bg-royalblue {
     background-color: royalblue;
 }
 .text-light-grey {
     color: #b9b9b9;
+}
+.text-error {
+    color: #f02767 !important;
+}
+.text-success {
+    color: #00c0f0 !important;
 }
 .border-outset {
     border: outset;
@@ -213,11 +222,16 @@ header {
     }
 }
 
-#new_consult_requests_count {
+#new_consult_signup_count {
     background-color: royalblue;
     color: white;
     border: 1px solid royalblue;
     padding: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
 }
 
 /* стиль кнопок */
@@ -252,6 +266,15 @@ header {
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: #5271ff;
     --bs-gradient: none;
+}
+.btn-danger {
+    --bs-btn-bg: #f02767;
+    --bs-btn-border-color: #f02767;
+    --bs-btn-hover-bg: #bb2d55;
+    --bs-btn-hover-border-color: #bb2d55;
+    --bs-btn-active-bg: #bb2d55;
+    --bs-btn-active-border-color: #bb2d55;
+    --bs-btn-disabled-border-color: #f02767;
 }
 /* стиль кнопок */
 .hidden_element {
@@ -745,4 +768,21 @@ footer {
 }
 #preferred_contact_ico img:hover {
     filter: invert(1);
+}
+
+/* consult_page_requests */
+
+.my-hover-gray:hover {
+    background-color: #ececec;
+    outline-color: #8f8f8f !important;
+    outline-style: auto !important;
+    outline-width: 1px !important;
+}
+
+form .helptext {
+    display: none;
+}
+
+.unread {
+    color: royalblue;
 }

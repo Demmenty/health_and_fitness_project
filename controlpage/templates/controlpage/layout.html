@@ -101,11 +101,11 @@
         {% else %}
           <!-- навигация главной страницы контроля -->
           <div class="text-center my-3">
-            <a href="{% url 'controlpage' %}" class="nav_link pointer" id="link_clients">мои клиенты</a>
+            <a href="{% url 'controlpage' %}" class="nav_link pointer text-nowrap" id="link_clients">мои клиенты</a>
 
-            <a href="{% url 'consult_requests_page' %}" class="nav_link pointer" id="link_consult_requests">заявки
-              {% if new_consult_requests_count > 0 %}
-                <span class="rounded-circle ms-2" id="new_consult_requests_count">{{ new_consult_requests_count }}</span>
+            <a href="{% url 'consult_requests_page' %}" class="nav_link pointer text-nowrap" id="link_consult_requests">заявки
+              {% if new_consult_signup_count > 0 %}
+                <div class="rounded-circle ms-2" id="new_consult_signup_count">{{ new_consult_signup_count }}</div>
               {% endif %}
             </a>
             

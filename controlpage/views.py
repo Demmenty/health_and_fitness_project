@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings, MeasureColorField
 from controlpage.models import Commentary, ConsultationSignup
 from personalpage.forms import QuestionaryForm
-from controlpage.forms import MeasureColorFieldForm, CommentaryForm
+from controlpage.forms import MeasureColorFieldForm, CommentaryForm, ConsultationBrowseForm
 from time import sleep
 from itertools import zip_longest
 from datetime import date, datetime, timedelta, time
@@ -123,13 +123,11 @@ def save_commentary_form(request):
     """Сохранение формы коммента для клиента через аякс-скрипт
        Используется в controlpage/layout.html
     """
-
     if request.user.username != 'Parrabolla':
         data = {}
         return JsonResponse(data, status=403)
 
     if request.method == 'POST':
-
         client_id = request.POST['client']
         form = CommentaryForm(request.POST)
 
@@ -178,32 +176,87 @@ def controlpage(request):
     clients = User.objects.exclude(username='Parrabolla')
     # новые заявки на консультацию
     new_consult_requests = ConsultationSignup.objects.filter(is_read=0)
-    new_consult_requests_count = new_consult_requests.count()
+    new_consult_signup_count = new_consult_requests.count()
 
     data = {
         'clients': clients,
-        'new_consult_requests_count': new_consult_requests_count,
+        'new_consult_signup_count': new_consult_signup_count,
     }
     return render(request, 'controlpage/controlpage.html', data)
 
 
 def consult_requests_page(request):
     """Управление заявками на консультацию"""
+
+    print(request)
+    if request.POST:
+        print(request.POST)
+    if request.GET:
+        print(request.GET)
+
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect('loginuser')
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
 
+    # функция сохранения заметки к заявке консультации
+    if request.POST.get('purpose') == 'save':
+        print('это пост запрос для сохранения')
+        form = ConsultationBrowseForm(request.POST)
+        if form.is_valid():
+            print('форма валидна')
+            signup_id = request.POST.get('id')
+            expert_note = form.cleaned_data['expert_note']
+            instance = ConsultationSignup.objects.filter(id=signup_id)
+            instance.update(expert_note=expert_note)
+            result = 'заметка сохранена'
+        else:
+            result = 'данные некорректны'
+            
+        data = {
+            'result': result,
+        }
+        return JsonResponse(data, status=200)
+
+    # функция удаления заявки консультации
+    if request.POST.get('purpose') == 'delete':
+        print('это запрос на удаление')
+        print(request.POST)
+        signup_id = request.POST.get('id')
+        instance = ConsultationSignup.objects.filter(id=signup_id)
+        instance.delete()
+        data = {}
+        return JsonResponse(data, status=200)
+
+    # изменение отметки о том, что заявка прочитана 
+    if request.GET.get('purpose') == 'make_readed':
+        print('это пост запрос для прочитанности')
+        print(request)
+        signup_id = request.GET.get('id')
+        instance = ConsultationSignup.objects.filter(id=signup_id)
+        instance.update(is_read=1)
+        data = {}
+        return JsonResponse(data, status=200)
+
+    print('просто генерим страницу')
+
     # заявки на консультацию
-    consult_requests = ConsultationSignup.objects.all()
+    consult_signup_entries = ConsultationSignup.objects.all()
     # новые заявки на консультацию
-    new_consult_requests = ConsultationSignup.objects.filter(is_read=0)
-    new_consult_requests_count = new_consult_requests.count()
+    new_consult_signup_count = ConsultationSignup.objects.filter(is_read=0).count()
+    # формы для просмотра заявок и добавления заметки
+    consult_signup_forms = []
+    for entry in consult_signup_entries:
+        form = ConsultationBrowseForm(instance=entry)
+        consult_signup_forms.append(form)
+
+    consult_signups_zip = zip(consult_signup_entries, consult_signup_forms)
 
     data = {
-            'consult_requests': consult_requests,
-            'new_consult_requests_count': new_consult_requests_count,
+            'new_consult_signup_count': new_consult_signup_count,
+            'consult_signup_entries': consult_signup_entries,
+            'consult_signups_zip': consult_signups_zip,
         }
     return render(request, 'controlpage/consult_requests_page.html', data)
 
