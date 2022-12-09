@@ -4,25 +4,30 @@
 {% block title %}Health & Fitness{% endblock %}
 
 {% block content %}
-<section id="welcome_section" class="">
-    <div class="container"> 
+<section id="welcome_section">
+    <div class="container d-flex flex-column justify-content-between h-fill"> 
 
-        <h1 class="display-5 fw-bold lh-1 py-5 text-center">Стратегия здоровья и активности</h1>
-        <div class="d-flex flex-row align-items-center g-5 py-5">
+        <h1 class="pt-5 text-nowrap text-center text-md-start" name="logo_title">HEALTH & FITNESS</h1>
 
-            <div class="col-6">
-                <p class="fs-4"><span class="text-royalblue">Ваш комплексный гид в здоровую жизнь:</span></p>
-                <br>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> Помощь, обучение и поддержка</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> Обновление тела и разума через модификацию поведения, навыков и знаний</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> Только научный подход</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> Эффективность и ничего лишнего</p>
+        <div class="d-flex flex-column float-end border-blueshadow fs-5 py-4 px-3 px-sm-4 " id="welcome_section_textblock">
+            <h3 class="text-royalblue-dark">Индивидуальная стратегия<br> здоровья и активности</h3>
+            <br>
+            <div class="d-flex flex-row">
+                <p class="text-royalblue me-2">&#9658;</p>
+                <p class="">Помощь, обучение и поддержка</p>
             </div>
-
-            <div class="col-6">
-                <img src="{% static 'homepage/img/homepage_img1.svg' %}" class="d-block mx-lg-auto img-fluid" width="700" height="500">
+            <div class="d-flex flex-row">
+                <p class="text-royalblue me-2">&#9658;</p>
+                <p class="">Обновление тела и разума через модификацию поведения, навыков и знаний</p>
             </div>
-
+            <div class="d-flex flex-row">
+                <p class="text-royalblue me-2">&#9658;</p>
+                <p class="">Только научный подход</p>
+            </div>
+            <div class="d-flex flex-row">
+                <p class="text-royalblue me-2">&#9658;</p>
+                <p class="">Эффективность и ничего лишнего</p>
+            </div>
         </div>
 
     </div>
@@ -255,8 +260,8 @@
                 <p class="lead"><span class="text-royalblue">&#9658;</span> в одном месте</p>
                 <p class="lead"><span class="text-royalblue">&#9658;</span> в удобном формате</p>
                 <br>
-                <p>Но как бы не был хорош функционал нашего сайта, это только инструменты.
-                   Управлять ими и учить ими пользоваться вас будет <a href="#" class="text-decoration-none text-royalblue"><b>эксперт и основатель проекта</b></a>. А человеческое время и силы, увы, ограничены, поэтому услуга лимитирована.</p>
+                <p>Но как бы не был хорош функционал нашего сервиса, это только инструменты.
+                   Управлять ими, учить ими пользоваться и контролировать прогресс будет <a href="#" class="text-decoration-none text-royalblue"><b>эксперт и основатель проекта</b></a>. А человеческое время и силы, увы, ограничены, поэтому услуга лимитирована.</p>
                 <p>Успей <a href="#consultation_section" class="text-decoration-none text-royalblue"><b>записаться</b></a>, пока есть свободные места.</p>
             </div>
         </div>

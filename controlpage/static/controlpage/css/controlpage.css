@@ -824,6 +824,10 @@ form .helptext {
     }
 }
 
+p[name='result_msg'] {
+    margin-top: -8px;
+}
+
 div[name='signup_row'] span[name='arrow'] {
     color: royalblue;
 }

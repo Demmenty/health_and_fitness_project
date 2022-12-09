@@ -29,8 +29,10 @@ DEBUG = True
 
 # не забыть настроить !!!!
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    '*',
 ]
+# это добавлено из-ха ошибки 'Origin checking failed'
+CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
 
 
 # Application definition

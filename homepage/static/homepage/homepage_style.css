@@ -10,8 +10,15 @@
 .text-transparent {
     color: #ffffff00;
 }
+/* цветовая тема */
+.text-royalblue-ligth {
+    color: #B2BFFF !important;
+}
 .text-royalblue {
     color: royalblue !important;
+}
+.text-royalblue-dark {
+    color: #2b48a0 !important;
 }
 .text-darkgrey {
     color: #3e3e3e;
@@ -19,6 +26,16 @@
 .w-100px {
     width: 100px;
 }
+.border-blueshadow {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+.h-fill {
+    height: -webkit-fill-available;
+}
+
+
 
 /* скролл */
 ::-webkit-scrollbar {
@@ -71,6 +88,25 @@ header {
         display: unset;
     }
     #logo_mini {
+        display: none;
+    }
+}
+
+#profile_btn_txt, #exit_btn_txt {
+    display: none;
+}
+#profile_btn_pic, #exit_btn_pic {
+    filter: saturate(0.5) brightness(0.9); 
+}
+#profile_btn_pic:hover, #exit_btn_pic:hover {
+    filter: none; 
+}
+
+@media (min-width: 992px) {
+    #profile_btn_txt, #exit_btn_txt {
+        display: unset;
+    }
+    #profile_btn_pic, #exit_btn_pic {
         display: none;
     }
 }
@@ -194,7 +230,11 @@ main {
 }
 
 #welcome_section {
-    height: 90vh;
+    height: 91vh;
+    background-image: url('/static/homepage/img/man_lowpoly.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 #why_section, #consult_section {
@@ -227,3 +267,49 @@ main {
 #consultation_form p {
     margin-bottom: 0.5rem;
 }
+
+#welcome_section_textblock {
+    background-color: white;
+    max-width: 490px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+}
+@media (min-width: 576px) {
+    #welcome_section_textblock {
+        margin-bottom: 7rem;
+    }
+}
+@media (min-width: 768px) {
+    #welcome_section_textblock {
+        margin-bottom: 6rem;
+        font-size: large;
+        margin-right: unset;
+    }
+}
+@media (min-width: 1200px) {
+    #welcome_section_textblock {
+        max-width: 412px;
+    }
+}
+@media (min-width: 1400px) {
+    #welcome_section_textblock {
+        max-width: 500px;
+        font-size: x-large !important;
+    }
+}
+
+h1[name='logo_title'] {
+    font-family: sans-serif;
+    font-size: medium;
+    letter-spacing: 9px;
+    text-shadow: 0px 0px 7px #2a356a;
+    color: white;
+}
+@media (min-width: 576px) {
+    h1[name='logo_title'] {
+        font-size: xx-large;
+        text-shadow: 0px 0px 14px #2a356a;
+    }
+}
+

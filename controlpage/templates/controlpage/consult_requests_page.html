@@ -46,7 +46,7 @@
                             <input type="hidden" name="id" value="{{ entry.id }}">
                             <input type="hidden" name="purpose" value="save">
                             {{ form.as_p }}
-                            <p class="transition_common text-center text-transparent mb-1" id="result_msg_{{ entry.id }}">&nbsp;</p>
+                            <p class="transition_common text-center text-transparent mb-2" name="result_msg" id="result_msg_{{ entry.id }}">&nbsp;</p>
                             <button type="submit" class="btn btn-primary float-end">сохранить</button>
                             
                         </form>
