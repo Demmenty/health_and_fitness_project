@@ -9,8 +9,8 @@
 
         <h1 class="pt-5 text-nowrap text-center text-md-start" name="logo_title">HEALTH & FITNESS</h1>
 
-        <div class="d-flex flex-column float-end border-blueshadow fs-5 py-4 px-3 px-sm-4 " id="welcome_section_textblock">
-            <h3 class="text-royalblue-dark">Индивидуальная стратегия<br> здоровья и активности</h3>
+        <div class="d-flex flex-column float-end fs-5 py-4 px-3 px-sm-4 " id="welcome_section_block">
+            <h3 class="text-royalblue-dark text-center">Индивидуальная стратегия<br> здоровья и активности</h3>
             <br>
             <div class="d-flex flex-row">
                 <p class="text-royalblue me-2">&#9658;</p>
@@ -36,96 +36,69 @@
 <section id="why_section">
     <div class="container">
 
-        <h1 class="text-center py-4 mb-3">Зачем вам Health & Fitness</h1>
+        <h1 class="text-nowrap text-center fw-bolder pt-5">ЗАЧЕМ ВАМ</h1>
+        <h1 class="text-nowrap text-center pb-5 color-black" name="logo_title">HEALTH & FITNESS</h1>
 
-        <div class="d-flex flex-row">
-            <div class="d-flex flex-column text-darkgrey w-50">
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico1_hands.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Множество распространённых болезней человек приобрёл в современном обществе тотальной гиподинамии и обилия калорийной, бедной нутриентами пищи. </p>
-                        <p class="mb-1">Продлите <span class="text-royalblue"><b>активное, здоровое долголетие</b></span>, сохранив большие деньги, необходимые для множества обследований, лечения и, возможно, даже операций. </p>
-                        <p class="mb-1">Заботиться о здоровье дома и в зале приятнее, чем исправлять его в больнице.</p>
-                    </div>
+            <div class="text-darkgrey">
+
+                <div class="why_section_block" id="why_section_block1">
+                    <p class="why_section_txt m-0" id="why_section_txt1">
+                        Множество распространённых болезней человек приобрёл в современном обществе тотальной гиподинамии и обилия калорийной, бедной нутриентами пищи.<br>
+                        Продлите <span class="text-royalblue"><b>активное, здоровое долголетие</b></span>, избежав множества обследований, лечения и, возможно, даже операций.
+                        Заботиться о здоровье дома и в зале приятнее, чем исправлять его в больнице.
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img1_health.svg' %}" width="" class="why_section_img" id="why_section_img1">
                 </div>
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico2_handsheart.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Человеку свойственно заботиться о своих ближних. Иногда человек старается заботиться о многих. Но часто человек забывает <span class="text-royalblue"><b>заботиться о своём теле и здоровье.</b></span></p>
-                        <p class="mb-1">Предлагаем вам об этом вспомнить и позволить нам помочь.</p>
-                    </div>
+                <div class="why_section_block" id="why_section_block2">
+                    <p class="why_section_txt" id="why_section_txt2">
+                        Современные научные исследования доказывают, что красивые, стройные и ухоженные люди <span class="text-royalblue"><b>больше зарабатывают</b></span>, чаще <span class="text-royalblue"><b>получают работу</b></span> и лучше формируют <span class="text-royalblue"><b>социальные связи</b></span>.
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img2_success.svg' %}" width="" class="why_section_img" id="why_section_img2">
                 </div>
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico3_people.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Ощутите себя частью <span class="text-royalblue"><b>общества осознанных людей</b></span>, понимающих ценность себя и своей жизни.</p>
-                    </div>
+                <div class="why_section_block" id="why_section_block3">
+                    <p class="why_section_txt m-0" id="why_section_txt3">
+                        Человеку свойственно заботиться о своих ближних. Иногда человек старается заботиться о многих. Но часто человек забывает <span class="text-royalblue"><b>заботиться о своём теле и здоровье</b></span> Предлагаем вам об этом вспомнить и позволить нам помочь.
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img3_care.svg' %}" width="" class="why_section_img" id="why_section_img3">
                 </div>
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico4_stars.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Множество научных исследований доказывают, что красивые, стройные и ухоженные люди <span class="text-royalblue"><b>больше зарабатывают</b></span>, чаще <span class="text-royalblue"><b>получают работу</b></span> и лучше формируют <span class="text-royalblue"><b>социальные связи</b></span>.</p>
-                    </div>
+                <div class="why_section_block" id="why_section_block4">
+                    <p class="why_section_txt m-0" id="why_section_txt4">
+                        Часто люди путают фитнес со спортом. Мы не разделяем такой подход.<br>
+                        В спорте люди тратят ресурс здоровья на борьбу друг с другом. Мы же боремся со старением, болезнями и неосознанностью, достигая <span class="text-royalblue"><b>повышения ресурса здоровья.</b>
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img4_resource.svg' %}" width="" class="why_section_img" id="why_section_img4">
                 </div>
 
-            </div>
-            <div class="d-flex w-50">
-                <!-- картинка -->
-            </div>
-        </div>
-
-        <div class="d-flex flex-row">
-            <div class="d-flex w-50">
-                <!-- картинка -->
-            </div>
-            <div class="d-flex flex-column text-darkgrey w-50">
-
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico5_goingup.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Часто люди путают фитнес со спортом. Мы не разделяем такой подход.</p>
-                        <p class="mb-1">В спорте люди тратят ресурс здоровья на борьбу друг с другом.</p>
-                        <p class="mb-1">Мы же боремся со старением, болезнями и неосознанностью, достигая <span class="text-royalblue"><b>повышения ресурса здоровья.</b></span></p>
-                    </div>
+                <div class="why_section_block" id="why_section_block5">
+                    <p class="why_section_txt m-0" id="why_section_txt5">
+                        Распространённая ошибка - начать путь к здоровью купив лишь абонемент в зал и опираясь на популярные мнения в интернете.<br>
+                        К сожалению, это будет так же эффективно, как самолечение или психологическое консультирование самого себя.
+                        Грамотная физическая нагрузка требует знаний физиологии, анатомии, биомеханики, теории и методики тренировки.
+                        Грамотное питание требует знаний нутрициологии. Долгая дистанция требует знаний психологии. Плюс каждый человек особенный и требует персональной работы.<br>
+                        <span class="text-royalblue"><b>Сэкономьте деньги, силы и время</b></span>, избежав этих ошибок.
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img5_piggybank.svg' %}" width="" class="why_section_img" id="why_section_img5">
                 </div>
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico6_piggy.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1">Распространённая ошибка - начать путь к здоровью купив лишь абонемент в зал и опираясь на популярные мнения в интернете. К сожалению, это будет так же эффективно, как самолечение или психологическое консультирование самого себя</p>
-                        <p class="mb-1">Грамотная физическая нагрузка требует знаний физиологии, анатомии, биомеханики, теории и методики тренировки.</p>
-                        <p class="mb-1">Грамотное питание требует знаний нутрициологии.</p>
-                        <p class="mb-1">Долгая дистанция требует знаний психологии.</p>
-                        <p class="mb-1">Плюс каждый человек особенный и требует персональной работы.</p>
-                        <p class="mb-1"><span class="text-royalblue"><b>Сэкономьте деньги, силы и время</b></span>, избежав этих ошибок.</p>
-                    </div>
+                <div class="why_section_block" id="why_section_block6">
+                    <p class="why_section_txt m-0" id="why_section_txt6">
+                        Ощутите себя частью <span class="text-royalblue"><b>общества осознанных людей</b></span>, понимающих ценность себя и своей жизни.
+                    </p>
+                    <img src="{% static 'homepage/img/why_section_img6_society.svg' %}" width="" class="why_section_img" id="why_section_img6">
                 </div>
 
-                <div class="d-flex flex-row mb-5">
-                    <div class="d-flex home_ico">
-                        <img src="{% static 'homepage/img/home_ico7_light.svg' %}" width="50">
-                    </div>
-                    <div class="me-4 align-self-center">
-                        <p class="mb-1"><span class="text-royalblue"><b>Попробуйте что-то новое</b></span>. Если вы только решили заниматься здоровьем, начать с нами - отличный вариант!</p>
-                        <p class="mb-1">Если вы уже собой занимаетесь, но своими силами, попробуйте с нами, вам понравится)</p>
-                        <p class="mb-1">Если вы занимались с тренером, но ваши пути разошлись, попробуйте пойти нашим путём, может он и ваш тоже)</p>
-                    </div>
+                <div class="why_section_block" id="why_section_block7">
+                    <img src="{% static 'homepage/img/why_section_img7_new.svg' %}" width="" class="why_section_img" id="why_section_img7">
+                    <p class="why_section_txt m-0" id="why_section_txt7">
+                        <span class="text-royalblue"><b>Попробуйте что-то новое</b></span>.<br>
+                        Если вы только решили заниматься здоровьем, начать с нами - отличный вариант!<br>
+                        Если вы уже собой занимаетесь, но своими силами, попробуйте с нами, вам понравится)<br>
+                        Если вы занимались с тренером, но ваши пути разошлись, попробуйте пойти нашим путём, может он и ваш тоже)<br>
+                    </p>
                 </div>
 
             </div>
