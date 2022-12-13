@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="98.040451mm"
-   height="43.270203mm"
-   viewBox="0 0 98.040449 43.270202"
+   width="48mm"
+   height="41.928505mm"
+   viewBox="0 0 47.999999 41.928504"
    version="1.1"
    id="svg39304"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
@@ -25,11 +25,11 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="7.11257"
-     inkscape:cx="76.132818"
-     inkscape:cy="106.2204"
+     inkscape:cx="-11.177394"
+     inkscape:cy="39.015433"
      inkscape:window-width="2560"
      inkscape:window-height="1361"
-     inkscape:window-x="2391"
+     inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
@@ -54,7 +54,7 @@
      inkscape:label="Слой 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-97.327898,-31.492326)">
+     transform="translate(-97.476696,-32.834022)">
     <path
        stroke-linecap="round"
        fill="none"
@@ -68,7 +68,7 @@
        style="fill:#ffffff;fill-opacity:1;stroke:#cbd3ed;stroke-opacity:1" />
     <path
        style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
-       d="M 97.662611,33.609357 106.24077,47.07331"
+       d="m 97.811409,33.311762 8.578161,13.463953"
        id="path103810-7" />
     <g
        clip-path="url(#555760aff0-1)"
@@ -85,18 +85,7 @@
     </g>
     <path
        style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
-       d="m 129.8228,33.141168 -8.10628,13.875476"
+       d="m 130.19115,32.69277 -8.471,14.325875"
        id="path103810-98" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
-       d="m 192.48649,33.230887 -62.99069,0.11149"
-       id="path104333-2-7" />
-    <ellipse
-       style="fill:#cbd3ed;stroke:#cbd3ed;stroke-width:0.714375"
-       id="path123394"
-       cx="193.66135"
-       cy="33.199326"
-       rx="1.3498125"
-       ry="1.3498124" />
   </g>
 </svg>
