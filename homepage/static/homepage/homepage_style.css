@@ -232,44 +232,121 @@ main {
 /* welcome_section */
 #welcome_section {
     height: 91vh;
-    background-image: url('/static/homepage/img/man_lowpoly.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
+    background-image: url(/static/homepage/img/homepage_trapeze.svg), url(/static/homepage/img/man_lowpoly.png);
+    background-color: #e9ebfe;
     background-size: cover;
+    background-position-x: center;
+    background-position-y: center, center;
+    background-repeat: no-repeat, no-repeat;
 }
-#welcome_section_block {
+
+#welcome_section_text {
+    align-self: center;
+    margin-bottom: 8rem;
+    padding: 30px 11px;
     background-color: white;
-    max-width: 490px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2rem;
-    border: 1px solid #ced4da;
-    box-shadow: 0 0 8px 1px #9fbfc5;
+    border-radius: 15px;
+    z-index: 1;
+    box-shadow: 0px 0px 10px #adb6dd;
+}
+@media (min-width: 520px) {
+    #welcome_section_text {
+        width: fit-content;
+        margin-bottom: 6rem;
+        padding: 30px 30px;
+        font-size: 20px;
+        background-color: white;
+        border-radius: 15px;
+        z-index: 1;
+        transform: skew(349deg);
+        box-shadow: 0px 0px 10px #adb6dd;
+    }
 }
 @media (min-width: 576px) {
-    #welcome_section_block {
-        margin-bottom: 3rem;
+    #welcome_section_text {
+        margin-right: 26px;
+        align-self: flex-end;
     }
 }
 @media (min-width: 768px) {
-    #welcome_section_block {
-        font-size: large;
-        margin-right: unset;
+    #welcome_section_text {
+        margin-bottom: 4rem;
+    }
+}
+@media (min-width: 992px) {
+    #welcome_section_text {
+        padding: 30px 15px;
+        font-size: 20px;
+        background-color: #ffffffd1;
+        box-shadow: unset;
     }
 }
 @media (min-width: 1200px) {
-    #welcome_section_block {
-        max-width: 412px;
+    #welcome_section_text {
+        padding: 30px 20px;
+        font-size: x-large;
     }
 }
 @media (min-width: 1400px) {
-    #welcome_section_block {
-        max-width: 500px;
-        font-size: x-large !important;
+    #welcome_section_text {
+        padding: 35px 40px;
+        font-size: 25px;
+    }
+}
+
+
+#welcome_section_h2_intext {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-left: 4px;
+}
+@media (min-width: 520px) {
+    #welcome_section_h2_intext {
+        text-align: start;
+        font-size: 25px;
+        padding-left: 18px;
+    }
+}
+@media (min-width: 768px) {
+    #welcome_section_h2_intext {
+        font-size: 25px;
+        padding-left: 18px;
+    }
+}
+@media (min-width: 992px) {
+    #welcome_section_h2_intext {
+        display: none;
+    }
+}
+
+#welcome_section_h2_outtext {
+    display: none;
+}
+@media (min-width: 992px) {
+    #welcome_section_h2_outtext {
+        display: unset;
+        margin-bottom: -6rem;
+        align-self: flex-end;
+        width: fit-content;
+        transform: skew(349deg);
+        font-size: 25px;
+    }
+}
+@media (min-width: 1200px) {
+    #welcome_section_h2_outtext {
+        margin-bottom: -4rem;
+        font-size: xx-large;
+    }
+}
+@media (min-width: 1400px) {
+    #welcome_section_h2_outtext {
+        margin-bottom: 0;
+        font-size: 35px;
     }
 }
 
 h1[name='logo_title'] {
+    align-self: center;
     font-family: sans-serif;
     font-size: medium;
     letter-spacing: 9px;
@@ -281,7 +358,12 @@ h1[name='logo_title'] {
         font-size: x-large;
     }
 }
-@media (min-width: 576px) {
+@media (min-width: 520px) {
+    h1[name='logo_title'] {
+        align-self: flex-start;
+    }
+}
+@media (min-width: 768px) {
     h1[name='logo_title'] {
         font-size: xx-large;
         text-shadow: 0px 0px 14px #2a356a;
@@ -972,7 +1054,12 @@ h1[name='logo_title'] {
         margin-right: 43px;
 }}
 /* hero_section */
-
+#hero_section {
+    height: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* what_section */
 #what_section {
     display: none;
