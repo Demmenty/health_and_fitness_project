@@ -20,9 +20,6 @@
 .text-royalblue-dark {
     color: #2b48a0 !important;
 }
-.text-darkgrey {
-    color: #3e3e3e;
-}
 .w-100px {
     width: 100px;
 }
@@ -231,7 +228,7 @@ main {
 
 /* welcome_section */
 #welcome_section {
-    height: 91vh;
+    height: 92vh;
     background-image: url(/static/homepage/img/homepage_trapeze.svg), url(/static/homepage/img/man_lowpoly.png);
     background-color: #e9ebfe;
     background-size: cover;
@@ -242,7 +239,7 @@ main {
 
 #welcome_section_text {
     align-self: center;
-    margin-bottom: 8rem;
+    margin-bottom: 2rem;
     padding: 30px 11px;
     background-color: white;
     border-radius: 15px;
@@ -277,8 +274,7 @@ main {
     #welcome_section_text {
         padding: 30px 15px;
         font-size: 20px;
-        background-color: #ffffffd1;
-        box-shadow: unset;
+        box-shadow: 0px 0px 3px 0px #d9deff;
     }
 }
 @media (min-width: 1200px) {
@@ -325,7 +321,7 @@ main {
 @media (min-width: 992px) {
     #welcome_section_h2_outtext {
         display: unset;
-        margin-bottom: -6rem;
+        margin-bottom: 3rem;
         align-self: flex-end;
         width: fit-content;
         transform: skew(349deg);
@@ -334,13 +330,12 @@ main {
 }
 @media (min-width: 1200px) {
     #welcome_section_h2_outtext {
-        margin-bottom: -4rem;
+        margin-bottom: 2rem;
         font-size: xx-large;
     }
 }
 @media (min-width: 1400px) {
     #welcome_section_h2_outtext {
-        margin-bottom: 0;
         font-size: 35px;
     }
 }
@@ -371,6 +366,12 @@ h1[name='logo_title'] {
 }
 
 /* why_section */
+#why_section {
+    background-image: url(/static/homepage/img/why_section_back.svg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 .why_section_block {
     display: flex;
     width: 100%;
@@ -394,7 +395,6 @@ h1[name='logo_title'] {
     padding: 15px 15px 30px 15px;
     margin-bottom: 0;
     width: auto;
-    background-color: white;
     border-top: 2px solid #cbd3ed;
 }
 @media (min-width: 576px) {
@@ -409,6 +409,11 @@ h1[name='logo_title'] {
         padding: 0 0 15px 0;
         border: none;
         background-color: unset;
+    }
+}
+@media (min-width: 1400px) {
+    .why_section_txt {
+        font-size: 18px;
     }
 }
 .why_section_img {
@@ -439,6 +444,7 @@ h1[name='logo_title'] {
     padding-right: 10px;
     padding-bottom: 10px;
     margin-top: -46px;
+    filter: drop-shadow(0px 0px 3px #a7aece);
 }
 @media (min-width: 576px) {
     .why_section_img_mini {
@@ -557,7 +563,7 @@ h1[name='logo_title'] {
     #why_section_block2 {
         flex-direction: column;
         float: right;
-        margin-top: 133px;
+        margin-top: 114px;
     }
 }
 @media (min-width: 992px) {
@@ -567,12 +573,12 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1200px) {
     #why_section_block2 {
-        margin-top: 9px;
+        margin-top: 11px;
     } 
 }
 @media (min-width: 1400px) {
     #why_section_block2 {
-        margin-top: 30px;
+        margin-top: 11px;
     } 
 }
 #why_section_txt2 {
@@ -589,12 +595,12 @@ h1[name='logo_title'] {
         border: unset; 
         margin-left: 91px;
         padding-bottom: 15px;
-        padding-left: 14px;
+        padding-left: 18px;
     }
 }
 @media (min-width: 992px) {
     #why_section_txt2 {
-        margin-left: 102px;
+        margin-left: 104px;
     }
 }
 @media (min-width: 1200px) {
@@ -643,7 +649,7 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1200px) {
     #why_section_block3 {
-        margin-top: 98px;
+        margin-top: 100px;
     }
 }
 @media (min-width: 1400px) {
@@ -699,12 +705,12 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1200px) {
     #why_section_block4 {
-        margin-top: -340px;
+        margin-top: -341px;
     } 
 }
 @media (min-width: 1400px) {
     #why_section_block4 {
-        margin-top: -320px;
+        margin-top: -341px;
     }
 }
 #why_section_txt4 {
@@ -732,7 +738,7 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1200px) {
     #why_section_txt4 {
-        width: 83%;
+        width: 82.5%;
     }
 }
 @media (min-width: 1400px) {
@@ -743,7 +749,6 @@ h1[name='logo_title'] {
 #why_section_img4 {
     margin-top: -35px;
     margin-left: -1px;
-    z-index: -1;
 } 
 @media (min-width: 768px) {
    #why_section_img4 {
@@ -783,13 +788,13 @@ h1[name='logo_title'] {
 @media (min-width: 1200px) {
     #why_section_block5 {
         flex-direction: row;
-        margin-top: -2px;
+        margin-top: -3px;
         width: 66%;
     } 
 }
 @media (min-width: 1400px) {
     #why_section_block5 {
-        margin-top: 0;
+        margin-top: -3px;
         width: 64%;
     } 
 }
@@ -1059,6 +1064,8 @@ h1[name='logo_title'] {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgb(82,113,255);
+    background: linear-gradient(90deg, #5271ff 10%, #ffffff 100%);
 }
 /* what_section */
 #what_section {

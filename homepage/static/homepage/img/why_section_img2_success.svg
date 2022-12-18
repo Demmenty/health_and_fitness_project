@@ -25,13 +25,13 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="7.11257"
-     inkscape:cx="-11.177394"
-     inkscape:cy="39.015433"
-     inkscape:window-width="2560"
-     inkscape:window-height="1361"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
-     inkscape:window-maximized="1"
+     inkscape:cx="48.64627"
+     inkscape:cy="95.535088"
+     inkscape:window-width="1751"
+     inkscape:window-height="1243"
+     inkscape:window-x="537"
+     inkscape:window-y="171"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
      id="defs39301">
@@ -55,6 +55,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-97.476696,-32.834022)">
+    <path
+       fill="#f0f0f8"
+       d="m 130.75975,56.956919 -7.03309,12.405099 -13.90312,-0.0921 -6.86813,-12.497187 7.03309,-12.405081 13.90312,0.0921 6.86813,12.497169"
+       fill-opacity="1"
+       fill-rule="nonzero"
+       id="path322-40"
+       style="fill:#edeeef;fill-opacity:1;stroke-width:0.386524" />
     <path
        stroke-linecap="round"
        fill="none"

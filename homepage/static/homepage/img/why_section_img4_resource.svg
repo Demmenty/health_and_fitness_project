@@ -24,17 +24,25 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="7.11257"
-     inkscape:cx="101.86191"
-     inkscape:cy="146.85268"
-     inkscape:window-width="2560"
-     inkscape:window-height="1361"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:zoom="3.556285"
+     inkscape:cx="77.468482"
+     inkscape:cy="83.935905"
+     inkscape:window-width="2400"
+     inkscape:window-height="1271"
+     inkscape:window-x="3191"
+     inkscape:window-y="194"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
      id="defs50805">
+    <linearGradient
+       id="linearGradient2963"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop2961" />
+    </linearGradient>
     <linearGradient
        id="linearGradient78615"
        inkscape:swatch="solid">
@@ -114,6 +122,13 @@
      transform="translate(-27.243413,-7.8876133)">
     <path
        fill="#f0f0f8"
+       d="m 59.819687,45.179098 -7.0331,12.4051 -13.903119,-0.0921 -6.868132,-12.49719 7.033094,-12.40508 13.903127,0.0921 6.86813,12.49717"
+       fill-opacity="1"
+       fill-rule="nonzero"
+       id="path322-40-3-4"
+       style="fill:#cbd3ed;fill-opacity:1;stroke-width:0.386524" />
+    <path
+       fill="#f0f0f8"
        d="M 58.660411,48.755293 50.989089,62.286112 35.824305,62.185652 28.33291,48.554386 36.004236,35.023584 51.16902,35.124044 58.660411,48.755293"
        fill-opacity="1"
        fill-rule="nonzero"
@@ -142,7 +157,7 @@
        stroke-opacity="1"
        stroke-miterlimit="4"
        id="path98790"
-       style="stroke:#cbd3ed;stroke-opacity:1" />
+       style="stroke:#cbd3ed;stroke-opacity:1;fill-opacity:1;fill:none" />
     <path
        style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="M 59.598062,21.50975 51.491787,35.385227"
