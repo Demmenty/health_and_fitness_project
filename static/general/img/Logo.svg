@@ -24,11 +24,11 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="13.306667"
-     inkscape:cx="48.81012"
-     inkscape:cy="37.537575"
+     inkscape:cx="48.96042"
+     inkscape:cy="37.72545"
      inkscape:window-width="2560"
-     inkscape:window-height="1411"
-     inkscape:window-x="2391"
+     inkscape:window-height="1361"
+     inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg384" />
@@ -103,14 +103,14 @@
   <g
      clip-path="url(#cacebc5a65)"
      id="g228"
-     style="fill:#8e97c3;fill-opacity:1">
+     style="fill:#6184d0;fill-opacity:1">
     <path
        fill="#adacbc"
        d="M 46.933594 36.144531 L 52.855469 36.144531 L 52.855469 45.765625 L 46.933594 45.765625 L 46.933594 36.144531 "
        fill-opacity="1"
        fill-rule="nonzero"
        id="path226"
-       style="fill:#8e97c3;fill-opacity:1" />
+       style="fill:#6184d0;fill-opacity:1" />
   </g>
   <g
      clip-path="url(#0780e8729a)"
@@ -352,38 +352,38 @@
      clip-path="url(#f0c5f3a534)"
      id="g358"
      transform="matrix(1.0190354,0,0,1.004481,-1.0061267,-1.7503952e-5)"
-     style="fill:#8e97c3;fill-opacity:1">
+     style="fill:#6184d0;fill-opacity:1">
     <path
        fill="#adacbc"
        d="m 46.933594,0.00390625 h 5.921875 V 25.160156 H 46.933594 V 0.00390625"
        fill-opacity="1"
        fill-rule="nonzero"
        id="path356"
-       style="fill:#8e97c3;fill-opacity:1" />
+       style="fill:#6184d0;fill-opacity:1" />
   </g>
   <g
      clip-path="url(#df5df524d2)"
      id="g362"
-     style="fill:#8e97c3;fill-opacity:1">
+     style="fill:#6184d0;fill-opacity:1">
     <path
        fill="#adacbc"
        d="M 74.484375 0 L 74.484375 5.183594 L 47.132812 5.183594 L 47.132812 0 L 74.484375 0 "
        fill-opacity="1"
        fill-rule="nonzero"
        id="path360"
-       style="fill:#8e97c3;fill-opacity:1" />
+       style="fill:#6184d0;fill-opacity:1" />
   </g>
   <g
      clip-path="url(#eb63f3c8a9)"
      id="g366"
-     style="fill:#8e97c3;fill-opacity:1">
+     style="fill:#6184d0;fill-opacity:1">
     <path
        fill="#adacbc"
        d="M 71.238281 20.144531 L 71.238281 25.324219 L 46.839844 25.324219 L 46.839844 20.144531 L 71.238281 20.144531 "
        fill-opacity="1"
        fill-rule="nonzero"
        id="path364"
-       style="fill:#8e97c3;fill-opacity:1" />
+       style="fill:#6184d0;fill-opacity:1" />
   </g>
   <g
      clip-path="url(#85787f52bd)"
