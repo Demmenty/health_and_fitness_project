@@ -18,116 +18,107 @@
 
   <header class="border-bottom">
     <div class="container">
-      <div class="d-flex align-items-center justify-content-between py-3" id="header_container">
-
+      <div class="d-flex align-items-center justify-content-between justify-content-sm-start py-2">
         <!-- логотип -->
-        <a href="/" class="d-flex align-items-center col-md-2 mb-md-0 text-dark text-decoration-none">
-          <object data="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="100" id="logo"></object>
-          <object data="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="100" id="logo_mini"></object>
+        <a href="/" class="navbar-brand me-3">
+          <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
-
         {% if clientname %}
-          <!-- имя клиента -->
-          <a href="{% url 'controlpage' %}" class="clientname col-md-2">{{ clientname }}</a>
-          <!-- навигация просто строкой -->
-          <ul class="nav col-md-6 my-1 justify-content-center mb-3 mb-md-0" id="nav_string">
-            <li>
-              <form method="get" action="{% url 'clientpage' %}">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <input type="hidden" value="{{ clientname }}" name="clientname">
-                <button type="submit" class="nav_link" id="link_main">главная</button>
-              </form>
-            </li>
-            <li>
-              <form method="get" action="{% url 'client_measurements' %}">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <input type="hidden" value="{{ clientname }}" name="clientname">
-                <button type="submit" class="nav_link" id="link_measurements">измерения</button>
-              </form>
-            </li>
-            <li>
-              <form method="get" action="{% url 'client_mealjournal' %}">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <input type="hidden" value="{{ clientname }}" name="clientname">
-                <button type="submit" class="nav_link" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-              </form>
-            </li>
-            <li>
-              <form method="get" action="">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <input type="hidden" value="{{ clientname }}" name="clientname">
-                <button type="submit" class="nav_link" id="link_workout">тренировки</button>
-              </form>
-            </li>
-          </ul>
-          <!-- навигация выпадающим меню -->
-          <div class="col-md-4 align-items-center justify-content-center" id="nav_dropdown">
-            <div class="dropdown">
-              <a href="#" class="d-flex align-items-center col-lg-4 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="me-2" id="open_label_drop"></span>
-              </a>
-              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-                <li>
-                  <form method="get" action="{% url 'clientpage' %}">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
-                    <button type="submit" class="nav_link" id="link_main_drop">главная</button>
-                  </form>
-                </li>
-                <li>
-                  <form method="get" action="{% url 'client_measurements' %}">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
-                    <button type="submit" class="nav_link" id="link_measurements_drop">измерения</button>
-                  </form>
-                </li>
-                <li>
-                  <form method="get" action="{% url 'client_mealjournal' %}">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
-                    <button type="submit" class="nav_link" id="link_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-                  </form>
-                </li>
-                <li>
-                  <form method="get" action="">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
-                    <button type="submit" class="nav_link" id="link_workout_drop">тренировки</button>
-                  </form>
-                </li>
-              </ul>
+          <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline">
+            <!-- имя клиента -->
+            <a href="{% url 'controlpage' %}" class="clientname text-center">{{ clientname|truncatechars:10 }}</a>
+            <!-- навигация просто строкой -->
+            <ul class="nav ms-3" id="nav_string">
+              <li>
+                <form method="get" action="{% url 'clientpage' %}">
+                  <input type="hidden" value="{{ client_id }}" name="client_id">
+                  <input type="hidden" value="{{ clientname }}" name="clientname">
+                  <button type="submit" class="nav_link mx-2" id="link_main">главная</button>
+                </form>
+              </li>
+              <li>
+                <form method="get" action="{% url 'client_measurements' %}">
+                  <input type="hidden" value="{{ client_id }}" name="client_id">
+                  <input type="hidden" value="{{ clientname }}" name="clientname">
+                  <button type="submit" class="nav_link mx-2" id="link_measurements">измерения</button>
+                </form>
+              </li>
+              <li>
+                <form method="get" action="{% url 'client_mealjournal' %}">
+                  <input type="hidden" value="{{ client_id }}" name="client_id">
+                  <input type="hidden" value="{{ clientname }}" name="clientname">
+                  <button type="submit" class="nav_link mx-2" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+                </form>
+              </li>
+              <li>
+                <form method="get" action="">
+                  <input type="hidden" value="{{ client_id }}" name="client_id">
+                  <input type="hidden" value="{{ clientname }}" name="clientname">
+                  <button type="submit" class="nav_link mx-2" id="link_workout">тренировки</button>
+                </form>
+              </li>
+            </ul>
+            <!-- навигация выпадающим меню -->
+            <div class="align-items-center justify-content-center" id="nav_dropdown">
+              <div class="dropdown">
+                <a href="#" class="d-flex align-items-center col-lg-4 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="me-2" id="open_label_drop"></span>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
+                  <li>
+                    <form method="get" action="{% url 'clientpage' %}">
+                      <input type="hidden" value="{{ client_id }}" name="client_id">
+                      <input type="hidden" value="{{ clientname }}" name="clientname">
+                      <button type="submit" class="nav_link" id="link_main_drop">главная</button>
+                    </form>
+                  </li>
+                  <li>
+                    <form method="get" action="{% url 'client_measurements' %}">
+                      <input type="hidden" value="{{ client_id }}" name="client_id">
+                      <input type="hidden" value="{{ clientname }}" name="clientname">
+                      <button type="submit" class="nav_link" id="link_measurements_drop">измерения</button>
+                    </form>
+                  </li>
+                  <li>
+                    <form method="get" action="{% url 'client_mealjournal' %}">
+                      <input type="hidden" value="{{ client_id }}" name="client_id">
+                      <input type="hidden" value="{{ clientname }}" name="clientname">
+                      <button type="submit" class="nav_link" id="link_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+                    </form>
+                  </li>
+                  <li>
+                    <form method="get" action="">
+                      <input type="hidden" value="{{ client_id }}" name="client_id">
+                      <input type="hidden" value="{{ clientname }}" name="clientname">
+                      <button type="submit" class="nav_link" id="link_workout_drop">тренировки</button>
+                    </form>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         {% else %}
           <!-- навигация главной страницы контроля -->
-          <div class="text-center my-3">
-            <a href="{% url 'controlpage' %}" class="nav_link pointer text-nowrap" id="link_clients">мои клиенты</a>
-
-            <a href="{% url 'consult_requests_page' %}" class="nav_link pointer text-nowrap" id="link_consult_requests">заявки
+          <div class="d-flex flex-wrap justify-content-center align-items-center lh-1">
+            <a href="{% url 'controlpage' %}" class="nav_link text-nowrap" id="link_clients">мои клиенты</a>
+            <a href="{% url 'consult_requests_page' %}" class="nav_link text-nowrap" id="link_consult_requests">заявки
               {% if new_consult_signup_count > 0 %}
                 <div class="rounded-circle ms-2" id="new_consult_signup_count">{{ new_consult_signup_count }}</div>
               {% endif %}
             </a>
-            
           </div>
         {% endif %}
-  
         <!-- кнопка выхода -->
-        <div class="col-md-2 text-end mt-md-1">
-          <form method="POST" action="{% url 'logoutuser' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-primary" id="logout_btn">Выйти</button>
-            <button type="submit" class="btn btn-outline-primary px-2" id="logout_btn_pic">
-              <img src="{% static 'general/img/logout_ico.svg' %}" width="24" aria-hidden="true">
-            </button>
-          </form>
-        </div>
-
+        <form method="POST" action="{% url 'logoutuser' %}" class="ms-3 ms-sm-auto">
+          {% csrf_token %}
+          <input type="image" alt="Submit" src="{% static 'general/img/exit (fat).svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+        </form>
       </div>
     </div>       
   </header>
 
   <main>
+    <br><br>
     {% block content %}
     {% endblock %}
 

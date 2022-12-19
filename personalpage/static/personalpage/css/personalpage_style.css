@@ -216,6 +216,7 @@ header {
     background-color: #ffffff;
     margin-bottom: 1rem;
     position: fixed;
+    top: 0;
     width: 100%;
     z-index: 100;
 }
@@ -244,20 +245,9 @@ header {
     font-weight: 500;
 }
 
-#logo {
-    display: none;
-    pointer-events: none;
-}
+
 #logo_mini {
     pointer-events: none;
-}
-@media (min-width: 768px) {
-    #logo {
-        display: unset;
-    }
-    #logo_mini {
-        display: none;
-    }
 }
 
 #nav_string {
@@ -272,22 +262,11 @@ header {
     }
 }
 
-#logout_btn {
-    display: none;
+#exit_pic {
+    filter: grayscale(1) brightness(0.9);
 }
-#logout_btn_pic {
-    padding-top: 5px;
-}
-#logout_btn_pic:hover img {
-    filter: brightness(1000%) contrast(100%);
-}
-@media (min-width: 450px) {
-    #logout_btn {
-        display: inline-block;
-    }
-    #logout_btn_pic {
-        display: none;
-    }
+#exit_pic:hover {
+    filter: unset;
 }
 
 /* footer */

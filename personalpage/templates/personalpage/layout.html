@@ -19,14 +19,12 @@
   <header class="border-bottom">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between py-2">
-
         <!-- логотип -->
         <a href="/" class="navbar-brand">
-          <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
           <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
         <!-- навигация просто строкой -->
-        <ul class="nav col-md-8 my-1 justify-content-center mb-md-0" id="nav_string">
+        <ul class="nav justify-content-center mb-md-0" id="nav_string">
           <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
           <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
           <li>
@@ -39,7 +37,7 @@
         <!-- навигация выпадающим меню -->
         <div class="d-flex align-items-center justify-content-center mt-2" id="nav_dropdown">
           <div class="dropdown">
-            <a href="#" class="d-flex align-items-center col-lg-4 mb-2 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="d-flex align-items-center  mb-2 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="me-2" id="open_label_drop"></span>
             </a>
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
@@ -55,22 +53,17 @@
           </div>
         </div>
         <!-- кнопка выхода -->
-        <div class="col-md-2 text-end mt-md-1">
-          <form method="POST" action="{% url 'logoutuser' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-primary" id="logout_btn">Выйти</button>
-            <button type="submit" class="btn btn-outline-primary px-2" id="logout_btn_pic">
-              <img src="{% static 'general/img/logout_ico.svg' %}" width="24" aria-hidden="true">
-            </button>
-          </form>
-        </div>
-
+        <form method="POST" action="{% url 'logoutuser' %}">
+          {% csrf_token %}
+          <input type="image" alt="Submit" src="{% static 'general/img/exit (fat).svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+        </form>
       </div>
     </div>    
   </header>
 
   <main>
-    <div class="container">
+    <br><br>
+    <div class="container mt-3">
       {% block content %}
       {% endblock %}
     </div>

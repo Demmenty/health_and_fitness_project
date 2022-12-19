@@ -135,6 +135,7 @@ header {
     background-color: #ffffff;
     margin-bottom: 1rem;
     position: fixed;
+    top: 0;
     width: 100%;
     z-index: 100;
 }
@@ -155,6 +156,13 @@ header {
     color: #5271ff;
 }
 
+#exit_pic {
+    filter: grayscale(1) brightness(0.9);
+}
+#exit_pic:hover {
+    filter: unset;
+}
+
 .border-blueshadow {
     border: 1px solid #ced4da;
     border-radius: 10px;
@@ -169,21 +177,11 @@ header {
     font-weight: 500;
 }
 
-#logo {
-    display: none;
-    pointer-events: none;
-}
+
 #logo_mini {
     pointer-events: none;
 }
-@media (min-width: 768px) {
-    #logo {
-        display: unset;
-    }
-    #logo_mini {
-        display: none;
-    }
-}
+
 
 
 #logout_btn_pic {
@@ -210,18 +208,13 @@ header {
     }
 }
 
-#nav_dropdown {
+#nav_string {
     display: none;
 }
-@media (min-width: 450px) {
-    #nav_string {
-        display: none;
-    }
-    #nav_dropdown {
-        display: flex;
-    }
+#nav_dropdown {
+    display: flex;
 }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     #nav_string {
         display: flex;
     }
@@ -230,12 +223,12 @@ header {
     }
 }
 
-#header_container {
-    flex-direction: column;
+#link_clients {
+    margin-bottom: 3px;
 }
-@media (min-width: 450px) {
-    #header_container {
-        flex-direction: row;
+@media (min-width: 433px) {
+    #link_clients {
+        margin-bottom: 0;
     }
 }
 
@@ -243,12 +236,13 @@ header {
     background-color: royalblue;
     color: white;
     border: 1px solid royalblue;
-    padding: 5px;
+    padding: 4px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 28px;
-    height: 28px;
+    height: 26px;
+    font-size: 15px;
 }
 
 /* стиль кнопок */
@@ -351,15 +345,21 @@ input[type="radio"]:focus {
     color: #5271ff;
     text-decoration: none;
     vertical-align: middle;
-    font-size: x-large;
     font-weight: 600;
-    margin-top: 0.5rem;
+    line-height: 22px;
+    font-size: large;
 }
-@media (min-width: 450px) {
+@media (min-width: 576px) {
     .clientname {
-        margin-top: 0;
+        color: #5271ff;
+        text-decoration: none;
+        vertical-align: middle;
+        font-size: x-large;
+        font-weight: 600;
+        line-height: initial;
     }
 }
+
 caption {
     color: black;
 }
