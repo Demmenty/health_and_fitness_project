@@ -40,7 +40,7 @@
                 {% for entry, form in consult_signups_zip %}
                     <div class="hidden_element border-blueshadow bg-white p-2 transition_common" id="signup_container_{{ entry.id }}" name="signup_container">
                         <form method="POST" action="{% url 'consult_requests_page' %}" id="signup_form_{{ entry.id }}" name="signup_form">
-                            <button class="btn btn-outline-primary float-end close_btn" type="button" onclick="closeForm()">&#10006;</button>
+                            <button class="btn btn-outline-primary border-white float-end close_btn" type="button" onclick="closeForm()">&#10006;</button>
                             {% csrf_token %}
                             <br>
                             <input type="hidden" name="id" value="{{ entry.id }}">
