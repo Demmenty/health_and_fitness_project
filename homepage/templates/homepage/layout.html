@@ -19,46 +19,70 @@
 
     <header class="border-bottom">
       <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center   justify-content-sm-between    justify-content-md-between align-middle py-2">
-          <!-- логотип -->
-          <a href="/" class="d-flex col-sm-2 align-items-center mb-2 mb-sm-0 text-dark text-decoration-none">
-              <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
-              <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini"></object>
-          </a>
-          {% if user.is_authenticated %}
-            <!-- навигация -->
-            <ul class="nav col-12 col-sm-8 justify-content-center">
-              <li><a href="#why_section" class="nav_link">о проекте</a></li>
-              <li><a href="#what_section" class="nav_link">услуги</a></li>
-              <li><a href="#consultation_section" class="nav_link">консультация</a></li>
-              <li><a href="#trainer_contacts" class="nav_link">о специалисте</a></li>
-            </ul>
-            <!-- кнопки входа/выхода -->
-            <div class="d-flex col-sm-2 text-end justify-content-end text-nowrap">
-              <a href="{{ 'personalpage' }}" id="profile_btn_txt"><button type="button" class="btn btn-primary">Профиль</button></a>
-              <a href="{{ 'personalpage' }}" id="profile_btn_pic" class="align-middle"><img src="{% static 'general/img/enter_profile.svg' %}" title="Личный кабинет"></a>
-              <form method="POST" action="{% url 'logoutuser' %}" class="ms-3">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-primary" id="exit_btn_txt">Выход</button>
-                <input type="image" alt="Submit" src="{% static 'general/img/exit.svg' %}" id="exit_btn_pic" class="align-middle" title="Выйти">
-              </form>
+        <nav class="navbar navbar-expand-md navbar-light bg-white flex-nowrap">
+          <div class="container-fluid px-0">
+            <!-- логотип -->
+            <a href="/" class="navbar-brand p-0 me-2">
+                <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
+                <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini"></object>
+            </a>
+            <!-- список ссылок -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+              <ul class="navbar-nav text-center mb-0">
+                <li class="nav-item">
+                  <a href="#why_section" class="nav_link">о проекте</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#what_section" class="nav_link">услуги</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#consultation_section" class="nav_link">консультация</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#trainer_contacts" class="nav_link">о специалисте</a>
+                </li>
+              </ul>
+              <div class="d-flex flex-column d-sm-none text-center">
+                <hr class="my-2 mx-auto" style="width: 110px;">
+                {% if user.is_authenticated %}
+                  <!-- кнопка входа -->
+                    <a href="{{ 'personalpage' }}" id="profile_p" class="nav_link">профиль</a>
+                    <form method="POST" action="{% url 'logoutuser' %}" class="form-inline">
+                      {% csrf_token %}
+                      <input type="Submit" id="exit_p" class="nav_link" title="Выйти" value="выйти">
+                    </form>
+                {% else %}
+                  <!-- кнопки входа/регистрации -->
+                  <p class="nav_link" id="login_p" data-bs-toggle="modal" data-bs-target="#login_form_container">вход</button>
+                  <p class="nav_link" id="registration_p" data-bs-toggle="modal" data-bs-target="#registration_form_container">регистрация</p>
+                {% endif %}
+              </div>
             </div>
-          {% else %}
-            <!-- навигация -->
-            <ul class="nav col-12 col-md-8 col-lg-7 col-xl-8 justify-content-center">
-              <li><a href="#why_section" class="nav_link">о проекте</a></li>
-              <li><a href="#what_section" class="nav_link">услуги</a></li>
-              <li><a href="#consultation_section" class="nav_link">консультация</a></li>
-              <li><a href="#trainer_contacts" class="nav_link">о специалисте</a></li>
-            </ul>
-            <!-- кнопки входа/регистрации -->
-            <div class="d-flex col-md-2 col-lg-3 col-xl-2 text-end justify-content-end text-nowrap">
-              <button type="button" class="btn btn-outline-primary ms-2" id="login_btn" data-bs-toggle="modal" data-bs-target="#login_form_container">Вход</button>
-              <button type="button" class="btn btn-outline-primary ms-2" id="registration_btn" data-bs-toggle="modal" data-bs-target="#registration_form_container">Регистрация</button>
-            </div>
-          {% endif %}
+            <!-- кнопка-гамбургер -->
+            <button class="navbar-toggler ms-2 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
 
-        </div>
+          {% if user.is_authenticated %}
+          <!-- кнопки входа/выхода -->
+          <div class="d-none d-sm-flex text-end justify-content-end">
+            <a href="{{ 'personalpage' }}" id="profile_btn">
+              <button type="button" class="btn btn-primary ms-3">Профиль</button>
+            </a>
+            <form method="POST" action="{% url 'logoutuser' %}" class="form-inline ms-3">
+              {% csrf_token %}
+              <input type="image" alt="Submit" src="{% static 'general/img/exit (thin).svg' %}" id="exit_pic" class="align-middle" title="Выйти">
+            </form>
+          </div>
+          {% else %}
+          <!-- кнопки входа/регистрации -->
+          <div class="d-none d-sm-flex text-end justify-content-end">
+            <button type="button" class="btn btn-primary ms-2" id="login_btn" data-bs-toggle="modal" data-bs-target="#login_form_container">Вход</button>
+            <button type="button" class="btn btn-outline-primary ms-2 d-none d-sm-flex" id="registration_btn" data-bs-toggle="modal" data-bs-target="#registration_form_container">Регистрация</button>
+          </div>
+          {% endif %}
+        </nav>
       </div>
     </header>
 
@@ -281,6 +305,6 @@
       
   </body>
   
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
   <script src="{% static 'homepage/js/layout.js' %}"></script>
 </html>
