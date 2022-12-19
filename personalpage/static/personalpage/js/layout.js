@@ -40,22 +40,6 @@ const inputDateComment = document.querySelector('#commentary_form #id_date');
 // количество непрочитанных комментариев
 const countUnread = document.getElementById('count_of_unread');
 
-// функция для правильного отступа от header
-var headerHeight;
-
-function setMainTopPadding() {
-    headerHeight = header.offsetHeight;
-    main.style.paddingTop = headerHeight + "px";
-}
-
-window.onload = function() {
-    setMainTopPadding();
-};
-   
-window.onresize = function() {
-    setMainTopPadding();
-};
-
 // применение настроек в зависимости от открытой страницы
 setSettingsDependPath();
 function setSettingsDependPath() {

@@ -10,7 +10,7 @@
 .text-transparent {
     color: #ffffff00;
 }
-/* цветовая тема */
+
 .text-royalblue-ligth {
     color: #B2BFFF !important;
 }
@@ -55,6 +55,7 @@
 header {
     background-color: #ffffff;
     position: fixed;
+    top: 0;
     width: 100%;
     z-index: 100;
     font-family: 'Roboto', sans-serif;
@@ -243,9 +244,10 @@ main {
     font-family: 'Poppins', sans-serif !important;
 }
 
+
 /* welcome_section */
 #welcome_section {
-    height: 92vh;
+    height: 100vh;
     background-image: url(/static/homepage/img/homepage_trapeze.svg), url(/static/homepage/img/man_lowpoly.png);
     background-color: #e9ebfe;
     background-size: cover;
@@ -257,8 +259,7 @@ main {
 #welcome_section_text {
     align-self: center;
     font-size: 18px;
-    margin-bottom: 2rem;
-    padding: 30px 21px;
+    padding: 30px 20px;
     background-color: white;
     border-radius: 15px;
     z-index: 1;
@@ -269,15 +270,9 @@ main {
         margin-right: 26px;
         align-self: flex-end;
         width: fit-content;
-        margin-bottom: 6rem;
         padding: 30px 30px;
         font-size: 20px;
         transform: skew(349deg);
-    }
-}
-@media (min-width: 768px) {
-    #welcome_section_text {
-        margin-bottom: 4rem;
     }
 }
 @media (min-width: 992px) {
@@ -300,7 +295,6 @@ main {
     }
 }
 
-
 #welcome_section_h2_intext {
     text-align: center;
     margin-bottom: 3rem;
@@ -313,7 +307,6 @@ main {
 }
 @media (min-width: 768px) {
     #welcome_section_h2_intext {
-        
         font-size: 25px;
     }
 }

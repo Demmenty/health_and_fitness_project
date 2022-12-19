@@ -18,12 +18,12 @@
   
   <header class="border-bottom">
     <div class="container">
-      <div class="d-flex align-items-center justify-content-between py-3">
+      <div class="d-flex align-items-center justify-content-between py-2">
 
         <!-- логотип -->
-        <a href="/" class="d-flex align-items-center col-md-2 mb-md-0 text-dark text-decoration-none">
-          <object data="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="100" id="logo"></object>
-          <object data="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="100" id="logo_mini"></object>
+        <a href="/" class="navbar-brand">
+          <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
+          <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
         <!-- навигация просто строкой -->
         <ul class="nav col-md-8 my-1 justify-content-center mb-md-0" id="nav_string">

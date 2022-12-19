@@ -22,9 +22,9 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white flex-nowrap">
           <div class="container-fluid px-0">
             <!-- логотип -->
-            <a href="/" class="navbar-brand p-0 me-2">
+            <a href="/" class="navbar-brand p-0 me-0 me-sm-2">
                 <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
-                <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini"></object>
+                <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
             </a>
             <!-- список ссылок -->
             <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
@@ -45,14 +45,12 @@
               <div class="d-flex flex-column d-sm-none text-center">
                 <hr class="my-2 mx-auto" style="width: 110px;">
                 {% if user.is_authenticated %}
-                  <!-- кнопка входа -->
                     <a href="{{ 'personalpage' }}" id="profile_p" class="nav_link">профиль</a>
                     <form method="POST" action="{% url 'logoutuser' %}" class="form-inline">
                       {% csrf_token %}
                       <input type="Submit" id="exit_p" class="nav_link" title="Выйти" value="выйти">
                     </form>
                 {% else %}
-                  <!-- кнопки входа/регистрации -->
                   <p class="nav_link" id="login_p" data-bs-toggle="modal" data-bs-target="#login_form_container">вход</button>
                   <p class="nav_link" id="registration_p" data-bs-toggle="modal" data-bs-target="#registration_form_container">регистрация</p>
                 {% endif %}
@@ -63,7 +61,6 @@
               <span class="navbar-toggler-icon"></span>
             </button>
           </div>
-
           {% if user.is_authenticated %}
           <!-- кнопки входа/выхода -->
           <div class="d-none d-sm-flex text-end justify-content-end">
@@ -72,7 +69,7 @@
             </a>
             <form method="POST" action="{% url 'logoutuser' %}" class="form-inline ms-3">
               {% csrf_token %}
-              <input type="image" alt="Submit" src="{% static 'general/img/exit (thin).svg' %}" id="exit_pic" class="align-middle" title="Выйти">
+              <input type="image" alt="Submit" src="{% static 'general/img/exit.svg' %}" id="exit_pic" class="align-middle" title="Выйти">
             </form>
           </div>
           {% else %}

@@ -35,22 +35,6 @@ const commentaryStatusMsg = document.getElementById('commentary_status_msg');
 // окошко ввода даты комментария
 const inputDateComment = document.querySelector('#client_comment_form #id_date');
 
-// функция для правильного отступа от header
-var headerHeight;
-
-function setMainTopPadding() {
-    headerHeight = header.offsetHeight;
-    main.style.paddingTop = headerHeight + "px";
-}
-
-window.onload = function() {
-    setMainTopPadding();
-};
-   
-window.onresize = function() {
-    setMainTopPadding();
-};
-
 // применение настроек в зависимости от открытой страницы
 setSettingsDependPath();
 function setSettingsDependPath() {
