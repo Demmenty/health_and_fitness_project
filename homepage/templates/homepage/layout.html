@@ -90,7 +90,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <h4 class="modal-title text-center">АВТОРИЗАЦИЯ</h4><br>
-          <form method="POST" action="" id="login_form">
+          <form method="POST" action="{% url 'loginuser' %}" id="login_form" data-redirect="{% url 'personalpage' %}">
             {% csrf_token %}
             <div class="pad-notop-4">
               <label>Логин</label>
@@ -105,62 +105,13 @@
       </div>
     </div>
 
-    <!-- аякс скрипты -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
-    <!-- вход скрипт -->
-    <script>
-        $(document).ready(function () {
-            // отслеживаем событие отправки формы
-            $('#login_form').submit(function () {
-
-                resultField = document.getElementById("login_form_result");
-                
-                // создаем AJAX-вызов
-                $.ajax({
-                    data: $(this).serialize(), // получаем данные формы
-                    type: $(this).attr('method'), // метод отправки запроса
-                    url: "{% url 'loginuser' %}", // функция обработки
-                    
-                    // После успешного завершения запросов запускается одна из колбэк-функций success или error.
-                    success: function (response) {
-                      if (response.result == 'доступ разрешен') {
-                        resultField.style.color = "#00000000";
-                        resultField.style.color = "#00c0f0";
-                        resultField.textContent = response.result;
-                        setTimeout(() => {
-                            window.location.href = "{% url 'personalpage' %}";
-                          }, 1000);
-                        }
-                      else {
-                        resultField.textContent = response.result;
-                        resultField.style.color = "#00000000";
-                        setTimeout(() => {
-                          resultField.style.color = "#ff1943";
-                          }, 500);
-                      }
-                      },
-                    error: function (response) {
-                      resultField.textContent = "возникла ошибка";
-                      resultField.style.color = "#00000000";
-                      setTimeout(() => {
-                          resultField.style.color = "#ff1943";
-                          }, 500);
-                      }
-                });
-                // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
-                return false;
-            });
-        })    
-    </script>
-    <!--  -->
 
     <!-- регистрация форма -->
     <div class="modal fade" id="registration_form_container" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <h4 class="modal-title text-center">РЕГИСТРАЦИЯ</h4><br>
-          <form method="POST" action="" id="registration_form">
+          <form method="POST" action="{% url 'registration' %}" id="registration_form" data-redirect="{% url 'personalpage' %}">
             {% csrf_token %}
             <div class="pad-notop-4">
               <label>Логин</label>
@@ -186,59 +137,6 @@
         </div>
       </div>
     </div>
-    <!--  -->
-
-    <!-- регистрация скрипт -->
-    <script>
-      $(document).ready(function () {
-          // отслеживаем событие отправки формы
-          $('#registration_form').submit(function () {
-
-              resultField = document.getElementById("registration_form_result");
-              
-              // создаем AJAX-вызов
-              $.ajax({
-                  data: $(this).serialize(), // получаем данные формы
-                  type: $(this).attr('method'), // метод отправки запроса
-                  url: "{% url 'registration' %}", // функция обработки
-                  
-                  // После успешного завершения запросов запускается одна из колбэк-функций success или error.
-                  success: function (response) {
-                    if (response.result == 'успешный успех') {
-                      document.getElementById("username_error").textContent = "";
-                      document.getElementById("password2_error").textContent = "";
-                      resultField.style.color = "#00000000";
-                      resultField.textContent = response.result;
-                      resultField.style.color = "#00c0f0";
-                      setTimeout(() => {
-                          window.location.href = "{% url 'personalpage' %}";
-                      }, 1700);
-                      }
-                    else {
-                      resultField.style.color = "#00000000";
-                      document.getElementById("username_error").style.color = "#00000000";
-                      document.getElementById("password2_error").style.color = "#00000000";
-                      for (var key in response.result) {
-                        document.getElementById(key + "_error").style.color = "#00000000";
-                        for (let i=0; i<response.result[key].length; i++) {
-                          response.result[key][i] = '&#8226; ' + response.result[key][i];
-                        }
-                        document.getElementById(key + "_error").innerHTML = response.result[key].join("\n");
-                        document.getElementById(key + "_error").style.color = "#0055d5";
-                      }
-                    }
-                    },
-                  error: function (response) {
-                    resultField.style.color = "#00000000";
-                    resultField.textContent = "возникла ошибка";
-                    resultField.style.color = "#ff1943";
-                    }
-              });
-              // return false в конце скрипта предотвращает перезагрузку страницы.
-              return false;
-          });
-      })    
-    </script>
     <!--  -->
 
     <main>
@@ -302,6 +200,7 @@
       
   </body>
   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
   <script src="{% static 'homepage/js/layout.js' %}"></script>
 </html>
