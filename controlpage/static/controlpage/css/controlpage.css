@@ -66,7 +66,7 @@
 
 /* коммент для клиента */
 #client_comment_form_container {
-    width: 600px;
+    max-width: 600px !important;
     background-color: #ffffff;
     position: fixed;
     top: 50%;
@@ -74,6 +74,7 @@
     transform: translate(-50%, -50%);
     z-index: 10;
 }
+
 .comment_section {
     color: #5271ff;
     font-weight: 500;
@@ -86,17 +87,32 @@
     z-index: 2;
     background-color: white !important;
     position: relative;
+    display: inline-flex;
+    order: 4;
+}
+@media (min-width: 576px) {
+    .comment_section {
+       order: 1; 
+    }
 }
 .comment_section.closed {
     color: #545454;
     z-index: 0;
     border: none;
+    order: 1;
 }
 .comment_section.closed:hover {
     cursor: pointer;
     color: #5271ff;
 }
- 
+
+#id_date {
+    min-width: 9rem;
+}
+.w-95 {
+    width: 95% !important;
+}
+
 #client_comment_form textarea {
     border: 1px solid #ced4da;
     z-index: 1;
@@ -107,15 +123,21 @@
    box-shadow: none;
 }
 
-#client_comment_form table {
+#client_comment_categories {
+    max-width: 21rem;
     margin-bottom: -9px;
-    border-collapse: unset !important;
+}
+@media (min-width: 576px) {
+    #client_comment_categories {
+        max-width: unset;
+    }
 }
 
 .close_btn, .ok_btn {
-    width: 25px;
+    min-width: 25px;
     height: 25px;
     --bs-btn-padding-y: unset;
+    font-size: 13px;
 }
 
 .date_arrow:hover {

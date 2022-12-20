@@ -216,6 +216,49 @@ function changeCommentaryForm(dateString) {
 }
 
 
+// сохранение комментария для клиента
+$(document).ready(function () {
+    // надпись о статусе сохранения
+    var commentaryStatusMsg = document.getElementById('commentary_status_msg');
+
+    // отслеживаем событие сохранения и отправки формы
+    $('#client_comment_form').submit(function () {               
+
+      $.ajax({
+          data: $(this).serialize(), // получаем данные формы
+          type: $(this).attr('method'), // метод отправки запроса
+          url: $(this).attr('action'), // функция обработки
+
+          success: function (response) {
+            // уведомление о успешности сохранении внизу окошка коммента
+            if (response.result == 'комментарий сохранен') {
+              commentaryStatusMsg.textContent = response.result;
+              commentaryStatusMsg.classList.add('form_saved');
+              setTimeout(() => {
+                commentaryStatusMsg.classList.remove('form_saved');
+              }, 1500);
+            }
+            else {
+              commentaryStatusMsg.textContent = response.result;
+              commentaryStatusMsg.classList.add('form_not_saved');
+              setTimeout(() => {
+                commentaryStatusMsg.classList.remove('form_not_saved');
+              }, 1500);
+            }
+          },
+          error: function (response) {
+              commentaryStatusMsg.textContent = 'не сохранено! возникла ошибка!';
+              commentaryStatusMsg.classList.add('form_not_saved');
+              setTimeout(() => {
+                commentaryStatusMsg.classList.remove('form_not_saved');
+              }, 1500);
+          },             
+      });
+      return false;
+  });
+})
+
+
 // функция перетаскивания
 function dragCommentary(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

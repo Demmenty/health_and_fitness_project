@@ -116,15 +116,12 @@ header {
         display: none;
     }
 }
-
-
 #exit_pic {
     filter: grayscale(1) brightness(0.9);
 }
 #exit_pic:hover {
     filter: unset;
 }
-
 /* header */
 
 /* footer */
