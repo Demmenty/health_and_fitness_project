@@ -34,6 +34,8 @@ const navLinkOpenDrop = document.getElementById('open_label_drop');
 const commentaryStatusMsg = document.getElementById('commentary_status_msg');
 // окошко ввода даты комментария
 const inputDateComment = document.querySelector('#client_comment_form #id_date');
+// список контактов клиента
+const clientContacts = document.getElementById('client_contacts');
 
 // применение настроек в зависимости от открытой страницы
 setSettingsDependPath();
@@ -131,6 +133,18 @@ function openCommentary() {
     else {
         commentaryContainer.classList.add('hidden_element'); 
     }
+}
+
+
+// показ списка контактов клиента
+function showContacts() {
+    if (clientContacts.classList.contains('d-none')) {
+        clientContacts.classList.remove('d-none');
+    }
+    else {
+        clientContacts.classList.add('d-none');
+    }
+    
 }
 
 

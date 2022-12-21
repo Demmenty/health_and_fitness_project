@@ -787,6 +787,7 @@ footer {
 .mail_ref:hover {
     color: black;
 }
+
 .contact_ico {
     height: 25px;
     filter: invert(1);
@@ -796,21 +797,20 @@ footer {
 }
 
 #preferred_contact_ico {
-    padding: 7px;
-    border: 1px solid #7d9db1;
-    border-radius: 45px;
-    box-shadow: 0 0 8px 1px #9dc3da;
+    filter: drop-shadow(0px 0px 8px cyan);
 }
-#preferred_contact_ico:hover {
-    background-color: #3f54b2;
-    cursor: pointer;
+
+#client_contacts {
+    margin-left: 3.5rem;
 }
-#preferred_contact_ico img:hover {
-    filter: invert(1);
+@media (min-width: 576px) {
+    #client_contacts {
+        margin-left: 0;
+    }
 }
+
 
 /* consult_page_requests */
-
 .my-hover-gray:hover {
     background-color: #ececec;
     outline-color: #8f8f8f !important;

@@ -180,117 +180,105 @@
   {% if clientname %}
   <footer>
     <div class="container">
-      <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
-        <div class="d-flex flex-column">
-          <p class="p-2 m-0 text-center text-white">Контакты клиента</p>
-          
-          {% if client_contacts %}
-            <div class="d-flex flex-row align-items-center mb-3">
-              
-              {% if client_contacts.telegram %}
-                {% if client_contacts.preferred == 'TG' %}
-                  <a href="{{ client_contacts.telegram }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.telegram }}" target="_blank">
-                      <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
-                    </a>
-                  </div>
-                {% endif %}
-              {% endif %}
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start py-3">
 
-              {% if client_contacts.whatsapp %}
-                {% if client_contacts.preferred == 'WA' %}
-                  <a href="{{ client_contacts.whatsapp }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.whatsapp }}" target="_blank">
-                      <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
-                    </a>
-                  </div>
-                {% endif %}
-              {% endif %}
+        <button type="button" class="btn btn-primary" onclick="openCommentary()">
+          <img src="{% static 'controlpage/img/comment_ico.svg' %}" width="38" title="Заметка для клиента">
+          <span class="ms-2">Заметка для клиента</span>
+        </button>
 
-              {% if client_contacts.discord %}
-                {% if client_contacts.preferred == 'DC' %}
-                  <a href="{{ client_contacts.discord }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.discord }}" target="_blank">
-                      <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
-                    </a>
-                  </div>
-                {% endif %}
-              {% endif %}
+        <button type="button" class="btn btn-primary">
+          <img src="{% static 'controlpage/img/note_ico.svg' %}" width="38" title="Заметка о клиенте">
+          <span class="ms-2">Заметка о клиенте</span>
+        </button>
+        
+        <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
+          <button type="button" class="btn btn-primary" onclick="showContacts()">
+            <img src="{% static 'controlpage/img/contacts_ico.svg' %}" width="38" title="Контакты, оставленные клиентом">
+            <span class="ms-2">Контакты клиента</pspan>
+          </button>
 
-              {% if client_contacts.skype %}
-                {% if client_contacts.preferred == 'SK' %}
-                  <a href="{{ client_contacts.skype }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.skype }}" target="_blank">
-                      <img src="{% static 'general/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
-                    </a>
-                </div>
-                {% endif %}
-              {% endif %}
-
-              {% if client_contacts.vkontakte %}
-                {% if client_contacts.preferred == 'VK' %}
-                  <a href="{{ client_contacts.vkontakte }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.vkontakte }}" target="_blank">
-                      <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
-                    </a>
-                  </div>
-                {% endif %}
-              {% endif %}
-
-              {% if client_contacts.facebook %}
-                {% if client_contacts.preferred == 'FB' %}
-                  <a href="{{ client_contacts.facebook }}" target="_blank" class="mx-2">
-                    <div class="order-1" id="preferred_contact_ico">
-                      <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
-                    </div>
-                  </a>
-                {% else %}
-                  <div class="p-2 order-2">
-                    <a href="{{ client_contacts.facebook }}" target="_blank">
-                      <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
-                      </a>
-                  </div>
-                {% endif %}
-              {% endif %}      
-            </div>
-          {% else %}
-            <p class="text-light-grey p-2 m-0">не указаны</p>
-          {% endif %}
-                  
-        </div>
+          <div class="d-none" id="client_contacts">
+            {% if client_contacts %}
+              <div class="d-flex flex-row align-items-center">
                 
-        <button type="button" class="btn btn-light" onclick="openCommentary()">Комментарий для клиента</button>
-        <button type="button" class="btn btn-light">Комментарий для меня</button>
+                {% if client_contacts.telegram %}
+                  {% if client_contacts.preferred == 'TG' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.telegram }}" target="_blank">
+                        <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                      </a>
+                    </div>
+                {% endif %}
+
+                {% if client_contacts.whatsapp %}
+                  {% if client_contacts.preferred == 'WA' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.whatsapp }}" target="_blank">
+                        <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                      </a>
+                    </div>
+                {% endif %}
+
+                {% if client_contacts.discord %}
+                  {% if client_contacts.preferred == 'DC' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.discord }}" target="_blank">
+                        <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                      </a>
+                    </div>
+                {% endif %}
+
+                {% if client_contacts.skype %}
+                  {% if client_contacts.preferred == 'SK' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.skype }}" target="_blank">
+                        <img src="{% static 'general/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
+                      </a>
+                    </div>
+                {% endif %}
+
+                {% if client_contacts.vkontakte %}
+                  {% if client_contacts.preferred == 'VK' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.vkontakte }}" target="_blank">
+                        <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                      </a>
+                    </div>
+                {% endif %}
+
+                {% if client_contacts.facebook %}
+                  {% if client_contacts.preferred == 'FB' %}
+                    <div class="p-2 order-1" id="preferred_contact_ico">
+                  {% else %}
+                    <div class="p-2 order-2">
+                  {% endif %}
+                      <a href="{{ client_contacts.facebook }}" target="_blank">
+                        <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                        </a>
+                    </div>
+                {% endif %}      
+              </div>
+            {% else %}
+              <span class="text-light-grey ms-2">не указаны</span>
+            {% endif %}     
+          </div>
+        </div>
 
       </div>
     </div>
