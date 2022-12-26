@@ -15,7 +15,7 @@
     color: #B2BFFF !important;
 }
 .text-royalblue {
-    color: royalblue;
+    color: royalblue !important;
 }
 .text-royalblue-dark {
     color: #2b48a0 !important;
@@ -1059,14 +1059,59 @@ h1[name='logo_title'] {
 
 /* hero_section1 */
 #hero_section1 {
-    height: 20rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(82,113,255);
-    background: linear-gradient(90deg, #5271ff 10%, #ffffff 100%);
+    background-image: url(/static/homepage/img/health_invest_gradient.png);
+    background-color: #e0e0e0;
+    background-size: cover;
+    background-position-y: center;
+    background-position-x: right;
+    background-repeat: no-repeat;
 }
 
+#hero_section1 h1 {
+    line-height: inherit;
+    color: white;
+    text-shadow: 0px 0px 8px #000832;
+    width: 68%;
+    padding-top: 1rem;
+    margin-bottom: 6rem;
+    font-size: 21px;
+}
+@media (min-width: 576px) {
+    #hero_section1 h1 {
+        width: 75%;
+        margin-top: 2rem;
+        margin-bottom: 9rem;
+        font-size: 25px;
+    }
+}
+@media (min-width: 768px) {
+    #hero_section1 h1 {
+        margin-top: 4rem;
+        margin-bottom: 11rem;
+        font-size: 33px;
+    }
+}
+@media (min-width: 992px) {
+    #hero_section1 h1 {
+        width: 70%;
+        margin-top: 8rem;
+        margin-bottom: 16rem;
+        font-size: 40px;
+    }
+}
+@media (min-width: 1200px) {
+    #hero_section1 h1 {
+        font-size: 45px;
+    }
+}
+@media (min-width: 1400px) {
+    #hero_section1 h1 {
+        margin-top: 10rem;
+        margin-bottom: 22rem;
+        font-size: 50px;
+    }
+}
 
 /* what_section */
 #what_section {
@@ -1074,6 +1119,11 @@ h1[name='logo_title'] {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+@media (min-width: 1400px) {
+    .what_section_txt {
+        font-size: 18px;
+    }
 }
 .what_section_txt p {
     background-color: #ffffff80;
@@ -1141,7 +1191,19 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1400px) {
     #what_section_block2 {
-        width: 51%;
+        width: 48%;
+    }
+    #what_section_block2 .what_section_txt p {
+        height: 3.5rem;
+    }
+    #what_section_block2:hover .txt_what {
+        margin-top: -3.5rem;
+    }
+    #what_section_block2:hover .what_section_txt p {
+        height: 7rem;
+    }
+    #what_section_block2:hover .dumbbell_bottom {
+        margin-top: -1rem;
     }
 }
 /* 3 */
@@ -1196,8 +1258,20 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1400px) {
     #what_section_block3 {
-        width: 55%;
+        width: 52%;
         margin-left: 14rem !important;
+    }
+    #what_section_block3 .what_section_txt p {
+        height: 3.5rem;
+    }
+    #what_section_block3:hover .what_section_txt p {
+        height: 7.5rem;
+    }
+    #what_section_block3:hover .dumbbell_bottom {
+        margin-top: -1.5rem;
+    }
+    #what_section_block3:hover .gear_lg {
+        transform: rotate(39deg);
     }
 }
 /* 4 */
@@ -1265,6 +1339,18 @@ h1[name='logo_title'] {
         align-self: flex-start;
         margin-top: -3rem;
     }
+    #what_section_block4 .what_section_txt p {
+        height: 1.75rem;
+    }
+    #what_section_block4 .dumbbell_bottom {
+        margin-top: -1rem;
+    }
+    #what_section_block4:hover .what_section_txt p {
+        height: 5.5rem;
+    }
+    #what_section_block4:hover .dumbbell_bottom {
+        margin-top: -3rem;
+    }
 }
 /* 5 */
 @media (min-width: 768px) {
@@ -1321,11 +1407,20 @@ h1[name='logo_title'] {
         margin-top: -7.5rem;
         width: 31.5%;
     }
+    #what_section_block5 .what_section_txt p {
+        height: 3.5rem;
+    }
+    #what_section_block5 .dumbbell_bottom {
+        margin-top: -2.5rem;
+    }
     #what_section_block5:hover .what_section_txt p {
-        height: 9rem;
+        height: 10.5rem;
     }
     #what_section_block5:hover .dumbbell_bottom {
-        margin-top: -4rem;
+        margin-top: -5.5rem;
+    }
+    #what_section_block5:hover .gear_lg {
+        transform: rotate(-60deg);
     }
 }
 /* 6 */
@@ -1407,17 +1502,17 @@ h1[name='logo_title'] {
         margin-top: 2rem;
     }
     #what_section_block6 .what_section_txt p {
-        height: 7.5rem;
+        height: 10.25rem;
     }
     #what_section_block6 .dumbbell_bottom {
-        margin-top: 2rem;
+        margin-top: 1rem;
     }
     #what_section_block6:hover .txt_what {
-        margin-top: -7.5rem;
+        margin-top: -10.5rem;
     }
     #what_section_block6:hover .what_section_txt p {
-        height: 7.5rem;
-        margin-top: -4.5rem;
+        height: 11.5rem;
+        margin-top: -6rem;
     }
 }
 /* 7 */
@@ -1490,6 +1585,24 @@ h1[name='logo_title'] {
     #what_section_block7 {
         margin-top: -4.25rem;
         width: 43%;
+    }
+    #what_section_block7 .what_section_txt p {
+        height: 5.25rem;
+    }
+    #what_section_block7 .dumbbell_bottom {
+        margin-top: -1.5rem;
+    }
+    #what_section_block7:hover .txt_what {
+        margin-top: -5rem;
+    }
+    #what_section_block7:hover .what_section_txt p {
+        height: 19rem;
+    }
+    #what_section_block7:hover .dumbbell_bottom {
+        margin-top: -11.5rem;
+    }
+    #what_section_block7:hover .gear_lg {
+        transform: rotate(-40deg);
     }
 }
 /* 8 */
@@ -1565,11 +1678,23 @@ h1[name='logo_title'] {
     #what_section_block8 {
         width: 56.5%;
     }
+    #what_section_block8 .what_section_txt p {
+        height: 8.5rem;
+    }
+    #what_section_block8 .dumbbell_bottom {
+        margin-top: -3.5rem;
+    }
+    #what_section_block8:hover .txt_what {
+        margin-top: -8.5rem;
+    }
     #what_section_block8:hover .what_section_txt p {
-        height: 12rem;
+        height: 13.5rem;
     }
     #what_section_block8:hover .dumbbell_bottom {
-        margin-top: -5.5rem;
+        margin-top: -6.5rem;
+    }
+    #what_section_block8:hover .gear_lg {
+        transform: rotate(23deg);
     }
 }
 /* 9 */
@@ -1652,7 +1777,9 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1400px) {
     #what_section_block9 {
+        width: 50%;
         margin-top: 0.5rem;
+        margin-left: 8rem;
     }
     #what_section_block9 .gear_sm {
         margin-top: 0rem;
@@ -1661,16 +1788,19 @@ h1[name='logo_title'] {
         margin-top: -2rem;
     }
     #what_section_block9 .what_section_txt p {
-        height: 4.5rem;
+        height: 7rem;
     }
     #what_section_block9:hover .txt_what {
-        margin-top: -4.5rem;
+        margin-top: -6.5rem;
     }
     #what_section_block9:hover .what_section_txt p {
-        height: 10.5rem;
+        height: 14rem;
     }
     #what_section_block9:hover .dumbbell_bottom {
-        margin-top: -5.5rem;
+        margin-top: -7rem;
+    }
+    #what_section_block9:hover .gear_lg {
+        transform: rotate(-25deg);
     }
 }
 /* 10 */
@@ -1728,23 +1858,26 @@ h1[name='logo_title'] {
 }
 @media (min-width: 1400px) {
     #what_section_block10 {
-        width: 42%;
-        margin-top: -4.5rem;
+        width: 45%;
+        margin-top: -3.5rem;
     }
     #what_section_block10 .what_section_txt p {
-        height: 3rem;
+        height: 3.5rem;
     }
     #what_section_block10 .dumbbell_bottom {
-        margin-top: -5rem;
+        margin-top: -3.75rem;
     }
     #what_section_block10:hover .txt_what {
-        margin-top: -3rem;
+        margin-top: -3.5rem;
+    }
+    #what_section_block10:hover .what_section_txt p {
+        height: 12rem;
     }
     #what_section_block10:hover .dumbbell_bottom {
         margin-top: -8rem;
     }
     #what_section_block10:hover .gear_lg {
-        transform: rotate(43deg);
+        transform: rotate(29deg);
     }
 }
 /* 11 */
@@ -1767,7 +1900,11 @@ h1[name='logo_title'] {
         width: 34%;
     }
 }
-
+@media (min-width: 1400px) {
+    #what_section_block11 {
+        width: 36%;
+    }
+}
 
 
 
