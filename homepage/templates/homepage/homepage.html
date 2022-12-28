@@ -9,23 +9,20 @@
         <h1 class="text-nowrap text-center text-md-start mt-4 pt-lg-4" name="logo_title">HEALTH & FITNESS</h1>
         <div class="d-flex flex-column mb-5">
             <h2 class="" id="welcome_section_h2_outtext">Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span></h2>
-            <div class="d-flex flex-column float-end" id="welcome_section_text">
-                <h4 class="" id="welcome_section_h2_intext">Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span></h4>
-                <div class="d-flex flex-row">
+            <div class="d-flex flex-column float-end mx-2" id="welcome_section_text">
+                <h4 class="mb-4 mb-sm-5" id="welcome_section_h2_intext">Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span></h4>
+                <div class="d-flex flex-row mb-3">
                     <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
                     <p class="mb-0 mb-sm-2">Помощь, обучение и поддержка</p>
                 </div>
-                <br>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row mb-3">
                     <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
                     <p class="mb-0 mb-sm-2">Обновление тела и разума через <br>модификацию поведения, <br>навыков и знаний</p>
                 </div>
-                <br>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row mb-3">
                     <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
                     <p class="mb-0 mb-sm-2">Только научный подход</p>
                 </div>
-                <br>
                 <div class="d-flex flex-row">
                     <p class="text-royalblue mb-0 mb-sm-2 me-2 mb-0">&#9658;</p>
                     <p class="mb-0 mb-sm-2 mb-0">Эффективность и ничего лишнего</p>
@@ -114,7 +111,7 @@
 </section>
 
 <section id="hero_section1">
-    <div class="container">
+    <div class="d-flex justify-content-end w-75" id="hero_txt_block1">
         <h1 class="text-center">
             Лечение - это траты на здоровье<br>
             Фитнес - инвестиция
@@ -126,7 +123,7 @@
     <div class="container">
 
         <h1 class="text-nowrap text-center fw-bolder pt-4 pt-md-5">ЧТО ДАЕТ</h1>
-        <h1 class="text-nowrap text-center pb-5" name="logo_title">HEALTH & FITNESS</h1>
+        <h1 class="text-nowrap text-center pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">HEALTH & FITNESS</h1>
 
         <!-- 1 -->
         <div class="d-flex" id="what_section_block1">
@@ -134,14 +131,14 @@
             <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md">
         </div>
         <!-- 2 -->
-        <div class="d-flex mx-auto what_section_block" id="what_section_block2">
-            <img src="{% static 'homepage/img/what_section_gear_lg_health.svg' %}" class="gear_lg">
+        <div class="d-flex what_section_block" id="what_section_block2">
+            <img src="{% static 'homepage/img/what_section_gear_lg_health.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             <span class="text-royalblue"><b>Анализ особенностей</b></span> вашего здоровья и физического состояния.<br>
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             Мы соберём всю необходимую информацию через специальную анкету и консультацию с экспертом.<br>
                             При необходимости попросим вас дополнительно проконсультироваться с врачом.
@@ -151,32 +148,32 @@
             </div>
         </div>
         <!-- 3 -->
-        <div class="d-flex ms-auto mx-xl-auto what_section_block" id="what_section_block3">
-            <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md align-self-start me-1 me-lg-2 me-xl-3">
-            <img src="{% static 'homepage/img/what_section_gear_lg_recovery.svg' %}" class="gear_lg">
+        <div class="d-flex what_section_block" id="what_section_block3">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Определение и отслеживание личных возможностей <span class="text-royalblue"><b>восстановления и утомления</b></span>.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             Ежедневное отслеживание динамических параметров организма и их субъективного восприятия. А также учёт меняющихся внешних факторов.
                         </span>
                     </p>
                 </div>
             </div>
+            <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md">
+            <img src="{% static 'homepage/img/what_section_gear_lg_recovery.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
         </div>
         <!-- 4 -->
-        <div class="d-flex ms-auto what_section_block" id="what_section_block4">
-            <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md d-md-none d-xl-block me-2 me-xl-0">
-            <img src="{% static 'homepage/img/what_section_gear_lg_goal.svg' %}" class="gear_lg">
+        <div class="d-flex what_section_block" id="what_section_block4">
+            <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md d-sm-none d-xl-block">
+            <img src="{% static 'homepage/img/what_section_gear_lg_goal.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Анализ и <span class="text-royalblue"><b>конкретизация целей</b></span> и мотивов.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             В ходе личной консультации мы максимально конкретизируем фактические цели и мотивы, о которых вы, возможно, и не знали сами.
                         </span>
@@ -185,33 +182,34 @@
             </div>
         </div>
         <!-- 5 -->
-        <div class="d-flex me-auto what_section_block" id="what_section_block5">
+        <div class="d-flex what_section_block" id="what_section_block5">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3 pb-2">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3 pb-2" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Ежедневный <span class="text-royalblue"><b>мониторинг состояния</b></span>. 
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             Удобный набор цифровых инструментов для фиксации важных и информативных физических показателей и автоматический доступ специалиста к ним.
                         </span>
                     </p> 
                 </div>
             </div>
-            <img src="{% static 'homepage/img/what_section_gear_lg_monitor.svg' %}" class="gear_lg align-self-start">
+            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm">
+            <img src="{% static 'homepage/img/what_section_gear_lg_monitor.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
         </div>
         <!-- 6 -->
-        <div class="d-flex ms-auto what_section_block" id="what_section_block6">
-            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm align-self-start d-none d-md-block">
-            <img src="{% static 'homepage/img/what_section_gear_lg_training.svg' %}" class="gear_lg align-self-end">
+        <div class="d-flex what_section_block" id="what_section_block6">
+            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm">
+            <img src="{% static 'homepage/img/what_section_gear_lg_training.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Составление <span class="text-royalblue"><b>персональной программы тренировок</b></span> с равномерным развитием всего организма и учётом ваших особенностей и пожеланий.<br>
                             <span class="text-royalblue"><b>Обучение</b></span> эффективной технике.<br>
                             Динамическая <span class="text-royalblue"><b>модификация</b></span> программы в зависимости от изменения состояния организма.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             На основе экспертизы состояния вашего организма и ваших стремлений, мы составим максимально эффективную индивидуальную программу тренировок, как в отношении здоровья, так и ваших времени и сил.<br>
                             Находясь ежедневно с вами на связи и получая фидбек, мы всегда сможем её адаптировать под меняющиеся условия и сделать ещё эффективнее.
@@ -221,14 +219,14 @@
             </div>
         </div>
         <!-- 7 -->
-        <div class="d-flex me-auto what_section_block" id="what_section_block7">
+        <div class="d-flex what_section_block" id="what_section_block7">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Удобный <span class="text-royalblue"><b>цифровой инструментарий</b></span> для работы над здоровьем.<br>
                             Всё что нужно, в одном месте.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             Умные журналы:<br>
                             <span class="text-royalblue">&bull;</span> физических показателей<br>
@@ -237,26 +235,26 @@
                             <span class="text-royalblue">&bull;</span> тренировок<br>
                             Автоматический анализ долговременных пищевых привычек.<br>
                             Конструктор тренировок.<br>
-                            Инструменты связи со специалистом и получения фидбека.<br>
+                            Инструменты связи со специалистом.<br>
                             И другие.
                         </span>
                     </p>
                 </div>
             </div>
-            <img src="{% static 'homepage/img/what_section_gear_lg_instruments.svg' %}" class="gear_lg align-self-end me-n2r">
+            <img src="{% static 'homepage/img/what_section_gear_lg_instruments.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
         </div>
         <!-- 8 -->
-        <div class="d-flex ms-auto what_section_block" id="what_section_block8">
+        <div class="d-flex what_section_block" id="what_section_block8">
             <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md">
-            <img src="{% static 'homepage/img/what_section_gear_lg_nutrition.svg' %}" class="gear_lg align-self-end">
+            <img src="{% static 'homepage/img/what_section_gear_lg_nutrition.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Составление персональной понутриентной <span class="text-royalblue"><b>стратегии рационального питания</b></span>. Без запретов, со свободой выбора продуктов.<br>
                             Ежедневный <span class="text-royalblue"><b>мониторинг и фидбек</b></span> по питанию.<br>
                             Плавная и гибкая модификация пищевых привычек.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             Основываясь на экспертизе вашего организма мы определим необходимые нормы нутриентов для любой цели: снижение жировой массы; увеличение мышечной массы; сохранение фактической массы.
                             И научим как просто и эффективно питаться для набора этих нутриентов, всё с приоритетом улучшения здоровья.<br>
@@ -267,14 +265,14 @@
             </div>
         </div>
         <!-- 9 -->
-        <div class="d-flex me-auto what_section_block" id="what_section_block9">
+        <div class="d-flex what_section_block" id="what_section_block9">
             <div class="what_section_txt">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Три гибких часовых <span class="text-royalblue"><b>консультации со специалистом</b></span> в неделю.<br>
                             Вы имеете возможность <span class="text-royalblue"><b>выбирать тематику:</b></span><br> тренировки, питание, психология.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             У вас есть возможность трижды в неделю связаться с экспертом по видео или аудио связи и получить консультацию на ту тему, что вы сегодня считаете приоритетной.<br>
                             Мы можем обсудить ваше питание, жизненные сложности на пути к здоровью, ваши тренировки.<br>
@@ -283,19 +281,19 @@
                     </p>
                 </div>
             </div>
-            <img src="{% static 'homepage/img/what_section_gear_lg_consult.svg' %}" class="gear_lg">
-            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm align-self-start">
+            <img src="{% static 'homepage/img/what_section_gear_lg_consult.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
+            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm">
         </div>
         <!-- 10 -->
-        <div class="d-flex ms-auto what_section_block" id="what_section_block10">
-            <img src="{% static 'homepage/img/what_section_gear_lg_study.svg' %}" class="gear_lg">
-            <div class="what_section_txt align-self-xxl-center">
-                <div class="dumbbell_bottom transition_common">
-                    <p class="mb-0 px-3">
-                        <span class="txt_what d-block transition_common">
+        <div class="d-flex what_section_block" id="what_section_block10">
+            <img src="{% static 'homepage/img/what_section_gear_lg_study.svg' %}" class="gear_lg" onclick="openWhatSectionBlock(event)">
+            <div class="what_section_txt">
+                <div class="dumbbell_bottom">
+                    <p class="mb-0 px-3" onclick="openWhatSectionBlock(event)">
+                        <span class="txt_what d-block">
                             Уклон в <span class="text-royalblue"><b>обучение</b></span>.<br>
                             Чтобы со временем вы со всем справлялись сами.
-                        </span>
+                        </span><br>
                         <span class="txt_how">
                             В нашей работе мы стараемся не только вести клиента, но и обучать.<br>
                             Чтобы человек понимал принципы, не только знал что делать, но и почему.<br>
@@ -306,9 +304,9 @@
             </div>
         </div>
         <!-- 11 -->
-        <div class="d-flex justify-content-start ms-auto" id="what_section_block11">
+        <div class="d-flex justify-content-start" id="what_section_block11">
             <img src="{% static 'homepage/img/what_section_gear_md.svg' %}" class="gear_md me-2 me-xl-3">
-            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm align-self-end">
+            <img src="{% static 'homepage/img/what_section_gear_sm.svg' %}" class="gear_sm me-2 align-self-end">
         </div>
 
     </div>
@@ -374,7 +372,7 @@
 </section>
 
 <!-- модальное окно подтверждения заявки -->
-<div class="modal fade" id="consultation_confirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="consultation_confirm" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
