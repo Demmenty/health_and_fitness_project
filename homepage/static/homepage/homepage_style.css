@@ -302,7 +302,7 @@ main {
 
 /* why_section */
 #why_section {
-    background-image: url(/static/homepage/img/why_section_back.svg);
+    background-image: url(/static/homepage/img/why_section_back.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1063,7 +1063,7 @@ main {
 
 /* what_section */
 #what_section {
-    background-image: url(/static/homepage/img/why_section_back.svg);
+    background-image: url(/static/homepage/img/why_section_back.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
