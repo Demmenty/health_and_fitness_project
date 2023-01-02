@@ -26,7 +26,7 @@
      showgrid="false"
      inkscape:zoom="3.659624"
      inkscape:cx="89.899946"
-     inkscape:cy="107.25146"
+     inkscape:cy="107.52471"
      inkscape:window-width="1751"
      inkscape:window-height="1243"
      inkscape:window-x="449"
@@ -75,7 +75,7 @@
        fill-opacity="1"
        fill-rule="nonzero"
        id="path322-40-3-4"
-       style="fill:#cbd3ed;fill-opacity:1;stroke-width:0.386524" />
+       style="fill:#e8ebfa;fill-opacity:1;stroke-width:0.386524" />
     <path
        fill="#f0f0f8"
        d="M 94.147383,60.327444 86.476062,73.858266 71.31128,73.757805 63.819883,60.126539 71.49121,46.595736 l 15.164782,0.100461 7.491391,13.631247"
@@ -127,7 +127,7 @@
        clip-path="url(#083787133f)"
        id="g98848"
        transform="matrix(0.35277777,0,0,0.35277777,-332.82294,-90.418235)"
-       style="stroke:#b5b8d8;stroke-opacity:1">
+       style="stroke:#dcdcf4;stroke-opacity:1">
       <path
          stroke-linecap="round"
          transform="matrix(0.682317,0,0,0.682746,1119.1558,410.02877)"
@@ -139,14 +139,14 @@
          stroke-opacity="1"
          stroke-miterlimit="4"
          id="path98846"
-         style="stroke:#cbd3ed;stroke-opacity:1" />
+         style="stroke:#e8ebfa;stroke-opacity:1" />
     </g>
     <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="m 63.089148,31.465404 8.472207,14.90113"
        id="path103810-3" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="m 94.89318,60.101979 16.06987,-0.0046"
        id="path103810-3-6" />
     <path
@@ -162,7 +162,7 @@
        d="m 93.277601,60.055182 -7.6575,13.01054"
        id="path110454-8" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="M 71.47479,73.605435 63.090973,88.354196"
        id="path103810-3-60" />
   </g>

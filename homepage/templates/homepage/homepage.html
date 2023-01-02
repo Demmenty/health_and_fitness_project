@@ -5,38 +5,36 @@
 
 {% block content %}
 <section id="welcome_section">
-    <div class="container d-flex flex-column justify-content-between h-fill mt-lg-5">
-        <h1 class="text-nowrap text-center text-md-start mt-4 pt-lg-4" name="logo_title">HEALTH & FITNESS</h1>
-        <div class="d-flex flex-column mb-5">
-            <h2 class="" id="welcome_section_h2_outtext">Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span></h2>
-            <div class="d-flex flex-column float-end mx-2" id="welcome_section_text">
-                <h4 class="mb-4 mb-sm-5" id="welcome_section_h2_intext">Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span></h4>
-                <div class="d-flex flex-row mb-3">
-                    <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
-                    <p class="mb-0 mb-sm-2">Помощь, обучение и поддержка</p>
-                </div>
-                <div class="d-flex flex-row mb-3">
-                    <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
-                    <p class="mb-0 mb-sm-2">Обновление тела и разума через <br>модификацию поведения, <br>навыков и знаний</p>
-                </div>
-                <div class="d-flex flex-row mb-3">
-                    <p class="text-royalblue mb-0 mb-sm-2 me-2">&#9658;</p>
-                    <p class="mb-0 mb-sm-2">Только научный подход</p>
-                </div>
-                <div class="d-flex flex-row">
-                    <p class="text-royalblue mb-0 mb-sm-2 me-2 mb-0">&#9658;</p>
-                    <p class="mb-0 mb-sm-2 mb-0">Эффективность и ничего лишнего</p>
-                </div>
+    <div class="container d-flex flex-column justify-content-between h-fill my-5">
+        <h2 class="text-nowrap text-whiteshadow align-self-start mt-5 pt-lg-1" name="logo_title">HEALTH & FITNESS</h2>
+
+        <div class="d-flex flex-column align-items-center align-self-center align-self-md-end mb-xl-4" id="welcome_section_block">
+            <h2 class="text-center d-none d-lg-block mb-4 mb-lg-5">
+                Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span>
+            </h2>
+
+            <div class="d-flex flex-column" id="welcome_section_text">
+                <h2 class="text-center d-lg-none mb-4 mb-sm-5">
+                    Индивидуальная стратегия<br> <span class="text-royalblue"><b>здоровья и активности</b></span>
+                </h2>
+                <ul class="mb-0">
+                    <li class="mb-3 mb-xl-4">Помощь, обучение и поддержка</li>
+                    <li class="mb-3 mb-xl-4">Обновление тела и разума через модификацию поведения, навыков и знаний</li>
+                    <li class="mb-3 mb-xl-4">Только научный подход</li>
+                    <li>Эффективность и ничего лишнего</li>
+                </ul>
             </div>
+
         </div>
+
     </div>
 </section>
 
 <section id="why_section" class="pb-5">
     <div class="container">
 
-        <h1 class="text-nowrap text-center fw-bolder pt-4 pt-md-5">ЗАЧЕМ ВАМ</h1>
-        <h1 class="text-nowrap text-center pb-5" name="logo_title">HEALTH & FITNESS</h1>
+        <h2 class="text-nowrap text-center pt-4 pt-md-5">ЗАЧЕМ ВАМ</h2>
+        <h2 class="text-nowrap text-center text-whiteshadow pb-5" name="logo_title">HEALTH & FITNESS</h2>
 
             <div class="why_section_block" id="why_section_block1">
                 <p class="why_section_txt pin pin_left" id="why_section_txt1">
@@ -59,7 +57,9 @@
             <div class="why_section_block" id="why_section_block3">
                 <p class="why_section_txt pin pin_left" id="why_section_txt3">
                     <img src="{% static 'homepage/img/why_section_img3_care_mini.svg' %}" width="" class="why_section_img_mini" id="why_section_img3_mini">
-                    Человеку свойственно заботиться о своих ближних. Иногда человек старается заботиться о многих. Но часто человек забывает <span class="text-royalblue"><b>заботиться о своём теле и здоровье</b></span> Предлагаем вам об этом вспомнить и позволить нам помочь.
+                    Человеку свойственно заботиться о своих ближних. Иногда человек старается заботиться о многих.
+                    Но часто человек забывает <span class="text-royalblue"><b>заботиться о своём теле и здоровье</b></span>.
+                    Предлагаем вам об этом вспомнить и позволить нам помочь.
                 </p>
                 <img src="{% static 'homepage/img/why_section_img3_care.svg' %}" width="" class="why_section_img" id="why_section_img3">
             </div>
@@ -110,20 +110,24 @@
     </div>
 </section>
 
-<section id="hero_section1">
-    <div class="d-flex justify-content-end w-75" id="hero_txt_block1">
-        <h1 class="text-center">
-            Лечение - это траты на здоровье<br>
-            Фитнес - инвестиция
-        </h1>
+<section class="hero_section" id="hero_section1">
+    <div class="h-100 gradient_blue">
+
+        <div class="container justify-content-center justify-content-lg-end d-flex h-100">
+            <h2 class="text-center text-whiteshadow">
+                Лечение - это траты на здоровье<br>
+                Фитнес - инвестиция
+            </h2>
+        </div>
+
     </div>
 </section>
 
 <section id="what_section" class="pb-5">
     <div class="container">
 
-        <h1 class="text-nowrap text-center fw-bolder pt-4 pt-md-5">ЧТО ДАЕТ</h1>
-        <h1 class="text-nowrap text-center pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">HEALTH & FITNESS</h1>
+        <h2 class="text-nowrap text-center pt-4 pt-md-5">ЧТО ДАЕТ</h2>
+        <h2 class="text-nowrap text-center text-whiteshadow pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">HEALTH & FITNESS</h2>
 
         <!-- 1 -->
         <div class="d-flex" id="what_section_block1">
@@ -235,7 +239,7 @@
                             <span class="text-royalblue">&bull;</span> тренировок<br>
                             Автоматический анализ долговременных пищевых привычек.<br>
                             Конструктор тренировок.<br>
-                            Инструменты связи со специалистом.<br>
+                            Инструменты связи со специалистом.
                             И другие.
                         </span>
                     </p>
@@ -312,36 +316,16 @@
     </div>
 </section>
 
-<section id="consult_section">
-    <div class="container">
+<section class="hero_section" id="hero_section2">
+    <div class="h-100" id="img_couple">
 
-        <div class="d-flex flex-row py-5">
-            <div class="w-50">
-                <!-- картинка -->
-            </div>
-            <div class="d-flex flex-column w-50">
-                <h2 class="mb-0">Мы предлагаем</h2>
-                <h2 class="">комплексный функционал:</h2>
-                <br>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> всё, что нужно</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> в одном месте</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> в удобном формате</p>
-                <br>
-                <p>Но как бы не был хорош функционал нашего сервиса, это только инструменты.
-                   Управлять ими, учить ими пользоваться и контролировать прогресс будет <a href="#" class="text-decoration-none text-royalblue"><b>эксперт и основатель проекта</b></a>. А человеческое время и силы, увы, ограничены, поэтому услуга лимитирована.</p>
-                <p>Успей <a href="#consultation_section" class="text-decoration-none text-royalblue"><b>записаться</b></a>, пока есть свободные места.</p>
-            </div>
+        <div class="container d-flex h-100"> 
+            <h2 class="text-center text-whiteshadow">
+                Красивое тело - лишь приятный побочный эффект.<br>
+                Реальный результат - отличное самочувствие и здоровое долголетие.
+            </h2>
         </div>
-       
-    </div>
-</section>
 
-<section id="hero_section2">
-    <div class="container">
-        <h1 class="text-center text-white">
-            Красивое тело - лишь приятный побочный эффект.<br>
-            Реальный результат - отличное самочувствие и здоровое долголетие.
-        </h1>
     </div>
 </section>
 
@@ -349,14 +333,17 @@
     <div class="container">
 
         <div class="d-flex flex-column flex-md-row py-5">
-            <div class="w-100 w-md-50 pe-5 mb-4 mb-md-0">
-                <h2 class="fw-bolder mb-0">Запишитесь на</h2>
-                <h2 class="fw-bolder mb-0"><span class="text-royalblue">бесплатную консультацию</span></h2>
-                <h2 class="fw-bolder">со специалистом</h2>
-                <br>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> вы получите более подробную информацию</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> обсудите цели и пути их достижения</p>
-                <p class="lead"><span class="text-royalblue">&#9658;</span> сможете задать любые вопросы</p>
+            <div class="w-100 w-md-50 pe-5 mb-4" id="consultation_section_text">
+                <h2 class="fw-bolder mb-5">
+                    Запишитесь на <br>
+                    <span class="text-royalblue">бесплатную консультацию</span><br>
+                    со специалистом
+                </h2>
+                <ul class="ps-4">
+                    <li class="mb-3 mb-xl-4">вы получите более подробную информацию</li>
+                    <li class="mb-3 mb-xl-4">обсудите цели и пути их достижения</li>
+                    <li class="">сможете задать любые вопросы</li>
+                </ul>
             </div>
             <div class="d-flex flex-column w-100 w-md-50">
                 <!-- форма для консультацияя -->

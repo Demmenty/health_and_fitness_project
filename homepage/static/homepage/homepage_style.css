@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 
 .transition_common {
@@ -10,15 +11,12 @@
 .text-transparent {
     color: #ffffff00;
 }
-
-.text-royalblue-ligth {
-    color: #B2BFFF !important;
+.text-whiteshadow {
+    color: white;
+    text-shadow: 0px 0px 10px #2a356a;
 }
 .text-royalblue {
     color: royalblue !important;
-}
-.text-royalblue-dark {
-    color: #2b48a0 !important;
 }
 .w-100px {
     width: 100px;
@@ -58,7 +56,6 @@ header {
     top: 0;
     width: 100%;
     z-index: 100;
-    font-family: 'Roboto', sans-serif;
 }
 
 .navbar-toggler {
@@ -130,7 +127,6 @@ footer {
     border-top-color: #b9b9b9;
     border-top-style: solid;
     border-top-width: 3px;
-    font-family: 'Roboto', sans-serif;
 }
 .mail_ref {
     color: #b9b9b9;
@@ -238,10 +234,8 @@ footer {
 
 /* main */
 main {
-    font-family: 'Poppins', sans-serif !important;
+    color: #3e3e3e;
 }
-
-
 /* welcome_section */
 #welcome_section {
     height: 100vh;
@@ -252,113 +246,57 @@ main {
     background-position-y: center, center;
     background-repeat: no-repeat, no-repeat;
 }
-
 #welcome_section_text {
-    align-self: center;
-    font-size: 18px;
-    padding: 30px 20px;
+    padding: 20px 20px;
+    margin: 0 0.5rem;
+    max-width: 25rem;
     background-color: white;
-    border-radius: 15px;
-    z-index: 1;
+    border-radius: 5px;
     box-shadow: 0px 0px 10px #adb6dd;
 }
 @media (min-width: 576px) {
     #welcome_section_text {
-        margin-right: 26px;
-        align-self: flex-end;
-        width: fit-content;
-        padding: 30px 30px;
-        font-size: 20px;
-        transform: skew(349deg);
+        margin: 0;
+        padding: 28px 28px;
+        max-width: 28rem;
     }
 }
 @media (min-width: 992px) {
     #welcome_section_text {
-        padding: 30px 15px;
-        font-size: 20px;
-        box-shadow: 0px 0px 3px 0px #d9deff;
+        max-width: unset;
     }
+    #welcome_section_block {
+        max-width: 40%;
+    }
+}
+#welcome_section_text ul li::marker {
+    content: '►  ';
+    color: royalblue;
+}
+#welcome_section_text ul {
+    font-size: 1.25rem;
 }
 @media (min-width: 1200px) {
-    #welcome_section_text {
-        padding: 30px 20px;
-        font-size: x-large;
-    }
-}
-@media (min-width: 1400px) {
-    #welcome_section_text {
-        padding: 35px 40px;
-        font-size: 25px;
-    }
+    #welcome_section_text ul {
+        font-size: 1.5rem;
+    } 
 }
 
-#welcome_section_h2_intext {
-    text-align: center;
+[name='logo_title'] {
+    letter-spacing: 5px;
 }
 @media (min-width: 576px) {
-    #welcome_section_h2_intext {
-        text-align: start;
-        padding-left: 24px;
-    }
-}
-@media (min-width: 768px) {
-    #welcome_section_h2_intext {
-        font-size: 25px;
-    }
-}
-@media (min-width: 992px) {
-    #welcome_section_h2_intext {
-        display: none;
+    [name='logo_title'] {
+        letter-spacing: 8px;
     }
 }
 
-#welcome_section_h2_outtext {
-    display: none;
+#welcome_section [name='logo_title'] {
+    visibility: hidden;
 }
-@media (min-width: 992px) {
-    #welcome_section_h2_outtext {
-        display: unset;
-        margin-bottom: 3rem;
-        align-self: flex-end;
-        width: fit-content;
-        transform: skew(349deg);
-        font-size: 25px;
-    }
-}
-@media (min-width: 1200px) {
-    #welcome_section_h2_outtext {
-        margin-bottom: 2rem;
-        font-size: xx-large;
-    }
-}
-@media (min-width: 1400px) {
-    #welcome_section_h2_outtext {
-        font-size: 35px;
-    }
-}
-
-h1[name='logo_title'] {
-    align-self: center;
-    font-family: sans-serif;
-    font-size: medium;
-    letter-spacing: 9px;
-    text-shadow: 0px 0px 7px #2a356a;
-    color: white;
-}
-@media (min-width: 400px) {
-    h1[name='logo_title'] {
-        font-size: x-large;
-    }
-}
-@media (min-width: 520px) {
-    h1[name='logo_title'] {
-        align-self: flex-start;
-    }
-}
-@media (min-width: 768px) {
-    h1[name='logo_title'] {
-        font-size: xx-large;
-        text-shadow: 0px 0px 14px #2a356a;
+@media (min-width: 576px) {
+    #welcome_section [name='logo_title'] {
+        visibility: visible;
     }
 }
 
@@ -392,7 +330,8 @@ h1[name='logo_title'] {
     padding: 15px 15px 30px 15px;
     margin-bottom: 0;
     width: auto;
-    border-top: 2px solid #cbd3ed;
+    border-top: 2px solid #e8ebfa;
+    z-index: 2;
 }
 @media (min-width: 576px) {
     .why_section_txt {
@@ -405,7 +344,6 @@ h1[name='logo_title'] {
         align-self: end;
         padding: 0 0 15px 0;
         border: none;
-        background-color: unset;
     }
 }
 @media (min-width: 1400px) {
@@ -453,14 +391,14 @@ h1[name='logo_title'] {
 }
 .pin::before {
     position: absolute;
-    background-color: #cbd3ed;
+    background-color: #e8ebfa;
     border-radius: 10px;
     content: "";
 }
 @media (min-width: 768px) {
     .pin::after {
         position: absolute;
-        border-bottom: 3px solid #cbd3ed;
+        border-bottom: 3px solid #e8ebfa;
         content: "";
     }
 }
@@ -526,7 +464,7 @@ h1[name='logo_title'] {
     }
 }
 #why_section_txt1 {
-    border-left: 2px solid #cbd3ed;
+    border-left: 2px solid #e8ebfa;
 }
 #why_section_txt1::before {
     top: -6px;
@@ -560,12 +498,12 @@ h1[name='logo_title'] {
     #why_section_block2 {
         flex-direction: column;
         float: right;
-        margin-top: 114px;
+        margin-top: 135px;
     }
 }
 @media (min-width: 992px) {
     #why_section_block2 {
-        margin-top: 13px;
+        margin-top: 34px;
     }
 }
 @media (min-width: 1200px) {
@@ -579,12 +517,12 @@ h1[name='logo_title'] {
     } 
 }
 #why_section_txt2 {
-  border-right: 2px solid #cbd3ed;  
+  border-right: 2px solid #e8ebfa;  
 }
 @media (min-width: 576px) {
     #why_section_txt2 {
         border-right: unset;  
-        border-left: 2px solid #cbd3ed;  
+        border-left: 2px solid #e8ebfa;  
     }
 }
 @media (min-width: 768px) {
@@ -635,7 +573,7 @@ h1[name='logo_title'] {
         justify-content: end;
         align-items: flex-end;
         flex-direction: column;
-        margin-top: 40px;
+        margin-top: 23px;
     }
 }
 @media (min-width: 992px) {
@@ -655,11 +593,12 @@ h1[name='logo_title'] {
     }
 }
 #why_section_txt3 {
-    border-left: 2px solid #cbd3ed;
+    border-left: 2px solid #e8ebfa;
 }
 @media (min-width: 576px) {
     #why_section_txt3 {
         margin-top: 28px;
+        background-color: white;
     } 
 }
 @media (min-width: 768px) {
@@ -667,6 +606,7 @@ h1[name='logo_title'] {
         border: unset;
         padding-right: 40px;
         margin-top: 0;
+        background-color: unset;
     } 
 }
 @media (min-width: 1200px) {
@@ -711,12 +651,12 @@ h1[name='logo_title'] {
     }
 }
 #why_section_txt4 {
-    border-right: 2px solid #cbd3ed;  
+    border-right: 2px solid #e8ebfa;  
 }
 @media (min-width: 576px) {
     #why_section_txt4 {
         border-right: unset;  
-        border-left: 2px solid #cbd3ed;  
+        border-left: 2px solid #e8ebfa;  
     }
 }
 @media (min-width: 768px) {
@@ -749,7 +689,7 @@ h1[name='logo_title'] {
 } 
 @media (min-width: 768px) {
    #why_section_img4 {
-        margin-top: -135px;
+        margin-top: -135.5px;
     } 
 }
 @media (min-width: 992px) {
@@ -785,7 +725,7 @@ h1[name='logo_title'] {
 @media (min-width: 1200px) {
     #why_section_block5 {
         flex-direction: row;
-        margin-top: -3px;
+        margin-top: -22px;
         width: 66%;
     } 
 }
@@ -796,7 +736,7 @@ h1[name='logo_title'] {
     } 
 }
 #why_section_txt5 {
-    border-left: 2px solid #cbd3ed;
+    border-left: 2px solid #e8ebfa;
 }
 #why_section_txt5::before {
     top: -4px;
@@ -892,7 +832,7 @@ h1[name='logo_title'] {
 #why_section_txt6 {
     align-self: flex-start;
     padding-left: 26px;
-    border-right: 2px solid #cbd3ed;
+    border-right: 2px solid #e8ebfa;
 }
 #why_section_txt6::before {
     right: 0;
@@ -905,7 +845,7 @@ h1[name='logo_title'] {
     #why_section_txt6 {
         padding-bottom: 0;
         border-right: unset;
-        border-left: 2px solid #cbd3ed;
+        border-left: 2px solid #e8ebfa;
     }
 }
 @media (min-width: 768px) {
@@ -963,12 +903,12 @@ h1[name='logo_title'] {
 @media (min-width: 576px) {
     #why_section_block7 {
         margin-top: -77px;
-        border-bottom: 2px solid #cbd3ed;
+        border-bottom: 2px solid #e8ebfa;
         position: relative;
     }  
     #why_section_block7::before {
         position: absolute;
-        border-left: 2px solid #cbd3ed;
+        border-left: 2px solid #e8ebfa;
         content: "";
         bottom: 0;
         height: 115px;
@@ -1009,8 +949,8 @@ h1[name='logo_title'] {
 }
 #why_section_txt7 {
     padding-bottom: 15px;
-    border-left: 2px solid #cbd3ed;
-    border-bottom: 2px solid #cbd3ed;
+    border-left: 2px solid #e8ebfa;
+    border-bottom: 2px solid #e8ebfa;
 }
 #why_section_txt7::before {
     right: 0;
@@ -1058,8 +998,7 @@ h1[name='logo_title'] {
 
 /* hero_section1 */
 #hero_section1 {
-    display: flex;
-    background-image: url(/static/homepage/img/health_invest_background2.png);
+    background-image: url(/static/homepage/img/health_invest_background.png);
     background-color: #5876fe;
     background-size: cover;
     background-position-y: center;
@@ -1067,54 +1006,59 @@ h1[name='logo_title'] {
     background-repeat: no-repeat;
 }
 
-#hero_txt_block1 {
-    background: #5271ff;
-    background: linear-gradient(90deg, #5271ff 0%, #5271ff 10%, #ffffff00 100%);
-}
-
-#hero_section1 h1 {
-    line-height: inherit;
-    color: white;
-    text-shadow: 0px 0px 8px #000832;
-    margin-top: 1rem;
-    margin-bottom: 6rem;
-    padding-left: 18px;
-    font-size: 20px;
+#hero_section1 .gradient_blue {
+    background: linear-gradient(90deg, #5271ff 1%, #ffffff00 100%);
 }
 @media (min-width: 576px) {
-    #hero_section1 h1 {
-        margin-top: 2rem;
-        margin-bottom: 8rem;
-        font-size: 25px;
+    #hero_section1 .gradient_blue {
+        width: 75%;
+    }
+}
+
+#hero_section1 h2 {
+    margin-top: 1rem;
+    margin-bottom: 6rem;
+    width: 18rem;
+}
+@media (min-width: 576px) {
+    #hero_section1 h2 {
+        align-self: center;
+        margin: 0;
+        width: 70%;
     }
 }
 @media (min-width: 768px) {
-    #hero_section1 h1 {
-        margin-bottom: 9rem;
-        font-size: 33px;
-    }
-}
-@media (min-width: 992px) {
-    #hero_section1 h1 {
-        margin-top: 3rem;
-        margin-bottom: 10rem;
-        font-size: 40px;
+    #hero_section1 h2 {
+        line-height: inherit;
+        margin-left: 4rem;
+        width: 85%
     }
 }
 @media (min-width: 1200px) {
-    #hero_section1 h1 {
-        font-size: 45px;
-        margin-bottom: 12rem;
+    #hero_section1 h2 {
+        margin-bottom: 6rem;
     }
 }
+
+@media (min-width: 576px) {
+    .hero_section {
+        height: 275px;
+    } 
+}
+@media (min-width: 992px) {
+    .hero_section {
+        height: 328px;
+    } 
+}
+@media (min-width: 1200px) {
+    .hero_section {
+        height: 375px;
+    } 
+}
 @media (min-width: 1400px) {
-    #hero_section1 h1 {
-        padding-left: 0;
-        margin-top: 4rem;
-        font-size: 50px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    .hero_section {
+        height: 406px;
+    } 
 }
 
 /* what_section */
@@ -1141,6 +1085,7 @@ h1[name='logo_title'] {
 
 .what_section_txt {
     width: 80%;
+    color: #3e3e3e;
 }
 @media (min-width: 768px) {
     .what_section_txt {
@@ -1213,7 +1158,7 @@ h1[name='logo_title'] {
 
 .dumbbell_bottom {
     position: relative;
-    border-bottom: 2px solid #cbd3ed;
+    border-bottom: 2px solid #e8ebfa;
     transition: margin 0.6s ease;
 }
 @media (min-width: 576px) {
@@ -1223,7 +1168,7 @@ h1[name='logo_title'] {
 }
 .dumbbell_bottom::before {
     position: absolute;
-    background-color: #cbd3ed;
+    background-color: #e8ebfa;
     border-radius: 10px;
     content: "";
     height: 10px;
@@ -1233,7 +1178,7 @@ h1[name='logo_title'] {
 }
 .dumbbell_bottom::after {
     position: absolute;
-    background-color: #cbd3ed;
+    background-color: #e8ebfa;
     border-radius: 10px;
     content: "";
     height: 10px;
@@ -1243,7 +1188,7 @@ h1[name='logo_title'] {
 }
 @media (min-width: 576px) {
     .dumbbell_bottom {
-        border-bottom: 3px solid #cbd3ed;
+        border-bottom: 3px solid #e8ebfa;
     }
     .dumbbell_bottom::before {
         height: 13px;
@@ -1331,6 +1276,9 @@ h1[name='logo_title'] {
     #what_section_block3 .dumbbell_bottom {
         margin-top: -2rem;
     }
+    #what_section_block3 .dumbbell_bottom.down {
+        margin-top: -1.5rem;
+    }
     #what_section_block3 .gear_lg.turned {
         transform: rotate(20deg);
     }
@@ -1341,6 +1289,9 @@ h1[name='logo_title'] {
     }
     #what_section_block3 .dumbbell_bottom {
         margin-top: -0.5rem;
+    }
+    #what_section_block3 .dumbbell_bottom.down {
+        margin-top: 0rem;
     }
 }
 @media (min-width: 1200px) {
@@ -1363,6 +1314,9 @@ h1[name='logo_title'] {
         width: 47%;
     }
     #what_section_block3 .dumbbell_bottom {
+        margin-top: -0.75rem;
+    }
+    #what_section_block3 .dumbbell_bottom.down {
         margin-top: -0.75rem;
     }
 }
@@ -1402,6 +1356,9 @@ h1[name='logo_title'] {
     }
     #what_section_block4 .dumbbell_bottom {
         margin-top: 3.75rem;
+    }
+    #what_section_block4 .dumbbell_bottom.down {
+        margin-top: 0.5rem;
     }
 }
 @media (min-width: 1200px) {
@@ -1475,7 +1432,7 @@ h1[name='logo_title'] {
         margin-top: -0.5rem;
     }
     #what_section_block5 .dumbbell_bottom.down {
-        margin-top: -3.5rem;
+        margin-top: -4.5rem;
     }
 }
 @media (min-width: 992px) {
@@ -1506,7 +1463,7 @@ h1[name='logo_title'] {
         margin-top: -2.5rem;
     }
     #what_section_block5 .dumbbell_bottom.down {
-        margin-top: -6.25rem;
+        margin-top: -7.5rem;
     }
 }
 @media (min-width: 1400px) {
@@ -1514,7 +1471,7 @@ h1[name='logo_title'] {
         margin-left: 8.5rem;
     }
     #what_section_block5 .dumbbell_bottom {
-        margin-top: -1rem;
+        margin-top: -3rem;
     }
     #what_section_block5 .gear_lg.turned {
         transform: rotate(-20deg);
@@ -1557,7 +1514,7 @@ h1[name='logo_title'] {
         margin-top: -1.25rem;
     }
     #what_section_block6 .dumbbell_bottom.down {
-        margin-top: -1.75rem;
+        margin-top: -2rem;
     }
 }
 @media (min-width: 992px) {
@@ -1571,11 +1528,8 @@ h1[name='logo_title'] {
     #what_section_block6 .what_section_txt {
         width: 43%;
     }
-    #what_section_block6 .dumbbell_bottom {
-        margin-top: -2rem;
-    }
     #what_section_block6 .dumbbell_bottom.down {
-        margin-top: -2.75rem;
+        margin-top: 0rem;
     }
 }
 @media (min-width: 1200px) {
@@ -1603,10 +1557,13 @@ h1[name='logo_title'] {
         width: 49%;
     }
     #what_section_block6 .dumbbell_bottom {
-        margin-top: 2.25rem;
+        margin-top: 2.5rem;
     }
     #what_section_block6 .dumbbell_bottom.down {
-        margin-top: 1.5rem;
+        margin-top: 2rem;
+    }
+    #what_section_block6 .gear_lg.turned {
+        transform: rotate(17deg);
     }
 }
 /* 7 */
@@ -1627,7 +1584,7 @@ h1[name='logo_title'] {
         width: 40%;
     }
     #what_section_block7 .dumbbell_bottom {
-        margin-top: -0.25rem;
+        margin-top: -2.25rem;
     }
     #what_section_block7 .dumbbell_bottom.down {
         margin-top: -11rem;
@@ -1705,7 +1662,7 @@ h1[name='logo_title'] {
         margin-top: -1.5rem;
     }
     #what_section_block8 .dumbbell_bottom.down {
-        margin-top: -6.75rem;
+        margin-top: -8rem;
     }
     #what_section_block8 .gear_lg.turned {
         transform: rotate(22deg);
@@ -1793,14 +1750,14 @@ h1[name='logo_title'] {
         margin-left: -2rem;
     }
     #what_section_block9 .dumbbell_bottom {
-        margin-top: -7rem;
+        margin-top: -7.5rem;
     }
     #what_section_block9 .dumbbell_bottom.down {
-        margin-top: -18rem;
+        margin-top: -19.25rem;
     }
 
     #what_section_block9 .gear_lg.turned {
-        transform: rotate(-32deg);
+        transform: rotate(-50deg);
     }
 }
 @media (min-width: 992px) {
@@ -1829,13 +1786,10 @@ h1[name='logo_title'] {
         margin-top: -3.5rem;
     }
     #what_section_block9 .dumbbell_bottom.down {
-        margin-top: -8.25rem;
+        margin-top: -7rem;
     }
 }
 @media (min-width: 1400px) {
-    #what_section_block9 {
-
-    }
     #what_section_block9 .what_section_txt {
         margin-left: 9rem;
     }
@@ -1891,21 +1845,21 @@ h1[name='logo_title'] {
         margin-top: -3rem;
     }
     #what_section_block10 .dumbbell_bottom.down {
-        margin-top: -7rem;
+        margin-top: -6.75rem;
     }
     #what_section_block10 .gear_lg.turned {
         transform: rotate(45deg);
     }
 }
 @media (min-width: 1400px) {
-    #what_section_block10 {
-
-    }
     #what_section_block10 .what_section_txt {
         margin-right: 2rem;
     }
     #what_section_block10 .dumbbell_bottom {
         margin-top: -3.5rem;
+    }
+    #what_section_block10 .dumbbell_bottom.down {
+        margin-top: -8rem;
     }
 }
 /* 11 */
@@ -1948,15 +1902,66 @@ h1[name='logo_title'] {
 
 /* hero_section2 */
 #hero_section2 {
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(82,113,255);
-    background: linear-gradient(90deg, #5271ff 10%, #ffffff 100%);
+    background-image: linear-gradient(90deg, #5271ff 1%, #ffffff00 100%);
+}
+#img_couple {
+    background-image: url(/static/homepage/img/fitness_couple.png);
+    background-size: 39rem;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+}
+@media (min-width: 576px) {
+    #img_couple {
+        background-position: bottom left calc(30% + 19vw);
+        background-size: 44rem;
+    }
+}
+@media (min-width: 768px) {
+    #img_couple {
+        background-position: bottom left calc(30% + 30vw);
+    }
+}
+@media (min-width: 992px) {
+    #img_couple {
+        background-size: 50rem;
+    }
+}
+@media (min-width: 1200px) {
+    #img_couple {
+        background-size: 57rem;
+    }
+}
+@media (min-width: 1400px) {
+    #img_couple {
+        background-size: 62rem;
+    }
 }
 
-/* consult_section */
+#hero_section2 h2 {
+    margin-top: 1rem;
+    margin-bottom: 15rem;
+}
+@media (min-width: 576px) {
+    #hero_section2 h2 {
+        align-self: center;
+        margin: 0;
+        width: 70%;
+    }
+}
+
+/* consultation_section */
+#consultation_section_text ul li::marker {
+    content: '► ';
+    color: royalblue;
+}
+#consultation_section_text ul {
+    font-size: 1.25rem;
+}
+@media (min-width: 1200px) {
+    #consultation_section_text ul {
+        font-size: 1.5rem;
+    } 
+}
 #consultation_form .helptext {
     text-align: end;
     font-size: smaller;

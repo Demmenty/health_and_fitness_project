@@ -25,12 +25,12 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="7.11257"
-     inkscape:cx="48.64627"
-     inkscape:cy="95.535088"
+     inkscape:cx="48.786866"
+     inkscape:cy="95.675684"
      inkscape:window-width="1751"
      inkscape:window-height="1243"
      inkscape:window-x="537"
-     inkscape:window-y="171"
+     inkscape:window-y="100"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -72,9 +72,9 @@
        stroke-opacity="1"
        stroke-miterlimit="4"
        id="path98862"
-       style="fill:#ffffff;fill-opacity:1;stroke:#cbd3ed;stroke-opacity:1" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#e8ebfa;stroke-opacity:1" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="m 97.811409,33.311762 8.578161,13.463953"
        id="path103810-7" />
     <g
@@ -91,7 +91,7 @@
          style="stroke-width:0.372701;stroke-dasharray:none" />
     </g>
     <path
-       style="fill:none;fill-opacity:1;stroke:#cbd3ed;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
        d="m 130.19115,32.69277 -8.471,14.325875"
        id="path103810-98" />
   </g>
