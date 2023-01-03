@@ -4,6 +4,14 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+footer {
+    margin-top: auto;
+}
 
 .transition_common {
     transition: all 1s ease;
@@ -16,7 +24,7 @@
     text-shadow: 0px 0px 10px #2a356a;
 }
 .text-royalblue {
-    color: royalblue !important;
+    color: #5271ff !important;
 }
 .w-100px {
     width: 100px;
@@ -271,7 +279,7 @@ main {
 }
 #welcome_section_text ul li::marker {
     content: '►  ';
-    color: royalblue;
+    color: #5271ff;
 }
 #welcome_section_text ul {
     font-size: 1.25rem;
@@ -1952,7 +1960,7 @@ main {
 /* consultation_section */
 #consultation_section_text ul li::marker {
     content: '► ';
-    color: royalblue;
+    color: #5271ff;
 }
 #consultation_section_text ul {
     font-size: 1.25rem;

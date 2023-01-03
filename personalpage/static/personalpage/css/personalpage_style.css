@@ -5,6 +5,11 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
 /* скролл */
 ::-webkit-scrollbar {
@@ -42,7 +47,7 @@
 
 
 .text-royalblue {
-    color: royalblue !important;
+    color: #5271ff !important;
 }
 
 .border-blueshadow {
@@ -66,6 +71,16 @@
 .form_not_saved {
     color: #ff1943 !important;
     transition: all 1s ease !important;
+}
+
+.link {
+    color: #5271ff;
+    text-decoration: none;
+    font-weight: bolder;
+}
+.link:hover {
+    color: var(--bs-link-hover-color);
+    cursor: pointer;
 }
 
 
@@ -275,7 +290,7 @@ footer {
     border-top-color: #b9b9b9;
     border-top-style: solid;
     border-top-width: 3px;
-    margin-top: 2rem;
+    margin-top: auto;
 }
 .mail_ref {
     color: #b9b9b9;
@@ -290,6 +305,10 @@ footer {
 }
 .contact_ico:hover {
     filter: brightness();
+}
+#logout_btn {
+    width: 69px;
+    text-align: end;
 }
 
 /* стиль кнопок */
@@ -316,6 +335,7 @@ footer {
 }
 /* стиль кнопок */
 
+/* main */
 .royal_blue {
     color: #5271ff;
 }
@@ -716,6 +736,7 @@ table {
 /* personalpage */
 .today_measure_table {
     max-width: 500px;
+    min-width: 285px;
 }
 .tablerow_name {
     text-align: left;
@@ -772,7 +793,16 @@ table {
 
 /* форма контактов */
 #contacts_form_container {
-    max-width: 500px;
+    max-width: 420px;
+    position: absolute;
+    z-index: 2;
+    margin-left: auto;
+    margin-right: auto;
+    left: 8px;
+    right: 8px;
+}
+#contacts_form p {
+    margin-bottom: 0.75rem;
 }
 
 /* personalpage */

@@ -5,34 +5,38 @@
 
 {% block content %}
 
-<div class="container mt-3">
-    <br>
+<div class="container pt-5">
+
     <p>Дата региcтрации: {{ date_joined }}</p>
     <p>Возраст: {{ client_age }}</p>
-    <br>
 
     <!-- анкета -->
-    {% if questionary %}
-    <p><span class="royal_blue">&#10004;</span> Анкета здоровья заполнена</p>
-    <form method="get" action="{% url 'client_questionary' %}">
-        <input type="hidden" value="{{ client_id }}" name="client_id">
-        <input type="hidden" value="{{ clientname }}" name="clientname">
-        <button type="submit" class="btn btn-primary">Анкета здоровья</button>
-    </form>
-    {% else %}
-    <p><span class="text-danger">&#10006;</span> Анкета здоровья не заполнена</p>
-    {% endif %}
-
-    <br>
+    <div class="mb-3">
+        {% if questionary %}
+            &#10004;
+            <form method="get" action="{% url 'client_questionary' %}" class="d-inline">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
+            </form>
+            заполнена
+        {% else %}
+            &#10006;
+            <form method="get" action="{% url 'client_questionary' %}" class="d-inline">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
+            </form>
+            не заполнена
+        {% endif %}
+    </div>
 
     <!-- дневник питания -->
     {% if fs_connected %}
-    <p><span class="royal_blue">&#10004;</span> FatSecret подключен</p>
+    <p>&#10004; FatSecret подключен</p>
     {% else %}
-    <p><span class="text-danger">&#10006;</span> FatSecret не подключен</p>
+    <p>&#10006; FatSecret не подключен</p>
     {% endif %}
-
-    <br>
 
     <!-- физические показатели сегодня  -->
     {% if today_measure %}

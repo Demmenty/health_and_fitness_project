@@ -5,9 +5,8 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container pt-5">
 
-    <br>
     {% for client in clients %}
         <form method="get" action="{% url 'clientpage' %}">
             <input type="hidden" value="{{ client.id }}" name="client_id">

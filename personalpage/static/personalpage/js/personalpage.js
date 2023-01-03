@@ -1,7 +1,12 @@
 const contactsForm = document.getElementById("contacts_form_container");
 
 function openContactsForm() {
-    contactsForm.classList.remove('hidden_element');
+    if (contactsForm.classList.contains('hidden_element')) {
+        contactsForm.classList.remove('hidden_element');
+    }
+    else {
+        contactsForm.classList.add('hidden_element');
+    }
 }
 
 function closeContactsForm() {

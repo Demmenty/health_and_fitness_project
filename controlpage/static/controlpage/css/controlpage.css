@@ -5,6 +5,11 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
 /* скролл */
 ::-webkit-scrollbar {
@@ -29,7 +34,7 @@
     color: #5271ff !important;
 }
 .bg-royalblue {
-    background-color: royalblue;
+    background-color: #5271ff;
 }
 .text-light-grey {
     color: #b9b9b9;
@@ -40,6 +45,19 @@
 .text-success {
     color: #00c0f0 !important;
 }
+
+.link {
+    color: #5271ff;
+    text-decoration: none;
+    font-weight: bolder;
+    border: none;
+    background-color: unset;
+}
+.link:hover {
+    color: var(--bs-link-hover-color);
+    cursor: pointer;
+}
+
 .border-outset {
     border: outset;
 }
@@ -255,9 +273,9 @@ header {
 }
 
 #new_consult_signup_count {
-    background-color: royalblue;
+    background-color: #5271ff;
     color: white;
-    border: 1px solid royalblue;
+    border: 1px solid #5271ff;
     padding: 4px;
     display: inline-flex;
     align-items: center;
@@ -778,7 +796,7 @@ footer {
     border-top-color: #b9b9b9;
     border-top-style: solid;
     border-top-width: 3px;
-    margin-top: 2rem;
+    margin-top: auto;
 }
 .mail_ref {
     color: #b9b9b9;
@@ -810,6 +828,7 @@ footer {
 }
 
 
+
 /* consult_page_requests */
 .my-hover-gray:hover {
     background-color: #ececec;
@@ -823,7 +842,7 @@ form .helptext {
 }
 
 .unread {
-    color: royalblue;
+    color: #5271ff;
 }
 
 #cat_reading_requests {
@@ -851,7 +870,7 @@ p[name='result_msg'] {
 }
 
 div[name='signup_row'] span[name='arrow'] {
-    color: royalblue;
+    color: #5271ff;
 }
 
 /* адаптивная ширина */
