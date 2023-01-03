@@ -505,6 +505,14 @@ caption {
 #input_period {
     max-width: 70px;
 }
+.today_measure_table {
+    max-width: 500px;
+    min-width: 285px;
+}
+.tablerow_name {
+    text-align: left;
+    width: 128px;
+}
 /* clientpage */
 
 

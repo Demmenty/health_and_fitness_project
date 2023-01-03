@@ -299,8 +299,9 @@ def clientpage(request):
         fs_connected = False
 
     # измерения за сегодня
+    date_today = date.today()
     try:
-        today_measure = Measurement.objects.get(date__exact=date.today(), user_id=client_id)
+        today_measure = Measurement.objects.get(date__exact=date_today, user_id=client_id)
         if (today_measure.feel is None and today_measure.weight is None and
             today_measure.fat is None and today_measure.pulse is None and
             (today_measure.pressure_upper is None or today_measure.pressure_lower is None) and
@@ -319,6 +320,7 @@ def clientpage(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'client_age': client_age,
+        'date_today': date_today,
     }
     return render(request, 'controlpage/clientpage.html', data)
 
