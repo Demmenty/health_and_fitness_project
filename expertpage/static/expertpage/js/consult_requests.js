@@ -1,12 +1,11 @@
 // кружок уведомления о количестве новых заявок
 const newFormCount = document.getElementById('new_consult_signup_count');
-// картинка
-const mrCat = document.getElementById('cat_reading_requests');
-// переменные хранящие открытую сейчас форму и запись
+
+// переменные хранящие открытую сейчас заявку и ее запись
 var openedForm = false;
 var openedRow = false;
 
-// открыть форму по нажатию на ее запись
+// открыть заявку по нажатию на ее запись
 function openForm(event) {
     var row = event.target;
     var id = row.getAttribute('id').slice(7);
@@ -28,7 +27,7 @@ function openForm(event) {
             var request = $.ajax({
                 data: { 'id': id, 'purpose': 'make_readed' },
                 type: "GET",
-                url: '/controlpage/consult_requests_page/',
+                url: '/expertpage/consult_requests_page/',
             });
             request.done(function() {
                 row.classList.remove('unread');
@@ -56,7 +55,7 @@ function openForm(event) {
     }
 }
 
-// закрыть форму на крестик
+// закрыть заявку на крестик
 function closeForm() {
     openedForm.classList.add('hidden_element');
     openedRow.classList.remove('fw-bolder');
@@ -64,7 +63,7 @@ function closeForm() {
     openedRow = false;
 }
 
-// сохранение формы (заметки к заявке)
+// сохранение формы заявки (заметки эксперта к ней)
 $('form[name="signup_form"]').on('submit', function() {
 
     let id = $(this).attr('id').slice(12);

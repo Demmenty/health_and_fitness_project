@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'homepage',
     'personalpage',
     'controlpage',
+    'expertpage',
     'django_cleanup',
 ]
 

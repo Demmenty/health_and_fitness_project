@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Commentary, ConsultationSignup
+from .models import Commentary, Clientnote, FullClientnote
 
-# Register your models here.
+
 admin.site.register(Commentary)
-admin.site.register(ConsultationSignup)
+admin.site.register(Clientnote)
+admin.site.register(FullClientnote)

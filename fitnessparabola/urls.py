@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('homepage.urls')),
     path('personalpage/', include('personalpage.urls')),
     path('controlpage/', include('controlpage.urls')),
+    path('expertpage/', include('expertpage.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

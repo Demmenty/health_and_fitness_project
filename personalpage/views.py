@@ -246,7 +246,7 @@ def personalpage(request):
         return redirect('loginuser')
     # Парабола перенаправляется на свою страницу
     if request.user.username == 'Parrabolla':
-        return redirect('controlpage')
+        return redirect('expertpage')
 
     # существоВание анкеты
     try:
@@ -354,7 +354,7 @@ def measurements(request):
 
     # Парабола перенаправляется на свою страницу
     if request.user.username == 'Parrabolla':
-        return redirect('controlpage') 
+        return redirect('expertpage') 
 
     #измерения за сегодня
     today_set = Measurement.objects.filter(date__exact=date.today(), user=request.user)

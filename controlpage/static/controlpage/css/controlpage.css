@@ -82,73 +82,111 @@ body {
     filter: brightness(0.7);
 }
 
-/* коммент для клиента */
-#client_comment_form_container {
+/* комменты и заметки */
+#client_comment_form_container,
+#clientnote_container,
+#full_clientnote_container {
     max-width: 600px !important;
-    background-color: #ffffff;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
 }
+#client_comment_form_container {
+    background-color: #ffffff;
+}
+#clientnote_container {
+    background-color: #e8ebfa;
+}
+#full_clientnote_container {
+    background-color: #5271ff;
+    max-width: 500px !important;
+}
 
-.comment_section {
+.comment_section, .note_section {
     color: #5271ff;
     font-weight: 500;
     border-radius: 10px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #ced4da;
+    border: 1px solid #ced4da;
     padding-top: 4px !important;
     padding-bottom: 4px !important;
     z-index: 2;
-    background-color: white !important;
+    background-color: white;
     position: relative;
     display: inline-flex;
     order: 4;
 }
 @media (min-width: 576px) {
-    .comment_section {
+    .comment_section, .note_section {
        order: 1; 
     }
 }
-.comment_section.closed {
+.comment_section.closed, .note_section.closed {
+    background-color: unset;
     color: #545454;
     z-index: 0;
     border: none;
     order: 1;
 }
-.comment_section.closed:hover {
+@media (min-width: 576px) {
+    .comment_section.closed, .note_section.closed {
+        background-color: white;
+        border: 1px solid #ced4da;
+    }
+}
+
+.comment_section.closed:hover, .note_section.closed:hover {
     cursor: pointer;
     color: #5271ff;
 }
 
-#id_date {
-    min-width: 9rem;
+#id_date_comment,
+#id_date_note {
+    width: 144px;
+}
+@media (min-width: 576px) {
+    #id_date_comment,
+    #id_date_note {
+        width: 175px;
+    }
+}
+
+.w-10 {
+    width: 10%;
+}
+@media (min-width: 576px) {
+   .w-sm-30 {
+        width: 30%;
+    }
 }
 .w-95 {
     width: 95% !important;
 }
 
-#client_comment_form textarea {
+#client_comment_form textarea, #clientnote_container textarea {
     border: 1px solid #ced4da;
     z-index: 1;
     position: relative;
     padding-top: 15px;
 }
-#client_comment_form textarea:focus {
+#client_comment_form textarea:focus, #clientnote_container textarea:focus {
    box-shadow: none;
 }
 
-#client_comment_categories {
+.categories {
     max-width: 21rem;
     margin-bottom: -9px;
 }
 @media (min-width: 576px) {
-    #client_comment_categories {
+    .categories {
         max-width: unset;
     }
+}
+
+#full_clientnote_btn {
+    padding-top: 3px;
+    height: 34px;
 }
 
 .close_btn, .ok_btn {
@@ -163,11 +201,9 @@ body {
     color: #3f54b2;
 }
 
-.commentary_moving_part {
+.cursor-move {
     cursor: move;
-    width: -webkit-fill-available;
 }
-
 
 
 /* header */
@@ -444,7 +480,7 @@ caption {
 
 
 
-/* clientpage */
+/* client_mainpage */
 .comment_header {
     width: 280px;
     cursor: move;
@@ -513,7 +549,7 @@ caption {
     text-align: left;
     width: 128px;
 }
-/* clientpage */
+/* client_mainpage */
 
 
 /* questionary */
@@ -833,64 +869,5 @@ footer {
     #client_contacts {
         margin-left: 0;
     }
-}
-
-
-
-/* consult_page_requests */
-.my-hover-gray:hover {
-    background-color: #ececec;
-    outline-color: #8f8f8f !important;
-    outline-style: auto !important;
-    outline-width: 1px !important;
-}
-
-form .helptext {
-    display: none;
-}
-
-.unread {
-    color: #5271ff;
-}
-
-#cat_reading_requests {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    padding: 15px;
-    width: 320px;
-}
-@media (min-width: 576px) {
-    #cat_reading_requests {
-        width: 460px;
-        left: 2rem;
-    }
-}
-@media (min-width: 992px) {
-    #cat_reading_requests {
-        left: auto;
-    }
-}
-
-p[name='result_msg'] {
-    margin-top: -8px;
-}
-
-div[name='signup_row'] span[name='arrow'] {
-    color: #5271ff;
-}
-
-/* адаптивная ширина */
-@media (min-width: 768px) {
-    .w-md-50 {
-        width: 50% !important;
-    }
-}
-
-#p_no_signup_entries {
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }
 

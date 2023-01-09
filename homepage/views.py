@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from controlpage.forms import ConsultationsignupForm
+from .forms import ConsultationsignupForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.http import JsonResponse
@@ -19,18 +19,15 @@ def saveConsultationSignup(request):
             result = 'Заявка получена'
         else:
             result = form.errors
-
         data = {
             'result': result,
         }
         return JsonResponse(data, status=200)
-
     else:
         return redirect('homepage')
 
 
-
-# Create your views here.
+# My views
 def homepage(request):
     """Главная страница сайта"""
     data = {
@@ -90,6 +87,5 @@ def logoutuser(request):
     """Обработка запроса выхода пользователя"""
     if request.method == 'POST':
         logout(request)
-        return redirect('homepage')
-    else:
-        return redirect('homepage')
+
+    return redirect('homepage')

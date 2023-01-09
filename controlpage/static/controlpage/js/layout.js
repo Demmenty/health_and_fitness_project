@@ -1,92 +1,78 @@
-const pagePath = document.location.pathname;
-const main = document.querySelector("main");
-const header = document.querySelector("header");
-// окошко комментария для клиента
-const commentaryContainer = document.getElementById('client_comment_form_container');
-// вкладки по категориям в окошке коммента
-const commentGeneralLabel = document.getElementById('id_general_label');
-const commentMeasurementsLabel = document.getElementById('id_measurements_label');
-const commentNutritionLabel = document.getElementById('id_nutrition_label');
-const commentWorkoutLabel = document.getElementById('id_workout_label');
-// текстовые поля по категориям в окошке коммента
-const commentGeneral = document.getElementById('id_general');
-const commentMeasurements = document.getElementById('id_measurements');
-const commentNutrition = document.getElementById('id_nutrition');
-const commentWorkout = document.getElementById('id_workout');
-// все сразу вкладки по категориям в окошке коммента
-const commentLabels = document.querySelectorAll(".comment_section");
-// все сразу текстовые поля в окошке коммента
-const commentTextareas = document.querySelectorAll("#client_comment_form textarea");
-// идентификация клиента
 const client_id = document.getElementById('id_client').value;
-// кнопки навигации в header
-const navLinkMain = document.getElementById('link_main');
-const navLinkMeasurements = document.getElementById('link_measurements');
-const navLinkMeal = document.getElementById('link_meal');
-const navLinkWorkout = document.getElementById('link_workout');
-const navLinkMainDrop = document.getElementById('link_main_drop');
-const navLinkMeasurementsDrop = document.getElementById('link_measurements_drop');
-const navLinkMealDrop = document.getElementById('link_meal_drop');
-const navLinkWorkoutDrop = document.getElementById('link_workout_drop');
-// название открытой вкладки навигации dropdown
-const navLinkOpenDrop = document.getElementById('open_label_drop');
-// сообщение об ошибке связанной с комментарием
-const commentaryStatusMsg = document.getElementById('commentary_status_msg');
-// окошко ввода даты комментария
-const inputDateComment = document.querySelector('#client_comment_form #id_date');
-// список контактов клиента
-const clientContacts = document.getElementById('client_contacts');
 
 // применение настроек в зависимости от открытой страницы
-setSettingsDependPath();
-function setSettingsDependPath() {
-    if (pagePath !== '/controlpage/') {
-        if ((pagePath == '/controlpage/client_measurements/') ||
-            (pagePath == '/controlpage/client_anthropometry/')) {
-            // открытие соотв.текста комментария
-            commentMeasurements.classList.remove('hidden_element');
-            // открытие соотв.вкладки комментария
-            commentMeasurementsLabel.classList.remove('closed');
-            // окрашивание соотв.вкладки навигации в синий
-            navLinkMeasurements.classList.add('royal_blue');
-            navLinkMeasurementsDrop.classList.add('hidden_element');
-            // название открытой вкладки если меню dropdown
-            navLinkOpenDrop.textContent = 'измерения';
-        }
-        else if (pagePath == '/controlpage/consult_requests_page/') {
-            const navLinkApps = document.getElementById('link_consult_requests');
-            navLinkApps.classList.add('royal_blue');
-        }
-        else if ((pagePath == '/controlpage/client_mealjournal/') ||
-                (pagePath == '/controlpage/client_foodbymonth/') ||
-                (pagePath == '/controlpage/client_foodbydate/')) {
-            commentNutrition.classList.remove('hidden_element');
-            commentNutritionLabel.classList.remove('closed');
-            navLinkMeal.classList.add('royal_blue');
-            navLinkMealDrop.classList.add('hidden_element');
-            navLinkOpenDrop.textContent = 'питание';
-        }
-        else {
-            commentGeneral.classList.remove('hidden_element');
-            commentGeneralLabel.classList.remove('closed');
-            navLinkMain.classList.add('royal_blue');
-            navLinkMainDrop.classList.add('hidden_element');
-            navLinkOpenDrop.textContent = 'главная';
-        }
+$(document).ready(function() {
+    pagePath = document.location.pathname;
+    if ((pagePath == '/controlpage/main/') ||
+        (pagePath == '/controlpage/questionary/')) {
+        // открытие соотв.текста и вкладки комментария
+        $("#id_general_comment").removeClass('hidden_element');
+        $("#id_general_label").removeClass('closed');
+        // открытие соотв.текста и вкладки заметки о клиенте
+        $("#id_general_note").removeClass('hidden_element');
+        $("#id_general_note_label").removeClass('closed');
+        // окрашивание навигации
+        $('#navlink_main').addClass('text-royalblue');
+        $('#navlink_main_drop').addClass('hidden_element');
+        // название открытой вкладки если меню dropdown
+        $('#open_label_drop').text('главная');
     }
-    else {
-        const navLinkClients = document.getElementById('link_clients');
-        navLinkClients.classList.add('royal_blue');
+    else if ((pagePath == '/controlpage/mealjournal/') ||
+            (pagePath == '/controlpage/foodbymonth/') ||
+            (pagePath == '/controlpage/foodbydate/')) {
+        $("#id_nutrition_comment").removeClass('hidden_element');
+        $("#id_nutrition_label").removeClass('closed');
+        $("#id_nutrition_note").removeClass('hidden_element');
+        $("#id_nutrition_note_label").removeClass('closed');
+        $('#navlink_meal').addClass('text-royalblue');
+        $('#navlink_meal_drop').addClass('hidden_element');
+        $('#open_label_drop').text('питание');
     }
+    else if ((pagePath == '/controlpage/measurements/') ||
+            (pagePath == '/controlpage/anthropometry/')) {
+        $("#id_measurements_comment").removeClass('hidden_element');
+        $("#id_measurements_label").removeClass('closed');
+        $("#id_measurements_note").removeClass('hidden_element');
+        $("#id_measurements_note_label").removeClass('closed');
+        $('#navlink_measurements').addClass('text-royalblue');
+        $('#navlink_measurements_drop').addClass('hidden_element');
+        $('#open_label_drop').text('измерения');
+    }
+    else if (pagePath == '/controlpage/workout/') {
+        $("#id_workout_comment").removeClass('hidden_element');
+        $("#id_workout_label").removeClass('closed');
+        $("#id_workout_note").removeClass('hidden_element');
+        $("#id_workout_note_label").removeClass('closed');
+        $('#navlink_workout').addClass('text-royalblue');
+        $('#navlink_workout_drop').addClass('hidden_element');
+        $('#open_label_drop').text('тренировки');
+    }
+})
+
+
+// КОММЕНТАРИЙ КЛИЕНТУ
+const commentaryContainer = $('#client_comment_form_container');
+// окошко ввода даты
+const commentaryDate = $('#id_date_comment', commentaryContainer);
+// поле для сообщения об ошибках
+const commentaryStatusMsg = $('#commentary_status_msg', commentaryContainer);
+
+// откр/закр окошка комментария
+function closeCommentary() {
+    commentaryContainer.addClass('hidden_element');
+}
+function openCommentary() {
+    commentaryContainer.toggleClass('hidden_element');
+    getUp(commentaryContainer);
 }
 
-
-// установка сегодняшней даты в комментарии
-let curCommentDate = new Date();
-inputDateComment.value = dateToString(curCommentDate);
+// переменная для хранения текущей даты в поле ввода
+var currentCommentaryDate = commentaryDate.val();
+// переменная для хранения выбранной даты в поле ввода
+var chosenCommentaryDate;
 
 function dateToString(date) {
-    // превращение даты в строку, подходящую для инпут в комменте
+    // превращение даты в строку, подходящую для инпут
     let year = String(date.getFullYear());
     let month = String(date.getMonth()+1);
     let day = String(date.getDate());
@@ -102,126 +88,69 @@ function dateToString(date) {
     return dateString
 }
 
-
-// изменение категорий коммента при нажатии на вкладки
-function changeCommentCategory(event) {
-    // закрываем все вкладки и текстовые поля
-    commentLabels.forEach (label => {
-        label.classList.add('closed');
-    })
-    commentTextareas.forEach (area => {
-        area.classList.add('hidden_element');
-    })
-    // открываем нажатую, ее текстовое поле и окрашиваем
-    event.target.classList.remove('closed');
-    eventTextarea = document.getElementById(event.target.id.slice(0, -6))
-    eventTextarea.classList.remove('hidden_element');
-}
-commentLabels.forEach (label => {
-    label.addEventListener('click', changeCommentCategory, false); 
-})
-
-
-// откр/закр окошка коммента для клиента
-function closeCommentary() {
-    commentaryContainer.classList.add('hidden_element');
-}
-function openCommentary() {
-    if (commentaryContainer.classList.contains('hidden_element')) {
-       commentaryContainer.classList.remove('hidden_element'); 
-    }
-    else {
-        commentaryContainer.classList.add('hidden_element'); 
-    }
-}
-
-
-// показ списка контактов клиента
-function showContacts() {
-    if (clientContacts.classList.contains('d-none')) {
-        clientContacts.classList.remove('d-none');
-    }
-    else {
-        clientContacts.classList.add('d-none');
-    }
-    
-}
-
-
-// функции изменения даты комментария
+// изменения комментария для клиента на данные за выбранную дату
 function prevDate() {
-    // получаем дату из заголовка и меняем на -1 день
-    newCommentDate = inputDateComment.valueAsDate;
-    newCommentDate.setDate(newCommentDate.getDate()-1);
+    // рассчитываем новую выбранную дату
+    chosenCommentaryDate = new Date(currentCommentaryDate);
+    chosenCommentaryDate.setDate(chosenCommentaryDate.getDate()-1);
     // меняем коммент на соответствующий полученной дате
-    changeCommentaryForm(dateToString(newCommentDate));
+    changeCommentaryForm(dateToString(chosenCommentaryDate));
 }
 function nextDate() {
-    // получаем дату из заголовка и меняем на +1 день
-    newCommentDate = inputDateComment.valueAsDate;
-    newCommentDate.setDate(newCommentDate.getDate()+1);
+    // рассчитываем новую выбранную дату
+    chosenCommentaryDate = new Date(currentCommentaryDate);
+    chosenCommentaryDate.setDate(chosenCommentaryDate.getDate()+1);
     // меняем коммент на соответствующий полученной дате
-    changeCommentaryForm(dateToString(newCommentDate));
+    changeCommentaryForm(dateToString(chosenCommentaryDate));
 }
-// изменение даты вручную или через календарик
 function changeDateInput() {
     // получаем дату из заголовка
-    newCommentDate = inputDateComment.valueAsDate;
+    chosenCommentaryDate = commentaryDate.val();
     // меняем коммент на соответствующий полученной дате
-    changeCommentaryForm(dateToString(newCommentDate));
+    changeCommentaryForm(chosenCommentaryDate);
 }
-inputDateComment.addEventListener('input', changeDateInput, false);
+commentaryDate.bind('input', changeDateInput);
 
-
-function changeCommentaryForm(dateString) {
-    // запрос данных коммента из модели БД Commentary
+function changeCommentaryForm(chosenCommentaryDate) {
+    // запрос данных комментария из БД
     let request = new XMLHttpRequest();
     request.open("GET",
-     "/controlpage/get_commentary_form/?client_id=" + client_id + "&date=" + dateString);
+        "/controlpage/get_commentary_form/?client_id=" + client_id + 
+        "&date=" + chosenCommentaryDate);
 
     request.onreadystatechange = function() {
         if(this.readyState === 4) {
-
-            // в случае успеха:
+            // если данные успешно получены
             if (this.status === 200) {
-                // меняем дату заголовка коммента на выбранную
-                inputDateComment.value = dateString;
-                // фиксируем текущую дату коммента
-                curCommentDate = inputDateComment.valueAsDate;
-
-                let newCommentaryForm = JSON.parse(this.responseText);
-
-                // применяем новые данные к странице
-                commentGeneral.value = newCommentaryForm.general;
-                commentMeasurements.value = newCommentaryForm.measurements;
-                commentNutrition.value = newCommentaryForm.nutrition;
-                commentWorkout.value = newCommentaryForm.workout;
+                // меняем дату в поле коммента на выбранную
+                commentaryDate.val(chosenCommentaryDate);
+                // фиксируем, что текущая дата изменилась
+                currentCommentaryDate = chosenCommentaryDate;
+                // расшифровываем данные ответа
+                let newData = JSON.parse(this.responseText);
+                // и раскидываем по соответствующим полям
+                $('#id_general_comment').val(newData.general);
+                $('#id_measurements_comment').val(newData.measurements);
+                $('#id_nutrition_comment').val(newData.nutrition);
+                $('#id_workout_comment').val(newData.workout);
             }
-            // если нет соединения
-            else if (this.status === 0) {
-                // дата в заголовке меняется на старую
-                inputDateComment.value = dateToString(curCommentDate);
-                // уведомление об ошибке
-                commentaryStatusMsg.textContent = 'нет соединения!';
-                inputDateComment.style.background = '#f4c3be';
-                commentaryStatusMsg.classList.add('form_not_saved');
-                setTimeout(() => {
-                    inputDateComment.style.background = '#ffffff';
-                    commentaryStatusMsg.classList.remove('form_not_saved');
-                }, 2000);
-            }
-            // в случае других ошибок
             else {
-                // дата в заголовке меняется на старую
-                inputDateComment.value = dateToString(curCommentDate);
-                // уведомление об ошибке
-                commentaryStatusMsg.textContent = ('возникла ошибка! статус ' + 
-                                                      this.status + ' ' + this.statusText);
-                inputDateComment.style.background = '#f4c3be';
-                commentaryStatusMsg.classList.add('form_not_saved');
+                // меняем дату на старое значение
+                commentaryDate.val(currentCommentaryDate);
+                // показываем уведомление
+                if (this.status === 0) {
+                    commentaryStatusMsg.text('нет соединения!');
+                }
+                else {
+                    commentaryStatusMsg.text(
+                        'возникла ошибка! статус ' + this.status + ' ' + this.statusText);
+                }
+                // визуальные эффекты уведомления
+                commentaryDate.css('background-color', '#f4c3be');
+                commentaryStatusMsg.addClass('form_not_saved');
                 setTimeout(() => {
-                    inputDateComment.style.background = '#ffffff';
-                    commentaryStatusMsg.classList.remove('form_not_saved');
+                    commentaryDate.css('background-color', '#ffffff');
+                    commentaryStatusMsg.removeClass('form_not_saved');
                 }, 2000);
             }
         }
@@ -229,88 +158,347 @@ function changeCommentaryForm(dateString) {
     request.send();
 }
 
+// сохранение комментария
+$('#client_comment_form').submit(function () {               
 
-// сохранение комментария для клиента
-$(document).ready(function () {
-    // надпись о статусе сохранения
-    var commentaryStatusMsg = document.getElementById('commentary_status_msg');
+    $.ajax({
+        data: $(this).serialize(),
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
 
-    // отслеживаем событие сохранения и отправки формы
-    $('#client_comment_form').submit(function () {               
-
-      $.ajax({
-          data: $(this).serialize(), // получаем данные формы
-          type: $(this).attr('method'), // метод отправки запроса
-          url: $(this).attr('action'), // функция обработки
-
-          success: function (response) {
-            // уведомление о успешности сохранении внизу окошка коммента
+        success: function (response) {
             if (response.result == 'комментарий сохранен') {
-              commentaryStatusMsg.textContent = response.result;
-              commentaryStatusMsg.classList.add('form_saved');
-              setTimeout(() => {
-                commentaryStatusMsg.classList.remove('form_saved');
-              }, 1500);
+                commentaryStatusMsg.text(response.result);
+                commentaryStatusMsg.addClass('form_saved');
+                setTimeout(() => {
+                commentaryStatusMsg.removeClass('form_saved');
+                }, 1500);
             }
             else {
-              commentaryStatusMsg.textContent = response.result;
-              commentaryStatusMsg.classList.add('form_not_saved');
-              setTimeout(() => {
-                commentaryStatusMsg.classList.remove('form_not_saved');
-              }, 1500);
+                commentaryStatusMsg.text(response.result);
+                commentaryStatusMsg.addClass('form_not_saved');
+                setTimeout(() => {
+                    commentaryStatusMsg.removeClass('form_not_saved');
+                }, 1500);
             }
-          },
-          error: function (response) {
-              commentaryStatusMsg.textContent = 'не сохранено! возникла ошибка!';
-              commentaryStatusMsg.classList.add('form_not_saved');
-              setTimeout(() => {
-                commentaryStatusMsg.classList.remove('form_not_saved');
-              }, 1500);
-          },             
-      });
-      return false;
-  });
-})
+            },
+        error: function (response) {
+            commentaryStatusMsg.text('не сохранено! возникла ошибка!');
+            commentaryStatusMsg.addClass('form_not_saved');
+            setTimeout(() => {
+                commentaryStatusMsg.removeClass('form_not_saved');
+            }, 1500);
+        },             
+    });
+    return false;
+});
+
+// работа вкладок
+const commentLabels = $('.comment_section', commentaryContainer);
+const commentTextareas = $('textarea', commentaryContainer);
+
+function changeCommentCategory(event) {
+    // закрываем все вкладки и текстовые поля
+    commentLabels.addClass('closed');
+    commentTextareas.addClass('hidden_element');
+    // открываем нажатую, ее текстовое поле и окрашиваем
+    $(event.target).removeClass('closed');
+    eventTextarea = $('#' + event.target.id.slice(0, -6) + '_comment')
+    eventTextarea.removeClass('hidden_element');
+}
+commentLabels.bind('click', changeCommentCategory); 
 
 
-// функция перетаскивания
-function dragCommentary(elmnt) {
+// ЗАМЕТКА О КЛИЕНТЕ
+const clientNoteContainer = $('#clientnote_container');
+// окошко ввода даты
+const clientNoteDate = $('#id_date_note', clientNoteContainer);
+// поле для сообщения об ошибках
+const clientNoteStatusMsg = $('#clientnote_status_msg', clientNoteContainer);
+
+// откр/закр окошка заметки
+function closeClientNote() {
+    clientNoteContainer.addClass('hidden_element');
+}
+function openClientNote() {
+    clientNoteContainer.toggleClass('hidden_element');
+    getUp(clientNoteContainer);
+}
+
+// переменная для хранения текущего месяца в поле ввода
+var currentClientnoteDate = clientNoteDate.val();
+// переменная для хранения выбранного месяца в поле ввода
+var chosenClientnoteDate;
+
+// изменения заметки о клиенте на данные за выбранный месяц
+function prevMonth() {
+    // рассчитываем новую выбранную дату
+    oldDate = currentClientnoteDate.split('-');
+    oldMonth = parseInt(oldDate[1]);
+    oldYear = parseInt(oldDate[0]);
+    if (oldMonth == 1) {
+        chosenMonth = "12";
+        chosenYear = oldYear - 1;
+    }
+    else {
+        chosenMonth = "" + (oldMonth - 1);
+        chosenYear = oldYear;
+    }
+    if (chosenMonth.length == 1) {
+        chosenMonth = "0" + chosenMonth;
+    }
+    chosenClientnoteDate = chosenYear + "-" + chosenMonth;
+    // передаем ее в функцию для запроса данных
+    changeClientnoteForm(chosenClientnoteDate);
+}
+function nextMonth() {
+        // рассчитываем новую выбранную дату
+        oldDate = currentClientnoteDate.split('-');
+        oldMonth = parseInt(oldDate[1]);
+        oldYear = parseInt(oldDate[0]);
+        if (oldMonth == 12) {
+            chosenMonth = "01";
+            chosenYear = oldYear + 1;
+        }
+        else {
+            chosenMonth = "" + (oldMonth + 1);
+            chosenYear = oldYear;
+        }
+        if (chosenMonth.length == 1) {
+            chosenMonth = "0" + chosenMonth;
+        }
+        chosenClientnoteDate = chosenYear + "-" + chosenMonth;
+        // передаем ее в функцию для запроса данных
+        changeClientnoteForm(chosenClientnoteDate);
+}
+function changeMonthInput() {
+    // берем новую выбранную дату из поля ввода
+    chosenClientnoteDate = clientNoteDate.val();
+    // передаем ее в функцию для запроса данных
+    changeClientnoteForm(chosenClientnoteDate);
+}
+clientNoteDate.bind('input', changeMonthInput);
+
+function changeClientnoteForm(chosenClientnoteDate) {
+    // запрос данных заметки о клиенте из БД
+    let request = new XMLHttpRequest();
+    request.open("GET",
+        "/controlpage/get_clientnote_form/?client_id=" + client_id +
+        "&date=" + chosenClientnoteDate);
+
+    request.onreadystatechange = function() {
+        if(this.readyState === 4) {
+            // если данные успешно получены
+            if (this.status === 200) {
+                // меняем месяц в поле заметки на выбранный
+                clientNoteDate.val(chosenClientnoteDate);
+                // фиксируем, что текущий месяц изменился
+                currentClientnoteDate = chosenClientnoteDate;
+                // расшифровываем данные ответа
+                let newData = JSON.parse(this.responseText);
+                // и раскидываем по соответствующим полям
+                $('#id_general_note').val(newData.general);
+                $('#id_measurements_note').val(newData.measurements);
+                $('#id_nutrition_note').val(newData.nutrition);
+                $('#id_workout_note').val(newData.workout);
+            }
+            else {
+                // меняем месяц на старое значение
+                clientNoteDate.val(currentClientnoteDate);
+                // показываем уведомление
+                if (this.status === 0) {
+                    clientNoteStatusMsg.text('нет соединения!');
+                }
+                else {
+                    clientNoteStatusMsg.text(
+                        'возникла ошибка! статус ' + this.status + ' ' + this.statusText);
+                }
+                // визуальные эффекты уведомления
+                clientNoteDate.css('background-color', '#f4c3be');
+                clientNoteStatusMsg.addClass('form_not_saved');
+                setTimeout(() => {
+                    clientNoteDate.css('background-color', '#ffffff');
+                    clientNoteStatusMsg.removeClass('form_not_saved');
+                }, 2000);
+            }
+        }
+    }
+    request.send();
+}
+
+// сохранение заметки
+$('#clientnote_form').submit(function () { 
+
+    // добавляем к значению месяца число для полноты даты
+    var data = $(this).serializeArray();
+    var month = $('#id_date_note').val();
+    data.push({name: 'date', value: (month + '-01')});
+
+    $.ajax({
+        data: $.param(data),
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+
+        success: function (response) {
+            if (response.result == 'заметка сохранена') {
+            clientNoteStatusMsg.text(response.result);
+            clientNoteStatusMsg.addClass('form_saved');
+            setTimeout(() => {
+                clientNoteStatusMsg.removeClass('form_saved');
+            }, 1500);
+            }
+            else {
+            clientNoteStatusMsg.text(response.result);
+            clientNoteStatusMsg.addClass('form_not_saved');
+            setTimeout(() => {
+                clientNoteStatusMsg.removeClass('form_not_saved');
+            }, 1500);
+            }
+        },
+        error: function () {
+            clientNoteStatusMsg.text('не сохранено! возникла ошибка!');
+            clientNoteStatusMsg.addClass('form_not_saved');
+            setTimeout(() => {
+                clientNoteStatusMsg.removeClass('form_not_saved');
+            }, 1500);
+        },             
+    });
+    return false;
+});
+
+// работа вкладок
+const clientNoteLabels = $('.note_section', clientNoteContainer);
+const clientNotetTextareas = $('textarea', clientNoteContainer);
+
+function changeClientNoteCategory(event) {
+    // закрываем все вкладки и текстовые поля
+    clientNoteLabels.addClass('closed');
+    clientNotetTextareas.addClass('hidden_element');
+    // открываем нажатую, ее текстовое поле и окрашиваем
+    $(event.target).removeClass('closed');
+    eventTextarea = $('#' + event.target.id.slice(0, -6))
+    eventTextarea.removeClass('hidden_element');
+}
+clientNoteLabels.bind('click', changeClientNoteCategory); 
+
+
+
+// ЗАМЕТКА О КЛИЕНТЕ СОВОКУПНАЯ
+const fullClientNoteContainer = $('#full_clientnote_container');
+// поле для сообщения об ошибках
+const fullClientNoteStatusMsg = $('#full_clientnote_status_msg', fullClientNoteContainer);
+
+// откр/закр окошка заметки
+function closeFullClientNote() {
+    fullClientNoteContainer.addClass('hidden_element');
+}
+function openFullClientNote() {
+    fullClientNoteContainer.toggleClass('hidden_element');
+    fullClientNoteContainer.css('z-index', maxZ);
+}
+
+// сохранение заметки
+$('#full_clientnote_form').submit(function () { 
+
+    $.ajax({
+        data: $(this).serialize(),
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+
+        success: function (response) {
+            if (response.result == 'заметка сохранена') {
+            fullClientNoteStatusMsg.text(response.result);
+            fullClientNoteStatusMsg.addClass('form_saved');
+            setTimeout(() => {
+                fullClientNoteStatusMsg.removeClass('form_saved');
+            }, 1500);
+            }
+            else {
+            fullClientNoteStatusMsg.text(response.result);
+            fullClientNoteStatusMsg.addClass('form_not_saved');
+            setTimeout(() => {
+                fullClientNoteStatusMsg.removeClass('form_not_saved');
+            }, 1500);
+            }
+        },
+        error: function () {
+            fullClientNoteStatusMsg.text('не сохранено! возникла ошибка!');
+            fullClientNoteStatusMsg.addClass('form_not_saved');
+            setTimeout(() => {
+                fullClientNoteStatusMsg.removeClass('form_not_saved');
+            }, 1500);
+        },             
+    });
+    return false;
+});
+
+
+
+// показ списка контактов клиента по кнопке
+function showContacts() {
+    $('#client_contacts').toggleClass('d-none')
+}
+
+
+// перетаскивание заметки и коммента
+dragContainer(document.getElementById('client_comment_form_container'));
+dragContainer(document.getElementById('clientnote_container'));
+dragContainer(document.getElementById('full_clientnote_container'));
+
+function dragContainer(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-    elements = document.querySelectorAll('.commentary_moving_part');
+    elements = elmnt.querySelectorAll('.moving_part');
     elements.forEach ( element => {
-       element.onmousedown = dragMouseDown; 
+        element.onmousedown = dragMouseDown; 
        
-       function dragMouseDown(e) {
-         e = e || window.event;
-         e.preventDefault();
-         // получить положение курсора мыши при запуске:
-         pos3 = e.clientX;
-         pos4 = e.clientY;
-         document.onmouseup = closeDragElement;
-         // вызов функции при каждом перемещении курсора:
-         document.onmousemove = elementDrag;
-       }
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // получить положение курсора мыши при запуске:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // вызов функции при каждом перемещении курсора:
+            document.onmousemove = elementDrag;
+            // изменение Z-индекса
+            if (parseInt($(elmnt).css('z-index')) < maxZ) {
+                $(elmnt).css('z-index', ++maxZ);
+            }
+        }
      
-       function elementDrag(e) {
-         e = e || window.event;
-         e.preventDefault();
-         // вычислить новую позицию курсора:
-         pos1 = pos3 - e.clientX;
-         pos2 = pos4 - e.clientY;
-         pos3 = e.clientX;
-         pos4 = e.clientY;
-         // установите новое положение элемента:
-         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-       }
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // вычислить новую позицию курсора:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // установите новое положение элемента:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
      
-       function closeDragElement() {
-         // остановка перемещения при отпускании кнопки мыши:
-         document.onmouseup = null;
-         document.onmousemove = null;
-       }
+        function closeDragElement() {
+            // остановка перемещения при отпускании кнопки мыши:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
     })
-  }
-// применяем к контейнеру комментария
-dragCommentary(commentaryContainer);
+}
+
+
+// изменение z-индекса на > при клике на контейнер
+var maxZ = 11;
+function getUp(element) {
+    if (parseInt(element.css('z-index')) < maxZ) {
+        element.css('z-index', ++maxZ);
+    }
+}
+commentaryContainer.bind('click', function()
+    {getUp(commentaryContainer)});
+clientNoteContainer.bind('click', function()
+    {getUp(clientNoteContainer)});
+fullClientNoteContainer.bind('click', function()
+    {getUp(fullClientNoteContainer)});

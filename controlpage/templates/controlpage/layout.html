@@ -23,91 +23,79 @@
         <a href="/" class="navbar-brand me-sm-3">
           <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
-        {% if clientname %}
-          <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline">
-            <!-- имя клиента -->
-            <a href="{% url 'controlpage' %}" class="clientname text-center">{{ clientname|truncatechars:10 }}</a>
-            <!-- навигация просто строкой -->
-            <ul class="nav ms-3" id="nav_string">
-              <li>
-                <form method="get" action="{% url 'clientpage' %}">
-                  <input type="hidden" value="{{ client_id }}" name="client_id">
-                  <input type="hidden" value="{{ clientname }}" name="clientname">
-                  <button type="submit" class="nav_link mx-2" id="link_main">главная</button>
-                </form>
-              </li>
-              <li>
-                <form method="get" action="{% url 'client_measurements' %}">
-                  <input type="hidden" value="{{ client_id }}" name="client_id">
-                  <input type="hidden" value="{{ clientname }}" name="clientname">
-                  <button type="submit" class="nav_link mx-2" id="link_measurements">измерения</button>
-                </form>
-              </li>
-              <li>
-                <form method="get" action="{% url 'client_mealjournal' %}">
-                  <input type="hidden" value="{{ client_id }}" name="client_id">
-                  <input type="hidden" value="{{ clientname }}" name="clientname">
-                  <button type="submit" class="nav_link mx-2" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-                </form>
-              </li>
-              <li>
-                <form method="get" action="">
-                  <input type="hidden" value="{{ client_id }}" name="client_id">
-                  <input type="hidden" value="{{ clientname }}" name="clientname">
-                  <button type="submit" class="nav_link mx-2" id="link_workout">тренировки</button>
-                </form>
-              </li>
-            </ul>
-            <!-- навигация выпадающим меню -->
-            <div class="align-items-center justify-content-center" id="nav_dropdown">
-              <div class="dropdown">
-                <a href="#" class="d-flex align-items-center col-lg-4 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span class="me-2" id="open_label_drop"></span>
-                </a>
-                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-                  <li>
-                    <form method="get" action="{% url 'clientpage' %}">
-                      <input type="hidden" value="{{ client_id }}" name="client_id">
-                      <input type="hidden" value="{{ clientname }}" name="clientname">
-                      <button type="submit" class="nav_link" id="link_main_drop">главная</button>
-                    </form>
-                  </li>
-                  <li>
-                    <form method="get" action="{% url 'client_measurements' %}">
-                      <input type="hidden" value="{{ client_id }}" name="client_id">
-                      <input type="hidden" value="{{ clientname }}" name="clientname">
-                      <button type="submit" class="nav_link" id="link_measurements_drop">измерения</button>
-                    </form>
-                  </li>
-                  <li>
-                    <form method="get" action="{% url 'client_mealjournal' %}">
-                      <input type="hidden" value="{{ client_id }}" name="client_id">
-                      <input type="hidden" value="{{ clientname }}" name="clientname">
-                      <button type="submit" class="nav_link" id="link_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-                    </form>
-                  </li>
-                  <li>
-                    <form method="get" action="">
-                      <input type="hidden" value="{{ client_id }}" name="client_id">
-                      <input type="hidden" value="{{ clientname }}" name="clientname">
-                      <button type="submit" class="nav_link" id="link_workout_drop">тренировки</button>
-                    </form>
-                  </li>
-                </ul>
-              </div>
+        <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-baseline">
+          <!-- имя клиента -->
+          <a href="{% url 'expertpage' %}" class="clientname text-center">{{ clientname|truncatechars:10 }}</a>
+          <!-- навигация просто строкой -->
+          <ul class="nav ms-3" id="nav_string">
+            <li>
+              <form method="get" action="{% url 'client_mainpage' %}">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <button type="submit" class="nav_link mx-2" id="navlink_main">главная</button>
+              </form>
+            </li>
+            <li>
+              <form method="get" action="{% url 'client_measurements' %}">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <button type="submit" class="nav_link mx-2" id="navlink_measurements">измерения</button>
+              </form>
+            </li>
+            <li>
+              <form method="get" action="{% url 'client_mealjournal' %}">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <button type="submit" class="nav_link mx-2" id="navlink_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+              </form>
+            </li>
+            <li>
+              <form method="get" action="">
+                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ clientname }}" name="clientname">
+                <button type="submit" class="nav_link mx-2" id="navlink_workout">тренировки</button>
+              </form>
+            </li>
+          </ul>
+          <!-- навигация выпадающим меню -->
+          <div class="align-items-center justify-content-center" id="nav_dropdown">
+            <div class="dropdown">
+              <a href="#" class="d-flex align-items-center col-lg-4 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="me-2" id="open_label_drop"></span>
+              </a>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
+                <li>
+                  <form method="get" action="{% url 'client_mainpage' %}">
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ clientname }}" name="clientname">
+                    <button type="submit" class="nav_link" id="navlink_main_drop">главная</button>
+                  </form>
+                </li>
+                <li>
+                  <form method="get" action="{% url 'client_measurements' %}">
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ clientname }}" name="clientname">
+                    <button type="submit" class="nav_link" id="navlink_measurements_drop">измерения</button>
+                  </form>
+                </li>
+                <li>
+                  <form method="get" action="{% url 'client_mealjournal' %}">
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ clientname }}" name="clientname">
+                    <button type="submit" class="nav_link" id="navlink_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
+                  </form>
+                </li>
+                <li>
+                  <form method="get" action="">
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ clientname }}" name="clientname">
+                    <button type="submit" class="nav_link" id="navlink_workout_drop">тренировки</button>
+                  </form>
+                </li>
+              </ul>
             </div>
           </div>
-        {% else %}
-          <!-- навигация главной страницы контроля -->
-          <div class="d-flex flex-wrap justify-content-center align-items-center lh-1">
-            <a href="{% url 'controlpage' %}" class="nav_link text-nowrap" id="link_clients">мои клиенты</a>
-            <a href="{% url 'consult_requests_page' %}" class="nav_link text-nowrap" id="link_consult_requests">заявки
-              {% if new_consult_signup_count > 0 %}
-                <div class="rounded-circle ms-2" id="new_consult_signup_count">{{ new_consult_signup_count }}</div>
-              {% endif %}
-            </a>
-          </div>
-        {% endif %}
+        </div>
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" class="ms-3 ms-sm-auto">
           {% csrf_token %}
@@ -123,47 +111,117 @@
     {% endblock %}
 
     <!-- комментарий для клиента -->
-    <div class="d-flex flex-column border rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="client_comment_form_container">
-      
+    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="client_comment_form_container">
       <form method="post" id="client_comment_form" action="{% url 'save_commentary_form' %}" class="w-100">
         {% csrf_token %}
-        <div class="d-flex justify-content-center align-items-center pb-3 pt-2">
-          <div class="commentary_moving_part">&nbsp;</div>
-          <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
-          {{ client_comment_form.date }}
-          <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
-          <div class="commentary_moving_part">&nbsp;</div>
-        </div>
-        
         <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <div class="d-flex justify-content-center align-items-center pb-3 pt-2">
+          <div class="moving_part d-none d-sm-block w-fill cursor-move">&nbsp;</div>
 
-        <!-- категории -->
-        <div class="d-flex justify-content-center flex-wrap mx-auto" id="client_comment_categories">
+          <div class="d-flex justify-content-center">
+            <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
+            {{ client_comment_form.date }}
+            <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
+          </div>
 
-            <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_general_label">
-              {{ client_comment_form.general.label|lower }}
-            </span> 
-            <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_measurements_label">
-              {{ client_comment_form.measurements.label|lower }}
-            </span>
-            <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_nutrition_label">
-              {{ client_comment_form.nutrition.label|lower }}
-            </span>
-            <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_workout_label">
-              {{ client_comment_form.workout.label|lower }}
-            </span>
-
+          <div class="moving_part d-none d-sm-block w-fill cursor-move">&nbsp;</div>
         </div>
         
+        <div class="d-flex justify-content-center flex-wrap mx-auto categories">
+          <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_general_label">
+            общее
+          </span> 
+          <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_measurements_label">
+            измерения
+          </span>
+          <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_nutrition_label">
+            питание
+          </span>
+          <span class="comment_section closed mx-sm-3 px-1 px-2" id="id_workout_label">
+            тренировки
+          </span>
+        </div>
         {{ client_comment_form.general }}
         {{ client_comment_form.measurements }}
         {{ client_comment_form.nutrition }}
         {{ client_comment_form.workout }}
-        
         <div class="d-flex justify-content-between">
           <button class="btn btn-primary close_btn" type="button" onclick="closeCommentary()">&#10006;</button>
-          <div class="text-center text-transparent transition_common commentary_moving_part mx-2" id="commentary_status_msg"></div>
+          <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="commentary_status_msg"></div>
           <button class="btn btn-primary float-end ok_btn" type="submit" title="Сохранить запись за день">&#10004;</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- заметка о клиенте -->
+    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="clientnote_container">
+      <form method="post" id="clientnote_form" action="{% url 'save_clientnote_form' %}" class="w-100">
+        {% csrf_token %}
+        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
+          <div class="d-flex justify-content-start w-10 w-sm-30">
+            <button type="button" class="btn btn-primary text-nowrap px-2 px-sm-3" id="full_clientnote_btn" title="Сводная заметка" onclick="openFullClientNote()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-bounding-box me-sm-1" viewBox="0 0 16 16">
+                <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"></path>
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+              </svg>
+              <span class="d-none d-sm-inline">Клиент</span>
+            </button>
+            <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
+            {{ clientnote_form.date }}
+            <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
+          </div>
+
+          <div class="d-flex justify-content-end w-10 w-sm-30" style="height: 36px;">
+            <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>
+            <button class="btn-close" type="button" aria-label="Close" onclick="closeClientNote()"></button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center flex-wrap mx-auto categories">
+          <span class="note_section closed mx-sm-3 px-1 px-2" id="id_general_note_label">
+            общее
+          </span> 
+          <span class="note_section closed mx-sm-3 px-1 px-2" id="id_measurements_note_label">
+            измерения
+          </span>
+          <span class="note_section closed mx-sm-3 px-1 px-2" id="id_nutrition_note_label">
+            питание
+          </span>
+          <span class="note_section closed mx-sm-3 px-1 px-2" id="id_workout_note_label">
+            тренировки
+          </span>
+        </div>
+        {{ clientnote_form.general }}
+        {{ clientnote_form.measurements }}
+        {{ clientnote_form.nutrition }}
+        {{ clientnote_form.workout }}
+        <div class="d-flex justify-content-between">
+
+          <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="clientnote_status_msg"></div>
+          <button class="btn btn-primary float-end ok_btn" type="submit" title="Сохранить заметку">&#10004;</button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- заметка о клиенте совокупная -->
+    <div class="d-flex flex-column rounded border-blueshadow hidden_element px-2 px-sm-3 py-2 w-95 w-sm-auto" id="full_clientnote_container">
+      <form method="post" id="full_clientnote_form" action="{% url 'save_full_clientnote_form' %}" class="w-100">
+        {% csrf_token %}
+        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
+          <span class="clientname text-white">{{ clientname|truncatechars:15 }}</span>
+          <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>
+          <button class="btn-close" type="button" aria-label="Close" onclick="closeFullClientNote()"></button>
+        </div>
+        {{ full_clientnote_form.note }}
+        <div class="d-flex justify-content-end">
+          <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="full_clientnote_status_msg"></div>
+          <button class="btn btn-primary float-end ok_btn" type="submit" title="Сохранить заметку">&#10004;</button>
         </div>
       </form>
     </div>
@@ -177,19 +235,18 @@
     </div>
   </div>
 
-  {% if clientname %}
   <footer>
     <div class="container">
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start py-3">
 
-        <button type="button" class="btn btn-primary" onclick="openCommentary()">
-          <img src="{% static 'controlpage/img/comment_ico.svg' %}" width="38" title="Заметка для клиента">
-          <span class="ms-2">Заметка для клиента</span>
-        </button>
-
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" onclick="openClientNote()">
           <img src="{% static 'controlpage/img/note_ico.svg' %}" width="38" title="Заметка о клиенте">
           <span class="ms-2">Заметка о клиенте</span>
+        </button>
+
+        <button type="button" class="btn btn-primary" onclick="openCommentary()">
+          <img src="{% static 'controlpage/img/comment_ico.svg' %}" width="38" title="Заметка для клиента">
+          <span class="ms-2">Комментарий для клиента</span>
         </button>
         
         <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
@@ -283,8 +340,7 @@
       </div>
     </div>
   </footer>
-  {% endif %}
-          
+     
 </body>
         
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

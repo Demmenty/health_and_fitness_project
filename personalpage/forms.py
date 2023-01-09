@@ -1,11 +1,6 @@
-from msilib.schema import CheckBox
-from tkinter import Widget
-from datetime import date
 from .models import Measurement, Questionary, Anthropometry, UserSettings
 from django.forms import ModelForm, NumberInput, TextInput, DateInput, Textarea, SelectDateWidget, CheckboxInput, ClearableFileInput, Select
 
-# можно указать fields = '__all__'
-# исправить ? хотя наглядность лучше..
 
 class MeasurementForm(ModelForm):
     class Meta:

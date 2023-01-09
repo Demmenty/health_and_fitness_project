@@ -2,9 +2,9 @@ import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from personalpage.models import Measurement, Questionary, FatSecretEntry, Anthropometry, UserSettings, MeasureColorField
-from controlpage.models import Commentary, ConsultationSignup
+from controlpage.models import Commentary, Clientnote, FullClientnote
 from personalpage.forms import QuestionaryForm
-from controlpage.forms import MeasureColorFieldForm, CommentaryForm, ConsultationBrowseForm
+from controlpage.forms import MeasureColorFieldForm, CommentaryForm, ClientnoteForm, FullClientnoteForm
 from time import sleep
 from itertools import zip_longest
 from datetime import date, datetime, timedelta, time
@@ -75,19 +75,47 @@ def get_client_contacts(client_id):
         return False
 
 
+def get_age(birthdate):
+    """получить количество полных лет по дню рождения"""
+    now = date.today()
+    age = now.year - birthdate.year
+    if (now.month < birthdate.month or
+       (now.month == birthdate.month and now.day < birthdate.day)):
+        age = age - 1
+    return age
+   
+
 def today_commentary_form(client_id):
     """Получение формы для комплексного комментария клиенту от эксперта
        Дата - сегодняшняя, на другие даты меняется на странице скриптом
     """
+    # форматирование для правильного отображения в инпуте
+    today = date.today().strftime('%Y-%m-%d')
     try:
         instance = Commentary.objects.get(client=client_id, date=date.today())
-        form = CommentaryForm(instance=instance)
+        form = CommentaryForm(instance=instance, initial={'date': today})
     except Commentary.DoesNotExist:
-        form = CommentaryForm()
+        form = CommentaryForm(initial={'date': today})
 
     return form
 
 
+def today_clientnote_form(client_id):
+    """Получение формы для заметки о клиенте для эксперта
+       Месяц - текущий, на другие месяцы меняется на странице скриптом
+    """
+    current_month = date.today().strftime('%Y-%m')
+    try:
+        # месяц в модели записывается как полная дата с 1 числом
+        instance = Clientnote.objects.get(client=client_id, date=date.today().replace(day=1))
+        form = ClientnoteForm(instance=instance, initial={'date': current_month})
+    except Clientnote.DoesNotExist:
+        form = ClientnoteForm(initial={'date': current_month})
+
+    return form
+
+
+# Аякс-запросы
 def get_commentary_form(request):
     """Получение формы коммента клиенту для эксперта
        для выбранной на странице даты через скрипт в layout"""
@@ -97,7 +125,6 @@ def get_commentary_form(request):
         return JsonResponse(data, status=403)
 
     client_id = request.GET.get('client_id', None)
-
     comment_date = request.GET['date']
 
     try:
@@ -160,110 +187,177 @@ def save_commentary_form(request):
         return JsonResponse(data, status=200)
 
 
-def get_age(birthdate):
-    """получить количество полных лет по дню рождения"""
-    now = date.today()
-    age = now.year - birthdate.year
-    if (now.month < birthdate.month or
-       (now.month == birthdate.month and now.day < birthdate.day)):
-        age = age - 1
-    return age
-    
+def get_clientnote_form(request):
+    """Получение формы коммента клиенту для эксперта
+       для выбранной на странице даты через скрипт в layout"""
 
-# My views
-
-def controlpage(request):
-    """Личный кабинет Параболы"""
-
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect('loginuser')
     if request.user.username != 'Parrabolla':
-        return redirect('homepage')
-    
-    # список зарегистрированных клиентов
-    # !!! clients = User.objects.exclude(username='Demmenty').exclude(username='Parrabolla')
-    clients = User.objects.exclude(username='Parrabolla')
-    # новые заявки на консультацию
-    new_consult_requests = ConsultationSignup.objects.filter(is_read=0)
-    new_consult_signup_count = new_consult_requests.count()
+        data = {}
+        return JsonResponse(data, status=403)
 
-    data = {
-        'clients': clients,
-        'new_consult_signup_count': new_consult_signup_count,
-    }
-    return render(request, 'controlpage/controlpage.html', data)
+    print(request.GET)
+
+    client_id = request.GET['client_id']
+    clientnote_date = request.GET['date'] + '-01'
+
+    try:
+        instance = Clientnote.objects.get(client=client_id, date=clientnote_date)
+        data = {
+            'general': instance.general,
+            'measurements': instance.measurements,
+            'nutrition': instance.nutrition,
+            'workout': instance.workout,
+        }
+    except Clientnote.DoesNotExist:
+        data = {
+        'general': '',
+        'measurements': '',
+        'nutrition': '',
+        'workout': '',
+        }
+
+    return JsonResponse(data, status=200)
 
 
-def consult_requests_page(request):
-    """Управление заявками на консультацию"""
-
-    if request.POST:
-        print(request.POST)
-    if request.GET:
-        print(request.GET)
-
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect('loginuser')
+def save_clientnote_form(request):
+    """Сохранение формы заметки о клиенте через аякс-скрипт"""
     if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        data = {}
+        return JsonResponse(data, status=403)
 
-    # функция сохранения заметки к заявке консультации
-    if request.POST.get('purpose') == 'save':
-        form = ConsultationBrowseForm(request.POST)
+    if request.method == 'POST':
+        client_id = request.POST['client']
+        form = ClientnoteForm(request.POST)
+
         if form.is_valid():
-            signup_id = request.POST.get('id')
-            expert_note = form.cleaned_data['expert_note']
-            instance = ConsultationSignup.objects.filter(id=signup_id)
-            instance.update(expert_note=expert_note)
+            clientnote_date = form.cleaned_data['date']
+            try:
+                instance = Clientnote.objects.get(client=client_id, date=clientnote_date)
+                form = ClientnoteForm(request.POST, instance=instance)
+                form.save()
+            except Clientnote.DoesNotExist:
+                form.save()
             result = 'заметка сохранена'
         else:
             result = 'данные некорректны'
-            
+
         data = {
             'result': result,
         }
         return JsonResponse(data, status=200)
+    
 
-    # функция удаления заявки консультации
-    if request.POST.get('purpose') == 'delete':
-        signup_id = request.POST.get('id')
-        instance = ConsultationSignup.objects.filter(id=signup_id)
-        instance.delete()
+def save_full_clientnote_form(request):
+    """Сохранение формы совокупной заметки о клиенте через аякс-скрипт"""
+    if request.user.username != 'Parrabolla':
         data = {}
-        return JsonResponse(data, status=200)
+        return JsonResponse(data, status=403)
 
-    # изменение отметки о том, что заявка прочитана 
-    if request.GET.get('purpose') == 'make_readed':
-        signup_id = request.GET.get('id')
-        instance = ConsultationSignup.objects.filter(id=signup_id)
-        instance.update(is_read=1)
-        data = {}
-        return JsonResponse(data, status=200)
+    if request.method == 'POST':
+        client_id = request.POST['client']
+        form = FullClientnoteForm(request.POST)
 
-    # заявки на консультацию
-    consult_signup_entries = ConsultationSignup.objects.all()
-    # новые заявки на консультацию
-    new_consult_signup_count = ConsultationSignup.objects.filter(is_read=0).count()
-    # формы для просмотра заявок и добавления заметки
-    consult_signup_forms = []
-    for entry in consult_signup_entries:
-        form = ConsultationBrowseForm(instance=entry)
-        consult_signup_forms.append(form)
+        if form.is_valid():
+            try:
+                instance = FullClientnote.objects.get(client=client_id)
+                form = FullClientnoteForm(request.POST, instance=instance)
+                form.save()
+            except FullClientnote.DoesNotExist:
+                form.save()
+            result = 'заметка сохранена'
+        else:
+            result = 'данные некорректны'
 
-    consult_signups_zip = zip(consult_signup_entries, consult_signup_forms)
-
-    data = {
-            'new_consult_signup_count': new_consult_signup_count,
-            'consult_signup_entries': consult_signup_entries,
-            'consult_signups_zip': consult_signups_zip,
+        data = {
+            'result': result,
         }
-    return render(request, 'controlpage/consult_requests_page.html', data)
+        return JsonResponse(data, status=200)
+    
+
+def get_color_settings(request):
+    """Получение текущих настроек цветов показателей"""
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    
+    client_id = request.GET['client_id']
+    if client_id == 'user':
+        client_id = request.user
+
+    colorset = MeasureColorField.objects.filter(user_id=client_id).order_by('index', 'color')
+    
+    if colorset:
+        data = {'feel': {},
+                'weight': {},
+                'fat': {},
+                'pulse': {},
+                'pressure_upper': {},
+                'pressure_lower': {},
+                'calories': {},
+                'protein': {},
+                'fats': {},
+                'carbohydrates': {},
+                }
+        for object in colorset:
+            data[str(object.index)][str(object.color.id)] = {
+                                                'color': str(object.color),
+                                                'low': str(object.low_limit),
+                                                'up': str(object.upper_limit) }
+    else:
+        data = {}
+
+    return JsonResponse(data, status=200)
 
 
-def clientpage(request):
-    """Страница контроля за клиентом"""
+def color_settings_save(request):
+    """Сохранение настроек цветов для показателей клиента через ajax"""
+    if request.user.username != 'Parrabolla':
+        data = {'status': 'No!'}
+        return JsonResponse(data, status=403)
+
+    if request.method == 'POST':
+        client_id = request.POST['client_id']
+        indices = request.POST.getlist('index')
+        colors = request.POST.getlist('color')
+        low_limits = request.POST.getlist('low_limit')
+        up_limits = request.POST.getlist('upper_limit')
+
+        values = zip_longest(indices, colors, low_limits, up_limits)
+
+        # наличие цветовых настроек для клиента
+        colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
+
+        if colorset_exist:
+            for index, color, low, up in values:
+                if not low:
+                    low = None
+                if not up:
+                    up = None
+                instance = MeasureColorField.objects.filter(
+                    user_id=client_id,
+                    index_id=index,
+                    color_id=color)
+                instance.update(low_limit=low, upper_limit=up)
+        else:
+            for index, color, low, up in values:
+                if not low:
+                    low = None
+                if not up:
+                    up = None
+                MeasureColorField.objects.create(
+                    user_id=client_id,
+                    index_id=index, 
+                    color_id=color, 
+                    low_limit=low, 
+                    upper_limit=up)
+
+        data = {}
+        return JsonResponse(data, status=200)
+
+
+# My views
+def client_mainpage(request):
+    """Главная страница контроля за клиентом"""
 
     # проверка пользователя
     if request.user.is_anonymous:
@@ -276,17 +370,28 @@ def clientpage(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
+
+
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
+    
+    
+
     # дата регистрации
     date_joined = User.objects.get(username=clientname).date_joined.date()
 
-    
     # существоВание анкеты
     try:
         questionary = Questionary.objects.get(user_id=client_id)
         client_age = get_age(questionary.birth_date)
         client_age = (str(client_age) + ' ' +
                       get_noun_ending(client_age, 'год', 'года', 'лет'))
-        
     except Questionary.DoesNotExist:
         questionary = ''
         client_age = 'неизвестно'
@@ -316,13 +421,15 @@ def clientpage(request):
         'questionary': questionary,
         'fs_connected': fs_connected,
         'today_measure': today_measure,
+        'date_today': date_today,
+        'client_age': client_age,
         'date_joined': date_joined,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
-        'client_age': client_age,
-        'date_today': date_today,
+        'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
-    return render(request, 'controlpage/clientpage.html', data)
+    return render(request, 'controlpage/client_mainpage.html', data)
 
 
 def client_measurements(request):
@@ -339,6 +446,8 @@ def client_measurements(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
 
     # измерения за сегодня
     try:
@@ -427,92 +536,10 @@ def client_measurements(request):
         'norm_pressure': norm_pressure,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
+        
     }
     return render(request, 'controlpage/client_measurements.html', data)
-
-
-def color_settings_save(request):
-    """Сохранение настроек цветов для показателей клиента через ajax"""
-
-    if request.user.username != 'Parrabolla':
-        data = {'status': 'No!'}
-        return JsonResponse(data, status=403)
-
-    if request.method == 'POST':
-
-        client_id = request.POST['client_id']
-        indices = request.POST.getlist('index')
-        colors = request.POST.getlist('color')
-        low_limits = request.POST.getlist('low_limit')
-        up_limits = request.POST.getlist('upper_limit')
-
-        values = zip_longest(indices, colors, low_limits, up_limits)
-
-        # наличие цветовых настроек для клиента
-        colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
-
-        if colorset_exist:
-            for index, color, low, up in values:
-                if not low:
-                    low = None
-                if not up:
-                    up = None
-                instance = MeasureColorField.objects.filter(
-                    user_id=client_id,
-                    index_id=index,
-                    color_id=color)
-                instance.update(low_limit=low, upper_limit=up)
-
-        else:
-            for index, color, low, up in values:
-                if not low:
-                    low = None
-                if not up:
-                    up = None
-                MeasureColorField.objects.create(
-                    user_id=client_id,
-                    index_id=index, 
-                    color_id=color, 
-                    low_limit=low, 
-                    upper_limit=up)
-
-        data = {}
-        return JsonResponse(data, status=200)
-
-
-def color_settings_send(request):
-    """Отправка текущих настроек цветов показателей"""
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect('loginuser')
-    
-    client_id = request.GET['client_id']
-    if client_id == 'user':
-        client_id = request.user
-
-    colorset = MeasureColorField.objects.filter(user_id=client_id).order_by('index', 'color')
-    
-    if colorset:
-        data = {'feel': {},
-                'weight': {},
-                'fat': {},
-                'pulse': {},
-                'pressure_upper': {},
-                'pressure_lower': {},
-                'calories': {},
-                'protein': {},
-                'fats': {},
-                'carbohydrates': {},
-                }
-        for object in colorset:
-            data[str(object.index)][str(object.color.id)] = {
-                                                'color': str(object.color),
-                                                'low': str(object.low_limit),
-                                                'up': str(object.upper_limit) }
-    else:
-        data = {}
-
-    return JsonResponse(data, status=200)
 
 
 
@@ -530,6 +557,8 @@ def client_questionary(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
 
     # ???
     questionary = Questionary.objects.get(user=client_id)
@@ -542,9 +571,9 @@ def client_questionary(request):
         'form': form,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
     }
     return render(request, 'controlpage/client_questionary.html', data)
-
 
 
 def client_mealjournal(request):
@@ -563,6 +592,8 @@ def client_mealjournal(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
     # для поля выбора
     today_day = str(date.today())
     previous_month = str(date.today() + relativedelta(months=-1))[0:7]
@@ -581,6 +612,7 @@ def client_mealjournal(request):
             'previous_month': previous_month,
             'client_contacts': client_contacts,
             'client_comment_form': client_comment_form,
+            'clientnote_form': clientnote_form,
         }
         return render(request, 'controlpage/client_mealjournal.html', data)  
 
@@ -761,6 +793,7 @@ def client_mealjournal(request):
         'previous_month': previous_month,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
     }
     return render(request, 'controlpage/client_mealjournal.html', data)   
 
@@ -780,6 +813,8 @@ def client_foodbydate(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -815,6 +850,7 @@ def client_foodbydate(request):
             'food_entry': food_entry,
             'client_contacts': client_contacts,
             'client_comment_form': client_comment_form,
+            'clientnote_form': clientnote_form,
         }
         return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -888,7 +924,6 @@ def client_foodbydate(request):
 
             # сохранение в кеш
             food_cache.update(temp_food_cache)
-
 
         # добавление инфы в food для соответствующего вида порции
         if type(food_info['servings']['serving']) is list:
@@ -975,6 +1010,7 @@ def client_foodbydate(request):
         'food_entry': food_entry,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
     }
     return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -994,6 +1030,8 @@ def client_foodbymonth(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -1237,6 +1275,7 @@ def client_foodbymonth(request):
         'prods_without_info': prods_without_info,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
     }
     return render(request, 'controlpage/client_foodbymonth.html', data)
 
@@ -1255,6 +1294,8 @@ def client_anthropometry(request):
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
+    # заметка о клиенте
+    clientnote_form = today_clientnote_form(client_id)
 
     # таблица сделанных измерений
     metrics = Anthropometry.objects.filter(user=client_id)
@@ -1280,7 +1321,6 @@ def client_anthropometry(request):
         photoaccess_instance = UserSettings.objects.get(user=client_id)
     except UserSettings.DoesNotExist:
         photoaccess_instance = UserSettings.objects.create(user_id=client_id)
-        
     accessibility = photoaccess_instance.photo_access
 
     data = {
@@ -1293,5 +1333,6 @@ def client_anthropometry(request):
         'accessibility': accessibility,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
     }
     return render(request, 'controlpage/client_anthropometry.html', data)

@@ -121,7 +121,7 @@ applyColors();
 function getColorSettings() {
   // функция получения и применения цветовых настроек
   var request = new XMLHttpRequest();
-  request.open("GET", "/controlpage/color_settings_send/?client_id=user");
+  request.open("GET", "/controlpage/get_color_settings/?client_id=user");
 
   request.onreadystatechange = function() {
     if(this.readyState === 4) {

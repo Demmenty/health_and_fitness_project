@@ -1,8 +1,9 @@
+from django.forms import ModelForm, NumberInput, HiddenInput, DateInput, Textarea
+from .models import Commentary, Clientnote, FullClientnote
 from personalpage.models import MeasureColorField
-from django.forms import ModelForm, NumberInput, TextInput, HiddenInput, DateInput, Textarea, SelectDateWidget, CheckboxInput
-from .models import Commentary, ConsultationSignup
 
 class MeasureColorFieldForm(ModelForm):
+    """Форма для настройки цветовых полей таблицы измерений"""
     class Meta:
         model = MeasureColorField
         fields = [
@@ -26,7 +27,9 @@ class MeasureColorFieldForm(ModelForm):
             }),
         }
 
+
 class CommentaryForm(ModelForm):
+    """Форма для комментария для клиента от эксперта"""
     class Meta:
         model = Commentary
         fields = [
@@ -41,89 +44,81 @@ class CommentaryForm(ModelForm):
             'date': DateInput(attrs={
                 'class': 'form-control text-center p-1 transition_common',
                 'type': 'date',
+                'id': "id_date_comment",
                 'readonly': False,
             }),
             'client': HiddenInput(),
             'general': Textarea(attrs={
                 'class': 'form-control hidden_element mb-2',
+                'id': "id_general_comment",
             }),
             'measurements': Textarea(attrs={
                 'class': 'form-control hidden_element mb-2',
+                'id': "id_measurements_comment",
             }),
             'nutrition': Textarea(attrs={
                 'class': 'form-control hidden_element mb-2',
+                'id': "id_nutrition_comment",
             }),
             'workout': Textarea(attrs={
                 'class': 'form-control hidden_element mb-2',
+                'id': "id_workout_comment",
             }),
         }
 
-class ConsultationsignupForm(ModelForm):
-    """Форма для подачи заявки на консультацию"""
+
+class ClientnoteForm(ModelForm):
+    """Форма для заметки о клиенте от эксперта по месяцам"""
     class Meta:
-        model = ConsultationSignup
+        model = Clientnote
         fields = [
-            'name',
-            'age',
-            'location',
-            'email',
-            'contacts',
-        ]
+            'date',
+            'client',
+            'general',
+            'measurements',
+            'nutrition',
+            'workout',
+            ]
         widgets = {
-            'name': TextInput(attrs={
-                'class': 'form-control',
+            'date': DateInput(attrs={
+                'class': 'form-control text-center p-1 transition_common',
+                'type': 'month',
+                'id': "id_date_note",
+                'readonly': False,
             }),
-            'age': TextInput(attrs={
-                'class': 'form-control',
+            'client': HiddenInput(),
+            'general': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "id_general_note",
             }),
-            'location': TextInput(attrs={
-                'class': 'form-control',
+            'measurements': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "id_measurements_note",
             }),
-            'email': TextInput(attrs={
-                'class': 'form-control',
+            'nutrition': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "id_nutrition_note",
             }),
-            'contacts': TextInput(attrs={
-                'class': 'form-control',
+            'workout': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "id_workout_note",
             }),
         }
 
-class ConsultationBrowseForm(ModelForm):
-    """Форма для просмотра заявки на консультацию"""
+
+class FullClientnoteForm(ModelForm):
+    """Форма для заметки о клиенте от эксперта совокупная"""
     class Meta:
-        model = ConsultationSignup
-        fields = [
-            'name',
-            'age',
-            'location',
-            'email',
-            'contacts',
-            'is_read',
-            'expert_note'
-        ]
+        model = FullClientnote
+        fields =  [
+            'client',
+            'note',
+            ]
         widgets = {
-            'name': TextInput(attrs={
-                'class': 'form-control',
-                'readonly': True,
-            }),
-            'age': TextInput(attrs={
-                'class': 'form-control',
-                'readonly': True,
-            }),
-            'location': TextInput(attrs={
-                'class': 'form-control',
-                'readonly': True,
-            }),
-            'email': TextInput(attrs={
-                'class': 'form-control',
-                'readonly': True,
-            }),
-            'contacts': TextInput(attrs={
-                'class': 'form-control',
-                'readonly': True,
-            }),
-            'is_read': HiddenInput(),
-            'expert_note': Textarea(attrs={
-                'class': 'form-control',
-                'rows': "5",
+            'client': HiddenInput(),
+            'note': Textarea(attrs={
+                'class': 'form-control mb-2',
+                'id': "id_full_note",
+                'rows': "20",
             }),
         }
