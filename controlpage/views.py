@@ -372,8 +372,6 @@ def client_mainpage(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
-
-
     # заметка о клиенте совокупная
     try:
         instance = FullClientnote.objects.get(client=client_id)
@@ -381,8 +379,6 @@ def client_mainpage(request):
     except FullClientnote.DoesNotExist:
         full_clientnote_form = FullClientnoteForm()
     
-    
-
     # дата регистрации
     date_joined = User.objects.get(username=clientname).date_joined.date()
 
@@ -448,6 +444,12 @@ def client_measurements(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
 
     # измерения за сегодня
     try:
@@ -537,10 +539,9 @@ def client_measurements(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
-        
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_measurements.html', data)
-
 
 
 def client_questionary(request):
@@ -554,13 +555,19 @@ def client_questionary(request):
 
     clientname = request.GET['clientname']
     client_id = request.GET['client_id']
+
     client_contacts = get_client_contacts(client_id)
     # комментарий для клиента
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
 
-    # ???
     questionary = Questionary.objects.get(user=client_id)
     form = QuestionaryForm()
     
@@ -572,6 +579,7 @@ def client_questionary(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_questionary.html', data)
 
@@ -594,6 +602,12 @@ def client_mealjournal(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
     # для поля выбора
     today_day = str(date.today())
     previous_month = str(date.today() + relativedelta(months=-1))[0:7]
@@ -613,6 +627,7 @@ def client_mealjournal(request):
             'client_contacts': client_contacts,
             'client_comment_form': client_comment_form,
             'clientnote_form': clientnote_form,
+            'full_clientnote_form': full_clientnote_form,
         }
         return render(request, 'controlpage/client_mealjournal.html', data)  
 
@@ -794,6 +809,7 @@ def client_mealjournal(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_mealjournal.html', data)   
 
@@ -815,6 +831,12 @@ def client_foodbydate(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -851,6 +873,7 @@ def client_foodbydate(request):
             'client_contacts': client_contacts,
             'client_comment_form': client_comment_form,
             'clientnote_form': clientnote_form,
+            'full_clientnote_form': full_clientnote_form,
         }
         return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -1011,6 +1034,7 @@ def client_foodbydate(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -1032,6 +1056,12 @@ def client_foodbymonth(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
 
     # делаем сессию с FatSecret
     make_session(client_id)
@@ -1276,6 +1306,7 @@ def client_foodbymonth(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_foodbymonth.html', data)
 
@@ -1296,6 +1327,12 @@ def client_anthropometry(request):
     client_comment_form = today_commentary_form(client_id)
     # заметка о клиенте
     clientnote_form = today_clientnote_form(client_id)
+    # заметка о клиенте совокупная
+    try:
+        instance = FullClientnote.objects.get(client=client_id)
+        full_clientnote_form = FullClientnoteForm(instance=instance)
+    except FullClientnote.DoesNotExist:
+        full_clientnote_form = FullClientnoteForm()
 
     # таблица сделанных измерений
     metrics = Anthropometry.objects.filter(user=client_id)
@@ -1334,5 +1371,6 @@ def client_anthropometry(request):
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_anthropometry.html', data)

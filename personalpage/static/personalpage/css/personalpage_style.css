@@ -103,9 +103,15 @@ body {
     right: 0;
     left: 15px;
     z-index: 10;
-    margin-top: -506px;
+    margin-top: -448px;
     margin-right: 15px;
 }
+@media (min-width: 576px) {
+    #commentary_container {
+        margin-top: -506px;
+    }
+}
+
 .comment_section {
     font-weight: 500;
     border-radius: 10px;
@@ -133,10 +139,16 @@ body {
     border-radius: 10px;
     z-index: 1;
     position: relative;
-    height: 279px;
+    height: 232px;
     overflow: auto;
     margin-top: 1rem;
 }
+@media (min-width: 576px) {
+    .commentary_textfield {
+        height: 279px; 
+    }
+}
+
 #dialog_part_svg {
     filter: drop-shadow(11px 5px 3px #9fbfc5);
     z-index: 11;

@@ -232,6 +232,13 @@ header {
     color: #5271ff;
 }
 
+header .clientname {
+    max-width: -webkit-fill-available;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #exit_pic {
     filter: grayscale(1) brightness(0.9);
 }
@@ -280,21 +287,6 @@ header {
         display: inline-block;
     }
     #logout_btn_pic {
-        display: none;
-    }
-}
-
-#nav_string {
-    display: none;
-}
-#nav_dropdown {
-    display: flex;
-}
-@media (min-width: 768px) {
-    #nav_string {
-        display: flex;
-    }
-    #nav_dropdown {
         display: none;
     }
 }

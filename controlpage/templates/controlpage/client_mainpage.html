@@ -7,7 +7,7 @@
 
 <div class="container d-flex flex-column flex-sm-row justify-content-between pt-5">
 
-    <div class="d-flex flex-column me-sm-5 mb-4">
+    <div class="d-flex flex-column me-sm-4 mb-4">
         <p>Дата региcтрации: {{ date_joined }}</p>
         <p>Возраст: {{ client_age }}</p>
         <!-- анкета -->
@@ -21,13 +21,7 @@
                 </form>
                 заполнена
             {% else %}
-                &#10006;
-                <form method="get" action="{% url 'client_questionary' %}" class="d-inline">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
-                    <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
-                </form>
-                не заполнена
+                &#10006; Анкета здоровья не заполнена
             {% endif %}
         </div>
         <!-- дневник питания -->

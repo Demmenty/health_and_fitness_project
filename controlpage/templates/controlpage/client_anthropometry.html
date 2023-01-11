@@ -257,6 +257,8 @@
 
     {% endif %}
 
+    <br>
+    
     <!-- переход к ежедневным показателям -->
     <form method="get" action="{% url 'client_measurements' %}">
         <input type="hidden" value="{{ client_id }}" name="client_id">
