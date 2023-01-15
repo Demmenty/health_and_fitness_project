@@ -122,17 +122,17 @@
                         <!-- среднее арифметическое -->
                         <tr class="table-light">
                             <th colspan="2">В среднем:</th>
-                            <th>{{ avg_week.avg_feel|default:"" }}</th>
-                            <th>{{ avg_week.avg_weight|default:"" }}</th>
-                            <th>{{ avg_week.avg_fat|default:"" }}</th>
-                            <th>{{ avg_week.avg_pulse|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_feel|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_weight|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_fat|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_pulse|default:"" }}</th>
                             {% if show_pressure_week %}
-                                <th>{{ avg_week.avg_pressure|default:"" }}</th>
+                                <th>{{ week_measures_avg.avg_pressure|default:"" }}</th>
                             {% endif%}
-                            <th>{{ avg_week.avg_calories|default:"" }}</th>
-                            <th>{{ avg_week.avg_protein|default:"" }}</th>
-                            <th>{{ avg_week.avg_fats|default:"" }}</th>
-                            <th>{{ avg_week.avg_carbohydrates|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_calories|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_protein|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_fats|default:"" }}</th>
+                            <th>{{ week_measures_avg.avg_carbohydrates|default:"" }}</th>
                             <td class="borderless">&nbsp</td>
                         </tr>
                     </tbody>

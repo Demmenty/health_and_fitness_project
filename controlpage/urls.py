@@ -15,5 +15,4 @@ urlpatterns = [
     path('save_clientnote_form/', views.save_clientnote_form, name='save_clientnote_form'),
     path('save_full_clientnote_form/', views.save_full_clientnote_form, name='save_full_clientnote_form'),
     path('color_settings_save/', views.color_settings_save, name='color_settings_save'),
-    path('get_color_settings/', views.get_color_settings, name='get_color_settings'),
 ]

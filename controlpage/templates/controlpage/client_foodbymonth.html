@@ -27,7 +27,7 @@
 
     <br>
 
-    {% if food_entries_month %}
+    {% if monthly_food_entries %}
         <!-- Сводка за выбраннный месяц-->
         <table class="table table-bordered table-hover text-center">
             <thead class="table-light">
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for day in food_entries_month %}
+                {% for day in monthly_food_entries %}
                 <tr>
                     <td>{{ day.date_int|date:"j E - D" }}</td>
                     <td>{{ day.calories }}</td>
@@ -51,10 +51,10 @@
                 {% endfor %}
                 <tr class="table-light">
                     <th>В среднем:</th>
-                    <th>{{ avg_month.calories }}</th>
-                    <th>{{ avg_month.protein }}</th>
-                    <th>{{ avg_month.fat }}</th>
-                    <th>{{ avg_month.carbo }}</th>
+                    <th>{{ monthly_avg.calories }}</th>
+                    <th>{{ monthly_avg.protein }}</th>
+                    <th>{{ monthly_avg.fat }}</th>
+                    <th>{{ monthly_avg.carbo }}</th>
                 </tr>
             </tbody>
         </table><br>
@@ -75,7 +75,7 @@
                 {% for prod, value in prods_without_info.items %}
                 <div id="food_id_{{ value.index_number }}">
                     <hr>
-                    <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                    <p><b>Продукт:</b> {{ value.daily_food_entries_name }}</p>
                     <p>{{ value.serving_description }} = 
                         <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
                         <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
@@ -209,7 +209,7 @@
 
         <br>
     {% else %}
-        {% if food_entries_month %}
+        {% if monthly_food_entries %}
             <!-- кНопка посчитать ТОП -->
             <form action="{% url 'client_foodbymonth' %}" method="get" class="d-flex justify-content-center" id="calc_top_btn">
                 <input type="hidden" value="{{ client_id }}" name="client_id">
@@ -250,5 +250,7 @@
     </form>
 </div>
 
-<script src="{% static 'personalpage/js/foodbymonth.js' %}"></script>
+<br>
+
+<script src="{% static 'controlpage/js/client_mealjournal.js' %}"></script>
 {% endblock %}

@@ -24,6 +24,7 @@ urlpatterns = [
     path('personalpage/', include('personalpage.urls')),
     path('controlpage/', include('controlpage.urls')),
     path('expertpage/', include('expertpage.urls')),
+    path('fatsecret_app/', include('fatsecret_app.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

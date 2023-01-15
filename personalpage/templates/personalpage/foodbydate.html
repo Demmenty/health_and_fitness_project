@@ -23,7 +23,7 @@
 
 <br>
 
-{% if food_entry %}
+{% if daily_food %}
     <!-- Сводка за выбраннную дату -->
     <table class="table table-bordered">
         <thead class="table-light">
@@ -39,33 +39,35 @@
         </thead>
         <tbody>
             <tr>
-                {% for category, count in count_meal_in_category.items %}
-                {% if count > 0 %}
-                <td rowspan="{{ count }}">{% translate category %}</td>
-                {% endif %}
-                {% for food in food_entry %}
-                {% if food.meal == category %}
-                <td>{{ food.food_entry_name }}</td>
-                <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
-                <td class="text-center">{{ food.calories }}</td>
-                <td class="text-center">{{ food.protein }}</td>
-                <td class="text-center">{{ food.fat }}</td>
-                <td class="text-center">{{ food.carbohydrate }}</td> 
-            </tr>
-                {% endif %}
-                {% endfor %}
+                {% for category, count in daily_food.count_by_category.items %}
+                    {% if count > 0 %}
+                        <td rowspan="{{ count }}">{% translate category %}</td>
+                    {% endif %}
+                    {% for food in daily_food.entries %}
+                        {% if food.meal == category %}
+                        <td>{{ food.food_entry_name }}</td>
+                        <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                        <td class="text-center">{{ food.calories }}</td>
+                        <td class="text-center">{{ food.protein }}</td>
+                        <td class="text-center">{{ food.fat }}</td>
+                        <td class="text-center">{{ food.carbohydrate }}</td> 
+                    </tr>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             <tr class="table-light">
                 <th colspan="2" class="text-end">Всего:</th>
-                <th class="text-center">{{ day_total.amount }} g/ml</th>
-                <th class="text-center">{{ day_total.calories }}</th>
-                <th class="text-center">{{ day_total.protein }}</th>
-                <th class="text-center">{{ day_total.fat }}</th>
-                <th class="text-center">{{ day_total.carbohydrate }}</th>
+                <th class="text-center">{{ daily_food.nutrition.amount }} g/ml</th>
+                <th class="text-center">{{ daily_food.nutrition.calories }}</th>
+                <th class="text-center">{{ daily_food.nutrition.protein }}</th>
+                <th class="text-center">{{ daily_food.nutrition.fat }}</th>
+                <th class="text-center">{{ daily_food.nutrition.carbohydrate }}</th>
             </tr>
         </tbody>
     </table>
-{% else %}
+{% endif %}
+
+{% if not daily_food %}
     <br>
     <p class="text-center mb-0">Данные отсутствуют</p>
 {% endif %}
@@ -73,17 +75,17 @@
 <br>
 
 <!-- если не посчитались какие-то продукты -->
-{% if prods_without_info %}
+{% if daily_food.without_info %}
     <br>
     <h4 class="text-center">Некоторые продукты не удалось посчитать!</h4><br>
     <div class="add_metric_container">
         <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
         <form method="POST" action="" class="add_metric_form">
             {% csrf_token %}
-            {% for prod, value in prods_without_info.items %}
+            {% for prod, value in daily_food.without_info.items %}
             <div id="food_id_{{ value.index_number }}">
                 <hr>
-                <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                <p><b>Продукт:</b> {{ value.daily_food.entries_name }}</p>
                 <p>{{ value.serving_description }} = 
                     <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
                     <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
@@ -165,7 +167,7 @@
     </script>
 {% endif %}
 
-{% if food_entry %}
+{% if daily_food %}
     <!-- топчики -->
     <ol class="top_table_ol">
     <table class="table top_table caption-top">
@@ -179,11 +181,11 @@
             </tr>
         </thead>
         <tbody>
-        {% for product, value in top_amount.items %}
+        {% for product, value in daily_top.top_amount.items %}
             <tr>
                 <td></td>
                 <td><li>{% translate product %}</li></td>
-                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric }}</td>
                 <td class="text-center">{{ value.calories }}</td>
             </tr>
         {% endfor %}
@@ -204,11 +206,11 @@
             </tr>
         </thead>
         <tbody>
-        {% for product, value in top_calories.items %}
+        {% for product, value in daily_top.top_calories.items %}
             <tr>
                 <td></td>
                 <td><li>{% translate product %}</li></td>
-                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric|default_if_none:"" }}</td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric }}</td>
                 <td class="text-center">{{ value.calories }}</td>
             </tr>
         {% endfor %}
@@ -225,7 +227,7 @@
 <div id="another_date_container">
     <h5 class="text-center">Сводка за другое число</h5>
     <form action="" method = "get" class="d-flex justify-content-between">
-        <input type="date" class="form-control text-center" name="date" id="input_briefdate">
+        <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ prev_date }}">
         <button type="submit" class="btn btn-primary d-inline" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
@@ -236,6 +238,6 @@
     <img src="{% static 'general/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К дневнику питания">
 </a>
 
-<br><br>
+<br><br><br>
 
 {% endblock %}

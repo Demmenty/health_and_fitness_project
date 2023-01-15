@@ -29,7 +29,7 @@
 
     <br>
 
-    {% if food_entry %}
+    {% if daily_food_entries %}
         <!-- Сводка за выбраннную дату -->
         <table class="table table-bordered">
             <thead class="table-light">
@@ -45,13 +45,13 @@
             </thead>
             <tbody>
                 <tr>
-                    {% for category, count in count_meal_in_category.items %}
+                    {% for category, count in count_daily_food_by_category.items %}
                     {% if count > 0 %}
                     <td rowspan="{{ count }}">{% translate category %}</td>
                     {% endif %}
-                    {% for food in food_entry %}
+                    {% for food in daily_food_entries %}
                     {% if food.meal == category %}
-                    <td>{{ food.food_entry_name }}</td>
+                    <td>{{ food.daily_food_entries_name }}</td>
                     <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
                     <td class="text-center">{{ food.calories }}</td>
                     <td class="text-center">{{ food.protein }}</td>
@@ -63,11 +63,11 @@
                     {% endfor %}
                 <tr class="table-light">
                     <th colspan="2" class="text-end">Всего:</th>
-                    <th class="text-center">{{ day_total.amount }} g/ml</th>
-                    <th class="text-center">{{ day_total.calories }}</th>
-                    <th class="text-center">{{ day_total.protein }}</th>
-                    <th class="text-center">{{ day_total.fat }}</th>
-                    <th class="text-center">{{ day_total.carbohydrate }}</th>
+                    <th class="text-center">{{ daily_nutrition.amount }} g/ml</th>
+                    <th class="text-center">{{ daily_nutrition.calories }}</th>
+                    <th class="text-center">{{ daily_nutrition.protein }}</th>
+                    <th class="text-center">{{ daily_nutrition.fat }}</th>
+                    <th class="text-center">{{ daily_nutrition.carbohydrate }}</th>
                 </tr>
             </tbody>
         </table>
@@ -90,7 +90,7 @@
                 {% for prod, value in prods_without_info.items %}
                 <div id="food_id_{{ value.index_number }}">
                     <hr>
-                    <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                    <p><b>Продукт:</b> {{ value.daily_food_entries_name }}</p>
                     <p>{{ value.serving_description }} = 
                         <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
                         <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
@@ -172,7 +172,7 @@
         </script>
     {% endif %}
 
-    {% if food_entry %}
+    {% if daily_food_entries %}
         <!-- топчики -->
         <ol class="top_table_ol">
         <table class="table top_table caption-top">

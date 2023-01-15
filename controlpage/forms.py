@@ -1,31 +1,5 @@
-from django.forms import ModelForm, NumberInput, HiddenInput, DateInput, Textarea
+from django.forms import ModelForm, HiddenInput, DateInput, Textarea
 from .models import Commentary, Clientnote, FullClientnote
-from personalpage.models import MeasureColorField
-
-class MeasureColorFieldForm(ModelForm):
-    """Форма для настройки цветовых полей таблицы измерений"""
-    class Meta:
-        model = MeasureColorField
-        fields = [
-            'user',
-            'index',
-            'color',
-            'low_limit',
-            'upper_limit',
-            ]
-        widgets = {
-            'user': HiddenInput(),
-            'index': HiddenInput(),
-            'color': HiddenInput(),
-            'low_limit': NumberInput(attrs={
-                'class': 'form-control text-center',
-                'min': '0',
-            }),
-            'upper_limit': NumberInput(attrs={
-                'class': 'form-control text-center',
-                'min': '0',
-            }),
-        }
 
 
 class CommentaryForm(ModelForm):

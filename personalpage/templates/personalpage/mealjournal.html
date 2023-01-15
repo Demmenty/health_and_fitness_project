@@ -5,13 +5,16 @@
 {% block title %}Дневник питания{% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 {% if user_not_connected %}
     <!-- Предложение соединения с FS если не подключен -->
     <div class="d-flex flex-column">
 
         <div class="">
-            <p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение <a href="https://www.fatsecret.com" target="_blank" class="fatsecret_ref">FatSecret</a>.</p>
+            <p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение 
+                <a href="https://www.fatsecret.com" target="_blank" class="fatsecret_ref">FatSecret</a>.
+            </p>
             <p>FatSecret бесплатен и прост в использовании.</p>
             <p>Вам нужно будет лишь вести дневник питания на своем смартфоне, а вся необходимая для анализа информация будет собираться нами автоматически.</p>
         </div>
@@ -49,16 +52,14 @@
                     <img src="{% static 'personalpage/img/FS_photo.webp' %}" class="rounded fs_photo">
                 </div>
             </div>
-
         </div>
-
     </div>
     
 {% else %}
 
     <!-- Сводка за сегодня -->
     <h3>Сегодня</h3>
-    {% if food_entry %}
+    {% if daily_food %}
 
         <table class="table table-bordered">
             <thead class="table-light">
@@ -74,11 +75,11 @@
             </thead>
             <tbody>
                 <tr>
-                    {% for category, count in count_meal_in_category.items %}
+                    {% for category, count in daily_food.count_by_category.items %}
                     {% if count > 0 %}
                     <td rowspan="{{ count }}">{% translate category %}</td>
                     {% endif %}
-                    {% for food in food_entry %}
+                    {% for food in daily_food.entries %}
                     {% if food.meal == category %}
                     <td>{{ food.food_entry_name }}</td>
                     <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
@@ -92,11 +93,11 @@
                     {% endfor %}
                 <tr class="table-light">
                     <th colspan="2" class="text-end">Всего:</th>
-                    <th class="text-center">{{ day_total.amount }} g/ml</th>
-                    <th class="text-center">{{ day_total.calories }}</th>
-                    <th class="text-center">{{ day_total.protein }}</th>
-                    <th class="text-center">{{ day_total.fat }}</th>
-                    <th class="text-center">{{ day_total.carbohydrate }}</th>
+                    <th class="text-center">{{ daily_food.nutrition.amount }} g/ml</th>
+                    <th class="text-center">{{ daily_food.nutrition.calories }}</th>
+                    <th class="text-center">{{ daily_food.nutrition.protein }}</th>
+                    <th class="text-center">{{ daily_food.nutrition.fat }}</th>
+                    <th class="text-center">{{ daily_food.nutrition.carbohydrate }}</th>
                 </tr>
             </tbody>
         </table>
@@ -111,7 +112,7 @@
                     {% for prod, value in prods_without_info.items %}
                     <div id="food_id_{{ value.index_number }}">
                         <hr>
-                        <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
+                        <p><b>Продукт:</b> {{ value.daily_food.entries_name }}</p>
                         <p>{{ value.serving_description }} = 
                             <input type="hidden" value="{{ prod }}" name="food_id_{{ value.index_number }}">
                             <input type="hidden" value="{{ value.serving_id }}" name="serving_id_{{ value.index_number }}">
@@ -132,7 +133,6 @@
             </div>
 
             <!-- сохранение введенной метрики -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
             <script>
                 $(document).ready(function () {
                     // отслеживаем событие отправки формы
@@ -203,7 +203,7 @@
     <div id="another_date_container_mealjournal">
         <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
         <form action = "{% url 'foodbydate' %}" method = "get" class="d-flex justify-content-between">
-            <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{{ today_day }}">
+            <input type="date" class="form-control text-center" name="date" id="input_briefdate" value="{% now 'Y-m-d' %}">
             <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
         </form>
     </div>
@@ -212,7 +212,7 @@
 
     <!-- Сводка за текущий месяц -->
     <h3>Текущий месяц</h3>
-    {% if food_entries_month %}
+    {% if monthly_food %}
         <table class="table table-bordered table-hover text-center">
             <thead class="table-light">
                 <tr>
@@ -224,9 +224,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for day in food_entries_month %}
+                {% for day in monthly_food.entries %}
                 <tr>
-                    <td>{{ day.date_int|date:"j E - D" }}</td>
+                    <td>{{ day.date_datetime|date:"j E - D" }}</td>
                     <td>{{ day.calories }}</td>
                     <td>{{ day.protein }}</td>
                     <td>{{ day.fat }}</td>
@@ -235,10 +235,10 @@
                 {% endfor %}
                 <tr class="table-light">
                     <th>В среднем:</th>
-                    <th>{{ avg_month.calories }}</th>
-                    <th>{{ avg_month.protein }}</th>
-                    <th>{{ avg_month.fat }}</th>
-                    <th>{{ avg_month.carbo }}</th>
+                    <th>{{ monthly_food.monthly_avg.calories }}</th>
+                    <th>{{ monthly_food.monthly_avg.protein }}</th>
+                    <th>{{ monthly_food.monthly_avg.fat }}</th>
+                    <th>{{ monthly_food.monthly_avg.carbo }}</th>
                 </tr>
             </tbody>
         </table>
@@ -246,7 +246,74 @@
         <p class="text-center">Данные отсутствуют</p>
     {% endif %}
 
-    <br>
+    <!-- топ-10 продуктов за текущий месяц -->
+    {% if something %}
+    <div class="hidden_element" id="top_section">
+        <ol class="top_table_ol">
+        <table class="table top_table caption-top" id="table_top_amount">
+            <caption><h3 class="text-center">Топ по количеству</h3></caption>
+            <thead class="table-light">
+                <tr>
+                    <th></th>
+                    <th>Название продукта</th>
+                    <th class="text-center">Съедено</th>
+                    <th class="text-center">Получено калорий</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for product, value in monthly_top.top_amount.items %}
+                <tr>
+                    <td></td>
+                    <td><li>{% translate product %}</li></td>
+                    <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+                    <td class="text-center">{{ value.calories }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </ol>
+        <br>
+
+        <ol class="top_table_ol">
+        <table class="table top_table caption-top" id="table_top_calories">
+            <caption><h3 class="text-center">Топ по калориям</h3></caption>
+            <thead class="table-light">
+                <tr>
+                    <th></th>
+                    <th>Название продукта</th>
+                    <th class="text-center">Съедено</th>
+                    <th class="text-center">Получено калорий</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for product, value in monthly_top.top_calories.items %}
+                <tr>
+                    <td></td>
+                    <td><li>{% translate product %}</li></td>
+                    <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+                    <td class="text-center">{{ value.calories }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </ol>
+        <br>
+    </div>
+    {% endif %}
+    
+        <!-- запрос топ-10 за месяц -->
+        {% if monthly_food.entries %}
+            <div id="waiting_cat" class="waiting_container d-flex flex-column hidden_element">
+                <img src="{% static 'general/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+                <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
+            </div>
+            <br>
+            <button type="button" class="btn btn-primary" id="calc_top_btn" data-month="{% now 'Y-m' %}" data-action="{% url 'get_monthly_top' %}">
+                ТОП-10 продуктов
+            </button>
+            <br>
+        {% endif %}
+    
 
     <!-- Сводка (итоговая средняя) за последний полный месяц - сделать! -->
 
@@ -267,4 +334,5 @@
 
 <br>
 
+<script src="{% static 'personalpage/js/mealjournal.js' %}"></script>
 {% endblock %}

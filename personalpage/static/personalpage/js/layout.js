@@ -44,7 +44,8 @@ const countUnread = document.getElementById('count_of_unread');
 setSettingsDependPath();
 function setSettingsDependPath() {
     if ((pagePath == '/personalpage/measurements/') ||
-        (pagePath == '/personalpage/anthropometry/')) {
+        (pagePath == '/personalpage/anthropometry/') ||
+        (pagePath == '/personalpage/addmeasure/')) {
         // открытие соотв.текста комментария
         commentMeasurements.classList.remove('hidden_element');
         // открытие соотв.вкладки комментария

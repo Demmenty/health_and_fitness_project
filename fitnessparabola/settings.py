@@ -44,10 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'homepage',
     'personalpage',
     'controlpage',
     'expertpage',
+    'measurements',
+    'fatsecret_app',
+
     'django_cleanup',
 ]
 
@@ -145,3 +149,11 @@ MEDIA_ROOT = BASE_DIR/'media'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# данные fatsecret - засунуть в вирт среду!!!
+FS_CONSUMER_KEY = '96509fd6591d4fb384386e1b75516777'
+FS_CONSUMER_SECRET = 'cb1398ad47344691b092cabce5647116'
+
+# FS_CONSUMER_KEY = os.getenv('FS_CONSUMER_KEY')
+# FS_CONSUMER_SECRET = os.getenv('FS_CONSUMER_SECRET')

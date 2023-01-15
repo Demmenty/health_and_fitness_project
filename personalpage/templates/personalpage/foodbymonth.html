@@ -5,7 +5,9 @@
 {% block title %}Дневник питания{% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
+<!-- заголовок-дата -->
 <div class="d-flex justify-content-center align-items-center">
     <!-- кнопка предыдущий месяц-->
     <form method = "get">
@@ -13,7 +15,8 @@
         <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'general/img/arrow_left_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий месяц" style="width: 20px;">
     </form>
     <!-- месяц -->
-    <h3 class="text-center p-2">{{ briefmonth|date:'F Y' }}</h3>
+    <span class="hidden_element" data-action="{% url 'get_monthly_top' %}" id="hidden_briefmonth">{{ briefmonth }}</span>
+    <h3 class="text-center p-2" id="briefmonth">{{ briefmonth|date:'F Y' }}</h3>
     <!-- кнопка следующий месяц-->
     <form method = "get">
         <input type="hidden" name="month" value="{{ next_month }}">
@@ -23,8 +26,8 @@
 
 <br>
 
-{% if food_entries_month %}
-    <!-- Сводка за выбраннный месяц-->
+<!-- Сводка за выбраннный месяц-->
+{% if monthly_food %}
     <table class="table table-bordered table-hover text-center">
         <thead class="table-light">
             <tr>
@@ -36,9 +39,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for day in food_entries_month %}
+            {% for day in monthly_food.entries %}
             <tr>
-                <td>{{ day.date_int|date:"j E - D" }}</td>
+                <td>{{ day.date_datetime|date:"j E - D" }}</td>
                 <td>{{ day.calories }}</td>
                 <td>{{ day.protein }}</td>
                 <td>{{ day.fat }}</td>
@@ -47,10 +50,10 @@
             {% endfor %}
             <tr class="table-light">
                 <th>В среднем:</th>
-                <th>{{ avg_month.calories }}</th>
-                <th>{{ avg_month.protein }}</th>
-                <th>{{ avg_month.fat }}</th>
-                <th>{{ avg_month.carbo }}</th>
+                <th>{{ monthly_food.monthly_avg.calories }}</th>
+                <th>{{ monthly_food.monthly_avg.protein }}</th>
+                <th>{{ monthly_food.monthly_avg.fat }}</th>
+                <th>{{ monthly_food.monthly_avg.carbo }}</th>
             </tr>
         </tbody>
     </table>
@@ -61,13 +64,13 @@
 <br>
 
 <!-- если не посчитались какие-то продукты -->
-{% if prods_without_info %}
+{% if monthly_food.without_info %}
     <h4 class="text-center">Некоторые продукты не удалось посчитать!</h4><br>
     <div class="add_metric_container">
         <h5 class="text-center">Укажите их граммовку, пожалуйста</h5>
         <form method="POST" action="" class="add_metric_form">
             {% csrf_token %}
-            {% for prod, value in prods_without_info.items %}
+            {% for prod, value in monthly_food.without_info.items %}
             <div id="food_id_{{ value.index_number }}">
                 <hr>
                 <p><b>Продукт:</b> {{ value.food_entry_name }}</p>
@@ -84,14 +87,12 @@
             </div>
             {% endfor %}
             <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
-            
             <button type="submit" class="btn btn-primary">Сохранить</button>
             <button type="button" class="btn btn-primary hidden_element btn_rigth" id="recalculation_btn" onclick=location=URL>Пересчитать</button>
         </form>
     </div><br>
 
     <!-- сохранение введенной метрики -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             // отслеживаем событие отправки формы
@@ -151,6 +152,19 @@
     </script>
 {% endif %}
 
+<!-- запрос топ-10 -->
+{% if monthly_food %}
+    <div id="waiting_cat" class="waiting_container d-flex flex-column hidden_element">
+        <img src="{% static 'general/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+        <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
+    </div>
+    <button type="button" class="btn btn-primary d-block mx-auto" id="calc_top_btn" data-month="{{ briefmonth|date:'Y-m' }}" data-action="{% url 'get_monthly_top' %}">
+        ТОП-10 продуктов
+    </button>
+    <br>
+    <span class="text-danger d-block text-center" id="top_error"></span>
+{% endif %}
+
 {% if top_calories %}
     <!-- топчики -->
     <ol class="top_table_ol">
@@ -169,7 +183,7 @@
             <tr>
                 <td></td>
                 <td><li>{% translate product %}</li></td>
-                <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric }}</td>
                 <td class="text-center">{{ value.calories }}</td>
             </tr>
         {% endfor %}
@@ -177,7 +191,6 @@
     </table>
     </ol>
     <br>
-
     <ol class="top_table_ol">
     <table class="table top_table caption-top">
         <caption><h3 class="text-center">Топ по калориям</h3></caption>
@@ -194,31 +207,14 @@
             <tr>
                 <td></td>
                 <td><li>{% translate product %}</li></td>
-                <td class="text-center">{{ value.amount }} {{ value.metric }}</td>
+                <td class="text-center">{{ value.amount|default:"?" }} {{ value.metric }}</td>
                 <td class="text-center">{{ value.calories }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     </ol>
-
     <br>
-{% else %}
-
-    {% if food_entries_month %}
-        <!-- кНопка посчитать ТОП -->
-        <form action="{% url 'foodbymonth' %}" method="get" class="d-flex justify-content-center" id="calc_top_btn">
-            <input type="month" class="hidden_element" name="month" id="input_briefmonth" value="{{ briefmonth|date:'Y-m' }}">
-            <input type="checkbox" class="hidden_element" name="top_create" value="True" id="" checked>
-            <button type="submit" class="btn btn-primary" name="submit" onclick="waiting()">посчитать ТОП-продукты</button></h5>
-        </form>
-
-        <div id="waiting_calculating" class="waiting_container d-flex flex-column hidden_element">
-            <img src="{% static 'general/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
-            <h6 class="text-center"><i>нужно немножечко подождать...</i></h6>
-        </div>
-        <br>
-    {% endif %}
 {% endif %}
 
 <hr>
@@ -228,7 +224,7 @@
 <div id="another_date_container">
     <h5 class="text-center">Сводка за другой месяц</h5>
     <form action="" method ="get" class="d-flex justify-content-between">
-        <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ previous_month }}">
+        <input type="month" class="form-control text-center" name="month" id="input_briefmonth" value="{{ prev_month }}">
         <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
     </form>
 </div>
@@ -239,7 +235,7 @@
     <img src="{% static 'general/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К дневнику питания">
 </a>
 
-<br><br>
+<br><br><br>
 
-<script src="{% static 'personalpage/js/foodbymonth.js' %}"></script>
+<script src="{% static 'personalpage/js/mealjournal.js' %}"></script>
 {% endblock %}
