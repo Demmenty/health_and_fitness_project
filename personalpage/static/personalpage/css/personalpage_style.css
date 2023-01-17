@@ -45,6 +45,9 @@ body {
     color: #b9b9b9 !important;
 }
 
+.w-fill {
+    width: -webkit-fill-available;
+}
 
 .text-royalblue {
     color: #5271ff !important;
@@ -655,17 +658,17 @@ table {
 
 
 /* mealjournal */
-#another_date_container_mealjournal {
-    width: 310px;
-    float: right;
-    margin-right: 40px;
-    margin-top: -10px;
+#select_date_section_mealjournal {
+    max-width: 310px;
 }
 #back_btn_mealjournal {
     margin-top: -18px;
 }
 #text_warning_nometrics_mealjournal {
     margin-top: 28px;
+}
+.hr_select_section {
+    margin-top: 5.65rem;
 }
 .fatsecret_ref {
     color: #36bd30;
@@ -734,16 +737,38 @@ table {
 }
 /* mealjournal */
 
-
 /* foodbymonth */
-
 #cat_with_coffee {
     height: 122px;
     width: 152px;
     align-self: center;
 }
+.min-vh {
+    min-height: 64vh;
+}
+@media (min-width: 576px) {
+    .min-vh {
+        min-height: 79vh;
+    }  
+}
+#select_month_section {
+    max-width: 310px;
+}
 /* foodbymonth */
 
+/* foodbydate */
+.min-vh {
+    min-height: 64vh;
+}
+@media (min-width: 576px) {
+    .min-vh {
+        min-height: 79vh;
+    }  
+}
+#select_date_section {
+    max-width: 310px;
+}
+/* foodbydate */
 
 /* personalpage */
 .today_measure_table {

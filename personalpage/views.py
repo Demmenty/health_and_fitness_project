@@ -5,7 +5,7 @@ from controlpage.models import Commentary
 from django.db.models import Q
 from .forms import AnthropometryForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from measurements.forms import MeasurementForm, MeasurementCommentForm
-from time import sleep
+from time import time as t
 from datetime import date, datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 # from fatsecret import Fatsecret, GeneralError
@@ -204,6 +204,31 @@ def get_count_unread(request):
     return JsonResponse(data, status=200)
 
 
+def get_monthly_top(request):
+    """выдает топ-10 продуктов месяца через ajax"""
+
+    if request.user.is_anonymous:
+        return JsonResponse({}, status=403)
+
+    month_str = request.GET.get('month')
+    month_datetime = datetime.strptime(month_str, "%Y-%m")
+
+    monthly_top = create_monthly_top(request.user, month_datetime)
+
+    return JsonResponse(monthly_top, status=200)
+    
+
+def get_color_settings(request):
+    """Получение текущих настроек цветов показателей через ajax-запрос"""
+
+    if request.user.is_anonymous:
+        return JsonResponse({}, status=403)
+
+    colorsettings = get_measeurecolor_settings(request.user)
+
+    return JsonResponse(colorsettings, status=200)
+
+
 def commentsave(request):
     """Сохранение коммента через ajax"""
     # получаем форму из запроса
@@ -387,10 +412,11 @@ def measurements(request):
     period_measures = get_last_measures(request.user, days=period)
 
     if period_measures:
-        period_measures_avg = get_avg_for_period(request.user.id, period=period)
+
+        period_measures_avg = create_avg_for_measures(period_measures)
         period_measure_comment_forms = get_measure_comment_forms(period_measures)
         period_as_string = f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
-        need_to_show_pressure = any(day.pressure_upper for day in period_measures)
+        need_to_show_pressure = bool(period_measures_avg.get('pressure'))
 
         colorsettings_exist = user_has_measeurecolor_settings(request.user)
 
@@ -411,17 +437,6 @@ def measurements(request):
         'today_commentary': today_commentary,
     })
     return render(request, 'personalpage/measurements.html', data)    
-
-
-def get_color_settings(request):
-    """Получение текущих настроек цветов показателей через ajax-запрос"""
-
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    colorsettings = get_measeurecolor_settings(request.user)
-
-    return JsonResponse(colorsettings, status=200)
 
 
 def questionary(request):
@@ -598,8 +613,9 @@ def mealjournal(request):
     if daily_food:
         prods_without_info.update(daily_food.get('without_info'))
 
-    # для поля выбора
-    previous_month = str(date.today() + relativedelta(months=-1))[0:7]
+    # для поля выбора (потом сделать через js)
+    previous_month = date.today() + relativedelta(months=-1)
+    previous_month = previous_month.strftime("%Y-%m")
 
     data = {
         'daily_food': daily_food,
@@ -609,20 +625,6 @@ def mealjournal(request):
         'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/mealjournal.html', data)
-
-
-def get_monthly_top(request):
-    """выдает топ-10 продуктов месяца через ajax"""
-
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    month_str = request.GET.get('month')
-    month_datetime = datetime.strptime(month_str, "%Y-%m")
-
-    monthly_top = create_monthly_top(request.user, month_datetime)
-
-    return JsonResponse(monthly_top, status=200)
 
 
 def foodbydate(request):

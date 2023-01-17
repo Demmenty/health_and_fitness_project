@@ -37,6 +37,111 @@ def get_measure_comment_forms(measurements_set):
     return measure_comment_forms
 
 
+def create_avg_for_measures(period_measures) -> dict:
+    """Составляет словарь из средних значений по
+       каждому ежедневному измерению физических показателей
+       Нужно передать QuerySet измерений Measurements
+    """
+
+    period_measures = list(period_measures.values())
+
+    avg_data = {}
+
+    if any(day['feel'] for day in period_measures):
+        days = 0
+        feel_total = 0
+        for day in period_measures:
+            if day['feel']:
+                feel_total += int(day['feel'])
+                days += 1
+        avg = int(feel_total / days)
+        avg_data['feel'] = str(avg) + "/10"
+
+    if any(day['weight'] for day in period_measures):
+        days = 0
+        weight_total = 0
+        for day in period_measures:
+            if day['weight']:
+                weight_total += float(day['weight'])
+                days += 1
+        avg = round(weight_total / days, 1)
+        avg_data['weight'] = str(avg) + " кг"
+
+    if any(day['fat'] for day in period_measures):
+        days = 0
+        fat_total = 0
+        for day in period_measures:
+            if day['fat']:
+                fat_total += float(day['fat'])
+                days += 1
+        avg = round(fat_total / days, 1)
+        avg_data['fat'] = str(avg) + " %"
+
+    if any(day['pulse'] for day in period_measures):
+        days = 0
+        pulse_total = 0
+        for day in period_measures:
+            if day['pulse']:
+                pulse_total += int(day['pulse'])
+                days += 1
+        avg = int(pulse_total / days)
+        avg_data['pulse'] = avg
+
+    if any(day['pressure_upper'] and day['pressure_lower']
+                               for day in period_measures):
+        days = 0
+        pressure_upper = 0
+        pressure_lower = 0
+        for day in period_measures:
+            if day['pressure_upper'] and day['pressure_lower']:
+                pressure_upper += int(day['pressure_upper'])
+                pressure_lower += int(day['pressure_lower'])
+                days += 1
+        avg_data['pressure'] = (str(int(pressure_upper / days)) +
+                          "/" + str(int(pressure_lower / days)))
+
+    # КБЖУ считается без учета сегодняшнего дня
+    for i in range(len(period_measures)):
+        if period_measures[i]['date'] == date.today():
+            del period_measures[i]
+            break
+
+    # если calories none или 0 - нет смысла считать кбжу
+    if any(day['calories'] for day in period_measures):
+
+        days = 0
+        calories_total = 0
+        protein_total = 0
+        fats_total = 0
+        carbohydrates_total = 0
+
+        for day in period_measures:
+
+            if day['calories']:
+                days += 1
+                calories_total += int(day['calories'])
+            if day['protein'] is not None:
+                protein_total += float(day['protein'])
+            if day['fats'] is not None:
+                fats_total += float(day['fats'])
+            if day['carbohydrates'] is not None:
+                carbohydrates_total += float(day['carbohydrates'])
+
+        avg = int(calories_total / days)
+        avg_data['calories'] = str(avg)
+
+        avg = int(protein_total / days)
+        avg_data['protein'] = str(avg)
+
+        avg = int(fats_total / days)
+        avg_data['fats'] = str(avg)
+
+        avg = int(carbohydrates_total / days)
+        avg_data['carbohydrates'] = str(avg)
+
+    return avg_data
+
+
 def user_has_measeurecolor_settings(user) -> bool:
     """проверяет, настроены ли у пользователя окрашивания 
     физических показателей экспертом"""
@@ -50,29 +155,29 @@ def get_measeurecolor_settings(user):
     """возвращает настройки окрашивания показателей клиента в виде Queryset"""
 
     if user_has_measeurecolor_settings(user):
-        colorsettings = MeasureColorField.objects.filter(user=user)
-        colorsettings.order_by('index', 'color')
+        instance = MeasureColorField.objects.filter(user=user)
+        instance.order_by('index', 'color')
     else:
-        return None
+        return {}
 
-    data = {'feel': {},
-            'weight': {},
-            'fat': {},
-            'pulse': {},
-            'pressure_upper': {},
-            'pressure_lower': {},
-            'calories': {},
-            'protein': {},
-            'fats': {},
-            'carbohydrates': {},
-            }
-    for object in colorsettings:
-        data[str(object.index)][str(object.color.id)] = {
+    colorsettings = {'feel': {},
+                    'weight': {},
+                    'fat': {},
+                    'pulse': {},
+                    'pressure_upper': {},
+                    'pressure_lower': {},
+                    'calories': {},
+                    'protein': {},
+                    'fats': {},
+                    'carbohydrates': {}}
+
+    for object in instance:
+        colorsettings[str(object.index)][str(object.color.id)] = {
                                 'color': str(object.color),
                                 'low': str(object.low_limit),
                                 'up': str(object.upper_limit) }
 
-    return data
+    return colorsettings
 
 
 def create_weekly_measure_forms(user):

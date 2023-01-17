@@ -345,6 +345,7 @@ def create_monthly_top(user, month: datetime) -> dict:
     monthly_total = _get_monthly_total_from_cache(user, month)
 
     if not monthly_total:
+        print('monthly_total в кеше нет')
         monthly_total = _create_monthly_total(user, month)
 
         if monthly_total.get('without_info') is None:
@@ -512,6 +513,8 @@ def _create_daily_total(user, entry_date: datetime) -> dict:
 
     if without_info:
         daily_total['without_info'] = without_info
+    else:
+         _save_daily_total_in_cache(user, entry_date, daily_total)
 
     return daily_total
 
@@ -589,6 +592,7 @@ def _create_monthly_total(user, entry_month: datetime) -> dict:
         # добываем суммарности за день
         daily_total = _get_daily_total_from_cache(user, entry_month)
         if not daily_total:
+            print('daily_total в кеше нет')
             daily_total = _create_daily_total(user, entry_month)
             _save_daily_total_in_cache(user, entry_month, daily_total)
 
@@ -601,6 +605,9 @@ def _create_monthly_total(user, entry_month: datetime) -> dict:
                 monthly_total[key]['amount'] += daily_total[key]['amount']
             else:
                 monthly_total[key] = daily_total[key]
+
+    if monthly_total:
+         _save_monthly_total_in_cache(user, entry_month, monthly_total)
 
     return monthly_total
 
@@ -626,11 +633,11 @@ def _save_monthly_total_in_cache(user, entry_month: datetime, monthly_total:dict
     if entry_month == current_month:
         return
 
+    with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
+        monthly_total_cache = pickle.load(file)
+
     # если такого юзера еще не записано - сохраняем
     if monthly_total_cache.get(user.id) is None:
-
-        with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
-            monthly_total_cache = pickle.load(file)
 
         monthly_total_cache.update({user.id:{entry_month:monthly_total}})
 
@@ -639,9 +646,6 @@ def _save_monthly_total_in_cache(user, entry_month: datetime, monthly_total:dict
 
     # если такой юзер записан, но нет такого месяца - сохраняем
     if monthly_total_cache[user.id].get(entry_month) is None:
-
-        with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
-            monthly_total_cache = pickle.load(file)
 
         monthly_total_cache[user.id].update({entry_month:monthly_total})
 
@@ -658,6 +662,10 @@ def _get_monthly_total_from_cache(user, entry_month: datetime) -> dict:
 
     with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
         monthly_total_cache = pickle.load(file)
+
+    print('monthly_total_cache')
+    print(monthly_total_cache)
+    print()
 
     if monthly_total_cache.get(user.id):
         if monthly_total_cache[user.id].get(entry_month):
