@@ -645,30 +645,19 @@ input[type="radio"]:hover {
 
 
 /* mealjournal */
-#another_date_container_mealjournal {
-    width: 310px;
-    float: right;
-    margin-right: 40px;
-    margin-top: -10px;
-}
-#another_date_container {
-    width: 310px;
-    float: right;
-    margin-top: -8px;
+#select_date_section_mealjournal {
+    max-width: 310px;
 }
 #back_btn_mealjournal {
     margin-top: -18px;
 }
-#text_warning_nometrics_mealjournal {
-    margin-top: 28px;
-}
-#input_briefdate {
-    max-width: 200px;
+.without_info_row input[type="number"] {
+    text-align: center;
     display: inline;
 }
-#input_briefmonth {
-    max-width: 200px;
+.without_info_row select {
     display: inline;
+    width: unset;
 }
 
 #cat_with_coffee {
@@ -704,6 +693,40 @@ input[type="radio"]:hover {
     color: #0065fd00;
 }
 /* mealjournal */
+
+/* foodbymonth */
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+.min-vh {
+    min-height: 64vh;
+}
+@media (min-width: 576px) {
+    .min-vh {
+        min-height: 79vh;
+    }  
+}
+#select_month_section {
+    max-width: 310px;
+}
+/* foodbymonth */
+
+/* foodbydate */
+.min-vh {
+    min-height: 64vh;
+}
+@media (min-width: 576px) {
+    .min-vh {
+        min-height: 79vh;
+    }  
+}
+#select_date_section {
+    max-width: 310px;
+}
+/* foodbydate */
+
 
 /* anthropometry */
 .anthropometry_form {

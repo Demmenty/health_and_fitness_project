@@ -365,15 +365,6 @@ footer {
     outline-style: auto !important;
     outline-width: 1px !important;
 }
-.add_metric_container {
-    max-width: max-content;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
-}
 .btn_rigth {
     float: right;
 }
@@ -664,12 +655,15 @@ table {
 #back_btn_mealjournal {
     margin-top: -18px;
 }
-#text_warning_nometrics_mealjournal {
-    margin-top: 28px;
+.without_info_row input[type="number"] {
+    text-align: center;
+    display: inline;
 }
-.hr_select_section {
-    margin-top: 5.65rem;
+.without_info_row select {
+    display: inline;
+    width: unset;
 }
+
 .fatsecret_ref {
     color: #36bd30;
     text-decoration: none;

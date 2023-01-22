@@ -208,7 +208,7 @@ def count_daily_food(user, request_date:datetime) -> dict:
                 # если в инфе не оказалось граммовки порции
                 # добавляем эту еду в спец.словарь и не считаем amount
                 without_info[food['food_id']] = {
-                    'daily_food_entries_name': food['daily_food_entries_name'],
+                    'food_entry_name': food['food_entry_name'],
                     'serving_description': food['serving'].get('serving_description', 'порция'),
                     'serving_id': food['serving_id'],
                     'calories_per_serving': food['serving'].get('calories', food['calories']) }
@@ -447,6 +447,36 @@ def _get_foodinfo_from_foodcache(food_id:str):
     return {}
 
 
+def save_foodmetric_into_foodcache(prods_without_info) -> None:
+    """получает словарь с продуктами, которым добавили метрику
+    вручную в дневнике питания, и сохраняет в food_info_cache"""
+
+    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
+        food_info_cache = pickle.load(file)
+
+    count_of_prods = len(prods_without_info.get('food_id'))
+
+    for i in range(count_of_prods):
+
+        food_id = prods_without_info["food_id"][i]
+        metric_serving_amount = prods_without_info["metric_serving_amount"][i]
+        metric_serving_unit = prods_without_info["metric_serving_unit"][i]
+        serving_id = prods_without_info["serving_id"][i]
+
+        if type(food_info_cache[food_id]['servings']['serving']) is dict:
+            food_info_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
+            food_info_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
+        else:
+            for dic in food_info_cache[food_id]['servings']['serving']:
+                if dic['serving_id'] == serving_id:
+                    dic["metric_serving_amount"] = metric_serving_amount
+                    dic["metric_serving_unit"] = metric_serving_unit
+                    break
+            
+    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
+            pickle.dump(food_info_cache, f)   
+
+
 # daily_total
 def _create_daily_total(user, entry_date: datetime) -> dict:
     """возвращает словарь с суммарным количеством и калорийностью
@@ -663,10 +693,6 @@ def _get_monthly_total_from_cache(user, entry_month: datetime) -> dict:
     with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
         monthly_total_cache = pickle.load(file)
 
-    print('monthly_total_cache')
-    print(monthly_total_cache)
-    print()
-
     if monthly_total_cache.get(user.id):
         if monthly_total_cache[user.id].get(entry_month):
             monthly_total = monthly_total_cache[user.id][entry_month]
@@ -692,8 +718,19 @@ def _remove_prods_without_info_from_cache() -> None:
 
     with open('fatsecret_app/food_info_cache.pickle', 'rb') as f:
         food_cache = pickle.load(f)
+
+    #  твистер - (184г)
+    if food_cache.get('4652615'):
+        print(food_cache.get('4652615'))
         del food_cache['4652615']
+    #  картоха - (135г)
+    if food_cache.get('62258251'):
+        print(food_cache.get('62258251'))
         del food_cache['62258251']
 
     with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
         pickle.dump(food_cache, f)
+
+
+# _remove_prods_without_info_from_cache()
+

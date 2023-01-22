@@ -1,21 +1,35 @@
-# import pickle
 from django.shortcuts import render, redirect
 from .models import Anthropometry, Questionary, UserSettings
 from controlpage.models import Commentary
 from django.db.models import Q
 from .forms import AnthropometryForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from measurements.forms import MeasurementForm, MeasurementCommentForm
-from time import time as t
-from datetime import date, datetime, timedelta, time
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
-# from fatsecret import Fatsecret, GeneralError
 from django.http import JsonResponse
-# from django.conf import settings
 from fatsecret_app.services import *
 from measurements.services import *
 
 
-# функции
+# внутренние функции
+def get_noun_ending(number, one, two, five):
+    """Функция возвращает вариант слова с правильным окончанием
+       в зависимости от числа
+       Нужно передать число и соответствующие варианты
+       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
+    """
+    n = abs(number)
+    n %= 100
+    if 20 >= n >= 5:
+        return five
+    n %= 10
+    if n == 1:
+        return one
+    if 4 >= n >= 2:
+        return two
+    return five
+
+
 def get_avg_for_period(user_id, period=7):
     """Составляет словарь из средних значений по
        каждому ежедневному измерению физичских показателей за неделю.
@@ -97,24 +111,6 @@ def get_avg_for_period(user_id, period=7):
         avg_data['avg_carbohydrates'] = int(avg_data['avg_carbohydrates'] / count_carbohydrates)
     
     return avg_data
-
-
-def get_noun_ending(number, one, two, five):
-    """Функция возвращает вариант слова с правильным окончанием
-       в зависимости от числа
-       Нужно передать число и соответствующие варианты
-       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
-    """
-    n = abs(number)
-    n %= 100
-    if 20 >= n >= 5:
-        return five
-    n %= 10
-    if n == 1:
-        return one
-    if 4 >= n >= 2:
-        return two
-    return five
 
 
 # Аякс-запросы
@@ -204,31 +200,6 @@ def get_count_unread(request):
     return JsonResponse(data, status=200)
 
 
-def get_monthly_top(request):
-    """выдает топ-10 продуктов месяца через ajax"""
-
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    month_str = request.GET.get('month')
-    month_datetime = datetime.strptime(month_str, "%Y-%m")
-
-    monthly_top = create_monthly_top(request.user, month_datetime)
-
-    return JsonResponse(monthly_top, status=200)
-    
-
-def get_color_settings(request):
-    """Получение текущих настроек цветов показателей через ajax-запрос"""
-
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    colorsettings = get_measeurecolor_settings(request.user)
-
-    return JsonResponse(colorsettings, status=200)
-
-
 def commentsave(request):
     """Сохранение коммента через ajax"""
     # получаем форму из запроса
@@ -252,47 +223,15 @@ def commentsave(request):
 def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
 
-    status = "инфа сохранена, круто!"
-    saved_food_id = []
+    if request.user.is_anonymous:
+        return redirect('loginuser')
 
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
-        food_cache = pickle.load(file)
+    prods_without_info = dict(request.POST)
+    del prods_without_info['csrfmiddlewaretoken']
 
-    index_number = 0
-    while True:
-        index_number += 1
-        if request.POST.get("metric_serving_amount_"+str(index_number)) is None :
-            break
+    save_foodmetric_into_foodcache(prods_without_info)
 
-        elif (request.POST.get("metric_serving_amount_"+str(index_number)) == "" or 
-              request.POST.get("metric_serving_amount_"+str(index_number)) == "0") :
-            status = "поле оставлено пустым, алло!"
-        
-        else:
-            food_id = request.POST["food_id_"+str(index_number)]
-            saved_food_id.append("food_id_"+str(index_number))
-            metric_serving_amount = request.POST["metric_serving_amount_"+str(index_number)]
-            metric_serving_unit = request.POST["metric_serving_unit_"+str(index_number)]
-            serving_id = request.POST["serving_id_"+str(index_number)]
-
-            if type(food_cache[food_id]['servings']['serving']) is dict:
-                food_cache[food_id]['servings']['serving']["metric_serving_amount"] = metric_serving_amount
-                food_cache[food_id]['servings']['serving']["metric_serving_unit"] = metric_serving_unit
-            else:
-                for dic in food_cache[food_id]['servings']['serving']:
-                    if dic['serving_id'] == serving_id:
-                        dic["metric_serving_amount"] = metric_serving_amount
-                        dic["metric_serving_unit"] = metric_serving_unit
-                        break
-            
-
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
-            pickle.dump(food_cache, f)
-
-    data = {
-        'status': status,
-        'saved_food_id': saved_food_id,
-    }
+    data = {'status': "инфа сохранена, круто!"}
     return JsonResponse(data, status=200)
   
 
@@ -318,13 +257,13 @@ def photoaccess_change(request):
 def personalpage(request):
     """Личный кабинет клиента"""
 
+    # проверка пользователя
     if request.user.is_anonymous:
         return redirect('loginuser')
-
     if request.user.username == 'Parrabolla':
         return redirect('expertpage')
 
-    questionary = Questionary.objects.filter(user=request.user).first
+    questionary = Questionary.objects.filter(user=request.user).first()
 
     # сообщение об ошибке в контактах
     contacts_error = ''
@@ -383,60 +322,8 @@ def personalpage(request):
         'contacts_error': contacts_error,
         'contacts_filled': contacts_filled,
         'today_commentary': today_commentary,
-        'date_today': date.today(),
     }
     return render(request, 'personalpage/personalpage.html', data)
-
-
-def measurements(request):
-    """Страница отслеживания ежедневных измерений"""
-    
-    if request.user.is_anonymous:
-        return redirect('loginuser')
-
-    if request.user.username == 'Parrabolla':
-        return redirect('expertpage') 
-
-    if user_has_fs_entry(request.user):
-        renew_weekly_measures_nutrition(request.user)
-
-    data = {}
-
-    today_measure = get_daily_measure(request.user)
-
-    if request.GET.get('selectperiod'):
-        period = int(request.GET['selectperiod'])
-    else:
-        period = 7
-
-    period_measures = get_last_measures(request.user, days=period)
-
-    if period_measures:
-
-        period_measures_avg = create_avg_for_measures(period_measures)
-        period_measure_comment_forms = get_measure_comment_forms(period_measures)
-        period_as_string = f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
-        need_to_show_pressure = bool(period_measures_avg.get('pressure'))
-
-        colorsettings_exist = user_has_measeurecolor_settings(request.user)
-
-        data.update({     
-            'period_measures': period_measures,
-            'period_measures_avg': period_measures_avg,
-            'period_measure_comment_forms': period_measure_comment_forms,
-            'period_as_string': period_as_string,
-            'need_to_show_pressure': need_to_show_pressure,
-            'colorsettings_exist': colorsettings_exist,
-        })
-
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
-
-    data.update({
-        'today_measure': today_measure,
-        'today_commentary': today_commentary,
-    })
-    return render(request, 'personalpage/measurements.html', data)    
 
 
 def questionary(request):
@@ -470,7 +357,6 @@ def questionary(request):
         }
         return render(request, 'personalpage/questionary.html', data)
 
-    # POST-запрос
     if request.method == 'POST':
         # получаем форму из запроса
         form = QuestionaryForm(request.POST)
@@ -506,6 +392,56 @@ def questionary(request):
                 'error': 'Данные введены некорректно. Попробуйте ещё раз.',
             }
             return render(request, 'personalpage/questionary.html', data)
+
+
+def measurements(request):
+    """Страница отслеживания ежедневных измерений"""
+    
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
+    if request.user.username == 'Parrabolla':
+        return redirect('expertpage') 
+
+    data = {}
+
+    if user_has_fs_entry(request.user):
+        renew_weekly_measures_nutrition(request.user)
+
+    today_measure = get_daily_measure(request.user)
+
+    if request.GET.get('selectperiod'):
+        period = int(request.GET['selectperiod'])
+    else:
+        period = 7
+
+    period_measures = get_last_measures(request.user, days=period)
+
+    if period_measures:
+        period_measures_avg = create_avg_for_measures(period_measures)
+        period_measure_comment_forms = get_measure_comment_forms(period_measures)
+        period_as_string = f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
+        need_to_show_pressure = bool(period_measures_avg.get('pressure'))
+
+        colorsettings_exist = user_has_measeurecolor_settings(request.user)
+
+        data.update({     
+            'period_measures': period_measures,
+            'period_measures_avg': period_measures_avg,
+            'period_measure_comment_forms': period_measure_comment_forms,
+            'period_as_string': period_as_string,
+            'need_to_show_pressure': need_to_show_pressure,
+            'colorsettings_exist': colorsettings_exist,
+        })
+
+    today_commentary = Commentary.objects.filter(
+            date=date.today(), client=request.user).first()
+
+    data.update({
+        'today_measure': today_measure,
+        'today_commentary': today_commentary,
+    })
+    return render(request, 'personalpage/measurements.html', data)    
 
 
 def addmeasure(request):
@@ -594,42 +530,44 @@ def mealjournal(request):
     # комментарий за сегодня от эксперта
     today_commentary = Commentary.objects.filter(
             date=date.today(), client=request.user).first()
+    
+    data = {'today_commentary': today_commentary,}
 
     # проверяем, привязан ли у пользователя аккаунт Fatsecret
     if user_has_fs_entry(request.user) is False:
         # показываем предложение подключить
-        data = {
+        data.update({
             'user_not_connected': True,
-            'today_commentary': today_commentary,
-        }
+        })
         return render(request, 'personalpage/mealjournal.html', data)
+    else:
+        # делаем подсчеты
+        daily_food = count_daily_food(request.user, datetime.today())
+        monthly_food = count_monthly_food(request.user, datetime.today())
 
-    # делаем подсчеты
-    daily_food = count_daily_food(request.user, datetime.today())
-    monthly_food = count_monthly_food(request.user, datetime.today())
+        # словарь продуктов, для которых нет инфо о граммовке порции
+        prods_without_info = {}
+        if daily_food.get('without_info'):
+            prods_without_info.update(daily_food['without_info'])
+        if monthly_food.get('without_info'):
+            prods_without_info.update(monthly_food['without_info'])
 
-    # словарь продуктов, для которых нет инфо о граммовке порции
-    prods_without_info = {}
-    if daily_food:
-        prods_without_info.update(daily_food.get('without_info'))
+        # для поля выбора (потом сделать через js)
+        previous_month = date.today() + relativedelta(months=-1)
+        previous_month = previous_month.strftime("%Y-%m")
 
-    # для поля выбора (потом сделать через js)
-    previous_month = date.today() + relativedelta(months=-1)
-    previous_month = previous_month.strftime("%Y-%m")
-
-    data = {
-        'daily_food': daily_food,
-        'monthly_food': monthly_food,
-        'prods_without_info': prods_without_info,
-        'previous_month': previous_month,
-        'today_commentary': today_commentary,
-    }
-    return render(request, 'personalpage/mealjournal.html', data)
+        data.update({
+            'daily_food': daily_food,
+            'monthly_food': monthly_food,
+            'prods_without_info': prods_without_info,
+            'previous_month': previous_month,
+        })
+        return render(request, 'personalpage/mealjournal.html', data)
 
 
 def foodbydate(request):
     """Получение данных за опр.день из FatSecret
-    С ТОПом по количеству и калориям
+    С ТОП-3 по количеству и калориям
     """
     
     if request.user.is_anonymous:
@@ -666,7 +604,9 @@ def foodbydate(request):
 
 
 def foodbymonth(request):
-    """Страница подробной статистики по КБЖУ за месяц из FatSecret"""
+    """Страница подробной статистики по КБЖУ за месяц из FatSecret
+        с кнопочкой подсчета ТОП-10 продуктов
+    """
     
     if request.user.is_anonymous:
         return redirect('loginuser')
@@ -692,9 +632,6 @@ def foodbymonth(request):
     today_commentary = Commentary.objects.filter(
             date=date.today(), client=request.user).first()
 
-    print('monthly_food')
-    print(monthly_food)
-            
     data = {
         'briefmonth': month_datetime,
         'prev_month': prev_month,

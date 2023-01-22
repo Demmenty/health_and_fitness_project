@@ -16,7 +16,6 @@
                 &#10004;
                 <form method="get" action="{% url 'client_questionary' %}" class="d-inline">
                     <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="hidden" value="{{ clientname }}" name="clientname">
                     <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
                 </form>
                 заполнена
@@ -34,7 +33,7 @@
 
     <div class="d-flex flex-column">
         <!-- физические показатели сегодня  -->
-        <h5 class="text-royalblue align-self-center pt-1 mb-2">{{ date_today|date:"j E Y" }}</h5>
+        <h5 class="text-royalblue align-self-center pt-1 mb-2">{% now "j E Y" %}</h5>
         {% if today_measure %}
             <div class="table-responsive today_measure_table" id="today_measure_table">
                 <table class="table table-bordered table-fixed text-center">

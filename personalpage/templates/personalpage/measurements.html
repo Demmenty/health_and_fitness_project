@@ -6,179 +6,262 @@
 {% block content %}
 <div class="container pt-5">
     <!-- табличка за сегодня -->
-    {% if today_measure %}
-        <table class="table table-bordered caption-top align-middle text-center" id="today_measure_table">
-            <caption class="text-body"><h4>Сегодня</h4></caption>
-            <thead class="table-light">
-                <tr>
-                    <th>Дата</th>
-                    <th>День</th>
-                    <th>Самочувствие</th>
-                    <th>Масса</th>
-                    <th>Жирность</th>
-                    <th>Пульс</th>
-                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                        <th>Давление</th>
-                    {% endif %}
-                    <th>Калории</th>
-                    <th>Белки</th>
-                    <th>Жиры</th>
-                    <th>Углеводы</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ today_measure.date|date:"j b" }}</td>
-                    <td>{{ today_measure.date|date:"D" }}</td>
-                    <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
-                    <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
-                    <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
-                    <td>{{ today_measure.pulse|default_if_none:"" }}</td>
-                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
-                    <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
-                    {% endif %}
-                    <td>{{ today_measure.calories|default_if_none:"" }}</td>
-                    <td>{{ today_measure.protein|default_if_none:"" }}</td>
-                    <td>{{ today_measure.fats|default_if_none:"" }}</td>
-                    <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <section name="today_measurements">
+        {% if today_measure %}
+            <table class="table table-bordered caption-top align-middle text-center" id="today_measure_table">
+                <caption class="text-body"><h4>Сегодня</h4></caption>
+                <thead class="table-light">
+                    <tr>
+                        <th>Дата</th>
+                        <th>День</th>
+                        <th>Самочувствие</th>
+                        <th>Масса</th>
+                        <th>Жирность</th>
+                        <th>Пульс</th>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                            <th>Давление</th>
+                        {% endif %}
+                        <th>Калории</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ today_measure.date|date:"j b" }}</td>
+                        <td>{{ today_measure.date|date:"D" }}</td>
+                        <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
+                        <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                        <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
+                        <td>{{ today_measure.pulse|default_if_none:"" }}</td>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                            <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                        {% endif %}
+                        <td>{{ today_measure.calories|default_if_none:"" }}</td>
+                        <td>{{ today_measure.protein|default_if_none:"" }}</td>
+                        <td>{{ today_measure.fats|default_if_none:"" }}</td>
+                        <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-        {% if today_measure.comment %}
-            <div class="d-flex align-items-center" id="today_comment_container">
-        {% else %}
-            <div class="d-flex align-items-center hidden_element" id="today_comment_container">
-        {% endif %}
+            <div {% if today_measure.comment %} class="d-flex align-items-center" 
+                {% else %} class="d-flex align-items-center hidden_element"
+                {% endif %} id="today_comment_container">
                 <div class="col-1 text-center">
                     <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
                 </div>
                 <div class="border border-grey rounded col-11 p-2 px-3" id="today_comment">
                     {{ today_measure.comment }}
                 </div>
-            </div><br>
-        
-        <a href="{% url 'addmeasure' %}" title="редактировать измерения">
-            <button class='btn btn-outline-primary float-end'>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 20 20">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                </svg>
-                Редактировать
-            </button>
-        </a>
-    {% else %}
-        <p class="text-center">За сегодня измерений не сделано</p>
-        <a href="{% url 'addmeasure' %}" title="добавить измерения">
-            <button type="button" class="btn btn-outline-primary float-end">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle-dotted" viewBox="0 0 20 20">
-                    <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
-                </svg>
-                Добавить
-            </button>
-        </a>
-    {% endif %}
+            </div>
+            <br>
+            
+            <a href="{% url 'addmeasure' %}" title="редактировать измерения">
+                <button class='btn btn-outline-primary float-end'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 20 20">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                    </svg>
+                    Редактировать
+                </button>
+            </a>
+        {% else %}
+            <p class="text-center">За сегодня измерений не сделано</p>
+            <a href="{% url 'addmeasure' %}" class="d-block text-end" title="добавить измерения">
+                <button type="button" class="btn btn-outline-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle-dotted" viewBox="0 0 20 20">
+                        <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
+                    </svg>
+                    Добавить
+                </button>
+            </a>
+        {% endif %}
+    </section>
+
+    <br>
 
     <!-- табличка за период -->
     {% if period_measures %}
-        <table class="table table-bordered caption-top align-middle text-center">
-            <caption><h4>Показатели за {{ period_as_string }}</h4></caption>
-            <tr class="table-light"> 
-                <th>Дата</th>
-                <th>День</th>
-                <th>Самочувствие</th>
-                <th>Масса</th>
-                <th>Жирность</th>
-                <th>Пульс</th>
-                {% if need_to_show_pressure %}
-                    <th>Давление</th>
-                {% endif%}
-                <th>Калории</th>
-                <th>Белки</th>
-                <th>Жиры</th>
-                <th>Углеводы</th>
-                <td class="borderless">&nbsp</td>
-            </tr>
-            {% for day in period_measures|dictsort:"date" %}
-            <tr class="my-hover">
-                <td>{{ day.date|date:"j b" }}</td>
-                <td>{{ day.date|date:"D" }}</td>
-                <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-                <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-                <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
-                {% if need_to_show_pressure %}
-                    <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">
-                        {% if day.pressure_upper is not None and day.pressure_lower is not None %}
-                            {{ day.pressure_upper }}/{{ day.pressure_lower }}
-                        {% endif %}</td>
-                {% endif%}
-                <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
-                <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
-                <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
-                <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
-                <td class="borderless">
-                    <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
-                    {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
-                    {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
-                    value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
-                </td>
-            </tr>
-            {% endfor %}
-            {% if period_measures_avg %}
-                <tr class="table-light">
-                    <!-- |default:"" -->
-                    <th colspan="2">В среднем:</th>
-                    <th>{{ period_measures_avg.feel }}</th>
-                    <th>{{ period_measures_avg.weight }}</th>
-                    <th>{{ period_measures_avg.fat }}</th>
-                    <th>{{ period_measures_avg.pulse }}</th>
+        <section name="period_measurements">
+            <table class="table table-bordered caption-top align-middle text-center">
+                <caption><h4>Показатели за {{ period_as_string }}</h4></caption>
+                <tr class="table-light"> 
+                    <th>Дата</th>
+                    <th>День</th>
+                    <th>Самочувствие</th>
+                    <th>Масса</th>
+                    <th>Жирность</th>
+                    <th>Пульс</th>
                     {% if need_to_show_pressure %}
-                        <th>{{ period_measures_avg.pressure }}</th>
+                        <th>Давление</th>
                     {% endif%}
-                    <th>{{ period_measures_avg.calories }}</th>
-                    <th>{{ period_measures_avg.protein }}</th>
-                    <th>{{ period_measures_avg.fats }}</th>
-                    <th>{{ period_measures_avg.carbohydrates }}</th>
+                    <th>Калории</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
                     <td class="borderless">&nbsp</td>
                 </tr>
+                {% for day in period_measures|dictsort:"date" %}
+                <tr class="my-hover">
+                    <td>{{ day.date|date:"j b" }}</td>
+                    <td>{{ day.date|date:"D" }}</td>
+                    <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                    <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                    <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                    <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
+                    {% if need_to_show_pressure %}
+                        <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">
+                            {% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                                {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                            {% endif %}</td>
+                    {% endif%}
+                    <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                    <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                    <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                    <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
+                    <td class="borderless">
+                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+                        {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+                        {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+                        value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if period_measures_avg %}
+                    <tr class="table-light">
+                        <th colspan="2">В среднем:</th>
+                        <th>{{ period_measures_avg.feel }}</th>
+                        <th>{{ period_measures_avg.weight }}</th>
+                        <th>{{ period_measures_avg.fat }}</th>
+                        <th>{{ period_measures_avg.pulse }}</th>
+                        {% if need_to_show_pressure %}
+                            <th>{{ period_measures_avg.pressure }}</th>
+                        {% endif%}
+                        <th>{{ period_measures_avg.calories }}</th>
+                        <th>{{ period_measures_avg.protein }}</th>
+                        <th>{{ period_measures_avg.fats }}</th>
+                        <th>{{ period_measures_avg.carbohydrates }}</th>
+                        <td class="borderless">&nbsp</td>
+                    </tr>
+                {% endif %}
+            </table>
+            {% if period_measures_avg %}
+            <p class="text-muted text-start"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
             {% endif %}
-        </table>
-        {% if period_measures_avg %}
-        <p class="text-muted text-center text-md-start"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
-        {% endif %}
-        <br>
+            <br>
 
-        <!-- всплывающие комменты за период -->
-        {% for comment in period_measure_comment_forms %}
-        <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
-            <form method="post" class="d-flex flex-column commentForm" id="commentForm{{ forloop.counter }}">
-                {% csrf_token %}
-                {{ comment.comment }}{{ comment.date }}
-                <div class="d-flex justify-content-between align-items-center commentbtn_container">
-                    <button class="btn btn-outline-primary close_btn" type="button" 
-                    id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
-                    onclick="closeComment(event)">&#10006</button>
-                    <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
-                    <button class="btn btn-primary close_btn" type="submit">&#10003</button>
-                </div>
-            </form>
-        </div>
-        {% endfor %}
-
-        <!-- всякие кнопки -->
-        <div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
-            <!-- кнопка применения цветов -->
-            <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-3">
-                <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
-                <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}" onchange="applyColors()"
-                {% if colorset_exist %} checked="checked"{% endif %}>
+            <!-- всплывающие комменты за период -->
+            {% for comment in period_measure_comment_forms %}
+            <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
+                <form method="post" class="d-flex flex-column commentForm" id="commentForm{{ forloop.counter }}">
+                    {% csrf_token %}
+                    {{ comment.comment }}{{ comment.date }}
+                    <div class="d-flex justify-content-between align-items-center commentbtn_container">
+                        <button class="btn btn-outline-primary close_btn" type="button" 
+                        id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
+                        onclick="closeComment(event)">&#10006</button>
+                        <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
+                        <button class="btn btn-primary close_btn" type="submit">&#10003</button>
+                    </div>
+                </form>
             </div>
-        
-            <a href="{% url 'anthropometry' %}"><button type="button" class="btn btn-primary mx-3 mb-3">Антропометрия</button></a>
+            {% endfor %}
+
+            <!-- сохранение комментария -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    // отслеживаем событие отправки формы
+                    $('.commentForm').submit(function () {
+                        
+                        // ID задействованной формы
+                        let formId = $(this).attr('id');
+                        // номер коммента
+                        let commentNum = formId.slice(11);
+                        // соответствующее текстовое поле
+                        let commentArea = $("#" + formId + " > #id_comment")[0];
+                        // соответствующая кнопка-значок комментария
+                        let commentBtn = document.getElementById("comment_btn" + commentNum);
+                        // соответствующее поле для надписи о сохранении
+                        let commentStatusField = document.getElementById("comment" + commentNum + "header");
             
-            <!-- выбор дней статистики -->
-            <form action="" method="get" class="d-flex flex-wrap justify-content-center">
+                        // создаем AJAX-вызов
+                        $.ajax({
+                            data: $(this).serialize(), // получаем данные формы
+                            type: $(this).attr('method'), // метод отправки запроса
+                            url: "{% url 'commentsave' %}", // функция обработки
+                            
+                            success: function (response) {
+                                // меняем поле коммента в таблице за сегодня
+                                if (document.getElementById("today_measure_table") && (commentNum == '7')) {
+                                    document.getElementById("today_comment").textContent = response.new_comment;
+            
+                                    let todayCommentContainer = document.getElementById("today_comment_container");
+                                    if (response.new_comment == '') {
+                                        todayCommentContainer.classList.add('hidden_element');
+                                    }
+                                    else {
+                                        todayCommentContainer.classList.remove('hidden_element');
+                                    }     
+                                }
+            
+                                // меняем значок этого комментария
+                                if (response.new_comment == '') {
+                                    // если новый коммент пуст - делаем его кнопку серой
+                                    commentBtn.classList.add('luminosity'); 
+                                }
+                                else {
+                                    // если новый коммент не пуст - делаем его кнопку синей
+                                    commentBtn.classList.remove('luminosity');
+                                }
+            
+                                // голубая подсветка коммента и статуса
+                                commentArea.classList.add('comment_saved');
+                                commentStatusField.textContent = 'сохранено';
+                                commentStatusField.classList.add('comment_saved');
+                                setTimeout(() => {
+                                    commentArea.classList.remove('comment_saved');
+                                    commentStatusField.classList.remove('comment_saved');
+                                }, 1000);
+            
+                                },
+            
+                            error: function (response) {
+                                // красная подсветка коммента и статуса
+                                comment.classList.add('comment_not_saved');
+                                commentStatusField.textContent = 'не сохранено';
+                                commentStatusField.classList.add('comment_not_saved');
+                                setTimeout(() => {
+                                    comment.classList.remove('comment_not_saved');
+                                    commentStatusField.classList.remove('comment_not_saved');
+                                }, 1000);
+                                }
+                        });
+                        // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
+                        return false;
+                    });
+                })    
+            </script>
+        </section>
+    {% endif %}
+
+    <!-- всякие кнопки -->
+    <div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
+        <!-- кнопка применения цветов -->
+        <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-3">
+            <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
+            <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
+                onchange="applyColors()" {% if colorsettings_exist %} checked="checked"{% endif %}>
+        </div>
+    
+        <!-- ссылка на антропометрию -->
+        <a href="{% url 'anthropometry' %}"><button type="button" class="btn btn-primary mb-3">Антропометрия</button></a>
+        
+        <!-- выбор дней статистики -->
+        {% if period_measures %}
+            <form action="" method="get" class="d-flex flex-wrap justify-content-center ms-3 mb-3">
                 <div class="d-flex align-items-center mb-3">
                     <h5 class="m-0">Статистика за</h5>
                     <input type="number" class="form-control text-center py-2 mx-3" name="selectperiod" min="1" id="input_period">
@@ -186,93 +269,16 @@
                 </div>
                 <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
             </form>
-        </div>
-        
-        <div class="d-flex hidden_element justify-content-center justify-content-md-start" id="colorset_error_container">
-            <span class="royal_blue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
-        </div>
-        <br>
-        
-        <!-- сохранение комментария -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // отслеживаем событие отправки формы
-                $('.commentForm').submit(function () {
-                    
-                    // ID задействованной формы
-                    let formId = $(this).attr('id');
-                    // номер коммента
-                    let commentNum = formId.slice(11);
-                    // соответствующее текстовое поле
-                    let commentArea = $("#" + formId + " > #id_comment")[0];
-                    // соответствующая кнопка-значок комментария
-                    let commentBtn = document.getElementById("comment_btn" + commentNum);
-                    // соответствующее поле для надписи о сохранении
-                    let commentStatusField = document.getElementById("comment" + commentNum + "header");
-        
-                    // создаем AJAX-вызов
-                    $.ajax({
-                        data: $(this).serialize(), // получаем данные формы
-                        type: $(this).attr('method'), // метод отправки запроса
-                        url: "{% url 'commentsave' %}", // функция обработки
-                        
-                        success: function (response) {
-                            // меняем поле коммента в таблице за сегодня
-                            if (document.getElementById("today_measure_table") && (commentNum == '7')) {
-                                document.getElementById("today_comment").textContent = response.new_comment;
-        
-                                let todayCommentContainer = document.getElementById("today_comment_container");
-                                if (response.new_comment == '') {
-                                    todayCommentContainer.classList.add('hidden_element');
-                                }
-                                else {
-                                    todayCommentContainer.classList.remove('hidden_element');
-                                }     
-                            }
-        
-                            // меняем значок этого комментария
-                            if (response.new_comment == '') {
-                                // если новый коммент пуст - делаем его кнопку серой
-                                commentBtn.classList.add('luminosity'); 
-                            }
-                            else {
-                                // если новый коммент не пуст - делаем его кнопку синей
-                                commentBtn.classList.remove('luminosity');
-                            }
-        
-                            // голубая подсветка коммента и статуса
-                            commentArea.classList.add('comment_saved');
-                            commentStatusField.textContent = 'сохранено';
-                            commentStatusField.classList.add('comment_saved');
-                            setTimeout(() => {
-                                commentArea.classList.remove('comment_saved');
-                                commentStatusField.classList.remove('comment_saved');
-                            }, 1000);
-        
-                            },
-        
-                        error: function (response) {
-                            // красная подсветка коммента и статуса
-                            comment.classList.add('comment_not_saved');
-                            commentStatusField.textContent = 'не сохранено';
-                            commentStatusField.classList.add('comment_not_saved');
-                            setTimeout(() => {
-                                comment.classList.remove('comment_not_saved');
-                                commentStatusField.classList.remove('comment_not_saved');
-                            }, 1000);
-                            }
-                    });
-                    // return false в конце скрипта предотвращает отправку форм, останавливая перезагрузку страницы.
-                    return false;
-                });
-            })    
-        </script>
-        <script src="{% static 'personalpage/js/measurements.js' %}"></script>
-    {% endif %}
+        {% endif %}
+    </div>
+    
+    <!-- ошибка с colorsettings -->
+    <div class="d-flex hidden_element justify-content-center justify-content-md-start" id="colorset_error_container">
+        <span class="royal_blue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
+    </div>
+    <br>
 
-    {% if not period_measures %}
-        <a href="{% url 'anthropometry' %}"><button type="button" class="btn btn-primary mx-3 mb-3">Антропометрия</button></a>
-    {% endif %}
 </div>
+
+<script src="{% static 'personalpage/js/measurements.js' %}"></script>
 {% endblock %}

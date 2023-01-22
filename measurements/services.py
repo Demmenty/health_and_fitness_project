@@ -1,10 +1,11 @@
-from .models import Measurement, MeasureIndex, MeasureColor, MeasureColorField
-from .forms import MeasurementForm, MeasurementCommentForm
+from .models import Measurement, MeasureColorField
+from .forms import MeasurementForm, MeasurementCommentForm, MeasureColorFieldForm
 from datetime import date, timedelta
 from typing import Union
 from fatsecret_app.services import *
 
 
+# measures
 def get_daily_measure(user, measure_date:date=None):
     """возвращает измерения за день, по умолчанию - за сегодня"""
 
@@ -35,6 +36,34 @@ def get_measure_comment_forms(measurements_set):
         measure_comment_forms.append(comment_form)
 
     return measure_comment_forms
+
+
+def create_weekly_measure_forms(user):
+    """создает список форм для измерений на последние семь дней"""
+
+    weekly_measure_forms = []
+
+    for i in range(7):
+        measure_date = date.today() - timedelta(days=i)
+        measure = Measurement.objects.filter(date=measure_date, user=user).first()
+
+        if not measure:
+            measure_form = MeasurementForm()
+            # в нее сразу записывается user и дата
+            measure_form = measure_form.save(commit=False)
+            measure_form.user = user
+            measure_form.date = measure_date
+            # сохраняется запись в базе
+            measure_form.save()
+
+            # готовая форма на основе сущеcтсвующей пустой записи БД
+            measure = Measurement.objects.get(date=measure_date, user=user)
+
+        measure_form = MeasurementForm(instance=measure)
+
+        weekly_measure_forms.append(measure_form)
+
+    return weekly_measure_forms
 
 
 def create_avg_for_measures(period_measures) -> dict:
@@ -142,6 +171,7 @@ def create_avg_for_measures(period_measures) -> dict:
     return avg_data
 
 
+# measeurecolors
 def user_has_measeurecolor_settings(user) -> bool:
     """проверяет, настроены ли у пользователя окрашивания 
     физических показателей экспертом"""
@@ -151,7 +181,7 @@ def user_has_measeurecolor_settings(user) -> bool:
     return result
 
 
-def get_measeurecolor_settings(user):
+def get_measurecolor_settings(user):
     """возвращает настройки окрашивания показателей клиента в виде Queryset"""
 
     if user_has_measeurecolor_settings(user):
@@ -172,49 +202,80 @@ def get_measeurecolor_settings(user):
                     'carbohydrates': {}}
 
     for object in instance:
+        print(object)
         colorsettings[str(object.index)][str(object.color.id)] = {
-                                'color': str(object.color),
+                                'color': str(object.color.color),
                                 'low': str(object.low_limit),
                                 'up': str(object.upper_limit) }
 
     return colorsettings
 
 
-def create_weekly_measure_forms(user):
-    """создает список форм для измерений на последние семь дней"""
+def save_measeurecolor_settings(user, colorset_values) -> None:
+    """"""
 
-    weekly_measure_forms = []
+    if user_has_measeurecolor_settings(user):
+        for index, color, low, up in colorset_values:
+            if not low:
+                low = None
+            if not up:
+                up = None
+            instance = MeasureColorField.objects.filter(
+                user=user,
+                index_id=index,
+                color_id=color)
+            instance.update(low_limit=low, upper_limit=up)
+    else:
+        for index, color, low, up in colorset_values:
+            if not low:
+                low = None
+            if not up:
+                up = None
+            MeasureColorField.objects.create(
+                user=user,
+                index_id=index, 
+                color_id=color, 
+                low_limit=low, 
+                upper_limit=up)
 
-    for i in range(7):
-        measure_date = date.today() - timedelta(days=i)
-        measure = Measurement.objects.filter(date=measure_date, user=user).first()
 
-        if not measure:
-            measure_form = MeasurementForm()
-            # в нее сразу записывается user и дата
-            measure_form = measure_form.save(commit=False)
-            measure_form.user = user
-            measure_form.date = measure_date
-            # сохраняется запись в базе
-            measure_form.save()
+def create_colorset_forms(client) -> list:
+    """создает формы для того, что эксперт настроил окрашивания
+    показателей в соответствующие цвета"""
 
-            # готовая форма на основе сущеcтсвующей пустой записи БД
-            measure = Measurement.objects.get(date=measure_date, user=user)
+    colorset_forms = []
 
-        measure_form = MeasurementForm(instance=measure)
+    if user_has_measeurecolor_settings(client):
+        for index_id in range(1, 11):
+            for color_id in range(2, 7):
+                instance = MeasureColorField.objects.get(
+                    user=client,
+                    index_id=index_id,
+                    color_id=color_id
+                    )
+                form = MeasureColorFieldForm(instance=instance)
+                colorset_forms.append(form)
+    else:
+        for index_id in range(1, 11):
+            for color_id in range(2, 7):
+                form = MeasureColorFieldForm(initial={
+                    'user': client,
+                    'index': index_id,
+                    'color': color_id
+                    })
+                colorset_forms.append(form)
 
-        weekly_measure_forms.append(measure_form)
-
-    return weekly_measure_forms
+    return colorset_forms
 
 
+# renew nutrition in measures
 def renew_measure_nutrition(user, measure_date:datetime) -> None:
     """обновление кбжу в записи Measurements на данные из FS
     за выбранный день, если изменились калории"""
 
     measure = Measurement.objects.filter(user=user, date=measure_date.date()).first()
 
-    if user_has_fs_entry(user) and measure:
+    if measure:
         fs_nutrition = get_daily_nutrition_fs(user, measure_date)
 
         if fs_nutrition:
@@ -248,6 +309,7 @@ def renew_weekly_measures_nutrition(user) -> None:
                     measure.save()
 
 
+# date manipulations
 def _epoch_into_date(date_epoch: int) -> date:
     """конвертирует число дней с 1970 в date"""
 

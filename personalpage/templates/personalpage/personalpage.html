@@ -56,7 +56,7 @@
 
         <div class="d-flex flex-column">
             <!-- физические показатели сегодня -->
-            <h3 class="text-royalblue fw-bolder align-self-center pt-1 mb-4">{{ date_today|date:"j E Y" }}</h3>
+            <h3 class="text-royalblue fw-bolder align-self-center pt-1 mb-4">{% now "j E Y" %}</h3>
             {% if today_measure %}
                 <div class="table-responsive today_measure_table" id="today_measure_table">
                     <table class="table table-bordered table-fixed text-center">

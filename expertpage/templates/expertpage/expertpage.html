@@ -10,7 +10,6 @@
     {% for client in clients %}
         <form method="get" action="{% url 'client_mainpage' %}">
             <input type="hidden" value="{{ client.id }}" name="client_id">
-            <input type="hidden" value="{{ client.username }}" name="clientname">
             <button type="submit" class="btn btn-outline-primary rounded-pill">{{ client.username }}</button>
         </form><br>
     {% endfor %}

@@ -5,7 +5,6 @@ from personalpage.models import  Questionary, Anthropometry, UserSettings
 from controlpage.models import Commentary, Clientnote, FullClientnote
 from personalpage.forms import QuestionaryForm
 from controlpage.forms import CommentaryForm, ClientnoteForm, FullClientnoteForm
-
 from time import sleep
 from itertools import zip_longest
 from datetime import date, datetime, timedelta, time
@@ -13,23 +12,12 @@ from dateutil.relativedelta import relativedelta
 from personalpage.views import get_avg_for_period
 from fatsecret import Fatsecret, GeneralError
 from django.http import JsonResponse
+from fatsecret_app.services import *
+from measurements.services import *
+from .comments_services import *
 
 
-# данные fatsecret - засунуть в бд!!!
-# consumer_key = '96509fd6591d4fb384386e1b75516777'
-# consumer_secret = 'cb1398ad47344691b092cabce5647116'
-# fs = Fatsecret(consumer_key, consumer_secret)
-
-
-# функции
-# def make_session(user):
-#     """создание сессии с FatSecret Api для переданного пользователя"""
-#     global fs
-#     userdata = FatSecretEntry.objects.get(user=user)
-#     session_token = (userdata.oauth_token, userdata.oauth_token_secret)
-#     fs = Fatsecret(consumer_key, consumer_secret, session_token=session_token)
-
-
+# внутренние функции
 def get_noun_ending(number, one, two, five):
     """Функция возвращает вариант слова с правильным окончанием
        в зависимости от числа
@@ -48,10 +36,10 @@ def get_noun_ending(number, one, two, five):
     return five
 
 
-def get_client_contacts(client_id):
+def get_client_contacts(client):
     """Достаем контакты клиента из его настроек"""
     try:
-        instance = UserSettings.objects.get(user_id=client_id)
+        instance = UserSettings.objects.get(user=client)
 
         fields = [
             'telegram',
@@ -86,35 +74,6 @@ def get_age(birthdate):
         age = age - 1
     return age
    
-
-def today_commentary_form(client_id):
-    """Получение формы для комплексного комментария клиенту от эксперта
-       Дата - сегодняшняя, на другие даты меняется на странице скриптом
-    """
-    # форматирование для правильного отображения в инпуте
-    today = date.today().strftime('%Y-%m-%d')
-    try:
-        instance = Commentary.objects.get(client=client_id, date=date.today())
-        form = CommentaryForm(instance=instance, initial={'date': today})
-    except Commentary.DoesNotExist:
-        form = CommentaryForm(initial={'date': today})
-
-    return form
-
-
-def today_clientnote_form(client_id):
-    """Получение формы для заметки о клиенте для эксперта
-       Месяц - текущий, на другие месяцы меняется на странице скриптом
-    """
-    current_month = date.today().strftime('%Y-%m')
-    try:
-        # месяц в модели записывается как полная дата с 1 числом
-        instance = Clientnote.objects.get(client=client_id, date=date.today().replace(day=1))
-        form = ClientnoteForm(instance=instance, initial={'date': current_month})
-    except Clientnote.DoesNotExist:
-        form = ClientnoteForm(initial={'date': current_month})
-
-    return form
 
 
 # Аякс-запросы
@@ -276,55 +235,10 @@ def save_full_clientnote_form(request):
         return JsonResponse(data, status=200)
     
 
-def color_settings_save(request):
-    """Сохранение настроек цветов для показателей клиента через ajax"""
-    if request.user.username != 'Parrabolla':
-        data = {'status': 'No!'}
-        return JsonResponse(data, status=403)
-
-    if request.method == 'POST':
-        client_id = request.POST['client_id']
-        indices = request.POST.getlist('index')
-        colors = request.POST.getlist('color')
-        low_limits = request.POST.getlist('low_limit')
-        up_limits = request.POST.getlist('upper_limit')
-
-        values = zip_longest(indices, colors, low_limits, up_limits)
-
-        # наличие цветовых настроек для клиента
-        colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
-
-        if colorset_exist:
-            for index, color, low, up in values:
-                if not low:
-                    low = None
-                if not up:
-                    up = None
-                instance = MeasureColorField.objects.filter(
-                    user_id=client_id,
-                    index_id=index,
-                    color_id=color)
-                instance.update(low_limit=low, upper_limit=up)
-        else:
-            for index, color, low, up in values:
-                if not low:
-                    low = None
-                if not up:
-                    up = None
-                MeasureColorField.objects.create(
-                    user_id=client_id,
-                    index_id=index, 
-                    color_id=color, 
-                    low_limit=low, 
-                    upper_limit=up)
-
-        data = {}
-        return JsonResponse(data, status=200)
-
-
 # My views
 def client_mainpage(request):
-    """Главная страница контроля за клиентом"""
+    """Главная страница контроля за клиентом
+     - аналог personalpage, но для эксперта"""
 
     # проверка пользователя
     if request.user.is_anonymous:
@@ -332,60 +246,45 @@ def client_mainpage(request):
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
     
-    clientname = request.GET['clientname']
+    # определение клиента
     client_id = request.GET['client_id']
-    client_contacts = get_client_contacts(client_id)
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
     # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
+    client_comment_form = get_today_commentary_form(client)
     # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
+    clientnote_form = get_today_clientnote_form(client)
     # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
-    
-    # дата регистрации
-    date_joined = User.objects.get(username=clientname).date_joined.date()
+    full_clientnote_form = get_full_clientnote_form(client)
 
-    # существоВание анкеты
-    try:
-        questionary = Questionary.objects.get(user_id=client_id)
+    # дата регистрации
+    date_joined = client.date_joined.date()
+
+    # существоВание анкеты и возраст клиента
+    questionary = Questionary.objects.filter(user=client).first()
+    if questionary:
         client_age = get_age(questionary.birth_date)
-        client_age = (str(client_age) + ' ' +
-                      get_noun_ending(client_age, 'год', 'года', 'лет'))
-    except Questionary.DoesNotExist:
-        questionary = ''
-        client_age = 'неизвестно'
+        client_age_str = (str(client_age) + ' ' +
+                    get_noun_ending(client_age, 'год', 'года', 'лет'))
+    else:
+        client_age_str = 'неизвестно'
 
     # проверка подключения FatSecret
-    try:
-        create_user_fs_session(client_id)
-        fs_connected = True
-    except FatSecretEntry.DoesNotExist:
-        fs_connected = False
+    fs_connected = user_has_fs_entry(client)
 
     # измерения за сегодня
-    date_today = date.today()
-    try:
-        today_measure = Measurement.objects.get(date__exact=date_today, user_id=client_id)
-        if (today_measure.feel is None and today_measure.weight is None and
-            today_measure.fat is None and today_measure.pulse is None and
-            (today_measure.pressure_upper is None or today_measure.pressure_lower is None) and
-            today_measure.calories is None and today_measure.comment == "") :
-            today_measure = ''
-    except Measurement.DoesNotExist:
-        today_measure = ''
+    if user_has_fs_entry(client):
+        renew_measure_nutrition(client, datetime.now())
+    today_measure = get_daily_measure(client)
 
     data = {
-        'clientname': clientname,
+        'clientname': client.username,
         'client_id': client_id,
         'questionary': questionary,
         'fs_connected': fs_connected,
         'today_measure': today_measure,
-        'date_today': date_today,
-        'client_age': client_age,
+        'client_age': client_age_str,
         'date_joined': date_joined,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
@@ -393,122 +292,6 @@ def client_mainpage(request):
         'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_mainpage.html', data)
-
-
-def client_measurements(request):
-    """Страница отслеживания ежедневных измерений"""
-
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
-    
-    clientname = request.GET['clientname']
-    client_id = request.GET['client_id']
-    client_contacts = get_client_contacts(client_id)
-    # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
-    # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
-    # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
-
-    # измерения за сегодня
-    try:
-        today_measure = Measurement.objects.get(date__exact=date.today(), user_id=client_id)
-        if (today_measure.feel is None and today_measure.weight is None and
-            today_measure.fat is None and today_measure.pulse is None and
-            (today_measure.pressure_upper is None or today_measure.pressure_lower is None) and
-            today_measure.calories is None and today_measure.comment == "") :
-            today_measure = ''
-    except Measurement.DoesNotExist:
-        today_measure = ''
-
-    # измерения за неделю
-    week_measures = Measurement.objects.filter(user=client_id)[:7]
-    # средние значения измерений за неделю 
-    week_measures_avg = get_avg_for_period(client_id, period=7)
-    # измерялось ли давление (отображать или нет)
-    show_pressure_week = False
-    if any(day.pressure_upper for day in week_measures):
-        show_pressure_week = True
-    
-    # статистика за выбранный период
-    show_pressure_period = False
-    if request.GET.get('selectperiod'):
-        selected_period = int(request.GET.get('selectperiod'))
-        # средние значения измерений за произвольный период
-        avg_period = get_avg_for_period(client_id, period=selected_period)
-        # список измерений за этот период
-        period = Measurement.objects.filter(user=client_id)[:selected_period]
-        # измерялось ли давление (отображать или нет)
-        if any(day.pressure_upper for day in period):
-            show_pressure_period = True
-        # красивый формат
-        selected_period = str(selected_period) + " " + get_noun_ending(selected_period, 'день', 'дня', 'дней')
-    else:
-        selected_period = ""
-        avg_period = ""
-        period = ""
-
-    # наличие цветовых настроек для клиента
-    colorset_exist = bool(MeasureColorField.objects.filter(user_id=client_id))
-
-    # настройки цветовых фонов для показателей клиента
-    colorset_forms = []
-    if colorset_exist:
-        for index_id in range(1, 11):
-            for color_id in range(2, 7):
-                instance = MeasureColorField.objects.get(
-                    user_id=client_id,
-                    index_id=index_id,
-                    color_id=color_id
-                    )
-                form = MeasureColorFieldForm(instance=instance)
-                colorset_forms.append(form)
-    else:
-        for index_id in range(1, 11):
-            for color_id in range(2, 7):
-                form = MeasureColorFieldForm(initial={
-                    'user': client_id,
-                    'index': index_id,
-                    'color': color_id
-                    })
-                colorset_forms.append(form)
-
-    # указанное в анкете нормальное давление
-    try:
-        norm_pressure = Questionary.objects.get(user=client_id).norm_pressure
-        if norm_pressure == 'no':
-            norm_pressure = 'не знает'
-    except Questionary.DoesNotExist:
-        norm_pressure = 'не заполнено'
-
-    data = {
-        'clientname': clientname,
-        'client_id': client_id,
-        'today_measure': today_measure,
-        'week_measures': week_measures,
-        'selected_period': selected_period,
-        'period': period,
-        'week_measures_avg': week_measures_avg,
-        'avg_period': avg_period,
-        'show_pressure_week': show_pressure_week,
-        'show_pressure_period': show_pressure_period,
-        'colorset_exist': colorset_exist,
-        'colorset_forms': colorset_forms,
-        'norm_pressure': norm_pressure,
-        'client_contacts': client_contacts,
-        'client_comment_form': client_comment_form,
-        'clientnote_form': clientnote_form,
-        'full_clientnote_form': full_clientnote_form,
-    }
-    return render(request, 'controlpage/client_measurements.html', data)
 
 
 def client_questionary(request):
@@ -520,35 +303,110 @@ def client_questionary(request):
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
 
-    clientname = request.GET['clientname']
+    # определение клиента
     client_id = request.GET['client_id']
-
-    client_contacts = get_client_contacts(client_id)
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
     # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
+    client_comment_form = get_today_commentary_form(client)
     # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
+    clientnote_form = get_today_clientnote_form(client)
     # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
+    full_clientnote_form = get_full_clientnote_form(client)
 
-    questionary = Questionary.objects.get(user=client_id)
-    form = QuestionaryForm()
+    questionary = Questionary.objects.filter(user=client).first()
+    questionary_form = QuestionaryForm()
     
     data = {
-        'clientname': clientname,
+        'clientname': client.username,
         'client_id': client_id,
         'questionary': questionary,
-        'form': form,
+        'form': questionary_form,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
         'full_clientnote_form': full_clientnote_form,
     }
     return render(request, 'controlpage/client_questionary.html', data)
+
+
+def client_measurements(request):
+    """Страница отслеживания ежедневных измерений"""
+
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+    
+    # определение клиента
+    client_id = request.GET['client_id']
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
+    # комментарий для клиента
+    client_comment_form = get_today_commentary_form(client)
+    # заметка о клиенте
+    clientnote_form = get_today_clientnote_form(client)
+    # заметка о клиенте совокупная
+    full_clientnote_form = get_full_clientnote_form(client)
+
+    data = {
+        'clientname': client.username,
+        'client_id': client_id,
+        'client_contacts': client_contacts,
+        'client_comment_form': client_comment_form,
+        'clientnote_form': clientnote_form,
+        'full_clientnote_form': full_clientnote_form,
+    }
+
+    # измерения клиента
+    if user_has_fs_entry(client):
+        renew_weekly_measures_nutrition(client)
+
+    today_measure = get_daily_measure(client)
+
+    if request.GET.get('selectperiod'):
+        period = int(request.GET['selectperiod'])
+    else:
+        period = 7
+    period_measures = get_last_measures(client, days=period)
+
+    if period_measures:
+        period_measures_avg = create_avg_for_measures(period_measures)
+        period_measure_comment_forms = get_measure_comment_forms(period_measures)
+        period_as_string = f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
+        need_to_show_pressure = bool(period_measures_avg.get('pressure'))
+
+        data.update({     
+            'period_measures': period_measures,
+            'period_measures_avg': period_measures_avg,
+            'period_measure_comment_forms': period_measure_comment_forms,
+            'period_as_string': period_as_string,
+            'need_to_show_pressure': need_to_show_pressure,
+        })
+
+    # настройки цветовых фонов для показателей клиента
+    colorsettings_exist = user_has_measeurecolor_settings(client)
+    colorset_forms = create_colorset_forms(client)
+
+    # указанное в анкете нормальное давление
+    questionary = Questionary.objects.filter(user=client).first()
+    if not questionary:
+        norm_pressure = 'не заполнено'
+    elif questionary.norm_pressure == 'no':
+        norm_pressure = 'не знает'
+    else:
+        norm_pressure = questionary.norm_pressure
+    
+    data.update({
+        'today_measure': today_measure,
+        'colorsettings_exist': colorsettings_exist,
+        'colorset_forms': colorset_forms,
+        'norm_pressure': norm_pressure,
+    })
+    return render(request, 'controlpage/client_measurements.html', data)
 
 
 def client_mealjournal(request):
@@ -562,374 +420,62 @@ def client_mealjournal(request):
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
 
-    clientname = request.GET['clientname']
+    # определение клиента
     client_id = request.GET['client_id']
-    client_contacts = get_client_contacts(client_id)
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
     # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
+    client_comment_form = get_today_commentary_form(client)
     # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
+    clientnote_form = get_today_clientnote_form(client)
     # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
-    # для поля выбора
-    today_day = str(date.today())
-    previous_month = str(date.today() + relativedelta(months=-1))[0:7]
-    
-    # проверка на интеграцию с FatSecret
-    try:
-        create_user_fs_session(client_id)
-        client_connected = True
-    except FatSecretEntry.DoesNotExist:
-        client_connected = False
-        data = {
-            'clientname': clientname,
-            'client_id': client_id,
-            'client_connected': client_connected,
-            'today_day': today_day,
-            'previous_month': previous_month,
-            'client_contacts': client_contacts,
-            'client_comment_form': client_comment_form,
-            'clientnote_form': clientnote_form,
-            'full_clientnote_form': full_clientnote_form,
-        }
-        return render(request, 'controlpage/client_mealjournal.html', data)  
-
-    # открываем сохраненные данные о продуктах из файла
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
-        food_cache = pickle.load(file)
-    # продукты, для которых нет инфо о граммовке порции
-    prods_without_info = {}
-
-    # ПИТАНИЕ ЗА СЕГОДНЯ
-    daily_food_entries = fs.food_entries_get(date=datetime.today())
-
-    # категории для таблички
-    count_daily_food_by_category = {
-        'Breakfast': 0,
-        'Lunch': 0,
-        'Dinner': 0,
-        'Other': 0,
-    }
-    # итоговые кбжу дня
-    daily_nutrition = {
-            'amount': 0,
-            'calories': 0,
-            'protein': 0,
-            'fat': 0,
-            'carbohydrate': 0,
-            }
-
-    # обработка каждой записи о продукте
-    for food in daily_food_entries:
-
-        # подсчет количеств блюд для каждой категории для таблички
-        count_daily_food_by_category[food['meal']] += 1
-
-        # получение инфы об этом продукте
-        temp_food_cache = {}
-            # сначала в кеше
-        if food_cache.get(food['food_id']):
-            food_info = food_cache[food['food_id']]
-        else:
-            # потом в FatSecret
-            # добавить обработчик ошибки! (с таймером - если много запросов)
-            food_info = fs.food_get(food_id=food['food_id'])
-            sleep(2)
-
-            # обработка для компактного сохранения
-            if type(food_info['servings']['serving']) is dict:
-                temp_food_cache[food_info['food_id']] = {
-                    'food_name': food_info['food_name'],
-                    'servings': {
-                        'serving': {
-                            'serving_id': food_info['servings']['serving']['serving_id'],
-                            'measurement_description': food_info['servings']['serving']['measurement_description'],
-                            'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
-                            'number_of_units': food_info['servings']['serving']['number_of_units'],
-                            'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
-                            'serving_description': food_info['servings']['serving']['serving_description'] }}}
-            else:
-                temp_food_cache[food_info['food_id']] = {
-                    'food_name': food_info['food_name'],
-                    'servings': {
-                        'serving': [] }}
-                for dic in food_info['servings']['serving']:
-                    temp_food_cache[food_info['food_id']]['servings']['serving'].append({
-                        'serving_id': dic['serving_id'],
-                        'measurement_description': dic['measurement_description'],
-                        'metric_serving_amount': dic.get('metric_serving_amount', None),
-                        'number_of_units': dic['number_of_units'],
-                        'metric_serving_unit': dic.get('metric_serving_unit', None),
-                        'serving_description': dic['serving_description'] })
-
-            # сохранение в кеш
-            food_cache.update(temp_food_cache)
-
-
-        # добавление инфы в food для соответствующего вида порции
-        if type(food_info['servings']['serving']) is list:
-            for serv_info in food_info['servings']['serving']:
-                if serv_info['serving_id'] == food['serving_id']:
-                    food['serving'] = serv_info
-                    break
-        else:
-            food['serving'] = food_info['servings']['serving']
-
-        # добавляем нормальное отображение количества
-        # если измерение в г или мл - считаем как есть
-        if (food['serving']['measurement_description'] == 'g' or
-            food['serving']['measurement_description'] == 'ml'):
-            food['norm_amount'] = int(float(food['number_of_units']))
-            daily_nutrition['amount'] += food['norm_amount']
-        else:
-            # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-            if food['serving'].get('metric_serving_amount') is None:
-                # если в инфе не оказалось граммовки порции
-                # добавляем эту еду в спец.словарь и не считаем amount
-                prods_without_info[food['food_id']] = {
-                    'daily_food_entries_name': food['daily_food_entries_name'],
-                    'serving_description': food['serving'].get('serving_description', 'порция'),
-                    'serving_id': food['serving_id'],
-                    'calories_per_serving': food['serving'].get('calories', food['calories']) }
-            else:
-                # если в инфе метрика есть - считаем и добавляем к общему подсчету
-                food['norm_amount'] = int(float(food['number_of_units']) *
-                                        float(food['serving']['metric_serving_amount']) *
-                                        float(food['serving']['number_of_units']))
-                daily_nutrition['amount'] += food['norm_amount']
-
-        # подсчет итоговой суммы кбжу
-        daily_nutrition['calories'] += int(food['calories'])
-        daily_nutrition['protein'] += float(food['protein'])
-        daily_nutrition['fat'] += float(food['fat'])
-        daily_nutrition['carbohydrate'] += float(food['carbohydrate'])
-
-    # записываем измененный кеш обратно в файл
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
-        pickle.dump(food_cache, f)
-        
-    # нумерация продуктов без инфы о порции
-    index_number = 1
-    for prod in prods_without_info:
-        prods_without_info[prod]['index_number'] = index_number
-        index_number += 1
-
-    # округляем результаты в получившемся итоге по кбжу
-    for key, value in daily_nutrition.items():
-        daily_nutrition[key] = round(value, 2)
-
-
-    # ПИТАНИЕ ЗА ТЕКУЩИЙ МЕСЯЦ
-    # средние кбжу
-    monthly_avg = {
-        'protein': 0,
-        'fat': 0,
-        'carbo': 0,
-        'calories': 0
-    }
-    try:
-        monthly_food_entries = fs.food_entries_get_month(date=datetime.today())
-        # если за месяц одна запись - будет просто словарь
-        if type(monthly_food_entries) is dict:
-            monthly_food_entries['date_int'] = (date(1970, 1, 1) + 
-                            timedelta(days=int(monthly_food_entries['date_int'])))
-            monthly_avg['protein'] = monthly_food_entries['protein']
-            monthly_avg['fat'] = monthly_food_entries['fat']
-            monthly_avg['carbo'] = monthly_food_entries['carbohydrate']
-            monthly_avg['calories'] = monthly_food_entries['calories']
-            # превращаем в список из словаря, чтобы табличка не ебнулась
-            monthly_food_entries = [monthly_food_entries]
-        else:
-            # если за день нет записей - то она итак не отображается (поэтому тут другая формула)
-            days_count = len(monthly_food_entries)
-            for day in monthly_food_entries:
-                day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
-                monthly_avg['protein'] += float(day['protein'])
-                monthly_avg['fat'] += float(day['fat'])
-                monthly_avg['carbo'] += float(day['carbohydrate'])
-                monthly_avg['calories'] += float(day['calories'])
-            monthly_avg['protein'] = round(monthly_avg['protein'] / days_count, 2)
-            monthly_avg['fat'] = round(monthly_avg['fat'] / days_count, 2)
-            monthly_avg['carbo'] = round(monthly_avg['carbo'] / days_count, 2)
-            monthly_avg['calories'] = round(monthly_avg['calories'] / days_count, 2)
-
-    except KeyError:
-        # KeyError = записей нет
-        monthly_food_entries = ""
-
-    # переменные для ТОПов
-    top_calories = ""
-    top_amount = ""
-    # продукты, для которых нет инфо о граммовке порции
-    prods_without_info = {}
-
-    # создание ТОП-списков! (если нажать на кнопку)
-    if request.GET.get('top_create', False):
-        print('считаю топ')
-
-        # итоговые вес и калории по каждому продукту
-        total_by_prod = {}
-
-        # открываем сохраненные данные о продуктах из файла
-        with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
-            food_cache = pickle.load(file)
-
-        # для каждого дня в записях за месяц
-        for day in monthly_food_entries:
-            # берем дату записи
-            food_date = datetime.combine(day['date_int'], time())
-            # получаем список съеденных продуктов за эту дату
-            try:
-                daily_food_entries = fs.food_entries_get(date=food_date)
-            except GeneralError:
-                print('спим')
-                sleep(30)
-                print('просыпаемся')
-                daily_food_entries = fs.food_entries_get(date=food_date)
-            sleep(3)
-
-            # для каждого продукта в списке съеденного за день
-            for food in daily_food_entries:
-
-                # получение инфы об этом продукте
-                temp_food_cache = {}
-                    # сначала в кеше
-                if food_cache.get(food['food_id']):
-                    food_info = food_cache[food['food_id']]
-                else:
-                    # потом в FatSecret
-                    # добавить обработчик ошибки!
-                    try:
-                        print('запрошен реквест о еде, food_id: ' + food['food_id'])
-                        food_info = fs.food_get(food_id=food['food_id'])
-                    except GeneralError:
-                        print('спим')
-                        sleep(30)
-                        print('просыпаемся')
-                        food_info = fs.food_get(food_id=food['food_id'])
-                    sleep(3)
-
-                    # обработка для компактного сохранения
-                    if type(food_info['servings']['serving']) is dict:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': {
-                                    'serving_id': food_info['servings']['serving']['serving_id'],
-                                    'measurement_description': food_info['servings']['serving']['measurement_description'],
-                                    'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
-                                    'number_of_units': food_info['servings']['serving']['number_of_units'],
-                                    'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
-                                    'serving_description': food_info['servings']['serving']['serving_description'] }}}
-                    else:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': [] }}
-                        for dic in food_info['servings']['serving']:
-                            temp_food_cache[food_info['food_id']]['servings']['serving'].append({
-                                'serving_id': dic['serving_id'],
-                                'measurement_description': dic['measurement_description'],
-                                'metric_serving_amount': dic.get('metric_serving_amount', None),
-                                'number_of_units': dic['number_of_units'],
-                                'metric_serving_unit': dic.get('metric_serving_unit', None),
-                                'serving_description': dic['serving_description'] })
-
-                    # сохранение в кеш
-                    food_cache.update(temp_food_cache)
-                        
-                    
-                # добавление инфы в food для соответствующего вида порции
-                if type(food_info['servings']['serving']) is list:
-                    for serv_info in food_info['servings']['serving']:
-                        if serv_info['serving_id'] == food['serving_id']:
-                            food['serving'] = serv_info
-                            break
-                else:
-                    food['serving'] = food_info['servings']['serving']
-
-                # добавляем нормальное отображение количества
-                # если измерение в г или мл - считаем как есть
-                if (food['serving']['measurement_description'] == 'g' or
-                    food['serving']['measurement_description'] == 'ml'):
-                    food['norm_amount'] = int(float(food['number_of_units']))
-                else:
-                    # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-                    if food['serving'].get('metric_serving_amount') is None:
-                        # если в инфе не оказалось граммовки порции
-                        # добавляем эту еду в спец.словарь и не считаем
-                        prods_without_info[food['food_id']] = {
-                            'daily_food_entries_name': food['daily_food_entries_name'],
-                            'serving_description': food['serving'].get('serving_description', 'порция'),
-                            'serving_id': food['serving_id'],
-                            'calories_per_serving': food['serving'].get('calories', food['calories']) }
-                    else:
-                        # если в инфе метрика есть - считаем
-                        food['norm_amount'] = int(float(food['number_of_units']) *
-                                            float(food['serving']['metric_serving_amount']) *
-                                            float(food['serving']['number_of_units']))
-                                            
-                # нормальное общее наименование для топов
-                # ? это можно убрать - записать ниже сразу как food_info['food_name'] ?
-                food['food_name'] = food_info['food_name']
-
-                # добавление\обновление инфы об общем количестве и калориях по продукту
-                # тут оптимизировать
-                if food.get('norm_amount') is not None:
-                    if total_by_prod.get(food['food_name']) == None:
-                        total_by_prod[food['food_name']] = {
-                            'calories': 0,
-                            'amount': 0,
-                        }
-                    total_by_prod[food['food_name']]['calories'] += int(food['calories'])
-                    if food.get('norm_amount'):
-                        total_by_prod[food['food_name']]['amount'] += food['norm_amount']
-                        total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
-
-        # данные посчитаны
-        # можно записать обновленный кеш обратно в файл
-        with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
-            pickle.dump(food_cache, f)
-            
-        # нумерация продуктов без инфы о порции
-        index_number = 1
-        for prod in prods_without_info:
-            prods_without_info[prod]['index_number'] = index_number
-            index_number += 1
-
-        # сорировка для вывода ТОПов
-        top_calories = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['calories'], reverse=True)[:10])
-        top_amount = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['amount'], reverse=True)[:10])
+    full_clientnote_form = get_full_clientnote_form(client)
 
     data = {
-        'clientname': clientname,
+        'clientname': client.username,
         'client_id': client_id,
-        'client_connected': client_connected,
-        'monthly_food_entries': monthly_food_entries,
-        'top_calories': top_calories,
-        'top_amount': top_amount,
-        'prods_without_info': prods_without_info,
-        'monthly_avg': monthly_avg,
-        'daily_food_entries': daily_food_entries,
-        'daily_nutrition': daily_nutrition,
-        'count_daily_food_by_category': count_daily_food_by_category,
-        'today_day': today_day,
-        'previous_month': previous_month,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
         'full_clientnote_form': full_clientnote_form,
     }
-    return render(request, 'controlpage/client_mealjournal.html', data)   
+
+    # проверяем, привязан ли у пользователя аккаунт Fatsecret
+    if user_has_fs_entry(client) is False:
+        # показываем уведомление
+        data.update({
+            'client_not_connected': True,
+        })
+        return render(request, 'controlpage/client_mealjournal.html', data)  
+    else:
+        # делаем подсчеты
+        daily_food = count_daily_food(client, datetime.today())
+        monthly_food = count_monthly_food(client, datetime.today())
+
+        # словарь продуктов, для которых нет инфо о граммовке порции
+        prods_without_info = {}
+        if daily_food.get('without_info'):
+            prods_without_info.update(daily_food['without_info'])
+        if monthly_food.get('without_info'):
+            prods_without_info.update(monthly_food['without_info'])
+
+        # для поля выбора (потом сделать через js)
+        previous_month = date.today() + relativedelta(months=-1)
+        previous_month = previous_month.strftime("%Y-%m")
+    
+        data.update({
+            'daily_food': daily_food,
+            'monthly_food': monthly_food,
+            'prods_without_info': prods_without_info,
+            'previous_month': previous_month,
+        })
+        return render(request, 'controlpage/client_mealjournal.html', data)   
 
 
 def client_foodbydate(request):
     """Получение данных за опр.день из FatSecret
-    С ТОПом по количеству и калориям
+    С ТОП-3 по количеству и калориям
     """
     
     if request.user.is_anonymous:
@@ -937,224 +483,55 @@ def client_foodbydate(request):
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
 
-    clientname = request.GET['clientname']
+    # определение клиента
     client_id = request.GET['client_id']
-    client_contacts = get_client_contacts(client_id)
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
     # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
+    client_comment_form = get_today_commentary_form(client)
     # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
+    clientnote_form = get_today_clientnote_form(client)
     # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
-
-    # делаем сессию с FatSecret
-    create_user_fs_session(client_id)
-
-    # получаем введенную дату
-    briefdate = request.GET.get('date')
-    if briefdate is None or not briefdate:
-        return redirect('client_mealjournal')
-    # форматируем для дальнейшей работы
-    briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
-    # заготовки для html
-    prev_date = str(briefdate - timedelta(days=1))[:10]
-    next_date = str(briefdate + timedelta(days=1))[:10]
-
-    # добавить обработчик too many actions!?
-
-    # ПИТАНИЕ за выбранную дату (briefdate)
-    daily_food_entries = fs.food_entries_get(date=briefdate)
-    # ???
-    if not daily_food_entries:
-        data = {
-            'clientname': clientname,
-            'client_id': client_id,
-            'top_calories': "",
-            'top_amount': "",
-            'total_by_prod': "",
-            'daily_nutrition': "",
-            'count_daily_food_by_category': "",
-            'prods_without_info': "",
-            'briefdate': briefdate,
-            'prev_date': prev_date,
-            'next_date': next_date,
-            'daily_food_entries': daily_food_entries,
-            'client_contacts': client_contacts,
-            'client_comment_form': client_comment_form,
-            'clientnote_form': clientnote_form,
-            'full_clientnote_form': full_clientnote_form,
-        }
-        return render(request, 'controlpage/client_foodbydate.html', data)
-
-    # открываем сохраненные данные о продуктах из файла
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
-        food_cache = pickle.load(file)
-
-
-    # продукты, для которых нет инфо о граммовке порции
-    prods_without_info = {}
-    # категории для таблички
-    count_daily_food_by_category = {
-        'Breakfast': 0,
-        'Lunch': 0,
-        'Dinner': 0,
-        'Other': 0,
-    }
-    # итоговые кбжу дня
-    daily_nutrition = {
-            'amount': 0,
-            'calories': 0,
-            'protein': 0,
-            'fat': 0,
-            'carbohydrate': 0,
-            }
-    # итоговые вес и калории по каждому виду продуктов для ТОПов
-    total_by_prod = {}
-
-    # обработка каждой записи о продукте
-    for food in daily_food_entries:
-
-        # подсчет количеств блюд для каждой категории для таблички
-        count_daily_food_by_category[food['meal']] += 1
-
-        # получение инфы об этом продукте
-        temp_food_cache = {}
-            # сначала в кеше
-        if food_cache.get(food['food_id']):
-            food_info = food_cache[food['food_id']]
-        else:
-            # потом в FatSecret
-            # добавить обработчик ошибки!
-            food_info = fs.food_get(food_id=food['food_id'])
-            sleep(2)
-
-            # обработка для компактного сохранения
-            if type(food_info['servings']['serving']) is dict:
-                temp_food_cache[food_info['food_id']] = {
-                    'food_name': food_info['food_name'],
-                    'servings': {
-                        'serving': {
-                            'serving_id': food_info['servings']['serving']['serving_id'],
-                            'measurement_description': food_info['servings']['serving']['measurement_description'],
-                            'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
-                            'number_of_units': food_info['servings']['serving']['number_of_units'],
-                            'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
-                            'serving_description': food_info['servings']['serving']['serving_description'] }}}
-            else:
-                temp_food_cache[food_info['food_id']] = {
-                    'food_name': food_info['food_name'],
-                    'servings': {
-                        'serving': [] }}
-                for dic in food_info['servings']['serving']:
-                    temp_food_cache[food_info['food_id']]['servings']['serving'].append({
-                        'serving_id': dic['serving_id'],
-                        'measurement_description': dic['measurement_description'],
-                        'metric_serving_amount': dic.get('metric_serving_amount', None),
-                        'number_of_units': dic['number_of_units'],
-                        'metric_serving_unit': dic.get('metric_serving_unit', None),
-                        'serving_description': dic['serving_description'] })
-
-            # сохранение в кеш
-            food_cache.update(temp_food_cache)
-
-        # добавление инфы в food для соответствующего вида порции
-        if type(food_info['servings']['serving']) is list:
-            for serv_info in food_info['servings']['serving']:
-                if serv_info['serving_id'] == food['serving_id']:
-                    food['serving'] = serv_info
-                    break
-        else:
-            food['serving'] = food_info['servings']['serving']
-        
-        # добавляем номальное отображение количества
-        # если измерение в г или мл - считаем как есть
-        if (food['serving']['measurement_description'] == 'g' or
-            food['serving']['measurement_description'] == 'ml'):
-            food['norm_amount'] = int(float(food['number_of_units']))
-            daily_nutrition['amount'] += food['norm_amount']
-        else:
-            # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-            if food['serving'].get('metric_serving_amount') is None:
-                # если в инфе не оказалось граммовки порции
-                # добавляем эту еду в спец.словарь и не считаем amount
-                prods_without_info[food['food_id']] = {
-                    'daily_food_entries_name': food['daily_food_entries_name'],
-                    'serving_description': food['serving'].get('serving_description', 'порция'),
-                    'serving_id': food['serving_id'],
-                    'calories_per_serving': food['serving'].get('calories', food['calories']) }
-            else:
-                # если в инфе метрика есть - считаем и добавляем к общему подсчету
-                food['norm_amount'] = int(float(food['number_of_units']) *
-                                        float(food['serving']['metric_serving_amount']) *
-                                        float(food['serving']['number_of_units']))
-                daily_nutrition['amount'] += food['norm_amount']            
-
-        # подсчет итоговой суммы кбжу
-        daily_nutrition['calories'] += int(food['calories'])
-        daily_nutrition['protein'] += float(food['protein'])
-        daily_nutrition['fat'] += float(food['fat'])
-        daily_nutrition['carbohydrate'] += float(food['carbohydrate'])
-
-        # ТОПЫ
-        # нормальное общее наименование еды для топов
-        food['food_name'] = food_info['food_name']
-        # подсчет
-        if total_by_prod.get(food['food_name']) == None:
-            total_by_prod[food['food_name']] = {
-                'calories': 0,
-                'amount': 0,
-            }
-        total_by_prod[food['food_name']]['calories'] += int(food['calories'])
-        if food.get('norm_amount'):
-            total_by_prod[food['food_name']]['amount'] += food['norm_amount']
-            total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
-
-    # записывается измененный кеш обратно в файл
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
-        pickle.dump(food_cache, f)
-
-    # нумерация продуктов без инфы о порции
-    index_number = 1
-    for prod in prods_without_info:
-        prods_without_info[prod]['index_number'] = index_number
-        index_number += 1
-
-    # округляем результаты в получившемся итоге по кбжу
-    for key, value in daily_nutrition.items():
-        daily_nutrition[key] = round(value, 2)
-           
-    # сортировка ТОПов
-    top_calories = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['calories'], reverse=True)[:3])
-    top_amount = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['amount'], reverse=True)[:3])
+    full_clientnote_form = get_full_clientnote_form(client)
 
     data = {
-        'clientname': clientname,
+        'clientname': client.username,
         'client_id': client_id,
-        'top_calories': top_calories,
-        'top_amount': top_amount,
-        'total_by_prod': total_by_prod,
-        'daily_nutrition': daily_nutrition,
-        'count_daily_food_by_category': count_daily_food_by_category,
-        'prods_without_info': prods_without_info,
-        'briefdate': briefdate,
-        'prev_date': prev_date,
-        'next_date': next_date,
-        'daily_food_entries': daily_food_entries,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
         'full_clientnote_form': full_clientnote_form,
     }
+
+    # получаем введенную дату, проверяем, форматируем
+    briefdate = request.GET.get('date')
+    if not briefdate:
+        return redirect('mealjournal')
+    briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
+
+    # для подстановки в html (пока так)
+    prev_date = briefdate - timedelta(days=1)
+    next_date = briefdate + timedelta(days=1)
+    prev_date = prev_date.strftime("%Y-%m-%d")
+    next_date = next_date.strftime("%Y-%m-%d")
+
+    daily_food = count_daily_food(client, briefdate)
+    daily_top = create_daily_top(client, briefdate)  
+
+    data.update({
+        'briefdate': briefdate,
+        'prev_date': prev_date,
+        'next_date': next_date,
+        'daily_food': daily_food,
+        'daily_top': daily_top,  
+    })
     return render(request, 'controlpage/client_foodbydate.html', data)
 
 
 def client_foodbymonth(request):
     """Страница подробной статистики по КБЖУ за месяц из FatSecret
-       с кнопочкой подсчета ТОПов
+       с кнопочкой подсчета ТОП-10 продуктов
     """
     
     if request.user.is_anonymous:
@@ -1162,265 +539,50 @@ def client_foodbymonth(request):
     if request.user.username != 'Parrabolla':
         return redirect('homepage')
 
-    clientname = request.GET['clientname']
+    # определение клиента
     client_id = request.GET['client_id']
-    client_contacts = get_client_contacts(client_id)
+    client = User.objects.get(id=client_id)
+    # контакты клиента
+    client_contacts = get_client_contacts(client)
     # комментарий для клиента
-    client_comment_form = today_commentary_form(client_id)
+    client_comment_form = get_today_commentary_form(client)
     # заметка о клиенте
-    clientnote_form = today_clientnote_form(client_id)
+    clientnote_form = get_today_clientnote_form(client)
     # заметка о клиенте совокупная
-    try:
-        instance = FullClientnote.objects.get(client=client_id)
-        full_clientnote_form = FullClientnoteForm(instance=instance)
-    except FullClientnote.DoesNotExist:
-        full_clientnote_form = FullClientnoteForm()
-
-    # делаем сессию с FatSecret
-    create_user_fs_session(client_id)
-
-    # месяц, за который нужно посчитать стату,
-    # введенный на предыдущей странице
-    briefmonth = request.GET.get('month')
-    if briefmonth is None or not briefmonth:
-        return redirect('client_mealjournal')
-
-    # заготовки для html
-    year = int(briefmonth[0:4])
-    month = int(briefmonth[-2:])
-
-    if month == 1:
-        prev_month = f"{year - 1}-12"
-        next_month = f"{year}-02"
-    elif month == 9:
-        prev_month = f"{year}-08"
-        next_month = f"{year}-10"
-    elif month == 10:
-        prev_month = f"{year}-09"
-        next_month = f"{year}-11"
-    elif month == 11:
-        prev_month = f"{year}-10"
-        next_month = f"{year}-12"
-    elif month == 12:
-        prev_month = f"{year}-11"
-        next_month = f"{year + 1}-01"
-    else:
-        prev_month = f"{year}-0{month - 1}"
-        next_month = f"{year}-0{month + 1}"
-
-    try:
-        # форматируем формат введенного месяца для FS
-        briefmonth = datetime.strptime(briefmonth, "%Y-%m")
-        # получаем нужные данные от FS за месяц
-        monthly_food_entries = fs.food_entries_get_month(date=briefmonth)
-        sleep(3)
-    except KeyError:
-        # если данных нет - переменная будет пустой
-        # указать конкретный тип ошибки!
-        monthly_food_entries = ""
-
-    # переменные для подсчета средних значений кбжу
-    avg_protein = 0
-    avg_fat = 0
-    avg_carbo = 0
-    avg_calories = 0
-
-    # считаем средние значения кбжу:
-    if monthly_food_entries:
-        # если за месяц одна запись - будет просто словарь
-        if type(monthly_food_entries) is dict:
-            monthly_food_entries['date_int'] = (date(1970, 1, 1) + 
-                        timedelta(days=int(monthly_food_entries['date_int'])))
-            avg_protein = monthly_food_entries['protein']
-            avg_fat = monthly_food_entries['fat']
-            avg_carbo = monthly_food_entries['carbohydrate']
-            avg_calories = monthly_food_entries['calories']
-            # превращаем в список из словаря, чтобы табличка не ебнулась
-            monthly_food_entries = [monthly_food_entries]
-        else:
-            # считаем среднее арифметическое для кбжу
-            days_count = len(monthly_food_entries)
-            for day in monthly_food_entries:
-                day['date_int'] = date(1970, 1, 1) + timedelta(days=int(day['date_int']))
-                avg_protein += float(day['protein'])
-                avg_fat += float(day['fat'])
-                avg_carbo += float(day['carbohydrate'])
-                avg_calories += float(day['calories'])
-            avg_protein = round(avg_protein / days_count, 2)
-            avg_fat = round(avg_fat / days_count, 2)
-            avg_carbo = round(avg_carbo / days_count, 2)
-            avg_calories = round(avg_calories / days_count, 2)
-
-    # предыдущий месяц для подстановки в поле выбора
-    previous_month = date.today() + relativedelta(months=-1)
-    previous_month = str(previous_month)[0:7]
-
-    # переменные для ТОПов
-    top_calories = ""
-    top_amount = ""
-    # продукты, для которых нет инфо о граммовке порции
-    prods_without_info = {}
-
-    # создание ТОП-списков! (если нажать на кнопку)
-    if request.GET.get('top_create', False):
-        print('считаю топ')
-
-        # итоговые вес и калории по каждому продукту
-        total_by_prod = {}
-
-        # открываем сохраненные данные о продуктах из файла
-        with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
-            food_cache = pickle.load(file)
-
-        # для каждого дня в записях за месяц
-        for day in monthly_food_entries:
-            # берем дату записи
-            food_date = datetime.combine(day['date_int'], time())
-            # получаем список съеденных продуктов за эту дату
-            try:
-                daily_food_entries = fs.food_entries_get(date=food_date)
-            except GeneralError:
-                print('спим')
-                sleep(30)
-                print('просыпаемся')
-                daily_food_entries = fs.food_entries_get(date=food_date)
-            sleep(3)
-
-            # для каждого продукта в списке съеденного за день
-            for food in daily_food_entries:
-
-                # получение инфы об этом продукте
-                temp_food_cache = {}
-                    # сначала в кеше
-                if food_cache.get(food['food_id']):
-                    food_info = food_cache[food['food_id']]
-                else:
-                    # потом в FatSecret
-                    # добавить обработчик ошибки!
-                    try:
-                        print('запрошен реквест о еде, food_id: ' + food['food_id'])
-                        food_info = fs.food_get(food_id=food['food_id'])
-                    except GeneralError:
-                        print('спим')
-                        sleep(30)
-                        print('просыпаемся')
-                        food_info = fs.food_get(food_id=food['food_id'])
-                    sleep(3)
-
-                    # обработка для компактного сохранения
-                    if type(food_info['servings']['serving']) is dict:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': {
-                                    'serving_id': food_info['servings']['serving']['serving_id'],
-                                    'measurement_description': food_info['servings']['serving']['measurement_description'],
-                                    'metric_serving_amount': food_info['servings']['serving'].get('metric_serving_amount', None),
-                                    'number_of_units': food_info['servings']['serving']['number_of_units'],
-                                    'metric_serving_unit': food_info['servings']['serving'].get('metric_serving_unit', None),
-                                    'serving_description': food_info['servings']['serving']['serving_description'] }}}
-                    else:
-                        temp_food_cache[food_info['food_id']] = {
-                            'food_name': food_info['food_name'],
-                            'servings': {
-                                'serving': [] }}
-                        for dic in food_info['servings']['serving']:
-                            temp_food_cache[food_info['food_id']]['servings']['serving'].append({
-                                'serving_id': dic['serving_id'],
-                                'measurement_description': dic['measurement_description'],
-                                'metric_serving_amount': dic.get('metric_serving_amount', None),
-                                'number_of_units': dic['number_of_units'],
-                                'metric_serving_unit': dic.get('metric_serving_unit', None),
-                                'serving_description': dic['serving_description'] })
-
-                    # сохранение в кеш
-                    food_cache.update(temp_food_cache)
-                        
-                    
-                # добавление инфы в food для соответствующего вида порции
-                if type(food_info['servings']['serving']) is list:
-                    for serv_info in food_info['servings']['serving']:
-                        if serv_info['serving_id'] == food['serving_id']:
-                            food['serving'] = serv_info
-                            break
-                else:
-                    food['serving'] = food_info['servings']['serving']
-
-                # добавляем нормальное отображение количества
-                # если измерение в г или мл - считаем как есть
-                if (food['serving']['measurement_description'] == 'g' or
-                    food['serving']['measurement_description'] == 'ml'):
-                    food['norm_amount'] = int(float(food['number_of_units']))
-                else:
-                    # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-                    if food['serving'].get('metric_serving_amount') is None:
-                        # если в инфе не оказалось граммовки порции
-                        # добавляем эту еду в спец.словарь и не считаем
-                        prods_without_info[food['food_id']] = {
-                            'daily_food_entries_name': food['daily_food_entries_name'],
-                            'serving_description': food['serving'].get('serving_description', 'порция'),
-                            'serving_id': food['serving_id'],
-                            'calories_per_serving': food['serving'].get('calories', food['calories']) }
-                    else:
-                        # если в инфе метрика есть - считаем
-                        food['norm_amount'] = int(float(food['number_of_units']) *
-                                            float(food['serving']['metric_serving_amount']) *
-                                            float(food['serving']['number_of_units']))
-                                            
-                # нормальное общее наименование для топов
-                # ? это можно убрать - записать ниже сразу как food_info['food_name'] ?
-                food['food_name'] = food_info['food_name']
-
-                # добавление\обновление инфы об общем количестве и калориях по продукту
-                # тут оптимизировать
-                if food.get('norm_amount') is not None:
-                    if total_by_prod.get(food['food_name']) == None:
-                        total_by_prod[food['food_name']] = {
-                            'calories': 0,
-                            'amount': 0,
-                        }
-                    total_by_prod[food['food_name']]['calories'] += int(food['calories'])
-                    if food.get('norm_amount'):
-                        total_by_prod[food['food_name']]['amount'] += food['norm_amount']
-                        total_by_prod[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
-
-        # данные посчитаны
-        # можно записать обновленный кеш обратно в файл
-        with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
-            pickle.dump(food_cache, f)
-            
-        # нумерация продуктов без инфы о порции
-        index_number = 1
-        for prod in prods_without_info:
-            prods_without_info[prod]['index_number'] = index_number
-            index_number += 1
-
-        # сорировка для вывода ТОПов
-        top_calories = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['calories'], reverse=True)[:10])
-        top_amount = dict(sorted(total_by_prod.items(), key=lambda x: x[1]['amount'], reverse=True)[:10])
+    full_clientnote_form = get_full_clientnote_form(client)
 
     data = {
-        'clientname': clientname,
+        'clientname': client.username,
         'client_id': client_id,
-        'top_calories': top_calories,
-        'top_amount': top_amount,
-        'briefmonth': briefmonth,
-        'previous_month': previous_month,
-        'monthly_food_entries': monthly_food_entries,
-        'monthly_avg': {
-            'calories': avg_calories,
-            'protein': avg_protein,
-            'fat': avg_fat,
-            'carbo': avg_carbo,
-        },
-        'prev_month': prev_month,
-        'next_month': next_month,
-        'prods_without_info': prods_without_info,
         'client_contacts': client_contacts,
         'client_comment_form': client_comment_form,
         'clientnote_form': clientnote_form,
         'full_clientnote_form': full_clientnote_form,
     }
+
+    # месяц, за который нужно посчитать стату,
+    # введенный на предыдущей странице
+    month_str = request.GET.get('month')
+
+    if month_str is None or not month_str:
+        return redirect('mealjournal')
+
+    month_datetime = datetime.strptime(month_str, "%Y-%m")
+
+    # для подстановки в html (пока так)
+    prev_month = month_datetime + relativedelta(months=-1)
+    next_month = month_datetime + relativedelta(months=1)
+    prev_month = prev_month.strftime("%Y-%m")
+    next_month = next_month.strftime("%Y-%m") 
+
+    monthly_food = count_monthly_food(client, month_datetime)
+
+    data.update({
+        'briefmonth': month_datetime,
+        'prev_month': prev_month,
+        'next_month': next_month,
+        'monthly_food': monthly_food,
+    })
     return render(request, 'controlpage/client_foodbymonth.html', data)
 
 

@@ -2,7 +2,7 @@ const commentButtons = document.querySelectorAll(".comment_btn");
 var commentForm = document.getElementById("comment1");
 const colorsetError = document.getElementById("colorset_error");
 const colorsetErrorContainer = document.getElementById("colorset_error_container");
-// переменная для настроек цветовых границ
+// переменная для хранения настроек цветовых границ
 var colorSet = false;
 
 // показать\скрыть коммент соответствующей даты
@@ -99,6 +99,7 @@ function dragElement(elmnt) {
 
 let btn = document.getElementById("apply_colors_btn");
 let allTableFields = document.querySelectorAll("td");
+
 // функция применения цветов к измерениям согласно настройкам из БД
 function applyColors() {
   if (btn.checked) {
@@ -115,15 +116,16 @@ function applyColors() {
     })
   }
 }
-applyColors();
-
+window.onload = function() {
+  applyColors();
+}
 
 function getColorSettings() {
   // функция получения и применения цветовых настроек
   var request = new XMLHttpRequest();
+  let url = document.getElementById('apply_colors_btn').dataset.action;
 
-  console.log('сейчас будет запрос');
-  request.open("GET", "get_color_settings");
+  request.open("GET", url);
 
   request.onreadystatechange = function() {
     if(this.readyState === 4) {

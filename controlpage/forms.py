@@ -93,6 +93,6 @@ class FullClientnoteForm(ModelForm):
             'note': Textarea(attrs={
                 'class': 'form-control mb-2',
                 'id': "id_full_note",
-                'rows': "20",
+                'rows': "15",
             }),
         }

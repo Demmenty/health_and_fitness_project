@@ -7,14 +7,9 @@ $(document).ready(function(){
     // модальное окно с предложением ввести недостающую метрику
     const withoutInfoModal =
         new bootstrap.Modal(document.getElementById('WithoutInfoModal'));
-    
-    // показ модального окна without_info, если уже что-то записано из view
-    if ($('.without_info_row').length > 0) {
-        withoutInfoModal.show();
-    }
 
     // получение топ-10 продуктов по кнопке
-    $('#get_top_form').submit(function () {
+    $('#get_top_form').click(function () {
         createTopTen($(this));
         return false;
     })
@@ -100,8 +95,6 @@ $(document).ready(function(){
 
     // наполнение модального окна without_info
     function createWithoutInfoSection(without_info) {
-        // удаляем продукты, что там были
-        $('.without_info_row').remove();
         // наполняем полученным списком
         $.each(without_info, function(id, data) {
             let newWithoutInfoRow =  $("<div class='without_info_row mt-5'>")
@@ -138,7 +131,7 @@ $(document).ready(function(){
         }
         else {
             // отправка
-            sendFoodMetric($(this));
+            sendFoodMetric($('#add_metric_form'));
         }
         // предупреждение стандартного сценария
         return false;
@@ -165,20 +158,8 @@ $(document).ready(function(){
             
             success: function (response) {
                 if (response.status == "инфа сохранена, круто!") {
-                    // если топы не были запрошены
-                    if ($('#top_section').hasClass("hidden_element")) {
-                        // закрываем модалку
-                        setTimeout(() => {
-                            withoutInfoModal.hide();
-                        }, 1500);
-                        // перезагружаем страницу
-                        location.reload();
-                    }
-                    // если топы были запрошены
-                    else {
-                        // добавляем кнопку пересчета
-                        recalcBtn.classList.remove('hidden_element');
-                    }
+                    // добавляем кнопку пересчета
+                    recalcBtn.classList.remove('hidden_element');
                     // показываем синий статус
                     statusBtn.textContent = response.status;
                     statusBtn.style.color = "#00c0f0";

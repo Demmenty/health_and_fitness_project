@@ -32,7 +32,7 @@ class MeasureColor(models.Model):
     meaning = models.CharField('Значение фона', max_length=100)
 
     def __str__(self):
-        return f"{self.color}"
+        return f"{self.meaning}"
 
 
 class MeasureIndex(models.Model):

@@ -49,7 +49,6 @@ $(document).ready(function() {
     }
 })
 
-
 // КОММЕНТАРИЙ КЛИЕНТУ
 const commentaryContainer = $('#client_comment_form_container');
 // окошко ввода даты
