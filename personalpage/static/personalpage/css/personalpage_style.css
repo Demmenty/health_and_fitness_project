@@ -466,7 +466,7 @@ table {
 /* общее */
 
 /* загрузочный кот */
-.modal.fade.cat_with_coffee {
+#load_cat {
     right: 0;
     bottom: 0;
     left: unset;
@@ -485,11 +485,11 @@ table {
     --bs-backdrop-bg: #61696e;
     --bs-backdrop-opacity: 0.4;
 }
-.modal.fade .modal-dialog {
+.modal.fade.cat_with_coffee .modal-dialog {
     transform: translate(200px,0px);
     transition: transform 2s ease-out;
 }
-.modal.show .modal-dialog {
+.modal.show.cat_with_coffee .modal-dialog {
     transform: none;
 }
 .button_clientname {
@@ -582,15 +582,6 @@ table {
 
 
 /* anthropometry */
-.anthropometry_form {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
-}
 .td_photo_btns {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -822,26 +813,12 @@ table {
     left: 50%;
 }
 
-/* форма контактов */
-#contacts_form_container {
-    max-width: 420px;
-    position: absolute;
-    z-index: 2;
-    margin-left: auto;
-    margin-right: auto;
-    left: 8px;
-    right: 8px;
-}
-#contacts_form p {
-    margin-bottom: 0.75rem;
-}
-
 /* personalpage */
 
 
-/* questionary */
+/* health_questionary */
 @media screen and (min-width: 576px) {
-    .questionary_container {
+    .health_questionary_container {
         border: 1px solid #dee2e6;
         border-radius: 10px;
         padding: 30px;
@@ -950,4 +927,4 @@ table {
     margin-top: auto;
     margin-bottom: auto;
 }
-/* questionary */
+/* health_questionary */

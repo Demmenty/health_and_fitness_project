@@ -4,54 +4,35 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
 <div class="container pt-5">
     <div class="d-flex flex-column flex-sm-row flex-wrap justify-content-between">
 
         <div class="d-flex flex-column me-sm-4 mb-4">
             <h2 class="clientname text-break mb-4">{{ user.username }}</h2>
+
             <!-- анкета здоровья -->
-            {% if questionary %}
-                <p>
-                    &#10004; 
-                    <a class="link" href="{% url 'questionary' %}">Анкета здоровья</a> 
-                    заполнена
+            {% if health_questionary_filled %}
+                <p> &#10004; 
+                    <a class="link" href="{% url 'health_questionary' %}">Анкета здоровья</a> заполнена
                 </p>
             {% else %}
-                <p>
-                    &#10006; 
-                    <a class="link" href="{% url 'questionary' %}">Анкета здоровья</a> 
-                    не заполнена
+                <p> &#10006; 
+                    <a class="link" href="{% url 'health_questionary' %}">Анкета здоровья</a> не заполнена
                 </p>
             {% endif %}
+
             <!-- контакты клиента -->
             {% if contacts_filled %}
-                <p>
-                    &#10004; 
-                    <span class="link" onclick="openContactsForm()">Контакты</span> 
-                    указаны
+                <p> &#10004; 
+                    <span class="link" data-bs-toggle="modal" data-bs-target="#contacts_form_modal">Контакты</span> указаны
                 </p>
             {% else %}
-                <p>
-                    &#10006; 
-                    <span class="link" onclick="openContactsForm()">Контакты</span> 
-                    не указаны
+                <p> &#10006; 
+                    <span class="link" data-bs-toggle="modal" data-bs-target="#contacts_form_modal">Контакты</span> не указаны
                 </p>
             {% endif %}
-            <!-- форма контактов -->
-            {% if contacts_error %}
-                <div class="d-flex flex-column border-blueshadow bg-white rounded py-2 px-3" id="contacts_form_container">
-            {% else %}
-                <div class="d-flex flex-column border-blueshadow bg-white rounded p-3 hidden_element" id="contacts_form_container">
-            {% endif %}
-                <h4 class="text-center">Мои контакты</h4>
-                <p class="text-center text-danger">{{ contacts_error }}</p>
-                <form method="post" id="contacts_form" class="w-100">
-                    {% csrf_token %}
-                    {{ contacts_form.as_p }}
-                    <button class="btn btn-outline-primary" type="button" onclick="closeContactsForm()">Отмена</button>
-                    <button class="btn btn-primary float-end" type="submit">Сохранить</button>
-                </form>
-            </div>
         </div>
 
         <div class="d-flex flex-column">
@@ -99,6 +80,26 @@
     <br>
     <br>
     <br>
+</div>
+
+<!-- модальное окно формы контактов -->
+<div class="modal" id="contacts_form_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-blueshadow">
+            <div class="modal-header px-4">
+                <h4 class="text-center mb-0">Мои контакты</h4>
+            </div>
+            <div class="modal-body px-4">
+                <form method="post" action="{% url 'save_contacts' %}" id="contacts_form" class="w-100">
+                    {% csrf_token %}
+                    {{ contacts_form.as_p }}
+                    <p class="text-center transition_common text-transparent" id="contacts_error">&nbsp;</p>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                </form>
+            </div>    
+        </div>
+    </div>
 </div>
 
 <script src="{% static 'personalpage/js/personalpage.js' %}"></script>

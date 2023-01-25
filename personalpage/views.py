@@ -1,259 +1,19 @@
 from django.shortcuts import render, redirect
-from .models import Anthropometry, Questionary, UserSettings
-from controlpage.models import Commentary
-from django.db.models import Q
-from .forms import AnthropometryForm, QuestionaryForm, PhotoAccessForm, ContactsForm
 from measurements.forms import MeasurementForm, MeasurementCommentForm
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from django.http import JsonResponse
 from fatsecret_app.services import *
 from measurements.services import *
+from anthropometry.models import Anthropometry
+from anthropometry.forms import AnthropometryForm
+from anthropometry.services import *
+from client_info.services import *
+from common.utils import get_noun_ending
+from expert_remarks.services import get_today_commentary
+from .utils import *
 
 
-# внутренние функции
-def get_noun_ending(number, one, two, five):
-    """Функция возвращает вариант слова с правильным окончанием
-       в зависимости от числа
-       Нужно передать число и соответствующие варианты
-       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
-    """
-    n = abs(number)
-    n %= 100
-    if 20 >= n >= 5:
-        return five
-    n %= 10
-    if n == 1:
-        return one
-    if 4 >= n >= 2:
-        return two
-    return five
 
-
-def get_avg_for_period(user_id, period=7):
-    """Составляет словарь из средних значений по
-       каждому ежедневному измерению физичских показателей за неделю.
-       Нужно передать user_id и period=кол-во дней
-    """
-    set = reversed(Measurement.objects.filter(user=user_id)[:period])
-    avg_data = {
-        'avg_feel': 0,
-        'avg_weight': 0,
-        'avg_fat': 0,
-        'avg_pulse': 0,
-        'avg_pressure': 0,
-        'avg_calories': 0,
-        'avg_protein': 0,
-        'avg_fats': 0,
-        'avg_carbohydrates': 0,
-    }
-    pressure_upper = 0
-    pressure_lower = 0
-
-    count_feel = 0
-    count_weight = 0
-    count_fat = 0
-    count_pulse = 0
-    count_pressure = 0
-    count_calories = 0
-    count_protein = 0
-    count_fats = 0
-    count_carbohydrates = 0
-
-    for day in set:
-        if day.feel:
-            avg_data['avg_feel'] += int(day.feel)
-            count_feel += 1
-        if day.weight:
-            avg_data['avg_weight'] += float(day.weight)
-            count_weight += 1
-        if day.fat:
-            avg_data['avg_fat'] += float(day.fat)
-            count_fat += 1
-        if day.pulse:
-            avg_data['avg_pulse'] += int(day.pulse)
-            count_pulse += 1
-        if day.pressure_upper and day.pressure_lower:
-            pressure_upper += int(day.pressure_upper)
-            pressure_lower += int(day.pressure_lower)
-            count_pressure += 1
-        # кбжу - без учета сегодняшнего дня
-        if day.calories and day.date != date.today():
-            avg_data['avg_calories'] += int(day.calories)
-            count_calories += 1
-        if day.protein and day.date != date.today():
-            avg_data['avg_protein'] += float(day.protein)
-            count_protein += 1
-        if day.fats and day.date != date.today():
-            avg_data['avg_fats'] += float(day.fats)
-            count_fats += 1
-        if day.carbohydrates and day.date != date.today():
-            avg_data['avg_carbohydrates'] += float(day.carbohydrates)
-            count_carbohydrates += 1
-
-    if count_feel:
-        avg_data['avg_feel'] = round(avg_data['avg_feel'] / count_feel, 1)
-    if count_weight:
-        avg_data['avg_weight'] = round(avg_data['avg_weight'] / count_weight, 1)
-    if count_fat:
-        avg_data['avg_fat'] = round(avg_data['avg_fat'] / count_fat, 1)
-    if count_pulse:
-        avg_data['avg_pulse'] = int(avg_data['avg_pulse'] / count_pulse)
-    if count_pressure:
-        avg_data['avg_pressure'] = str(int(pressure_upper / count_pressure)) + "/" + str(int(pressure_lower / count_pressure))
-    if count_calories:
-        avg_data['avg_calories'] = int(avg_data['avg_calories'] / count_calories)
-    if count_protein:
-        avg_data['avg_protein'] = int(avg_data['avg_protein'] / count_protein)
-    if count_fats:
-        avg_data['avg_fats'] = int(avg_data['avg_fats'] / count_fats)
-    if count_carbohydrates:
-        avg_data['avg_carbohydrates'] = int(avg_data['avg_carbohydrates'] / count_carbohydrates)
-    
-    return avg_data
-
-
-# Аякс-запросы
-def get_expert_commentary(request):
-    """Получение формы коммента клиенту для клиента
-       для выбранной на странице даты через скрипт в layout"""
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    client_id = request.user.id
-    comment_date = request.GET['date']
-
-    try:
-        instance = Commentary.objects.get(client=client_id, date=comment_date)
-        data = {
-            'general': instance.general,
-            'measurements': instance.measurements,
-            'nutrition': instance.nutrition,
-            'workout': instance.workout,
-            'general_read': instance.general_read,
-            'measurements_read': instance.measurements_read,
-            'nutrition_read': instance.nutrition_read,
-            'workout_read': instance.workout_read,
-        }
-    except Commentary.DoesNotExist:
-        data = {
-        'general': '',
-        'measurements': '',
-        'nutrition': '',
-        'workout': '',
-        'general_read': True,
-        'measurements_read': True,
-        'nutrition_read': True,
-        'workout_read': True,
-        }
-
-    return JsonResponse(data, status=200)
-
-
-def mark_comment_readed(request):
-    """Запись инфо о том, что коммент прочитан
-       через скрипт в layout"""
-    if request.user.is_anonymous:
-        data = {}
-        return JsonResponse(data, status=403)
-
-    client_id = request.user.id
-    comment_date = request.GET['date']
-    labelname = request.GET['label']
-
-    # сюда не попадут запросы о несуществующих
-    # из-за фильтра в javascript - controlLabelReaded()
-    commentary = Commentary.objects.get(client=client_id, date=comment_date)
-
-    if labelname == 'general':
-        commentary.general_read = True
-    elif labelname == 'measurements':
-        commentary.measurements_read = True
-    elif labelname == 'nutrition':
-        commentary.nutrition_read = True
-    elif labelname == 'workout':
-        commentary.workout_read = True
-    
-    commentary.save()
-
-    data = {}
-
-    return JsonResponse(data, status=200)
-
-
-def get_count_unread(request):
-    """ получение количества непрочитаных комментов 
-    через скрипт в layout"""
-    if request.user.is_anonymous:
-        data = {}
-        return JsonResponse(data, status=403)
-
-    unread_comments = Commentary.objects.filter(
-        Q(client=request.user), 
-        Q(general_read=0) | Q(measurements_read=0) | Q(nutrition_read=0) | Q(workout_read=0) 
-    )
-    count_of_unread = unread_comments.count()
-
-    data = {
-        'count_of_unread': count_of_unread,
-    }
-    return JsonResponse(data, status=200)
-
-
-def commentsave(request):
-    """Сохранение коммента через ajax"""
-    # получаем форму из запроса
-    form = MeasurementCommentForm(request.POST)
-    # проверяем на корректность
-    if form.is_valid():
-        # получаем дату из формы
-        comment_date = form.cleaned_data['date']
-        # получаем запись из БД с этим числом
-        measure = Measurement.objects.get(date=comment_date, user=request.user) 
-        # перезаписываем
-        form = MeasurementCommentForm(request.POST, instance=measure)
-        form.save()
-        new_comment = form.cleaned_data['comment']
-        data = {
-            'new_comment': new_comment,
-        }
-        return JsonResponse(data, status=200)
-
-
-def foodmetricsave(request):
-    """Сохранение введенной метрики еды через ajax"""
-
-    if request.user.is_anonymous:
-        return redirect('loginuser')
-
-    prods_without_info = dict(request.POST)
-    del prods_without_info['csrfmiddlewaretoken']
-
-    save_foodmetric_into_foodcache(prods_without_info)
-
-    data = {'status': "инфа сохранена, круто!"}
-    return JsonResponse(data, status=200)
-  
-
-def photoaccess_change(request):
-    """Обработка изменения настройки доступа к фото в антропометрии"""
-    # получаем форму из запроса
-    form = PhotoAccessForm(request.POST)
-    # проверяем на корректность
-    if form.is_valid():
-        # записываем значение в базу
-        instance = UserSettings.objects.get(user=request.user)
-        form = PhotoAccessForm(request.POST, instance=instance)
-        form.save()
-
-        accessible = form.cleaned_data['photo_access']
-        data = {
-            'accessible': accessible,
-            }
-        return JsonResponse(data, status=200)
-
-
-# My views
 def personalpage(request):
     """Личный кабинет клиента"""
 
@@ -263,135 +23,82 @@ def personalpage(request):
     if request.user.username == 'Parrabolla':
         return redirect('expertpage')
 
-    questionary = Questionary.objects.filter(user=request.user).first()
+    health_questionary_filled = is_health_questionary_filled_by(request.user)
 
-    # сообщение об ошибке в контактах
-    contacts_error = ''
-    # cохранение контактов клиента из формы
-    if request.method == 'POST':
-        form = ContactsForm(request.POST)
-        if form.is_valid():
-            try:
-                instance = UserSettings.objects.get(user=request.user)
-                form = ContactsForm(request.POST, instance=instance)
-                form.save()
-                return redirect('personalpage')
-            except UserSettings.DoesNotExist:
-                new_form = form.save(commit=False)
-                new_form.user = request.user
-                new_form.save()
-                return redirect('personalpage')
-        else:
-            contacts_error = 'Контакты введены некорректно. Попробуйте ещё раз.'
+    # контакты клиента
+    contacts_filled = is_contacts_filled_by(request.user)
+    contacts_form = get_contacts_form_for(request.user)
 
-    # форма контактов клиента
-    contacts_filled = False
-    try:
-        instance = UserSettings.objects.get(user=request.user)
-        contacts_form = ContactsForm(instance=instance)
-
-        # проверка на заполненность хотя бы 1 поля
-        fields = [
-            'telegram',
-            'whatsapp',
-            'discord',
-            'skype',
-            'vkontakte',
-            'facebook',
-        ]
-        for field in fields:
-            if getattr(instance, field):
-                contacts_filled = True
-                break
-
-    except UserSettings.DoesNotExist:
-        contacts_form = ContactsForm()
-        
     #измерения за сегодня
+    if user_has_fs_entry(request.user):
+        renew_measure_nutrition(request.user, datetime.now())
+
     today_measure = get_daily_measure(request.user)
-    renew_measure_nutrition(request.user, datetime.now())
 
     # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
+    today_commentary = get_today_commentary(request.user)
 
     data = {
         'today_measure': today_measure,
-        'questionary': questionary,
+        'health_questionary_filled': health_questionary_filled,
         'contacts_form': contacts_form,
-        'contacts_error': contacts_error,
         'contacts_filled': contacts_filled,
         'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/personalpage.html', data)
 
 
-def questionary(request):
+def health_questionary(request):
     """Страница заполнения личной анкеты"""
 
     if request.user.is_anonymous:
         return redirect('loginuser')
 
-    # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
-
-    # GET-запрос
+    # открываем анкету
     if request.method == 'GET':
-        # проверяем, есть ли у клиента уже анкета
-        try:
-            questionary = Questionary.objects.get(user=request.user)
-            # создаем форму на ее основе
-            form = QuestionaryForm(instance=questionary)
-        except Questionary.DoesNotExist:
-            questionary = ""
-             # или создаем пустую форму
-            form = QuestionaryForm()
+       
+        health_questionary = get_health_questionary_of(request.user)
+        health_questionary_form = get_health_questionary_form_for(request.user)
+        # комментарий за сегодня от эксперта
+        today_commentary = get_today_commentary(request.user)
 
-        # рендерим страницу с формой
         data = {
-            'questionary': questionary,
-            'form': form,
-            'error': '',
+            'health_questionary': health_questionary,
+            'health_questionary_form': health_questionary_form,
             'today_commentary': today_commentary,
         }
-        return render(request, 'personalpage/questionary.html', data)
+        return render(request, 'personalpage/health_questionary.html', data)
 
+    # сохраняем анкету
     if request.method == 'POST':
-        # получаем форму из запроса
-        form = QuestionaryForm(request.POST)
-        # проверяем на корректность
+
+        form = HealthQuestionaryForm(request.POST)
+
         if form.is_valid():
-            try:
-                # пробуем получить анкету из БД
-                questionary = Questionary.objects.get(user=request.user)
-                form = QuestionaryForm(request.POST, instance=questionary)
+            instance = get_health_questionary_of(request.user)
+
+            if instance:
+                form = HealthQuestionaryForm(request.POST, instance=instance)
                 form.save()
                 return redirect('personalpage')
-            except Questionary.DoesNotExist:
-                # если ее нет - сохраняем как новую
+            else:
                 new_form = form.save(commit=False)
                 new_form.user = request.user
                 new_form.save()
                 return redirect('personalpage')
-        # если форма некорректна - перезагружаем страницу с ошибкой
+
         else:
-            # проверяем, есть ли у клиента уже анкета
-            try:
-                questionary = Questionary.objects.get(user=request.user)
-                # создаем форму на ее основе
-                form = QuestionaryForm(instance=questionary)
-            except Questionary.DoesNotExist:
-                questionary = ""
-                # или создаем пустую форму
-                form = QuestionaryForm()
+            health_questionary = get_health_questionary_of(request.user)
+            health_questionary_form = get_health_questionary_form_for(request.user)
+            today_commentary = get_today_commentary(request.user)
+
             data = {
-                'questionary': questionary,
-                'form': form,
+                'health_questionary': health_questionary,
+                'health_questionary_form': health_questionary_form,
                 'today_commentary': today_commentary,
                 'error': 'Данные введены некорректно. Попробуйте ещё раз.',
             }
-            return render(request, 'personalpage/questionary.html', data)
+            return render(request, 'personalpage/health_questionary.html', data)
 
 
 def measurements(request):
@@ -403,12 +110,17 @@ def measurements(request):
     if request.user.username == 'Parrabolla':
         return redirect('expertpage') 
 
-    data = {}
+    today_commentary = get_today_commentary(request.user)
 
     if user_has_fs_entry(request.user):
         renew_weekly_measures_nutrition(request.user)
 
     today_measure = get_daily_measure(request.user)
+
+    data = {
+        'today_measure': today_measure,
+        'today_commentary': today_commentary,
+    }
 
     if request.GET.get('selectperiod'):
         period = int(request.GET['selectperiod'])
@@ -434,13 +146,6 @@ def measurements(request):
             'colorsettings_exist': colorsettings_exist,
         })
 
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
-
-    data.update({
-        'today_measure': today_measure,
-        'today_commentary': today_commentary,
-    })
     return render(request, 'personalpage/measurements.html', data)    
 
 
@@ -450,73 +155,135 @@ def addmeasure(request):
     if request.user.is_anonymous:
         return redirect('loginuser')
 
-    fatsecret_connected = user_has_fs_entry(request.user)
-
     if request.method == 'GET':
 
+        fatsecret_connected = user_has_fs_entry(request.user)
         if fatsecret_connected:
             renew_weekly_measures_nutrition(request.user)
             
         weekly_measure_forms = create_weekly_measure_forms(request.user)
-
-        last_seven_dates = []
-        for i in range(7):
-            selected_date = date.today() - timedelta(days=(6-i))
-            last_seven_dates.append(selected_date)
-
-        today_commentary = Commentary.objects.filter(
-                date=date.today(), client=request.user).first()        
+        last_seven_dates = create_list_of_dates(7)
+        today_commentary = get_today_commentary(request.user)       
 
         data = {
             'fatsecret_connected': fatsecret_connected,
             'weekly_measure_forms': weekly_measure_forms,
             'last_seven_dates': last_seven_dates,
             'today_commentary': today_commentary,
-            }
+        }
         return render(request, 'personalpage/addmeasure.html', data)
 
     if request.method == 'POST':
 
+        fatsecret_connected = user_has_fs_entry(request.user)
         form = MeasurementForm(request.POST)
     
         if form.is_valid():
-
             measure_date = form.cleaned_data['date']
             measure_weight = form.cleaned_data['weight']
 
             if fatsecret_connected and measure_weight:
                 set_weight_in_fatsecret(request.user, measure_weight, measure_date)
 
-            instance = Measurement.objects.filter(
-                        date=measure_date, user=request.user).first()
+            instance = get_daily_measure(request.user, measure_date)
 
             if instance:
                 form = MeasurementForm(request.POST, instance=instance)
                 form.save()
                 return redirect('measurements')
             else:
-                error = 'Случилось что-то непонятное, либо вы читерите :('
+                addmeasure_error = 'Случилось что-то непонятное, либо вы читерите :('
         else:
-            error = 'Данные введены некорректно. Попробуйте еще раз.'
+            addmeasure_error = 'Данные введены некорректно. Попробуйте еще раз.'
 
         weekly_measure_forms = create_weekly_measure_forms(request.user)
-
-        last_seven_dates = []
-        for i in range(7):
-            selected_date = date.today() - timedelta(days=(6-i))
-            last_seven_dates.append(selected_date)
-
-        today_commentary = Commentary.objects.filter(
-                date=date.today(), client=request.user).first()     
+        last_seven_dates = create_list_of_dates(7)
+        today_commentary = get_today_commentary(request.user)    
         
         data = {
-            'error': error,
+            'addmeasure_error': addmeasure_error,
             'fatsecret_connected': fatsecret_connected,
             'weekly_measure_forms': weekly_measure_forms,
             'last_seven_dates': last_seven_dates,
             'today_commentary': today_commentary,
             }
         return render(request, 'personalpage/addmeasure.html', data)
+
+
+def anthropometry(request):
+    """Страница внесения антропометрических измерений"""
+
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
+    if request.method == 'GET':
+        # сделанные измерения
+        entries = get_anthropo_entries(request.user)
+
+        # если запрошен полный список измерений
+        if request.GET.get('show_all_entries'):
+            show_all_entries = True
+        else:
+            show_all_entries = False
+
+        # форма внесения новой записи
+        new_entry_form = AnthropometryForm()
+        # доступ эксперта к фото
+        photoaccess_form = get_anthropo_photoaccess_form(request.user)
+        photoaccess_allowed = photoaccess_form['photo_access'].value()
+        # комментарий за сегодня от эксперта
+        today_commentary = get_today_commentary(request.user)
+
+        data = {
+            'entries': entries,
+            'show_all_entries': show_all_entries,
+            'new_entry_form': new_entry_form,
+            'photoaccess_form': photoaccess_form,
+            'photoaccess_allowed': photoaccess_allowed,
+            'today_commentary': today_commentary,
+        }
+        return render(request, 'personalpage/anthropometry.html', data)
+
+    # сохранение новых измерений
+    if request.method == 'POST':
+
+        form = AnthropometryForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            entry_date = form.cleaned_data['date']
+            instance = get_anthropo_entry(request.user, entry_date)
+
+            if instance:
+                form = AnthropometryForm(request.POST, request.FILES, instance=instance)
+                form.save()
+            else:
+                form = form.save(commit=False)
+                form.user = request.user
+                form.save()
+            return redirect('anthropometry')
+
+        else:
+            add_anthropo_error = 'Введены некорректные данные'
+
+            # сделанные измерения
+            entries = get_anthropo_entries(request.user)
+            # форма внесения новой записи
+            new_entry_form = AnthropometryForm()
+            # доступ эксперта к фото
+            photoaccess_form = get_anthropo_photoaccess_form(request.user)
+            photoaccess_allowed = photoaccess_form['photo_access'].value()
+            # комментарий за сегодня от эксперта
+            today_commentary = get_today_commentary(request.user)
+
+            data = {
+                'add_anthropo_error': add_anthropo_error,
+                'entries': entries,
+                'new_entry_form': new_entry_form,
+                'photoaccess_form': photoaccess_form,
+                'photoaccess_allowed': photoaccess_allowed,
+                'today_commentary': today_commentary,
+            }
+            return render(request, 'personalpage/anthropometry.html', data)
 
 
 def mealjournal(request):
@@ -528,20 +295,18 @@ def mealjournal(request):
         return redirect('loginuser')
 
     # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
-    
-    data = {'today_commentary': today_commentary,}
+    today_commentary = get_today_commentary(request.user)
 
     # проверяем, привязан ли у пользователя аккаунт Fatsecret
     if user_has_fs_entry(request.user) is False:
         # показываем предложение подключить
-        data.update({
+        data = {
+            'today_commentary': today_commentary,
             'user_not_connected': True,
-        })
+        }
         return render(request, 'personalpage/mealjournal.html', data)
     else:
-        # делаем подсчеты
+        # или делаем подсчеты
         daily_food = count_daily_food(request.user, datetime.today())
         monthly_food = count_monthly_food(request.user, datetime.today())
 
@@ -556,12 +321,13 @@ def mealjournal(request):
         previous_month = date.today() + relativedelta(months=-1)
         previous_month = previous_month.strftime("%Y-%m")
 
-        data.update({
+        data = {
+            'today_commentary': today_commentary,
             'daily_food': daily_food,
             'monthly_food': monthly_food,
             'prods_without_info': prods_without_info,
             'previous_month': previous_month,
-        })
+        }
         return render(request, 'personalpage/mealjournal.html', data)
 
 
@@ -586,8 +352,7 @@ def foodbydate(request):
     next_date = next_date.strftime("%Y-%m-%d")
 
     # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-        date=date.today(), client=request.user).first()
+    today_commentary = get_today_commentary(request.user)
 
     daily_food = count_daily_food(request.user, briefdate)
     daily_top = create_daily_top(request.user, briefdate)
@@ -629,8 +394,7 @@ def foodbymonth(request):
     monthly_food = count_monthly_food(request.user, month_datetime)
 
     # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
+    today_commentary = get_today_commentary(request.user)
 
     data = {
         'briefmonth': month_datetime,
@@ -640,99 +404,3 @@ def foodbymonth(request):
         'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/foodbymonth.html', data)
-
-
-def anthropometry(request):
-    """Страница внесения антропометрических измерений"""
-
-    
-    if request.user.is_anonymous:
-        return redirect('loginuser')
-
-    # таблица сделанных измерений
-    metrics = Anthropometry.objects.filter(user=request.user)
-    if metrics.exists():
-        if len(metrics) == 1:
-            first_metrics = ''
-            prev_metrics = [metrics[0]]
-        elif len(metrics) == 2:
-            first_metrics = metrics.earliest()
-            prev_metrics = [metrics.latest()]
-        else:
-            first_metrics = metrics.earliest()
-            prev_metrics = reversed(metrics[0:2])
-    else:
-        first_metrics = ''
-        prev_metrics = ''
-
-
-    # показ всех записей
-    show_all = request.GET.get('show_all')
-    
-    # форма внесения новой записи
-    metrics_form = AnthropometryForm()
-
-    error = ""
-
-    # комментарий за сегодня от эксперта
-    today_commentary = Commentary.objects.filter(
-            date=date.today(), client=request.user).first()
-
-    # сохранение полученной формы
-    if request.method == 'POST':
-        # получаем форму из запроса
-        form = AnthropometryForm(request.POST, request.FILES)
-
-        # проверяем на корректность
-        if form.is_valid():
-            # получаем дату из формы
-            form_date = form.cleaned_data['date']
-
-            if form_date <= date.today():
-                try:
-                    # если за это число есть - переписываем
-                    exist_metrics = Anthropometry.objects.get(date=form_date,
-                                                                user=request.user)                      
-                    form = AnthropometryForm(request.POST, request.FILES, instance=exist_metrics)
-                    form.save()
-                except Anthropometry.DoesNotExist:
-                    # сохраняем новую запись
-                    form = form.save(commit=False)
-                    form.user = request.user
-                    form.save()
-                return redirect('anthropometry')
-        # если форма некорректна - перезагружаем страницу с ошибкой
-        error = 'Введены некорректные данные'
-        data = {
-            'first_metrics': first_metrics,
-            'prev_metrics': prev_metrics,
-            'metrics_form': metrics_form,
-            'metrics': metrics,
-            'show_all': show_all,
-            'error': error,
-            'today_commentary': today_commentary,
-        }
-        return render(request, 'personalpage/anthropometry.html', data)
-
-    # форма для настройки доступа к фото
-    try:
-        photoaccess_instance = UserSettings.objects.get(user=request.user)
-    except UserSettings.DoesNotExist:
-        photoaccess_instance = UserSettings.objects.create(user=request.user)
-
-    photoaccess_form = PhotoAccessForm(instance=photoaccess_instance)
-    # проверка текущей настройки достпуности фото
-    accessibility = photoaccess_instance.photo_access
-
-    data = {
-        'first_metrics': first_metrics,
-        'prev_metrics': prev_metrics,
-        'metrics_form': metrics_form,
-        'metrics': metrics,
-        'show_all': show_all,
-        'error': error,
-        'photoaccess_form': photoaccess_form,
-        'accessibility': accessibility,
-        'today_commentary': today_commentary,
-    }
-    return render(request, 'personalpage/anthropometry.html', data)

@@ -3,8 +3,38 @@ from .forms import CommentaryForm, ClientnoteForm, FullClientnoteForm
 from datetime import date
 
 
+def get_remark_forms(client) -> dict:
+    """возвращает формы заметок и комментария, нужные для footer эксперта"""
+
+    # комментарий для клиента
+    comment_form = get_today_commentary_form(client)
+    # заметка о клиенте
+    monthnote_form = get_today_clientnote_form(client)
+    # заметка о клиенте совокупная
+    fullnote_form = get_full_clientnote_form(client)
+
+    client_remark = {
+        'comment_form': comment_form,
+        'monthnote_form': monthnote_form,
+        'fullnote_form': fullnote_form,
+    }
+
+    return client_remark
+
+
+# комментарий от эксперта клиенту
+def get_today_commentary(client):
+    """возвращает объект модели комментария от эксперта за сегодня"""
+
+    today_commentary = Commentary.objects.filter(
+                        date=date.today(),
+                        client=client).first()
+
+    return today_commentary
+
+
 def get_today_commentary_form(client):
-    """Получение формы для комплексного комментария клиенту от эксперта
+    """возвращает форму для комплексного комментария клиенту от эксперта
        Дата - сегодняшняя, на другие даты меняется на странице скриптом
     """
 
@@ -19,6 +49,7 @@ def get_today_commentary_form(client):
     return form
 
 
+# заметка о клиенте для эксперта (помесячная)
 def get_today_clientnote_form(client):
     """Получение формы для заметки о клиенте для эксперта
        Месяц - текущий, на другие месяцы меняется на странице скриптом
@@ -35,6 +66,7 @@ def get_today_clientnote_form(client):
     return form
 
 
+# заметка о клиенте для эксперта (совокупная)
 def get_full_clientnote_form(client):
     """Получение формы для заметки о клиенте для эксперта совокупной"""   
 

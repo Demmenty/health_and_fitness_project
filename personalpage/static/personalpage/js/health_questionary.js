@@ -1,8 +1,8 @@
-simpleRadioButtons = document.querySelectorAll(".simple_bool_radio");
-complexRadioButtons = document.querySelectorAll(".complex_bool_radio");
-par416RadioButtons = document.querySelectorAll(".par416_radio");
-par416expField = document.getElementById("id_parameter416_exp");
-confirmСheckbox = document.getElementById("id_confirm");
+const simpleRadioButtons = document.querySelectorAll(".simple_bool_radio");
+const complexRadioButtons = document.querySelectorAll(".complex_bool_radio");
+const par416RadioButtons = document.querySelectorAll(".par416_radio");
+const par416expField = document.getElementById("id_parameter416_exp");
+const confirmСheckbox = document.getElementById("id_confirm");
 
 // функция регулирования радиокнопок да\нет
 function ChangeSimpleAnswer(event) {
@@ -51,9 +51,9 @@ function par416ChangeAnswer(event) {
 }
 
 // регулировка кнопки отправки в зависимости от кнопки подтверждения
-document.getElementById('submit_btn_questionary').disabled = !confirmСheckbox.checked;
+document.getElementById('submit_btn_health_questionary').disabled = !confirmСheckbox.checked;
 function ConfirmCheck() {
-    document.getElementById('submit_btn_questionary').disabled = !confirmСheckbox.checked;
+    document.getElementById('submit_btn_health_questionary').disabled = !confirmСheckbox.checked;
 }
 
 // применение прослушивателей к кнопкам и установка начальных э.. видимостей

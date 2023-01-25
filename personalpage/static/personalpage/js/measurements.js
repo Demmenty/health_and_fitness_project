@@ -116,9 +116,10 @@ function applyColors() {
     })
   }
 }
-window.onload = function() {
+
+window.addEventListener('load', function() {
   applyColors();
-}
+})
 
 function getColorSettings() {
   // функция получения и применения цветовых настроек

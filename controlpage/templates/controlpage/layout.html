@@ -128,7 +128,7 @@
           
           <div class="d-flex justify-content-center">
             <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
-            {{ client_comment_form.date }}
+            {{ client_remark.comment_form.date }}
             <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
           </div>
 
@@ -152,10 +152,10 @@
             тренировки
           </span>
         </div>
-        {{ client_comment_form.general }}
-        {{ client_comment_form.measurements }}
-        {{ client_comment_form.nutrition }}
-        {{ client_comment_form.workout }}
+        {{ client_remark.comment_form.general }}
+        {{ client_remark.comment_form.measurements }}
+        {{ client_remark.comment_form.nutrition }}
+        {{ client_remark.comment_form.workout }}
 
         <div class="d-flex">
           <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="commentary_status_msg"></div>
@@ -184,7 +184,7 @@
 
           <div class="d-flex justify-content-center">
             <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
-            {{ clientnote_form.date }}
+            {{ client_remark.monthnote_form.date }}
             <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
           </div>
 
@@ -208,10 +208,10 @@
             тренировки
           </span>
         </div>
-        {{ clientnote_form.general }}
-        {{ clientnote_form.measurements }}
-        {{ clientnote_form.nutrition }}
-        {{ clientnote_form.workout }}
+        {{ client_remark.monthnote_form.general }}
+        {{ client_remark.monthnote_form.measurements }}
+        {{ client_remark.monthnote_form.nutrition }}
+        {{ client_remark.monthnote_form.workout }}
 
         <div class="d-flex">
           <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="clientnote_status_msg"></div>
@@ -230,7 +230,7 @@
           <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>
           <button class="btn-close" type="button" aria-label="Close" onclick="closeFullClientNote()"></button>
         </div>
-        {{ full_clientnote_form.note }}
+        {{ client_remark.fullnote_form.note }}
         <div class="d-flex justify-content-end">
           <div class="text-center text-transparent transition_common moving_part w-fill cursor-move mx-2" id="full_clientnote_status_msg"></div>
           <button class="btn btn-primary float-end ok_btn" type="submit" title="Сохранить заметку">&#10004;</button>

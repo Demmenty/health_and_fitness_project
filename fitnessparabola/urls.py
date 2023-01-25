@@ -26,6 +26,9 @@ urlpatterns = [
     path('expertpage/', include('expertpage.urls')),
     path('fatsecret_app/', include('fatsecret_app.urls')),
     path('measurements/', include('measurements.urls')),
+    path('anthropometry/', include('anthropometry.urls')),
+    path('client_info/', include('client_info.urls')),
+    path('expert_remarks/', include('expert_remarks.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

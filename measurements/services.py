@@ -1,8 +1,8 @@
 from .models import Measurement, MeasureColorField
 from .forms import MeasurementForm, MeasurementCommentForm, MeasureColorFieldForm
 from datetime import date, timedelta
-from typing import Union
 from fatsecret_app.services import *
+from common.utils import date_into_epoch
 
 
 # measures
@@ -202,7 +202,6 @@ def get_measurecolor_settings(user):
                     'carbohydrates': {}}
 
     for object in instance:
-        print(object)
         colorsettings[str(object.index)][str(object.color.id)] = {
                                 'color': str(object.color.color),
                                 'low': str(object.low_limit),
@@ -212,7 +211,7 @@ def get_measurecolor_settings(user):
 
 
 def save_measeurecolor_settings(user, colorset_values) -> None:
-    """"""
+    """сохраняет окрашивания физических показателей от эксперта в БД"""
 
     if user_has_measeurecolor_settings(user):
         for index, color, low, up in colorset_values:
@@ -298,7 +297,7 @@ def renew_weekly_measures_nutrition(user) -> None:
         measure = Measurement.objects.filter(user=user, date=measure_date).first()
 
         if measure:
-            measure_date_int = _date_into_epoch(measure.date)
+            measure_date_int = date_into_epoch(measure.date)
             if weekly_nutrition_fs.get(measure_date_int):
                 if (measure.calories !=
                     weekly_nutrition_fs[measure_date_int]['calories']):
@@ -307,20 +306,3 @@ def renew_weekly_measures_nutrition(user) -> None:
                     measure.fats = weekly_nutrition_fs[measure_date_int]['fat']
                     measure.carbohydrates = weekly_nutrition_fs[measure_date_int]['carbohydrate']
                     measure.save()
-
-
-# date manipulations
-def _epoch_into_date(date_epoch: int) -> date:
-    """конвертирует число дней с 1970 в date"""
-
-    date_date = date(1970, 1, 1) + timedelta(days=date_epoch)
-
-    return date_date
-
-
-def _date_into_epoch(request_date: date) -> int:
-    """превращает datetime в число дней с 1970"""
-
-    date_int = str((request_date - date(1970, 1, 1)).days)
-
-    return date_int

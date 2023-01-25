@@ -434,7 +434,7 @@ caption {
 /* общее */
 
 /* загрузочный кот */
-.modal.fade.cat_with_coffee {
+#load_cat {
     right: 0;
     bottom: 0;
     left: unset;
@@ -453,11 +453,11 @@ caption {
     --bs-backdrop-bg: #61696e;
     --bs-backdrop-opacity: 0.4;
 }
-.modal.fade .modal-dialog {
+.modal.fade.cat_with_coffee .modal-dialog {
     transform: translate(200px,0px);
     transition: transform 2s ease-out;
 }
-.modal.show .modal-dialog {
+.modal.show.cat_with_coffee .modal-dialog {
     transform: none;
 }
 .button_clientname {
@@ -544,9 +544,9 @@ caption {
 /* client_mainpage */
 
 
-/* questionary */
+/* health_questionary */
 @media screen and (min-width: 576px) {
-    .questionary_container {
+    .health_questionary_container {
         border: 1px solid #dee2e6;
         border-radius: 10px;
         padding: 30px;
@@ -641,7 +641,7 @@ input[type="radio"]:hover {
     margin-top: auto;
     margin-bottom: auto;
 }
-/* questionary */
+/* health_questionary */
 
 
 /* mealjournal */

@@ -1,25 +1,3 @@
-const newAnthropoDateField = document.getElementById("id_date");
-let initialDate = document.getElementById("initial-id_date");
-// автозаполнение сегодняшней даты для новой записи
-newAnthropoDateField.value = initialDate.value;
-
-// показ и скрытие формы ввода новой записи по кнопке
-const newAnthropoForm = document.getElementById("add_anthropo_form");
-const btnNewAnthropoAdd = document.getElementById("btn_add_anthropo");
-const btnNewAnthropoHide = document.getElementById("btn_hide_anthropo");
-
-function showForm() {
-    newAnthropoForm.classList.remove("hidden_element");
-    btnNewAnthropoAdd.innerHTML = "&#9998;";
-}
-function hideForm() {
-    newAnthropoForm.classList.add("hidden_element");
-    btnNewAnthropoAdd.textContent = "Добавить запись";
-}
-btnNewAnthropoAdd.addEventListener('click', showForm, false);
-btnNewAnthropoHide.addEventListener('click', hideForm, false);
-
-
 // показ\скрытие фото по кнопке-иконке
 const showPhotoBtns = document.querySelectorAll(".show_photo_btn");
 
@@ -132,4 +110,35 @@ function dragElement(elmnt) {
       document.onmousemove = null;
     }
 }
-  
+
+
+// обработка галочки о предоставлении доступа к фото
+$(document).ready(function () {
+    // отслеживаем событие отправки формы
+    $('#id_photo_access').change(function () {
+
+        form = $('#photo_access_form');
+        // уведомление о доступности фото в форме для нового измерения
+        photoAccessStatus = document.getElementById("photo_access_status");
+
+        $.ajax({
+            data: form.serialize(), // получаем данные формы
+            type: form.attr('method'), // метод отправки запроса
+            url: form.attr('action'), // функция обработки
+            
+            success: function (response) {
+                if (response.photoaccess_allowed === true) {
+                    photoAccessStatus.textContent = " эксперт имеет доступ к фотографиям";
+                }
+                else {
+                    photoAccessStatus.textContent = " эксперт не имеет доступа к фотографиям";
+                }
+                },
+            error: function (response) {
+                error = document.getElementById("photo_access_error");
+                error.textContent = "произошла ошибка!";
+                }
+        });
+        return false;
+    });
+})    

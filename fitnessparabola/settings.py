@@ -46,11 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'homepage',
+    'client_info',
     'personalpage',
     'controlpage',
     'expertpage',
     'measurements',
+    'anthropometry',
     'fatsecret_app',
+    'expert_remarks',
 
     'django_cleanup',
 ]

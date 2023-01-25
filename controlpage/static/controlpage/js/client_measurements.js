@@ -122,7 +122,6 @@ let btn = document.getElementById("apply_colors_btn");
 let allTableFields = document.querySelectorAll("td");
 
 // обработка запроса настроек окрашивания показателей измерений
-
 function applyColors() {
   if (btn.checked) {
     if (colorSet) {

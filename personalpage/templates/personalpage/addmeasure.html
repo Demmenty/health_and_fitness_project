@@ -17,7 +17,7 @@
 
         <div class="addmeasure_borderform">
 
-            {% if error %}<h5 class="text-danger text-center">{{ error }}</h3><br>{% endif %}
+            {% if addmeasure_error %}<h5 class="text-danger text-center">{{ addmeasure_error }}</h3><br>{% endif %}
             
             <!-- форма для редактирования записи -->
             {% for measure_form in weekly_measure_forms %}

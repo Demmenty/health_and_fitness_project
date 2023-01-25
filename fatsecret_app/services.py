@@ -1,10 +1,10 @@
 from fatsecret import Fatsecret, GeneralError
 from django.conf import settings
 from .models import FatSecretEntry
-from measurements.models import Measurement
 import pickle
 from datetime import date, datetime, time, timedelta
-from time import sleep
+# from time import sleep
+from common.utils import datetime_into_epoch, epoch_into_datetime
 
 
 # сессии
@@ -58,7 +58,7 @@ def get_daily_nutrition_fs(user, request_date: datetime) -> dict:
         return {}
 
     for day in monthly_nutrition:
-        if day['date_int'] == _datetime_into_epoch(request_date):
+        if day['date_int'] == datetime_into_epoch(request_date):
             return day
 
 
@@ -111,7 +111,7 @@ def set_weight_in_fatsecret(user, measure_weight: str, measure_date: date) -> No
 
         measure_weight = float(measure_weight)
         measure_datetime = datetime.combine(measure_date, time())
-        measure_date_int = _datetime_into_epoch(measure_datetime)
+        measure_date_int = datetime_into_epoch(measure_datetime)
 
         # проверяем существующие внесения веса в fatsecret
         monthly_weights = fs_session.weights_get_month()
@@ -373,24 +373,6 @@ def create_monthly_top(user, month: datetime) -> dict:
     return monthly_top
 
 
-# date manipulations
-def _datetime_into_epoch(request_date: datetime) -> int:
-    """превращает datetime в число дней с 1970"""
-
-    date_int = str((request_date.date() - date(1970, 1, 1)).days)
-
-    return date_int
-
-
-def _epoch_into_datetime(date_epoch: int) -> datetime:
-    """конвертирует число дней с 1970 в datetime"""
-
-    date_date = date(1970, 1, 1) + timedelta(days=date_epoch)
-    date_datetime = datetime.combine(date_date, time())
-
-    return date_datetime
-
-
 # food_info_cahe
 def _save_foodinfo_into_foodcache(food_info) -> None:
     """запись компактной инфы о продукте из FS в файл food_cache"""
@@ -618,7 +600,7 @@ def _create_monthly_total(user, entry_month: datetime) -> dict:
     # проходимся по каждому дню
     for day in monthly_entries:
         # узнаем его дату
-        entry_month = _epoch_into_datetime(int(day['date_int']))
+        entry_month = epoch_into_datetime(int(day['date_int']))
         # добываем суммарности за день
         daily_total = _get_daily_total_from_cache(user, entry_month)
         if not daily_total:
@@ -704,7 +686,7 @@ def _get_monthly_total_from_cache(user, entry_month: datetime) -> dict:
 
 
 
-# тестовое
+
 def _clean_food_info_cache() -> None:
     """очистка файла кеша food_info_cache.pickle"""
 
@@ -733,4 +715,3 @@ def _remove_prods_without_info_from_cache() -> None:
 
 
 # _remove_prods_without_info_from_cache()
-

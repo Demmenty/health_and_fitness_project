@@ -78,20 +78,20 @@
     <div class="container px-0">
 
       <!-- аватар эксперта -->
-      <img id="expert_pic" src="{% static 'personalpage/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80" onclick="openCommentary()">
+      <img id="expert_pic" src="{% static 'personalpage/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80">
       <!-- отметка о непрочитанных комментариях -->
-      <div class="rounded-circle text-center align-middle" id="count_of_unread"></div>
+      <div class="rounded-circle text-center align-middle" id="count_of_unread" data-action-count="{% url 'count_unread_comments' %}"></div>
 
       <!-- окно комментария эксперта -->
       <div class="d-flex flex-column flex-sm-row hidden_element" id="commentary_container">
         <div class="d-flex flex-column border rounded border-blueshadow p-3 bg-white">
           <!-- информация коммента -->
-          <form method="post" id="commentary_form" class="">
+          <form id="commentary_form" class="" action="{% url 'get_commentary' %}" data-action-mark-readed="{% url 'mark_comment_readed' %}">
 
             <div class="d-flex justify-content-center align-items-center mb-2 mx-4">
-              <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
-              <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date" oninput="changeDateInput()">
-              <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
+              <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" id="comment_prev_date" class="mx-2 arrow_btn" width="20">
+              <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
+              <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" id="comment_next_date" class="mx-2 arrow_btn" width="20">
             </div>
 
             <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>

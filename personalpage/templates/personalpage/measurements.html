@@ -191,7 +191,7 @@
                         $.ajax({
                             data: $(this).serialize(), // получаем данные формы
                             type: $(this).attr('method'), // метод отправки запроса
-                            url: "{% url 'commentsave' %}", // функция обработки
+                            url: "{% url 'save_measure_comment' %}", // функция обработки
                             
                             success: function (response) {
                                 // меняем поле коммента в таблице за сегодня

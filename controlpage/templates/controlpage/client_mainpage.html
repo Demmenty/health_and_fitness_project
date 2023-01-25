@@ -12,9 +12,9 @@
         <p>Возраст: {{ client_age }}</p>
         <!-- анкета -->
         <div class="mb-3">
-            {% if questionary %}
+            {% if health_questionary_filled %}
                 &#10004;
-                <form method="get" action="{% url 'client_questionary' %}" class="d-inline">
+                <form method="get" action="{% url 'client_health_questionary' %}" class="d-inline">
                     <input type="hidden" value="{{ client_id }}" name="client_id">
                     <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
                 </form>
