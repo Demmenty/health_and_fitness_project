@@ -41,17 +41,52 @@
             {% if today_measure %}
                 <div class="table-responsive today_measure_table" id="today_measure_table">
                     <table class="table table-bordered table-fixed text-center">
-                        <tr><th class="tablerow_name">Самочувствие</th><td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td></tr>
-                        <tr><th class="tablerow_name">Вес</th><td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td></tr>
-                        <tr><th class="tablerow_name">Процент жира</th><td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td></tr>
-                        <tr><th class="tablerow_name">Пульс в покое</th><td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td></tr>
-                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}<tr><th class="tablerow_name">Давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>{% endif %}
-                        <tr><th class="tablerow_name">Калории</th><td>{{ today_measure.calories|default_if_none:"-" }}</td></tr>
-                        <tr><th class="tablerow_name">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
-                        <tr><th class="tablerow_name">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
-                        <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
-                        {% if today_measure.comment %}<tr id="tr_today_comment">{% else %}<tr id="tr_today_comment" class="hidden_element">{% endif %}
-                            <th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>
+                        <tr>
+                            <th class="tablerow_name">Самочувствие</th>
+                            <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Вес</th>
+                            <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Процент жира</th>
+                            <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Пульс в покое</th>
+                            <td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td>
+                        </tr>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                            <tr>
+                                <th class="tablerow_name">Давление</th>
+                                <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <th class="tablerow_name">Калории</th>
+                            <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Белки</th>
+                            <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Жиры</th>
+                            <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="tablerow_name">Углеводы</th>
+                            <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                        </tr>
+                        {% if today_measure.comment %}
+                            <tr id="tr_today_comment">
+                        {% else %}
+                            <tr id="tr_today_comment" class="hidden_element">
+                        {% endif %}
+                                <th class="tablerow_name">Комментарий</th>
+                                <td id="today_comment">{{ today_measure.comment }}</td>
+                            </tr>
                     </table>
                     <a href="{% url 'addmeasure' %}" class="float-end" title="редактировать измерения">
                         <button class='btn btn-outline-primary'>

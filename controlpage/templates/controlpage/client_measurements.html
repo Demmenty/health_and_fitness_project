@@ -9,15 +9,19 @@
     <!-- измерения за сегодня -->
     <section name="today_measurements">
         {% if today_measure %}
-            <table class="table table-bordered caption-top align-middle text-center">
-                <caption class="text-body"><h4>Сегодня</h4></caption>
-                <thead class="table-light">
-                    <tr>
+            <h4 class="text-center text-sm-start ms-sm-3">Сегодня</h4>
+            <table class="table table-bordered align-middle text-center" id="today_measure_table">
+                <!-- структура для большого экрана -->
+                <thead class="table-light align-middle">
+                    <tr class="d-none d-md-table-row">
                         <th>Дата</th>
-                        <th>День</th>
-                        <th>Самочувствие</th>
+                        <th class="d-none d-xl-table-cell">День</th>
+                        <th>
+                            <span class="d-lg-none">Само-<br>чувствие</span>
+                            <span class="d-none d-lg-inline">Самочувствие</span>
+                        </th>
                         <th>Масса</th>
-                        <th>Жирность</th>
+                        <th>Процент жира</th>
                         <th>Пульс</th>
                         {% if today_measure.pressure_upper and today_measure.pressure_lower %}
                             <th>Давление</th>
@@ -29,9 +33,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{{ today_measure.date|date:"j b" }}</td>
-                        <td>{{ today_measure.date|date:"D" }}</td>
+                    <tr class="d-none d-md-table-row">
+                        <td class="text-nowrap">{{ today_measure.date|date:"j b" }}</td>
+                        <td class="d-none d-xl-table-cell">{{ today_measure.date|date:"D" }}</td>
                         <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
                         <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
                         <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
@@ -45,13 +49,54 @@
                         <td>{{ today_measure.carbohydrates|default_if_none:"" }}</td>
                     </tr>
                 </tbody>
+                <!-- структура для маленького экрана -->
+                <tbody class="d-md-none">
+                    <tr>
+                        <th class="tablerow_name table-light">Самочувствие</th>
+                        <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Вес</th>
+                        <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Процент жира</th>
+                        <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Пульс в покое</th>
+                        <td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td>
+                    </tr>
+                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                        <tr>
+                            <th class="tablerow_name table-light">Давление</th>
+                            <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th class="tablerow_name table-light">Калории</th>
+                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Белки</th>
+                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Жиры</th>
+                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="tablerow_name table-light">Углеводы</th>
+                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                    </tr>
+                </tbody> 
             </table>
             {% if today_measure.comment %}
                 <div class="d-flex align-items-center">
-                    <div class="col-1 text-center">
-                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="noluminosity" title="комментарий">
+                    <div class="text-center ms-2 me-3">
+                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="comment_pic_royalblue" title="комментарий">
                     </div>
-                    <div class="border border-grey rounded col-11 p-2 px-3">
+                    <div class="border border-grey rounded w-100 p-2 px-3">
                         {{ today_measure.comment }}
                     </div>
                 </div><br>
@@ -61,60 +106,65 @@
         {% endif %}
     </section>
 
-    <br>
+    <br><br><br>
 
     <!-- табличка за период -->
     {% if period_measures %}
         <section name="period_measurements">
-            <table class="table table-bordered caption-top align-middle text-center">
-                <caption><h4>Показатели за {{ period_as_string }}</h4></caption>
-                <tr class="table-light"> 
-                    <th>Дата</th>
-                    <th>День</th>
-                    <th>Самочувствие</th>
-                    <th>Масса</th>
-                    <th>Жирность</th>
-                    <th>Пульс</th>
-                    {% if need_to_show_pressure %}
-                        <th>Давление</th>
-                    {% endif%}
-                    <th>Калории</th>
-                    <th>Белки</th>
-                    <th>Жиры</th>
-                    <th>Углеводы</th>
-                    <td class="borderless">&nbsp</td>
-                </tr>
-                {% for day in period_measures|dictsort:"date" %}
-                <tr class="my-hover">
-                    <td>{{ day.date|date:"j b" }}</td>
-                    <td>{{ day.date|date:"D" }}</td>
-                    <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
-                    <td class="td_weight" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
-                    <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
-                    <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
-                    {% if need_to_show_pressure %}
-                        <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">
-                            {% if day.pressure_upper is not None and day.pressure_lower is not None %}
-                                {{ day.pressure_upper }}/{{ day.pressure_lower }}
-                            {% endif %}</td>
-                    {% endif%}
-                    <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
-                    <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
-                    <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
-                    <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
-                    <td class="borderless">
-                        <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
-                        {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
-                        {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
-                        value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
-                    </td>
-                </tr>
-                {% endfor %}
-                {% if period_measures_avg %}
-                    <tr class="table-light">
-                        <th colspan="2">В среднем:</th>
+            <h4 class="text-center text-sm-start ms-sm-3">Показатели за {{ period_as_string }}</h4>
+            <table class="table table-bordered align-middle text-center d-block d-lg-table overflow-auto w-100" id="measure_table_period">
+                <thead class="table-light align-middle">
+                    <tr class="table-light"> 
+                        <th>Дата</th>
+                        <th>
+                            <span class="d-xl-none">Само-<br>чувствие</span>
+                            <span class="d-none d-xl-inline">Самочувствие</span>
+                        </th>
+                        <th>Масса</th>
+                        <th class="">Процент жира</th>
+                        <th>Пульс</th>
+                        {% if need_to_show_pressure %}
+                            <th>Давление</th>
+                        {% endif%}
+                        <th>Калории</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                        <td class="borderless">&nbsp</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in period_measures|dictsort:"date" %}
+                    <tr class="my-hover">
+                        <td>{{ day.date|date:"j b" }}</td>
+                        <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                        <td class="td_weight text-nowrap" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                        <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                        <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
+                        {% if need_to_show_pressure %}
+                            <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">
+                                {% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                                    {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                                {% endif %}</td>
+                        {% endif%}
+                        <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                        <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                        <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                        <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
+                        <td class="borderless">
+                            <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}"
+                            {% if day.comment %}class="comment_btn noluminosity" title="показать комментарий"
+                            {% else %}class="comment_btn luminosity" title="комментария нет"{% endif %}
+                            value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <th class="text-nowrap">В среднем:</th>
                         <th>{{ period_measures_avg.feel }}</th>
-                        <th>{{ period_measures_avg.weight }}</th>
+                        <th class="text-nowrap">{{ period_measures_avg.weight }}</th>
                         <th>{{ period_measures_avg.fat }}</th>
                         <th>{{ period_measures_avg.pulse }}</th>
                         {% if need_to_show_pressure %}
@@ -126,7 +176,7 @@
                         <th>{{ period_measures_avg.carbohydrates }}</th>
                         <td class="borderless">&nbsp</td>
                     </tr>
-                {% endif %}
+                </tfoot>
             </table>
             {% if period_measures_avg %}
             <p class="text-muted text-start"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>

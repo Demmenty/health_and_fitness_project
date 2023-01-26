@@ -14,6 +14,7 @@ body {
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;
+    max-height: 9px;
     background-color: #f8f8f8;
 }
 ::-webkit-scrollbar-thumb {
@@ -502,41 +503,6 @@ caption {
     mix-blend-mode: none;
     filter: hue-rotate(36deg);
 }
-
-.comment_container {
-    background-color: white;
-    border: 1px solid #cfd6e1;
-    border-radius: 7px;
-    padding: 5px;
-    cursor: default;
-}
-.container_commentform {
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 5px;
-    backface-visibility: hidden;
-    background-color: #ebefff;
-    max-width: 352px;
-    position: fixed;
-    z-index: 10;
-    top: 60%;
-    left: 60%;
-}
-.period_select {
-    display: flex;
-    max-width: 380px;
-    align-items: baseline;
-    justify-content: space-between;
-    white-space: nowrap;
-    flex-flow: wrap;
-}
-#input_period {
-    max-width: 70px;
-}
-.today_measure_table {
-    max-width: 500px;
-    min-width: 285px;
-}
 .tablerow_name {
     text-align: left;
     width: 128px;
@@ -643,6 +609,50 @@ input[type="radio"]:hover {
 }
 /* health_questionary */
 
+/* measurements */
+#measure_table_period {
+    max-height: 81vh;
+}
+.comment_container {
+    background-color: white;
+    border: 1px solid #cfd6e1;
+    border-radius: 7px;
+    padding: 5px;
+    cursor: default;
+}
+.container_commentform {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    width: 352px;
+    max-width: 95vw;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+.period_select {
+    display: flex;
+    max-width: 380px;
+    align-items: baseline;
+    justify-content: space-between;
+    white-space: nowrap;
+    flex-flow: wrap;
+}
+#input_period {
+    max-width: 70px;
+}
+.today_measure_table {
+    max-width: 500px;
+    min-width: 285px;
+}
+.comment_pic_royalblue {
+    filter: hue-rotate(36deg);
+}
+/* measurements */
 
 /* mealjournal */
 #select_date_section_mealjournal {

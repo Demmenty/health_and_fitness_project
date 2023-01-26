@@ -39,7 +39,9 @@ def get_measure_comment_forms(measurements_set):
 
 
 def create_weekly_measure_forms(user):
-    """создает список форм для измерений на последние семь дней"""
+    """создает список форм для измерений на последние семь дней
+    если запись отсутствует - создает пустую
+    """
 
     weekly_measure_forms = []
 

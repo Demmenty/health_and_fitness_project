@@ -157,11 +157,12 @@ def addmeasure(request):
 
     if request.method == 'GET':
 
+        weekly_measure_forms = create_weekly_measure_forms(request.user)
+        
         fatsecret_connected = user_has_fs_entry(request.user)
         if fatsecret_connected:
             renew_weekly_measures_nutrition(request.user)
             
-        weekly_measure_forms = create_weekly_measure_forms(request.user)
         last_seven_dates = create_list_of_dates(7)
         today_commentary = get_today_commentary(request.user)       
 

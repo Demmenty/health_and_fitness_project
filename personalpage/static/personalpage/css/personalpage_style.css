@@ -14,6 +14,7 @@ body {
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;
+    max-height: 9px;
     background-color: #f8f8f8;
 }
 ::-webkit-scrollbar-thumb {
@@ -499,7 +500,42 @@ table {
 }
 /* загрузочный кот */
 
-
+/* measurements */
+#measure_table_period {
+    max-height: 75vh;
+}
+#id_comment {
+    transition: color 1s ease;
+}
+.comment_header {
+    width: 280px;
+    cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+.comment_btn.shadow {
+    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+}
+.container_commentform {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    width: 352px;
+    max-width: 95vw;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+.comment_pic_royalblue {
+    filter: hue-rotate(36deg);
+}
+/* measurements */
 
 /* addmeasure */
 #week_calendar {
@@ -786,33 +822,6 @@ table {
     color: #ff1943 !important;
     transition: all 1s ease !important;
 }
-#id_comment {
-    transition: color 1s ease;
-}
-.comment_header {
-    width: 280px;
-    cursor: move;
-    transition: all 1s ease;
-    color: #0065fd00;
-}
-.comment_btn.shadow {
-    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
-    background-color: rgb(13 110 253 / 20%);
-    border-radius: 3px;
-}
-.container_commentform {
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 5px;
-    backface-visibility: hidden;
-    background-color: #ebefff;
-    max-width: 352px;
-    position: fixed;
-    z-index: 10;
-    top: 50%;
-    left: 50%;
-}
-
 /* personalpage */
 
 

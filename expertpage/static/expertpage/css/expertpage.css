@@ -81,6 +81,7 @@ body {
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;
+    max-height: 9px;
     background-color: #f8f8f8;
 }
 ::-webkit-scrollbar-thumb {
