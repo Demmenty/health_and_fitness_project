@@ -30,11 +30,11 @@
     <!-- Сводка за выбраннную дату -->
     {% if daily_food %}
         <table class="table table-bordered">
+            <!-- заголовок для большого экрана -->
             <thead class="table-light">
-                <tr>
+                <tr class="d-none d-md-table-row">
                     <th>Категория</th>
-                    <th>Продукт</th>
-                    <th class="text-center">Количество</th>
+                    <th colspan="2">Продукт</th>
                     <th class="text-center">Калории</th>
                     <th class="text-center">Белки</th>
                     <th class="text-center">Жиры</th>
@@ -42,26 +42,58 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- структура для большого экрана -->
                 <tr>
                 {% for category, count in daily_food.count_by_category.items %}
                     {% if count > 0 %}
-                        <td rowspan="{{ count }}">{% translate category %}</td>
+                        <td rowspan="{{ count }}" class="d-none d-md-table-cell">{% translate category %}</td>
                     {% endif %}
                     {% for food in daily_food.entries %}
                         {% if food.meal == category %}
-                            <td>{{ food.food_entry_name }}</td>
-                            <td class="text-center">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
-                            <td class="text-center">{{ food.calories }}</td>
-                            <td class="text-center">{{ food.protein }}</td>
-                            <td class="text-center">{{ food.fat }}</td>
-                            <td class="text-center">{{ food.carbohydrate }}</td> 
+                                <td class="d-none d-md-table-cell">{{ food.food_entry_name }}</td>
+                                <td class="text-center text-nowrap d-none d-md-table-cell">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                                <td class="text-center d-none d-md-table-cell">{{ food.calories }}</td>
+                                <td class="text-center d-none d-md-table-cell">{{ food.protein }}</td>
+                                <td class="text-center d-none d-md-table-cell">{{ food.fat }}</td>
+                                <td class="text-center d-none d-md-table-cell">{{ food.carbohydrate }}</td> 
                             </tr>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
+                <!-- структура для маленького экрана -->
+                {% for category, count in daily_food.count_by_category.items %}
+                    {% if count > 0 %}
+                        <tr class="table-light d-md-none">
+                            <th colspan="4" class="text-center">{% translate category %}</th>
+                        </tr>
+                    {% endif %}
+                    {% for food in daily_food.entries %}
+                        {% if food.meal == category %}
+                            <tr class="d-md-none">
+                                <td colspan="4">{{ food.food_entry_name }} - {{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                            </tr>
+                            <tr class="d-md-none">
+                                <td class="text-center">{{ food.calories }}</td>
+                                <td class="text-center">{{ food.protein }}</td>
+                                <td class="text-center">{{ food.fat }}</td>
+                                <td class="text-center">{{ food.carbohydrate }}</td> 
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                <!-- итог -->
+                <tr class="table-light d-md-none">
+                    <th colspan="4" class="text-center">Всего</th>
+                </tr>
+                <tr class="table-light d-md-none">
+                    <th class="text-center">ккал</th>
+                    <th class="text-center">белки</th>
+                    <th class="text-center">жиры</th>
+                    <th class="text-center">углеводы</th>
+                </tr>
                 <tr class="table-light">
-                    <th colspan="2" class="text-end">Всего:</th>
-                    <th class="text-center">{{ daily_food.nutrition.amount }} g/ml</th>
+                    <th colspan="2" class="text-end d-none d-md-table-cell">Всего:</th>
+                    <th class="text-center text-nowrap d-none d-md-table-cell">{{ daily_food.nutrition.amount }} g/ml</th>
                     <th class="text-center">{{ daily_food.nutrition.calories }}</th>
                     <th class="text-center">{{ daily_food.nutrition.protein }}</th>
                     <th class="text-center">{{ daily_food.nutrition.fat }}</th>
@@ -82,9 +114,18 @@
                 <thead class="table-light">
                     <tr>
                         <th></th>
-                        <th>Название продукта</th>
-                        <th class="text-center">Съедено</th>
-                        <th class="text-center">Получено калорий</th>
+                        <th>
+                            <span class="d-sm-none">Продукт</span>
+                            <span class="d-none d-sm-inline">Название продукта</span>
+                        </th>
+                        <th class="text-center">
+                            <span class="d-sm-none text-nowrap">Кол-во</span>
+                            <span class="d-none d-sm-inline">Съедено</span>
+                        </th>
+                        <th class="text-center">
+                            <span class="d-sm-none">Ккал</span>
+                            <span class="d-none d-sm-inline">Получено калорий</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,9 +147,18 @@
                 <thead class="table-light">
                     <tr>
                         <th></th>
-                        <th>Название продукта</th>
-                        <th class="text-center">Съедено</th>
-                        <th class="text-center">Получено калорий</th>
+                        <th>
+                            <span class="d-sm-none">Продукт</span>
+                            <span class="d-none d-sm-inline">Название продукта</span>
+                        </th>
+                        <th class="text-center">
+                            <span class="d-sm-none text-nowrap">Кол-во</span>
+                            <span class="d-none d-sm-inline">Съедено</span>
+                        </th>
+                        <th class="text-center">
+                            <span class="d-sm-none">Ккал</span>
+                            <span class="d-none d-sm-inline">Получено калорий</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,7 +207,7 @@
                     <div id="without_info_list">
                         {% if daily_food.without_info %}
                             {% for id, info in daily_food.without_info.items %}
-                                <div class="without_info_row mt-5">
+                                <div class="without_info_row mt-4">
                                     <div class="d-flex">
                                         <span class="text-royalblue me-2"><b>Продукт:</b></span>
                                         {{ info.food_entry_name }}
@@ -172,7 +222,9 @@
                                             <option value="ml">мл</option>
                                         </select>
                                     </div>
-                                    <p>Калорийность этой порции: {{ info.calories_per_serving }} ккал</p>
+                                    <p>Калорийность этой порции: 
+                                        <span class="text-nowrap">{{ info.calories_per_serving }} ккал</span>
+                                    </p>
                                 </div>
                             {% endfor %}
                         {% endif %}

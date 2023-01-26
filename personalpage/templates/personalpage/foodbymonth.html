@@ -32,17 +32,26 @@
         <table class="table table-bordered table-hover text-center">
             <thead class="table-light">
                 <tr>
-                    <th>Дата</th>
-                    <th>Калории</th>
+                    <th class="d-none d-sm-table-cell">Дата</th>
+                    <th>
+                        <span class="d-sm-none">Ккал</span>
+                        <span class="d-none d-sm-inline">Калории</span>
+                    </th>
                     <th>Белки</th>
                     <th>Жиры</th>
-                    <th>Углеводы</th>
+                    <th>
+                        <span class="d-sm-none">Углев.</span>
+                        <span class="d-none d-sm-inline">Углеводы</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {% for day in monthly_food.entries %}
+                <tr class="d-sm-none">
+                    <td colspan="4">{{ day.date_datetime|date:"j E - D" }}</td>
+                </tr> 
                 <tr>
-                    <td>{{ day.date_datetime|date:"j E - D" }}</td>
+                    <td class="d-none d-sm-table-cell">{{ day.date_datetime|date:"j E - D" }}</td>
                     <td>{{ day.calories }}</td>
                     <td>{{ day.protein }}</td>
                     <td>{{ day.fat }}</td>
@@ -50,7 +59,16 @@
                 </tr>
                 {% endfor %}
                 <tr class="table-light">
-                    <th>В среднем:</th>
+                    <th colspan="4" class="d-sm-none">В среднем</th>
+                </tr>
+                <tr class="table-light d-sm-none">
+                    <th class="text-center">ккал</th>
+                    <th class="text-center">белки</th>
+                    <th class="text-center">жиры</th>
+                    <th class="text-center">углев.</th>
+                </tr>
+                <tr class="table-light">
+                    <th class="d-none d-sm-table-cell">В среднем</th>
                     <th>{{ monthly_food.monthly_avg.calories }}</th>
                     <th>{{ monthly_food.monthly_avg.protein }}</th>
                     <th>{{ monthly_food.monthly_avg.fat }}</th>
@@ -66,14 +84,23 @@
     <!-- заполняется данными от ajax запроса -->
     <div class="hidden_element" id="top_section">
         <ol class="top_table_ol my-4">
-        <table class="table top_table caption-top" id="table_top_amount">
+        <table class="table table-hover top_table caption-top" id="table_top_amount">
             <caption><h4 class="text-center">Топ по количеству</h4></caption>
             <thead class="table-light">
                 <tr>
                     <th></th>
-                    <th>Название продукта</th>
-                    <th class="text-center">Съедено</th>
-                    <th class="text-center">Получено калорий</th>
+                    <th>
+                        <span class="d-sm-none">Продукт</span>
+                        <span class="d-none d-sm-inline">Название продукта</span>
+                    </th>
+                    <th class="text-center">
+                        <span class="d-sm-none text-nowrap">Кол-во</span>
+                        <span class="d-none d-sm-inline">Съедено</span>
+                    </th>
+                    <th class="text-center">
+                        <span class="d-sm-none">Ккал</span>
+                        <span class="d-none d-sm-inline">Получено калорий</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -81,15 +108,24 @@
         </table>
         </ol>
 
-        <ol class="top_table_ol mt-4 mb-5">
-        <table class="table top_table caption-top" id="table_top_calories">
+        <ol class="top_table_ol my-4">
+        <table class="table table-hover top_table caption-top" id="table_top_calories">
             <caption><h4 class="text-center">Топ по калориям</h4></caption>
             <thead class="table-light">
                 <tr>
                     <th></th>
-                    <th>Название продукта</th>
-                    <th class="text-center">Съедено</th>
-                    <th class="text-center">Получено калорий</th>
+                    <th>
+                        <span class="d-sm-none">Продукт</span>
+                        <span class="d-none d-sm-inline">Название продукта</span>
+                    </th>
+                    <th class="text-center">
+                        <span class="d-sm-none text-nowrap">Кол-во</span>
+                        <span class="d-none d-sm-inline">Съедено</span>
+                    </th>
+                    <th class="text-center">
+                        <span class="d-sm-none">Ккал</span>
+                        <span class="d-none d-sm-inline">Получено калорий</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -144,7 +180,7 @@
                     <div id="without_info_list">
                         {% if prods_without_info %}
                             {% for id, info in prods_without_info.items %}
-                                <div class="without_info_row mt-5">
+                                <div class="without_info_row mt-4">
                                     <div class="d-flex">
                                         <span class="text-royalblue me-2"><b>Продукт:</b></span>
                                         {{ info.food_entry_name }}
@@ -159,7 +195,9 @@
                                             <option value="ml">мл</option>
                                         </select>
                                     </div>
-                                    <p>Калорийность этой порции: {{ info.calories_per_serving }} ккал</p>
+                                    <p>Калорийность этой порции: 
+                                        <span class="text-nowrap">{{ info.calories_per_serving }} ккал</span>
+                                    </p>
                                 </div>
                             {% endfor %}
                         {% endif %}
