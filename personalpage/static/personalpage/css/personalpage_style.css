@@ -28,6 +28,9 @@ body {
     background-color: #eeeef570;
 }
 
+.cursor-move {
+    cursor: move;
+}
 
 .border-grey {
     border-color: #ced4da !important;
@@ -676,6 +679,22 @@ table {
 
 
 /* mealjournal */
+#container_recommend_nutrition_form {
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    position: fixed;
+    width: 18rem;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+@media (min-width: 576px) {
+    #container_recommend_nutrition_form {
+        right: 30%;
+    }
+}
+
 #select_date_section_mealjournal {
     max-width: 310px;
 }

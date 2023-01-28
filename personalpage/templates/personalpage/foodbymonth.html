@@ -14,14 +14,14 @@
         <!-- кнопка предыдущий месяц-->
         <form method = "get">
             <input type="hidden" name="month" value="{{ prev_month }}">
-            <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'general/img/arrow_left_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий месяц" style="width: 20px;">
+            <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'common/img/arrow_prev_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий месяц" style="width: 20px;">
         </form>
         <!-- месяц -->
         <h3 class="text-center p-2" id="briefmonth">{{ briefmonth|date:'F Y' }}</h3>
         <!-- кнопка следующий месяц-->
         <form method = "get">
             <input type="hidden" name="month" value="{{ next_month }}">
-            <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'general/img/arrow_right_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий месяц" style="width: 20px;">
+            <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'common/img/arrow_next_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий месяц" style="width: 20px;">
         </form>
     </div>
 
@@ -52,10 +52,10 @@
                 </tr> 
                 <tr>
                     <td class="d-none d-sm-table-cell">{{ day.date_datetime|date:"j E - D" }}</td>
-                    <td>{{ day.calories }}</td>
-                    <td>{{ day.protein }}</td>
-                    <td>{{ day.fat }}</td>
-                    <td>{{ day.carbohydrate }}</td>
+                    <td title="калории">{{ day.calories }}</td>
+                    <td title="белки">{{ day.protein }}</td>
+                    <td title="жиры">{{ day.fat }}</td>
+                    <td title="углеводы">{{ day.carbohydrate }}</td>
                 </tr>
                 {% endfor %}
                 <tr class="table-light">
@@ -137,7 +137,7 @@
     <!-- запрос топ-10 за месяц -->
     {% if monthly_food %}
         <div id="waiting_cat" class="waiting_container hidden_element d-flex flex-column my-5">
-            <img src="{% static 'general/img/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+            <img src="{% static 'common/gif/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
             <h6 class="text-center text-muted"><i>нужно немножечко подождать...</i></h6>
         </div>
         <form action="{% url 'get_monthly_top' %}" method="get" class="" id="get_top_form">
@@ -149,18 +149,62 @@
         <span class="text-danger d-block text-center mb-2" id="top_error"></span>
     {% endif %}
 
-    <div class="d-flex flex-column flex-sm-row-reverse justify-content-between mt-auto">
-        <!-- Выбор сводки за другой месяц -->
-        <div class="mx-auto me-sm-5 ms-sm-auto my-3" id="select_month_section">
-            <h5 class="text-center">Сводка за другой месяц</h5>
-            <form action="" method ="get" class="d-flex justify-content-between">
-                <input type="month" class="form-control text-center me-3" name="month" id="input_briefmonth" value="{{ prev_month }}">
-                <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
-            </form>
+    <div class="d-flex flex-column flex-sm-row justify-content-between mt-auto mb-3">
+        <div class="d-flex flex-column flex-sm-row align-items-center order-sm-2 me-sm-5">
+            <!-- рекомендованные КБЖУ -->
+            {% if recommend_nutrition %}
+                <button type="button" class="btn btn-outline-primary align-self-sm-end me-sm-3 mb-3 mb-sm-0" id="recommend_nutrition_btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
+                        <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
+                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
+                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
+                    </svg>
+                    КБЖУ
+                </button>
+                <div class="border-blueshadow hidden_element p-2" id="container_recommend_nutrition_form">
+                    <div class="d-flex align-items-center">
+                        <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
+                        <button type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex">
+                        <div class="d-flex flex-column my-2 me-3">
+                            <label class="">Калории:</label>
+                            <input type="number" name="calories" value="{{ recommend_nutrition.calories }}" class="form-control text-center bg-white" readonly>
+                        </div>
+                        <div class="d-flex flex-column my-2">
+                            <label class="">Жиры:</label>
+                            <input type="number" name="calories" value="{{ recommend_nutrition.fats }}" class="form-control text-center bg-white" readonly>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="d-flex flex-column my-2 me-3">
+                            <label class="">Белки:</label>
+                            <input type="number" name="calories" value="{{ recommend_nutrition.protein }}" class="form-control text-center bg-white" readonly>
+                        </div>
+                        <div class="d-flex flex-column my-2">
+                            <label class="">Углеводы:</label>
+                            <input type="number" name="calories" value="{{ recommend_nutrition.carbohydrates }}" class="form-control text-center bg-white" readonly>
+                        </div>
+                    </div>
+                    {% if recommend_nutrition.note %}
+                        <label class="">Заметка:</label>
+                        <textarea name="note" cols="40" rows="8" class="form-control" readonly>{{ recommend_nutrition.note }}</textarea>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <!-- Выбор сводки за другой месяц -->
+            <div class="mb-3 mb-sm-0" id="select_month_section">
+                <h5 class="text-center">Сводка за другой месяц</h5>
+                <form action="" method ="get" class="d-flex justify-content-between">
+                    <input type="month" class="form-control text-center me-3" name="month" id="input_briefmonth" value="{{ prev_month }}">
+                    <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+                </form>
+            </div>
         </div>
         <!-- Кнопка возврата -->
         <a href="{% url 'mealjournal' %}" class="align-self-sm-end my-3">
-            <img src="{% static 'general/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К дневнику питания">
+            <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К дневнику питания">
         </a>
     </div>
 </div>

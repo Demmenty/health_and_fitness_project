@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'general/img/Logo_title.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'controlpage/css/controlpage.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
         <div class="d-flex flex-nowrap align-items-center overflow-hidden me-3">
           <!-- логотип -->
           <a href="/" class="navbar-brand me-3">
-            <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+            <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
           </a>
           <!-- имя клиента -->
           <a href="{% url 'expertpage' %}" class="d-none d-sm-block clientname text-center">{{ clientname }}</a>
@@ -104,7 +104,7 @@
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" class="ms-3">
           {% csrf_token %}
-          <input type="image" alt="Submit" src="{% static 'general/img/exit (fat).svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+          <input type="image" alt="Submit" src="{% static 'common/img/exit.svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
         </form>
       </div>
     </div>       
@@ -117,7 +117,7 @@
 
     <!-- комментарий для клиента -->
     <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="client_comment_form_container">
-      <form method="post" id="client_comment_form" action="{% url 'save_commentary_form' %}" class="w-100">
+      <form method="post" id="client_comment_form" action="{% url 'save_commentary_form' %}" data-action-get="{% url 'get_commentary_form' %}" class="w-100">
         {% csrf_token %}
         <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
 
@@ -127,9 +127,9 @@
           </div>
           
           <div class="d-flex justify-content-center">
-            <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
+            <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
             {{ client_remark.comment_form.date }}
-            <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
+            <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
           </div>
 
           <div class="d-flex justify-content-end w-10 w-sm-30" style="height: 36px;">
@@ -166,7 +166,7 @@
 
     <!-- заметка о клиенте -->
     <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="clientnote_container">
-      <form method="post" id="clientnote_form" action="{% url 'save_clientnote_form' %}" class="w-100">
+      <form method="post" id="clientnote_form" action="{% url 'save_clientnote_form' %}" data-action-get="{% url 'get_clientnote_form' %}" class="w-100">
         {% csrf_token %}
         <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
 
@@ -183,9 +183,9 @@
           </div>
 
           <div class="d-flex justify-content-center">
-            <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
+            <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
             {{ client_remark.monthnote_form.date }}
-            <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
+            <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
           </div>
 
           <div class="d-flex justify-content-end w-10 w-sm-30" style="height: 36px;">
@@ -243,7 +243,7 @@
   <!-- загрузочный кот -->
   <div class="modal fade cat_with_coffee" id="load_cat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog cat_with_coffee">
-        <img src="{% static 'general/img/cat_with_coffee.gif' %}" class="cat_with_coffee">
+        <img src="{% static 'common/gif/cat_with_coffee.gif' %}" class="cat_with_coffee">
     </div>
   </div>
 
@@ -278,7 +278,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.telegram }}" target="_blank">
-                        <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                        <img src="{% static 'common/img/contacts/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
                       </a>
                     </div>
                 {% endif %}
@@ -290,7 +290,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.whatsapp }}" target="_blank">
-                        <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                        <img src="{% static 'common/img/contacts/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
                       </a>
                     </div>
                 {% endif %}
@@ -302,7 +302,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.discord }}" target="_blank">
-                        <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                        <img src="{% static 'common/img/contacts/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
                       </a>
                     </div>
                 {% endif %}
@@ -314,7 +314,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.skype }}" target="_blank">
-                        <img src="{% static 'general/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
+                        <img src="{% static 'common/img/contacts/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
                       </a>
                     </div>
                 {% endif %}
@@ -326,7 +326,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.vkontakte }}" target="_blank">
-                        <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                        <img src="{% static 'common/img/contacts/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
                       </a>
                     </div>
                 {% endif %}
@@ -338,7 +338,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.facebook }}" target="_blank">
-                        <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                        <img src="{% static 'common/img/contacts/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
                         </a>
                     </div>
                 {% endif %}      

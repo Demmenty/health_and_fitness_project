@@ -1,4 +1,5 @@
-from fatsecret import Fatsecret, GeneralError
+from fatsecret import Fatsecret
+from fatsecret import ParameterError as FS_ParameterError, GeneralError as FS_GeneralError
 from django.conf import settings
 from .models import FatSecretEntry
 import pickle
@@ -131,7 +132,7 @@ def set_weight_in_fatsecret(user, measure_weight: str, measure_date: date) -> No
                     current_weight_kg=measure_weight,
                     date=measure_datetime)
 
-    except GeneralError as error:
+    except FS_GeneralError as error:
         print("Произошла ошибка при попытке отправки данных о весе в FatSecret:"
             + str(type(error)) + str(error))
 
@@ -174,50 +175,61 @@ def count_daily_food(user, request_date:datetime) -> dict:
 
     # складываем одинаковую еду в этот словарик (для топов)
     daily_total = {}
+    # для понимания, можно сохранить итог, или нет
+    daily_total_is_good = True
 
     # обработка каждой записи о продукте
     for food in daily_entries:
 
         # подсчет количеств блюд для каждой категории для таблички
         count_by_category[food['meal']] += 1
-
         # поиск подробностей о продукте для подсчета порции
         food_info = _get_foodinfo_from_foodcache(food['food_id'])
+        food_info_found = True
         if not food_info:
-            food_info = fs_session.food_get(food_id=food['food_id'])
-            _save_foodinfo_into_foodcache(food_info)
-
-        # добавление инфы в food для соответствующего вида порции
-        if type(food_info['servings']['serving']) is list:
-            for serv_info in food_info['servings']['serving']:
-                if serv_info['serving_id'] == food['serving_id']:
-                    food['serving'] = serv_info
-                    break
-        else:
-            food['serving'] = food_info['servings']['serving']
-
-        # добавляем нормальное отображение количества
-        # если измерение в г или мл - считаем как есть
-        if (food['serving']['measurement_description'] == 'g' or
-            food['serving']['measurement_description'] == 'ml'):
-            food['norm_amount'] = int(float(food['number_of_units']))
-            nutrition['amount'] += food['norm_amount']
-        else:
-            # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-            if food['serving'].get('metric_serving_amount') is None:
-                # если в инфе не оказалось граммовки порции
-                # добавляем эту еду в спец.словарь и не считаем amount
-                without_info[food['food_id']] = {
-                    'food_entry_name': food['food_entry_name'],
-                    'serving_description': food['serving'].get('serving_description', 'порция'),
-                    'serving_id': food['serving_id'],
-                    'calories_per_serving': food['serving'].get('calories', food['calories']) }
+            print('запрос food_info из fs')
+            try:
+                food_info = fs_session.food_get(food_id=food['food_id'])
+                _save_foodinfo_into_foodcache(food_info)
+            except FS_ParameterError:
+                food_info_found = False
+                food['cant_get_id'] = True
+                daily_total_is_good = False
+                
+        if food_info_found:
+            # добавление инфы в food для соответствующего вида порции
+            if type(food_info['servings']['serving']) is list:
+                for serv_info in food_info['servings']['serving']:
+                    if serv_info['serving_id'] == food['serving_id']:
+                        food['serving'] = serv_info
+                        break
             else:
-                # если в инфе метрика есть - считаем и добавляем к общему подсчету
-                food['norm_amount'] = int(float(food['number_of_units']) *
-                                        float(food['serving']['metric_serving_amount']) *
-                                        float(food['serving']['number_of_units']))
+                food['serving'] = food_info['servings']['serving']
+
+            # добавляем нормальное отображение количества
+            # если измерение в г или мл - считаем как есть
+            if (food['serving']['measurement_description'] == 'g' or
+                food['serving']['measurement_description'] == 'ml'):
+                food['norm_amount'] = int(float(food['number_of_units']))
                 nutrition['amount'] += food['norm_amount']
+            else:
+                # если измерение в порциях - сначала проверяем, есть ли граммовка порции
+                if food['serving'].get('metric_serving_amount') is None:
+                    # если в инфе не оказалось граммовки порции
+                    # добавляем эту еду в спец.словарь и не считаем amount
+                    daily_total_is_good = False
+                    without_info[food['food_id']] = {
+                        'food_entry_name': food['food_entry_name'],
+                        'serving_description': food['serving'].get('serving_description', 'порция'),
+                        'serving_id': food['serving_id'],
+                        'calories_per_serving': int(int(food['calories']) / float(food['number_of_units']))
+                    }
+                else:
+                    # если в инфе метрика есть - считаем и добавляем к общему подсчету
+                    food['norm_amount'] = int(float(food['number_of_units']) *
+                                            float(food['serving']['metric_serving_amount']) *
+                                            float(food['serving']['number_of_units']))
+                    nutrition['amount'] += food['norm_amount']
 
         # подсчет итоговой суммы кбжу
         nutrition['calories'] += int(food['calories'])
@@ -227,7 +239,10 @@ def count_daily_food(user, request_date:datetime) -> dict:
 
         # заодно готовим daily_total
         # меняем наименование на то, что в инфе, оно более общее
-        food['food_name'] = food_info['food_name']
+        if food_info_found:
+            food['food_name'] = food_info['food_name']
+        else:
+            food['food_name'] = food['food_entry_name']
         # складываем у продуктов с одинаковым именем калории и вес
         if daily_total.get(food['food_name']) is None:
             daily_total[food['food_name']] = {
@@ -235,24 +250,19 @@ def count_daily_food(user, request_date:datetime) -> dict:
                 'amount': 0,
             }
         daily_total[food['food_name']]['calories'] += int(food['calories'])
-        # еслиполучилось высчитать нормально количество
-        # если нет - то продукт в списке without_info
+        # если получилось высчитать нормально количество
+        # (если нет - то продукт в списке without_info, либо не имеет такого ключа)
         if food.get('norm_amount'):
             daily_total[food['food_name']]['amount'] += food['norm_amount']
             daily_total[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
-
-    # нумерация продуктов без инфы о порции ???
-    index_number = 1
-    for prod in without_info:
-        without_info[prod]['index_number'] = index_number
-        index_number += 1
 
     # округляем результаты в получившемся итоге по кбжу
     for key, value in nutrition.items():
         nutrition[key] = round(value, 2)
 
     # сохраняем daily_total в кеше на будущее для топов
-    _save_daily_total_in_cache(user, request_date, daily_total)
+    if daily_total_is_good:
+        _save_daily_total_in_cache(user, request_date, daily_total)
 
     # добавить очистку от ненужных значений??
 
@@ -468,6 +478,7 @@ def _create_daily_total(user, entry_date: datetime) -> dict:
 
     daily_total = {}
     without_info = {}
+    daily_total_is_good = True
 
     fs_session = create_user_fs_session(user)
     daily_entries = fs_session.food_entries_get(date=entry_date)
@@ -476,42 +487,53 @@ def _create_daily_total(user, entry_date: datetime) -> dict:
 
         # достаем подробную инфо о виде еды
         food_info = _get_foodinfo_from_foodcache(food['food_id'])
+        food_info_found = True
         if not food_info:
-            food_info = fs_session.food_get(food_id=food['food_id'])
-            _save_foodinfo_into_foodcache(food_info)
+            try:
+                food_info = fs_session.food_get(food_id=food['food_id'])
+                _save_foodinfo_into_foodcache(food_info)
+            except FS_ParameterError:
+                food_info_found = False
+                food['cant_get_id'] = True
+                daily_total_is_good = False
 
-        # добавление инфы в food для соответствующего вида порции
-        if type(food_info['servings']['serving']) is list:
-            for serv_info in food_info['servings']['serving']:
-                if serv_info['serving_id'] == food['serving_id']:
-                    food['serving'] = serv_info
-                    break
-        else:
-            food['serving'] = food_info['servings']['serving']
-
-        # добавляем нормальное отображение количества
-        # если измерение в г или мл - считаем как есть
-        if (food['serving']['measurement_description'] == 'g' or
-            food['serving']['measurement_description'] == 'ml'):
-            food['norm_amount'] = int(float(food['number_of_units']))
-        else:
-            # если измерение в порциях - сначала проверяем, есть ли граммовка порции
-            if food['serving'].get('metric_serving_amount') is None:
-                # если в инфе не оказалось граммовки порции
-                # добавляем эту еду в спец.словарь и не считаем amount
-                without_info[food['food_id']] = {
-                    'food_entry_name': food['food_entry_name'],
-                    'serving_description': food['serving'].get('serving_description', 'порция'),
-                    'serving_id': food['serving_id'],
-                    'calories_per_serving': food['serving'].get('calories', food['calories']) }
+        if food_info_found:
+            # добавление инфы в food для соответствующего вида порции
+            if type(food_info['servings']['serving']) is list:
+                for serv_info in food_info['servings']['serving']:
+                    if serv_info['serving_id'] == food['serving_id']:
+                        food['serving'] = serv_info
+                        break
             else:
-                # если в инфе метрика есть - считаем и добавляем к общему подсчету
-                food['norm_amount'] = int(float(food['number_of_units']) *
-                                        float(food['serving']['metric_serving_amount']) *
-                                        float(food['serving']['number_of_units']))  
+                food['serving'] = food_info['servings']['serving']
+
+            # добавляем нормальное отображение количества
+            # если измерение в г или мл - считаем как есть
+            if (food['serving']['measurement_description'] == 'g' or
+                food['serving']['measurement_description'] == 'ml'):
+                food['norm_amount'] = int(float(food['number_of_units']))
+            else:
+                # если измерение в порциях - сначала проверяем, есть ли граммовка порции
+                if food['serving'].get('metric_serving_amount') is None:
+                    # если в инфе не оказалось граммовки порции
+                    # добавляем эту еду в спец.словарь и не считаем amount
+                    without_info[food['food_id']] = {
+                        'food_entry_name': food['food_entry_name'],
+                        'serving_description': food['serving'].get('serving_description', 'порция'),
+                        'serving_id': food['serving_id'],
+                        'calories_per_serving': int(int(food['calories']) / float(food['number_of_units']))
+                    }
+                else:
+                    # если в инфе метрика есть - считаем и добавляем к общему подсчету
+                    food['norm_amount'] = int(float(food['number_of_units']) *
+                                            float(food['serving']['metric_serving_amount']) *
+                                            float(food['serving']['number_of_units']))  
 
         # меняем наименование на то, что в инфе, оно более общее
-        food['food_name'] = food_info['food_name']
+        if food_info_found:
+            food['food_name'] = food_info['food_name']
+        else:
+            food['food_name'] = food['food_entry_name']
         # складываем у продуктов с одинаковым именем калории и вес
         if daily_total.get(food['food_name']) is None:
             daily_total[food['food_name']] = {'calories': 0, 'amount': 0}
@@ -523,10 +545,11 @@ def _create_daily_total(user, entry_date: datetime) -> dict:
             daily_total[food['food_name']]['amount'] += food['norm_amount']
             daily_total[food['food_name']]['metric'] = food['serving']['metric_serving_unit']
 
-    if without_info:
+    if daily_total_is_good:
+        _save_daily_total_in_cache(user, entry_date, daily_total)
+
+    elif without_info:
         daily_total['without_info'] = without_info
-    else:
-         _save_daily_total_in_cache(user, entry_date, daily_total)
 
     return daily_total
 
@@ -715,3 +738,4 @@ def _remove_prods_without_info_from_cache() -> None:
 
 
 # _remove_prods_without_info_from_cache()
+

@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+    // активация всплывающих подсказок
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
     // кнопка пересчета топ-10 после внесения метрикик
     const recalcBtn = document.getElementById('recalculation_btn');
     // поле для надписи о сохранении внесенной метрикик
@@ -191,4 +195,59 @@ $(document).ready(function(){
                 }
         });
     }
+
+    // КБЖУ-рекомендаций форма
+    if (document.getElementById('recommend_nutrition_btn')) {
+        // показ окошка
+        $('#recommend_nutrition_btn').click(function() {
+            $('#container_recommend_nutrition_form').toggleClass('hidden_element');
+        })
+        // закрытие окошка
+        $('#container_recommend_nutrition_form .btn-close').click(function() {
+            $('#container_recommend_nutrition_form').addClass('hidden_element');
+        })
+
+        // перетаскивание окошка кбжу
+        dragContainer(document.getElementById('container_recommend_nutrition_form'));
+    }
+    
+    // функция перетаскивания
+    function dragContainer(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    
+        elements = elmnt.querySelectorAll('.moving_part');
+        elements.forEach ( element => {
+            element.onmousedown = dragMouseDown; 
+           
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // получить положение курсора мыши при запуске:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // вызов функции при каждом перемещении курсора:
+                document.onmousemove = elementDrag;
+            }
+         
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // вычислить новую позицию курсора:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // установите новое положение элемента:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+         
+            function closeDragElement() {
+                // остановка перемещения при отпускании кнопки мыши:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        })
+    }  
 })

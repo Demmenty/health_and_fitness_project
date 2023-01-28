@@ -3,7 +3,7 @@ $(document).ready(function(){
     // сохранение контактов
     $('#contacts_form').submit(function () {
 
-        let error = $('#contacts_error');
+        let statusField = $('#contacts_status');
 
         $.ajax({
             data: $(this).serialize(), 
@@ -12,33 +12,33 @@ $(document).ready(function(){
 
             success: function (response) {
                 // уведомление
-                error.text(response.result);
+                statusField.text(response.result);
                 // визуальные эффекты
-                error.removeClass('text-info');
-                error.removeClass('text-danger');
+                statusField.removeClass('text-info');
+                statusField.removeClass('text-danger');
                 setTimeout(() => {
                     if (response.result == 'Контакты сохранены') {
-                        error.addClass('text-info');
+                        statusField.addClass('text-info');
                     }
                     else {
-                        error.addClass('text-danger');
+                        statusField.addClass('text-danger');
                     }
                 }, 500);
             },
             error: function (response) {
                 // уведомление
                 if (response.status === 0) {
-                    error.text('нет соединения с сервером :(');
+                    statusField.text('нет соединения с сервером :(');
                 }
                 else {
-                    error.text('возникла ошибка! статус ' + 
-                                response.status + ' ' + response.statusText);
+                    statusField.text('возникла ошибка! статус ' + 
+                            response.status + ' ' + response.statusText);
                 }
                 // визуальные эффекты
-                error.removeClass('text-info');
-                error.removeClass('text-danger');
+                statusField.removeClass('text-info');
+                statusField.removeClass('text-danger');
                 setTimeout(() => {
-                    error.addClass('text-danger');
+                    statusField.addClass('text-danger');
                 }, 500); 
             }
         });    

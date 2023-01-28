@@ -15,7 +15,7 @@
         <form method = "get">
             <input type="hidden" value="{{ client_id }}" name="client_id">
             <input type="hidden" name="date" value="{{ prev_date }}">
-            <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'general/img/arrow_left_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий день" style="width: 20px;">
+            <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'common/img/arrow_prev_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий день" style="width: 20px;">
         </form>
         <!-- дата -->
         <h3 class="text-center p-2">{{ briefdate|date:"l " }}<br class="d-sm-none">{{ briefdate|date:"j E Y" }}</h3>
@@ -23,7 +23,7 @@
         <form method = "get">
             <input type="hidden" value="{{ client_id }}" name="client_id">
             <input type="hidden" name="date" value="{{ next_date }}">
-            <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'general/img/arrow_right_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий день" style="width: 20px;">
+            <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'common/img/arrow_next_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий день" style="width: 20px;">
         </form>
     </div>
 
@@ -52,7 +52,18 @@
                     {% endif %}
                     {% for food in daily_food.entries %}
                         {% if food.meal == category %}
-                                <td class="d-none d-md-table-cell">{{ food.food_entry_name }}</td>
+                                <td class="d-none d-md-table-cell">{{ food.food_entry_name }}
+                                    {% if food.cant_get_id %}
+                                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus"
+                                            title="критическая ошибка при получении данных"
+                                            data-bs-content="Посчитать массу этой позиции невозможно, она багованная.">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-exclamation-circle ch-pointer" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"></path>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
+                                </td>
                                 <td class="text-center text-nowrap d-none d-md-table-cell">{{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
                                 <td class="text-center d-none d-md-table-cell">{{ food.calories }}</td>
                                 <td class="text-center d-none d-md-table-cell">{{ food.protein }}</td>
@@ -72,13 +83,24 @@
                     {% for food in daily_food.entries %}
                         {% if food.meal == category %}
                             <tr class="d-md-none">
-                                <td colspan="4">{{ food.food_entry_name }} - {{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}</td>
+                                <td colspan="4">{{ food.food_entry_name }} - {{ food.norm_amount|default:"?" }} {{ food.serving.metric_serving_unit|default_if_none:"" }}
+                                    {% if food.cant_get_id %}
+                                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus"
+                                            title="критическая ошибка при получении данных"
+                                            data-bs-content="Посчитать массу этой позиции невозможно, она багованная.">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-exclamation-circle ch-pointer" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"></path>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
+                                </td>
                             </tr>
                             <tr class="d-md-none">
-                                <td class="text-center">{{ food.calories }}</td>
-                                <td class="text-center">{{ food.protein }}</td>
-                                <td class="text-center">{{ food.fat }}</td>
-                                <td class="text-center">{{ food.carbohydrate }}</td> 
+                                <td class="text-center text-nowrap" title="калории">{{ food.calories }}</td>
+                                <td class="text-center text-nowrap" title="белки">{{ food.protein }}</td>
+                                <td class="text-center text-nowrap" title="жиры">{{ food.fat }}</td>
+                                <td class="text-center text-nowrap" title="углеводы">{{ food.carbohydrate }}</td> 
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -143,7 +165,7 @@
             </table>
             </ol>
 
-            <ol class="top_table_ol mt-4 mb-5">
+            <ol class="top_table_ol mt-4 mb-4 mb-sm-5">
             <table class="table top_table caption-top" id="table_top_calories">
                 <caption><h4 class="text-center">Топ по калориям</h4></caption>
                 <thead class="table-light">
@@ -178,21 +200,69 @@
         </div>
     {% endif %}
 
-    <div class="d-flex flex-column flex-sm-row-reverse justify-content-between mt-auto">
-        <!-- Выбор сводки за другое число -->
-        <div class="mx-auto me-sm-5 ms-sm-auto my-3" id="select_date_section">
-            <h5 class="text-center">Сводка за другое число</h5>
-            <form action="" method = "get" class="d-flex justify-content-between">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <input type="date" class="form-control text-center me-3" name="date" id="input_briefdate" value="{{ prev_date }}">
-                <button type="submit" class="btn btn-primary d-inline" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
-            </form>
+    <div class="d-flex flex-column flex-sm-row justify-content-between mt-auto mb-3">
+        <div class="d-flex flex-column flex-sm-row align-items-center order-sm-2">
+            <!-- рекомендованные КБЖУ -->
+            <button type="button" class="btn btn-outline-primary align-self-sm-end me-sm-3 mb-3 mb-sm-0" id="recommend_nutrition_btn" style="height: 38px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
+                    <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
+                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
+                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
+                </svg>
+                КБЖУ
+            </button>
+            <div class="border-blueshadow hidden_element p-2" id="container_recommend_nutrition_form">
+                <div class="d-flex align-items-center">
+                    <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <hr class="my-2">
+                <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <div class="d-flex">
+                        <div class="d-flex flex-column my-2 me-3">
+                            <label for="id_calories" class="">Калории:</label>
+                            {{ recommend_nutrition_form.calories }}
+                        </div>
+                        <div class="d-flex flex-column my-2">
+                            <label for="id_fats" class="">Жиры:</label>
+                            {{ recommend_nutrition_form.fats }} 
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="d-flex flex-column my-2 me-3">
+                            <label for="id_protein" class="">Белки:</label>
+                            {{ recommend_nutrition_form.protein }}
+                        </div>
+                        <div class="d-flex flex-column my-2">
+                            <label for="id_carbohydrates" class="">Углеводы:</label>
+                            {{ recommend_nutrition_form.carbohydrates }}
+                        </div>
+                    </div>
+                    <label for="id_note" class="">Заметка:</label>
+                    {{ recommend_nutrition_form.note }}
+                    <span class="text-center transition_common text-transparent d-block" id="recommend_nutrition_status">&nbsp;</span>
+                    <div class="d-flex">
+                        <div class="moving_part w-fill cursor-move">&nbsp;</div> 
+                        <button type="submit" class="btn btn-primary ok_btn">✓</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Выбор сводки за другое число -->
+            <div class="mb-3 mb-sm-0" id="select_date_section">
+                <h5 class="text-center">Сводка за другое число</h5>
+                <form action="" method = "get" class="d-flex justify-content-between">
+                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="date" class="form-control text-center me-3" name="date" id="input_briefdate" value="{{ prev_date }}">
+                    <button type="submit" class="btn btn-primary d-inline" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
+                </form>
+            </div>
         </div>
         <!-- Кнопка возврата -->
-        <form method="get" action="{% url 'client_mealjournal' %}" class="align-self-sm-end my-3">
-            <input type="hidden" value="{{ client_id }}" name="client_id">
-            <input type="image" name="submit" class="hover_brigh" src="{% static 'general/img/arrow_back_royalblue.svg' %}" alt="Submit" title="К дневнику питания" width="38">
-        </form>
+        <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="align-self-sm-end order-sm-1">
+            <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" title="К дневнику питания" width="38">
+        </a>
     </div>
 </div>
 

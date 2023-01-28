@@ -6,6 +6,7 @@ from fatsecret_app.services import *
 from measurements.services import *
 from anthropometry.services import *
 from client_info.services import *
+from expert_recommendations.services import *
 from expert_remarks.services import get_remark_forms
 from common.utils import get_noun_ending
 
@@ -245,12 +246,15 @@ def client_mealjournal(request):
         # для поля выбора (потом сделать через js)
         previous_month = date.today() + relativedelta(months=-1)
         previous_month = previous_month.strftime("%Y-%m")
+        # рекомендации кбжу
+        recommend_nutrition_form = get_nutrition_recommend_form(client)
     
         data.update({
             'daily_food': daily_food,
             'monthly_food': monthly_food,
             'prods_without_info': prods_without_info,
             'previous_month': previous_month,
+            'recommend_nutrition_form': recommend_nutrition_form,
         })
         return render(request, 'controlpage/client_mealjournal.html', data)   
 
@@ -286,7 +290,8 @@ def client_foodbydate(request):
     next_date = next_date.strftime("%Y-%m-%d")
 
     daily_food = count_daily_food(client, briefdate)
-    daily_top = create_daily_top(client, briefdate)  
+    daily_top = create_daily_top(client, briefdate)
+    recommend_nutrition_form = get_nutrition_recommend_form(client)  
 
     data = {
         'clientname': client.username,
@@ -297,7 +302,8 @@ def client_foodbydate(request):
         'prev_date': prev_date,
         'next_date': next_date,
         'daily_food': daily_food,
-        'daily_top': daily_top,  
+        'daily_top': daily_top, 
+        'recommend_nutrition_form': recommend_nutrition_form, 
     }
     return render(request, 'controlpage/client_foodbydate.html', data)
 
@@ -333,6 +339,7 @@ def client_foodbymonth(request):
     next_month = next_month.strftime("%Y-%m") 
 
     monthly_food = count_monthly_food(client, month_datetime)
+    recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
         'clientname': client.username,
@@ -343,5 +350,6 @@ def client_foodbymonth(request):
         'prev_month': prev_month,
         'next_month': next_month,
         'monthly_food': monthly_food,
+        'recommend_nutrition_form': recommend_nutrition_form,
     }
     return render(request, 'controlpage/client_foodbymonth.html', data)

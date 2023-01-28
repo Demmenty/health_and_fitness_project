@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'common',
     'homepage',
     'client_info',
     'personalpage',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'anthropometry',
     'fatsecret_app',
     'expert_remarks',
+    'expert_recommendations',
 
     'django_cleanup',
 ]

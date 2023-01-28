@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'general/img/Logo_title.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'personalpage/css/personalpage_style.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
       <div class="d-flex align-items-center justify-content-between py-2">
         <!-- логотип -->
         <a href="/" class="navbar-brand">
-          <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+          <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
         <!-- навигация просто строкой -->
         <ul class="nav justify-content-center mb-md-0" id="nav_string">
@@ -55,7 +55,7 @@
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" id="logout_btn">
           {% csrf_token %}
-          <input type="image" alt="Submit" src="{% static 'general/img/exit (fat).svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+          <input type="image" alt="Submit" src="{% static 'common/img/exit.svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
         </form>
       </div>
     </div>    
@@ -70,7 +70,7 @@
   <!-- загрузочный кот -->
   <div class="modal fade cat_with_coffee" id="load_cat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog cat_with_coffee">
-        <img src="{% static 'general/img/cat_with_coffee.gif' %}" class="cat_with_coffee">
+        <img src="{% static 'common/gif/cat_with_coffee.gif' %}" class="cat_with_coffee">
     </div>
   </div>
 
@@ -89,9 +89,9 @@
           <form id="commentary_form" class="" action="{% url 'get_commentary' %}" data-action-mark-readed="{% url 'mark_comment_readed' %}">
 
             <div class="d-flex justify-content-center align-items-center mb-2 mx-4">
-              <img src="{% static 'general/img/arrow_left_royalblue.svg' %}" id="comment_prev_date" class="mx-2 arrow_btn" width="20">
+              <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" id="comment_prev_date" class="mx-2 arrow_btn" width="20">
               <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
-              <img src="{% static 'general/img/arrow_right_royalblue.svg' %}" id="comment_next_date" class="mx-2 arrow_btn" width="20">
+              <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" id="comment_next_date" class="mx-2 arrow_btn" width="20">
             </div>
 
             <div class="text-center text-transparent transition_common" id="commentary_status_msg"></div>
@@ -134,32 +134,32 @@
           <div class="d-flex align-items-center">
             <div class="p-2 d-flex justify-content-end">
               <a href="https://t.me/parrrabollla" target="_blank">
-                <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                <img src="{% static 'common/img/contacts/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://wa.me/79603280691" target="_blank">
-                <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                <img src="{% static 'common/img/contacts/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://discord.gg/CDrXhVA" target="_blank">
-                <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                <img src="{% static 'common/img/contacts/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank">
-                <img src="{% static 'general/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
+                <img src="{% static 'common/img/contacts/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://vk.com/id37037617" target="_blank">
-                <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                <img src="{% static 'common/img/contacts/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="" target="_blank">
-                <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                <img src="{% static 'common/img/contacts/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
               </a>
             </div>
           </div>
@@ -178,13 +178,13 @@
           </div>
           <div class="d-flex align-items-center">
             <div class="p-2 d-flex justify-content-end">
-              <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'common/img/contacts/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
             </div>
             <div class="p-2 d-flex justify-content-end">
-              <a href="https://wa.me/79273719237" target="_blank"><img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
+              <a href="https://wa.me/79273719237" target="_blank"><img src="{% static 'common/img/contacts/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
             </div>
             <div class="p-2 d-flex justify-content-end">
-              <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+              <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'common/img/contacts/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
             </div>
           </div>
         </div>
@@ -193,8 +193,8 @@
     </div>
   </footer>
 
-</body>
-
+  
 <script src="{% static 'personalpage/js/layout.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
 </html>

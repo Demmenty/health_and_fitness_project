@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'general/img/Logo_title.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'expertpage/css/expertpage.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
       <div class="d-flex align-items-center justify-content-between py-2">
         <!-- логотип -->
         <a href="/" class="navbar-brand me-sm-3">
-          <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+          <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
         <!-- навигация -->
         <div class="d-flex flex-wrap justify-content-center align-items-center lh-1">
@@ -35,7 +35,7 @@
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" class="ms-3">
           {% csrf_token %}
-          <input type="image" alt="Submit" src="{% static 'general/img/exit (fat).svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+          <input type="image" alt="Submit" src="{% static 'common/img/exit.svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
         </form>
       </div>
     </div>       

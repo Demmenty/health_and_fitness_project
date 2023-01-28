@@ -8,10 +8,10 @@ from anthropometry.models import Anthropometry
 from anthropometry.forms import AnthropometryForm
 from anthropometry.services import *
 from client_info.services import *
+from expert_recommendations.services import *
 from common.utils import get_noun_ending
 from expert_remarks.services import get_today_commentary
 from .utils import *
-
 
 
 def personalpage(request):
@@ -321,6 +321,8 @@ def mealjournal(request):
         # для поля выбора (потом сделать через js)
         previous_month = date.today() + relativedelta(months=-1)
         previous_month = previous_month.strftime("%Y-%m")
+        # рекомендации кбжу
+        recommend_nutrition = get_nutrition_recommend(request.user)
 
         data = {
             'today_commentary': today_commentary,
@@ -328,6 +330,7 @@ def mealjournal(request):
             'monthly_food': monthly_food,
             'prods_without_info': prods_without_info,
             'previous_month': previous_month,
+            'recommend_nutrition': recommend_nutrition,
         }
         return render(request, 'personalpage/mealjournal.html', data)
 
@@ -357,6 +360,8 @@ def foodbydate(request):
 
     daily_food = count_daily_food(request.user, briefdate)
     daily_top = create_daily_top(request.user, briefdate)
+    # рекомендации кбжу
+    recommend_nutrition = get_nutrition_recommend(request.user)
 
     data = {
         'briefdate': briefdate,
@@ -365,6 +370,7 @@ def foodbydate(request):
         'daily_food': daily_food,
         'daily_top': daily_top,
         'today_commentary': today_commentary,
+        'recommend_nutrition': recommend_nutrition,
     }
     return render(request, 'personalpage/foodbydate.html', data)
 
@@ -393,6 +399,8 @@ def foodbymonth(request):
     next_month = next_month.strftime("%Y-%m")
     
     monthly_food = count_monthly_food(request.user, month_datetime)
+    # рекомендации кбжу
+    recommend_nutrition = get_nutrition_recommend(request.user)
 
     # комментарий за сегодня от эксперта
     today_commentary = get_today_commentary(request.user)
@@ -403,5 +411,6 @@ def foodbymonth(request):
         'next_month': next_month,
         'monthly_food': monthly_food,
         'today_commentary': today_commentary,
+        'recommend_nutrition': recommend_nutrition,
     }
     return render(request, 'personalpage/foodbymonth.html', data)

@@ -51,6 +51,7 @@ $(document).ready(function() {
 
 // КОММЕНТАРИЙ КЛИЕНТУ
 const commentaryContainer = $('#client_comment_form_container');
+const commentaryForm = $('#client_comment_form');
 // окошко ввода даты
 const commentaryDate = $('#id_date_comment', commentaryContainer);
 // поле для сообщения об ошибках
@@ -113,9 +114,10 @@ commentaryDate.bind('input', changeDateInput);
 function changeCommentaryForm(chosenCommentaryDate) {
     // запрос данных комментария из БД
     let request = new XMLHttpRequest();
-    request.open("GET",
-        "/controlpage/get_commentary_form/?client_id=" + client_id + 
-        "&date=" + chosenCommentaryDate);
+    let url = commentaryForm.data('action-get');
+
+    request.open("GET", 
+        url + "?client_id=" + client_id + "&date=" + chosenCommentaryDate);
 
     request.onreadystatechange = function() {
         if(this.readyState === 4) {
@@ -158,7 +160,7 @@ function changeCommentaryForm(chosenCommentaryDate) {
 }
 
 // сохранение комментария
-$('#client_comment_form').submit(function () {               
+commentaryForm.submit(function () {               
 
     $.ajax({
         data: $(this).serialize(),
@@ -210,6 +212,7 @@ commentLabels.bind('click', changeCommentCategory);
 
 // ЗАМЕТКА О КЛИЕНТЕ
 const clientNoteContainer = $('#clientnote_container');
+const clientNoteForm = $('#clientnote_form');
 // окошко ввода даты
 const clientNoteDate = $('#id_date_note', clientNoteContainer);
 // поле для сообщения об ошибках
@@ -281,9 +284,9 @@ clientNoteDate.bind('input', changeMonthInput);
 function changeClientnoteForm(chosenClientnoteDate) {
     // запрос данных заметки о клиенте из БД
     let request = new XMLHttpRequest();
+    let url = clientNoteForm.data('action-get');
     request.open("GET",
-        "/controlpage/get_clientnote_form/?client_id=" + client_id +
-        "&date=" + chosenClientnoteDate);
+        url + "?client_id=" + client_id + "&date=" + chosenClientnoteDate);
 
     request.onreadystatechange = function() {
         if(this.readyState === 4) {
@@ -326,7 +329,7 @@ function changeClientnoteForm(chosenClientnoteDate) {
 }
 
 // сохранение заметки
-$('#clientnote_form').submit(function () { 
+clientNoteForm.submit(function () { 
 
     // добавляем к значению месяца число для полноты даты
     var data = $(this).serializeArray();
@@ -431,19 +434,16 @@ $('#full_clientnote_form').submit(function () {
     return false;
 });
 
-
-
 // показ списка контактов клиента по кнопке
 function showContacts() {
     $('#client_contacts').toggleClass('d-none')
 }
 
-
 // перетаскивание заметки и коммента
 dragContainer(document.getElementById('client_comment_form_container'));
 dragContainer(document.getElementById('clientnote_container'));
 dragContainer(document.getElementById('full_clientnote_container'));
-
+// функция перетаскивания
 function dragContainer(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
@@ -486,7 +486,6 @@ function dragContainer(elmnt) {
         }
     })
 }
-
 
 // изменение z-индекса на > при клике на контейнер
 var maxZ = 11;

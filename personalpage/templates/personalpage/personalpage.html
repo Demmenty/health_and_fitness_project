@@ -128,7 +128,7 @@
                 <form method="post" action="{% url 'save_contacts' %}" id="contacts_form" class="w-100">
                     {% csrf_token %}
                     {{ contacts_form.as_p }}
-                    <p class="text-center transition_common text-transparent" id="contacts_error">&nbsp;</p>
+                    <p class="text-center transition_common text-transparent" id="contacts_status">&nbsp;</p>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Закрыть</button>
                     <button type="submit" class="btn btn-primary float-end">Сохранить</button>
                 </form>

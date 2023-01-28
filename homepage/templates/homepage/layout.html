@@ -5,7 +5,7 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="icon" href="{% static 'general/img/Logo_title.png' %}" type="image/x-icon">
+      <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
       <link rel="stylesheet" href="{% static 'homepage/homepage_style.css' %}">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,8 +23,8 @@
           <div class="container-fluid px-0">
             <!-- логотип -->
             <a href="/" class="navbar-brand p-0 me-0 me-sm-2">
-                <img src="{% static 'general/img/Logo.svg' %}" type="image/svg+xml" width="90" id="logo">
-                <img src="{% static 'general/img/Logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+                <img src="{% static 'common/img/logo.svg' %}" type="image/svg+xml" width="90" id="logo">
+                <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
             </a>
             <!-- список ссылок -->
             <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
@@ -69,7 +69,7 @@
             </a>
             <form method="POST" action="{% url 'logoutuser' %}" class="form-inline ms-3">
               {% csrf_token %}
-              <input type="image" alt="Submit" src="{% static 'general/img/exit.svg' %}" id="exit_pic" class="align-middle" title="Выйти">
+              <input type="image" alt="Submit" src="{% static 'common/img/exit.svg' %}" id="exit_pic" class="align-middle" title="Выйти">
             </form>
           </div>
           {% else %}
@@ -158,31 +158,31 @@
             <div class="d-flex align-items-center">
               <div class="p-2 d-flex justify-content-end">
                 <a href="https://t.me/parrrabollla" target="_blank">
-                  <img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+                  <img src="{% static 'common/img/contacts/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
               </div>
               <div class="p-2 d-flex justify-content-end">
                 <a href="https://wa.me/79603280691" target="_blank">
-                  <img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                  <img src="{% static 'common/img/contacts/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
                 </a>
               </div>
               <div class="p-2 d-flex justify-content-end">
                 <a href="https://discord.gg/CDrXhVA" target="_blank">
-                  <img src="{% static 'general/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                  <img src="{% static 'common/img/contacts/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
                 </a>
               </div>
               <div class="p-2 d-flex justify-content-end">
                 <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank">
-                  <img src="{% static 'general/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
+                  <img src="{% static 'common/img/contacts/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
                 </a>
               </div>
               <div class="p-2 d-flex justify-content-end">
                 <a href="https://vk.com/id37037617" target="_blank">
-                  <img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                  <img src="{% static 'common/img/contacts/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
                 </a>
               </div>
               <div class="p-2 d-flex justify-content-end">
                 <a href="" target="_blank">
-                  <img src="{% static 'general/img/facebook-square.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                  <img src="{% static 'common/img/contacts/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
                 </a>
               </div>
             </div>
@@ -201,13 +201,13 @@
             </div>
             <div class="d-flex align-items-center">
               <div class="p-2 d-flex justify-content-end">
-                <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'general/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+                <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'common/img/contacts/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
               </div>
               <div class="p-2 d-flex justify-content-end">
-                <a href="https://wa.me/79273719237" target="_blank"><img src="{% static 'general/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
+                <a href="https://wa.me/79273719237" target="_blank"><img src="{% static 'common/img/contacts/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp"></a>
               </div>
               <div class="p-2 d-flex justify-content-end">
-                <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'general/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+                <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'common/img/contacts/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ class MeasurementForm(ModelForm):
             'protein',
             'fats',
             'carbohydrates',
-            ]
+        ]
         widgets = {
             'feel': NumberInput(attrs={
                 'class': 'form-control',
