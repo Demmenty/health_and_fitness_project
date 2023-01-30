@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
+    path('consultation_signup/', include('consultation_signup.urls')),
+    path('authentication/', include('authentication.urls')),
     path('personalpage/', include('personalpage.urls')),
     path('controlpage/', include('controlpage.urls')),
     path('expertpage/', include('expertpage.urls')),
@@ -30,6 +32,7 @@ urlpatterns = [
     path('client_info/', include('client_info.urls')),
     path('expert_remarks/', include('expert_remarks.urls')),
     path('expert_recommendations/', include('expert_recommendations.urls')),
+
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,6 +19,16 @@ body {
     }  
 }
 
+.form-check-input {
+    min-width: 20px;
+    min-height: 20px;
+    margin-top: 0px;
+}
+.form-check-input:checked {
+    background-color: #5271ff;
+    border-color: #5271ff;
+}
+
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;
@@ -306,7 +316,7 @@ header .clientname {
     }
 }
 
-#new_consult_signup_count {
+#new_consult_signup_amount {
     background-color: #5271ff;
     color: white;
     border: 1px solid #5271ff;

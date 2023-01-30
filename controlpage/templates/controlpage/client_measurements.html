@@ -5,7 +5,8 @@
 
 {% block content %}
 
-<div class="container pt-5">
+<div class="container main_container d-flex flex-column justify-content-between pt-5">
+
     <!-- измерения за сегодня -->
     <section name="today_measurements">
         {% if today_measure %}
@@ -202,255 +203,256 @@
         </section>
     {% endif %}
 
-    <!-- всякие кнопки -->
-    <div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
-        <!-- блок цветов -->
-        <div class="d-flex mb-3" style="height:38px">
-            <!-- кнопка применения цветов -->
-            <div class="d-flex px-3 border border-grey rounded align-items-center me-3">
-                <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
-                <input type="checkbox" name="apply_colors" class="form-check-input mt-0 ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
-                    onchange="applyColors()" {% if colorsettings_exist %} checked="checked"{% endif %}>
-            </div>
-            <!-- кнопка настроек цветов -->
-            <a href="#period_select_form" id="colorsettings_ref"><button class="btn btn-outline-primary" id="colorsettings_btn">
-                <img src="{% static 'common/img/gears_royalblue.svg' %}" width="26" style="margin-top: -3px;">
-            </button></a>
-        </div>
-
-        <!-- ссылка на антропометрию -->
-        <div class="ms-3 mb-3">
-            <form method="get" action="{% url 'client_anthropometry' %}">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
-                <button type="submit" class="btn btn-primary">Антропометрия</button>
-            </form>
-        </div>
-        
-        <!-- Выбор дней статистики -->
+    <!-- блок кнопок -->
+    <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-between mt-auto mb-3">
         {% if period_measures %}
-            <form action="" method="get" class="d-flex flex-wrap justify-content-center ms-3 mb-3" id="period_select_form">
+            <!-- окрашивания показателей -->
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <div class="d-flex">
+                    <!-- кнопка применения -->
+                    <div class="d-flex border border-grey rounded align-items-center px-3 py-2 me-3 mb-4" style="height:38px">
+                        <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
+                        <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
+                            onchange="applyColors()" {% if colorsettings_exist %} checked="checked" {% endif %}>
+                    </div>
+                    <!-- кнопка настроек -->
+                    <a href="#color_settings_form" id="colorsettings_ref"><button class="btn btn-outline-primary" id="colorsettings_btn">
+                        <img src="{% static 'common/img/gears_royalblue.svg' %}" width="26" style="margin-top: -3px;">
+                    </button></a>
+                </div>
+                <!-- уведомление -->
+                <p class="text-muted" id="colorset_error">
+                    <span class="text-royalblue">&#10006;</span>
+                    {% if not colorsettings_exist %}
+                        цветовые границы не настроены
+                    {% endif %}
+                </p>
+            </div>
+            <!-- Выбор дней статистики -->
+            <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-center mb-4">
                 <input type="hidden" value="{{ client_id }}" name="client_id">
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center mb-2 mb-md-0">
                     <h5 class="m-0">Статистика за</h5>
-                    <input type="number" class="form-control text-center py-2 mx-3" name="selectperiod" min="1" id="input_period">
+                    <input type="number" class="form-control text-center mx-3" name="selectperiod" min="1" id="input_period">
                     <h5 class="m-0">дней</h5>
                 </div>
-                <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
+                <button type="submit" class="btn btn-primary d-inline mx-2 mb-2 mb-md-0 me-md-0" name="submit">Получить</button></h5>
             </form>
         {% endif %}
     </div>
+    
+    <!-- ссылка на антропометрию -->
+    <a href="{% url 'client_anthropometry' %}?client_id={{ client_id }}" type="button" class="btn btn-primary mt-auto mx-auto ms-md-0 mb-2">
+        Антропометрия
+    </a>
 
-    {% if not colorsettings_exist %}
-        <p class="text-muted" id="colorset_not_exist"><span class="text-royalblue">&#10006;</span> цветовые границы не настроены</p>
+    {% if period_measures %}
+        <!-- сборная форма настроек цвета -->
+        <form method="POST" action="{% url 'save_color_settings' %}" class="hidden_element" id="color_settings_form">
+            {% csrf_token %}
+            <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
+        
+            <div class="d-flex flex-wrap">
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Самочувствие</h4></caption>
+                    {% for form in colorset_forms|slice:":5" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Вес</h4></caption>
+                    {% for form in colorset_forms|slice:"5:10" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Жирность</h4></caption>
+                    {% for form in colorset_forms|slice:"10:15" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Пульс</h4></caption>
+                    {% for form in colorset_forms|slice:"15:20" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center m-0">
+                    <caption class="text-center"><h4>Давление верхнее</h4></caption>
+                    {% for form in colorset_forms|slice:"20:25" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center m-0">
+                    <caption class="text-center"><h4>Давление нижнее</h4></caption>
+                    {% for form in colorset_forms|slice:"25:30" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 px-4">
+                    <p><span class="text-royalblue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ normal_pressure }}</span></p>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Калории</h4></caption>
+                    {% for form in colorset_forms|slice:"30:35" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Белки</h4></caption>
+                    {% for form in colorset_forms|slice:"35:40" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Жиры</h4></caption>
+                    {% for form in colorset_forms|slice:"40:45" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        
+                <div class="col-12 col-md-6 py-3 px-1">
+                <table class="table table-borderless caption-top align-middle text-center">
+                    <caption class="text-center"><h4>Углеводы</h4></caption>
+                    {% for form in colorset_forms|slice:"45:50" %}
+                    <tr>
+                        {{ form.index }}
+                        {{ form.color }}
+                        <td>{{ form.low_limit }}</td>
+                        <td class="fs-4">&#8804;</td>
+                        <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                        <td class="fs-4">&#8804;</td>
+                        <td>{{ form.upper_limit }}</td>
+                    </tr>
+                    {% endfor %}           
+                </table>
+                </div>
+            </div>
+        
+            <p class="text-center m-0 text-transparent" id="save_status">&nbsp;</p>
+        
+            <!-- блок кнопок -->
+            <div class="d-flex justify-content-between align-items-center" style="margin-left: 12px; margin-right: 12px;">
+                <a href="#top">
+                    <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="Наверх" style="transform: rotate(90deg);">
+                </a>
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        
+            <br><br>
+            <!-- пояснение алгоритма-->
+            <p class=""><span class="text-royalblue">&#9658;</span> Алгоритм выбора цвета</p>
+            <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
+            <p class="text-muted ms-4 m-0"><span class="text-royalblue">&#10004;</span> если условие выполняется, происходит окраска</p>
+            <p class="text-muted ms-4 m-0"><span class="text-royalblue">&#10006;</span> если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
+            <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
+            <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
+            <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>
+        
+        </form>
+        <br>
     {% endif %}
-
-    <!-- ошибка с colorsettings -->
-    <p class="text-muted" id="colorset_error"></p>
-
-    <!-- сборная форма настроек цвета -->
-    <form method="POST" action="{% url 'save_color_settings' %}" class="hidden_element" id="color_settings_form">
-        {% csrf_token %}
-        <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
-
-        <div class="d-flex flex-wrap">
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Самочувствие</h4></caption>
-                {% for form in colorset_forms|slice:":5" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Вес</h4></caption>
-                {% for form in colorset_forms|slice:"5:10" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Жирность</h4></caption>
-                {% for form in colorset_forms|slice:"10:15" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Пульс</h4></caption>
-                {% for form in colorset_forms|slice:"15:20" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center m-0">
-                <caption class="text-center"><h4>Давление верхнее</h4></caption>
-                {% for form in colorset_forms|slice:"20:25" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center m-0">
-                <caption class="text-center"><h4>Давление нижнее</h4></caption>
-                {% for form in colorset_forms|slice:"25:30" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 px-4">
-                <p><span class="text-royalblue">&#9658;</span> Нормальное давление по анкете: <span class="text-muted">{{ normal_pressure }}</span></p>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Калории</h4></caption>
-                {% for form in colorset_forms|slice:"30:35" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Белки</h4></caption>
-                {% for form in colorset_forms|slice:"35:40" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Жиры</h4></caption>
-                {% for form in colorset_forms|slice:"40:45" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            </div>
-
-            <div class="col-12 col-md-6 py-3 px-1">
-            <table class="table table-borderless caption-top align-middle text-center">
-                <caption class="text-center"><h4>Углеводы</h4></caption>
-                {% for form in colorset_forms|slice:"45:50" %}
-                <tr>
-                    {{ form.index }}
-                    {{ form.color }}
-                    <td>{{ form.low_limit }}</td>
-                    <td class="fs-4">&#8804;</td>
-                    <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
-                    <td class="fs-4">&#8804;</td>
-                    <td>{{ form.upper_limit }}</td>
-                </tr>
-                {% endfor %}           
-            </table>
-            </div>
-        </div>
-
-        <p class="text-center m-0 text-transparent" id="save_status">&nbsp;</p>
-
-        <!-- блок кнопок -->
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="#top">
-                <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="Наверх" style="transform: rotate(90deg);">
-            </a>
-            <button class="btn btn-primary" type="submit">Сохранить</button>
-        </div>
-
-        <br><br>
-        <!-- пояснение алгоритма-->
-        <p class=""><span class="text-royalblue">&#9658;</span> Алгоритм выбора цвета</p>
-        <p class="text-muted ms-3 m-0">Вначале берется зеленый цвет и проверяется соответствие показателя на заданное условие:</p>
-        <p class="text-muted ms-4 m-0"><span class="text-royalblue">&#10004;</span> если условие выполняется, происходит окраска</p>
-        <p class="text-muted ms-4 m-0"><span class="text-royalblue">&#10006;</span> если условие не выполняется, берется нижеследующий цвет и проверяется его условие</p>
-        <p class="text-muted ms-3">Если ни одно условие не выполнено, цвет остается прозрачным</p>
-        <p class="text-muted ms-3 m-0">Давление проверяется по двум числам отдельно и окрашивается по худшему результату</p>
-        <p class="text-muted ms-3 m-0">Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается</p>
-
-    </form>
-    <br>
 </div>
+
 
 <!-- сохранение цветовых настроек из формы -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

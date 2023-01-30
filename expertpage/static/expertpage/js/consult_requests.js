@@ -1,5 +1,5 @@
 // кружок уведомления о количестве новых заявок
-const newFormCount = document.getElementById('new_consult_signup_count');
+const newFormCount = document.getElementById('new_consult_signup_amount');
 
 // переменные хранящие открытую сейчас заявку и ее запись
 var openedForm = false;

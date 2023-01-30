@@ -27,8 +27,8 @@
         <div class="d-flex flex-wrap justify-content-center align-items-center lh-1">
           <a href="{% url 'expertpage' %}" class="nav_link text-nowrap" id="link_clients">мои клиенты</a>
           <a href="{% url 'consult_requests_page' %}" class="nav_link text-nowrap" id="link_consult_requests">заявки
-            {% if new_consult_signup_count > 0 %}
-              <div class="rounded-circle ms-2" id="new_consult_signup_count">{{ new_consult_signup_count }}</div>
+            {% if new_consult_signup_amount > 0 %}
+              <div class="rounded-circle ms-2" id="new_consult_signup_amount">{{ new_consult_signup_amount }}</div>
             {% endif %}
           </a>
         </div>

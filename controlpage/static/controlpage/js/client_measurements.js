@@ -157,7 +157,6 @@ function getColorSettings() {
         if (this.responseText == '{}') {
           // уведомление об отсутствии настроек
           colorsetError.innerHTML = "&#10006; цветовые границы не настроены";
-          document.getElementById("colorset_not_exist").classList.add('hidden_element');
           colorsetError.classList.add('form_not_saved');
           colorsetError.classList.remove('text-muted');
           setTimeout(() => {

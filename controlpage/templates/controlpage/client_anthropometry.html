@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="container pt-5">
+<div class="container main_container d-flex flex-column justify-content-between pt-5">
 
     <!-- записанные измерения -->
     <section name="anthropometry_entries">
@@ -256,12 +256,12 @@
     </section>
 
     <br>
-    
+
     <!-- переход к ежедневным показателям -->
-    <form method="get" action="{% url 'client_measurements' %}">
-        <input type="hidden" value="{{ client_id }}" name="client_id">
-        <input type="image" name="submit" class="hover_brigh" src="{% static 'common/img/arrow_back_royalblue.svg' %}" alt="Submit" title="К измерениям" height="38"> 
-    </form>
+    <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="mt-auto mb-2">
+        <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="К измерениям">
+    </a>
+
 </div>
 
 <script src="{% static 'controlpage/js/client_anthropometry.js' %}"></script>

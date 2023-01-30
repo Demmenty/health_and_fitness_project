@@ -298,36 +298,35 @@
     <!-- блок кнопок -->
     <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-between mt-auto mb-3">
         {% if period_measures %}
-            <!-- применение цветов -->
+            <!-- окрашивания показателей -->
             <div class="d-flex flex-column align-items-center align-items-md-start">
-                <!-- кнопка -->
-                <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-4" style="height:38px">
+                <!-- кнопка применения -->
+                <div class="d-flex border border-grey rounded align-items-center px-3 py-2 mb-4" style="height:38px">
                     <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
                     <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
-                        onchange="applyColors()" {% if colorsettings_exist %} checked="checked"{% endif %}>
+                        onchange="applyColors()" {% if colorsettings_exist %} checked="checked" {% endif %}>
                 </div>
-                <!-- ошибка -->
+                <!-- уведомление -->
                 <div class="d-flex hidden_element justify-content-center justify-content-md-start text-wrap mb-4" id="colorset_error_container">
                     <span class="text-royalblue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
                 </div>
             </div>
-        {% endif %}
-    
-        <!-- выбор дней статистики -->
-        {% if period_measures %}
-        <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-center mb-4">
-            <div class="d-flex align-items-center mb-2 mb-md-0">
-                <h5 class="m-0">Статистика за</h5>
-                <input type="number" class="form-control text-center mx-2" name="selectperiod" min="1" id="input_period">
-                <h5 class="m-0">дней</h5>
-            </div>
-            <button type="submit" class="btn btn-primary d-inline mx-2 mb-2 mb-md-0 me-md-0" name="submit">Получить</button></h5>
-        </form>
+            <!-- выбор дней статистики -->
+            <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-center mb-4">
+                <div class="d-flex align-items-center mb-2 mb-md-0">
+                    <h5 class="m-0">Статистика за</h5>
+                    <input type="number" class="form-control text-center mx-2" name="selectperiod" min="1" id="input_period">
+                    <h5 class="m-0">дней</h5>
+                </div>
+                <button type="submit" class="btn btn-primary d-inline mx-2 mb-2 mb-md-0 me-md-0" name="submit">Получить</button></h5>
+            </form>
         {% endif %}
     </div>
 
     <!-- ссылка на антропометрию -->
-    <a href="{% url 'anthropometry' %}" type="button" class="btn btn-primary mx-auto ms-md-0 mb-3">Антропометрия</a>
+    <a href="{% url 'anthropometry' %}" type="button" class="btn btn-primary mt-auto mx-auto ms-md-0 mb-3">
+        Антропометрия
+    </a>
 
 </div>
 

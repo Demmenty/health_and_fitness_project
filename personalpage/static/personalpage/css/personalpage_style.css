@@ -24,6 +24,11 @@ body {
     }
 }
 
+.form-check-input:checked {
+    background-color: #5271ff;
+    border-color: #5271ff;
+}
+
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;

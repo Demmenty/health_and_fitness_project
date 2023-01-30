@@ -45,15 +45,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'authentication',
     'common',
     'homepage',
+    'consultation_signup',
     'client_info',
     'personalpage',
     'controlpage',
-    'expertpage',
     'measurements',
     'anthropometry',
     'fatsecret_app',
+    'expertpage',
     'expert_remarks',
     'expert_recommendations',
 
