@@ -4,7 +4,7 @@
 {% block title %}Контроль показателей{% endblock %}
 
 {% block content %}
-<div class="container pt-5">
+<div class="container main_container d-flex flex-column justify-content-between pt-5">
     <section name="today_measurements">
         <!-- табличка за сегодня -->
         {% if today_measure %}
@@ -113,7 +113,7 @@
             </a>
         {% else %}
             <p class="text-center">За сегодня измерений не сделано</p>
-            <a href="{% url 'addmeasure' %}" class="d-block text-end" title="добавить измерения">
+            <a href="{% url 'addmeasure' %}" class="d-block text-center" title="добавить измерения">
                 <button type="button" class="btn btn-outline-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle-dotted" viewBox="0 0 20 20">
                         <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
@@ -197,9 +197,8 @@
                 </tfoot>
             </table>
             {% if period_measures_avg %}
-            <p class="text-muted text-start"><span class="royal_blue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
+            <p class="text-muted text-start"><span class="text-royalblue">&#9658;</span> среднее КБЖУ считается без учета сегодняшнего дня</p>
             {% endif %}
-            <br>
 
             <!-- всплывающие комменты за период -->
             {% for comment in period_measure_comment_forms %}
@@ -296,36 +295,39 @@
         </section>
     {% endif %}
 
-    <!-- всякие кнопки -->
-    <div class="d-flex justify-content-md-between justify-content-center text-nowrap flex-wrap">
-        <!-- кнопка применения цветов -->
-        <div class="d-flex px-3 py-2 border border-grey rounded align-items-center me-2 mb-3" style="height:38px">
-            <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
-            <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
-                onchange="applyColors()" {% if colorsettings_exist %} checked="checked"{% endif %}>
-        </div>
+    <!-- блок кнопок -->
+    <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-between mt-auto mb-3">
+        {% if period_measures %}
+            <!-- применение цветов -->
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <!-- кнопка -->
+                <div class="d-flex px-3 py-2 border border-grey rounded align-items-center mb-4" style="height:38px">
+                    <img src="{% static 'personalpage/img/colors_pic.svg' %}" width="55">
+                    <input type="checkbox" name="apply_colors" class="form-check-input ms-3" id="apply_colors_btn" data-action="{% url 'get_color_settings' %}"
+                        onchange="applyColors()" {% if colorsettings_exist %} checked="checked"{% endif %}>
+                </div>
+                <!-- ошибка -->
+                <div class="d-flex hidden_element justify-content-center justify-content-md-start text-wrap mb-4" id="colorset_error_container">
+                    <span class="text-royalblue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
+                </div>
+            </div>
+        {% endif %}
     
-        <!-- ссылка на антропометрию -->
-        <a href="{% url 'anthropometry' %}"><button type="button" class="btn btn-primary mb-3">Антропометрия</button></a>
-        
         <!-- выбор дней статистики -->
         {% if period_measures %}
-            <form action="" method="get" class="d-flex flex-wrap justify-content-center ms-3 mb-3">
-                <div class="d-flex align-items-center mb-3">
-                    <h5 class="m-0">Статистика за</h5>
-                    <input type="number" class="form-control text-center py-2 mx-3" name="selectperiod" min="1" id="input_period">
-                    <h5 class="m-0">дней</h5>
-                </div>
-                <button type="submit" class="btn btn-primary d-inline ms-3 mb-3" name="submit">Получить</button></h5>
-            </form>
+        <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-center mb-4">
+            <div class="d-flex align-items-center mb-2 mb-md-0">
+                <h5 class="m-0">Статистика за</h5>
+                <input type="number" class="form-control text-center mx-2" name="selectperiod" min="1" id="input_period">
+                <h5 class="m-0">дней</h5>
+            </div>
+            <button type="submit" class="btn btn-primary d-inline mx-2 mb-2 mb-md-0 me-md-0" name="submit">Получить</button></h5>
+        </form>
         {% endif %}
     </div>
-    
-    <!-- ошибка с colorsettings -->
-    <div class="d-flex hidden_element justify-content-center justify-content-md-start" id="colorset_error_container">
-        <span class="royal_blue">&#9658;&nbsp;</span><span class="text-muted" id="colorset_error"></span>
-    </div>
-    <br>
+
+    <!-- ссылка на антропометрию -->
+    <a href="{% url 'anthropometry' %}" type="button" class="btn btn-primary mx-auto ms-md-0 mb-3">Антропометрия</a>
 
 </div>
 

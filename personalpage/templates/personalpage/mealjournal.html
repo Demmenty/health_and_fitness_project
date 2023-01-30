@@ -258,10 +258,10 @@
                     </tr>
                     <tr class="table-light">
                         <th class="d-none d-sm-table-cell">В среднем</th>
-                        <th>{{ monthly_food.monthly_avg.calories }}</th>
-                        <th>{{ monthly_food.monthly_avg.protein }}</th>
-                        <th>{{ monthly_food.monthly_avg.fat }}</th>
-                        <th>{{ monthly_food.monthly_avg.carbo }}</th>
+                        <th title="калории">{{ monthly_food.monthly_avg.calories }}</th>
+                        <th title="белки">{{ monthly_food.monthly_avg.protein }}</th>
+                        <th title="жиры">{{ monthly_food.monthly_avg.fat }}</th>
+                        <th title="углеводы">{{ monthly_food.monthly_avg.carbo }}</th>
                     </tr>
                 </tbody>
             </table>
@@ -399,6 +399,13 @@
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- загрузочный кот -->
+<div class="modal fade cat_with_coffee" id="load_cat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog cat_with_coffee">
+        <img src="{% static 'common/gif/cat_with_coffee.gif' %}" class="cat_with_coffee">
     </div>
 </div>
 

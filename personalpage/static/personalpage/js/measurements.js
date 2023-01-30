@@ -97,12 +97,12 @@ function dragElement(elmnt) {
 }
 
 
-let btn = document.getElementById("apply_colors_btn");
+let colorsBtn = document.getElementById("apply_colors_btn");
 let allTableFields = document.querySelectorAll("td");
 
 // функция применения цветов к измерениям согласно настройкам из БД
 function applyColors() {
-  if (btn.checked) {
+  if (colorsBtn.checked) {
     if (colorSet) {
       applyColorSettings();
     }
@@ -118,7 +118,9 @@ function applyColors() {
 }
 
 window.addEventListener('load', function() {
-  applyColors();
+  if (colorsBtn) {
+    applyColors();
+  }
 })
 
 function getColorSettings() {

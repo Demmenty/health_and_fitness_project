@@ -7,7 +7,7 @@
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-<div class="container d-flex flex-column pt-5 min-vh">
+<div class="container main_container d-flex flex-column pt-4 pt-sm-5">
     
     <!-- заголовок-дата -->
     <div class="d-flex justify-content-center align-items-center">
@@ -253,7 +253,7 @@
         </div>
         <!-- Кнопка возврата -->
         <a href="{% url 'mealjournal' %}" class="align-self-sm-end order-sm-1">
-            <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К дневнику питания">
+            <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="К дневнику питания">
         </a>
     </div>
 </div>
@@ -301,6 +301,13 @@
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- загрузочный кот -->
+<div class="modal fade cat_with_coffee" id="load_cat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog cat_with_coffee">
+        <img src="{% static 'common/gif/cat_with_coffee.gif' %}" class="cat_with_coffee">
     </div>
 </div>
 

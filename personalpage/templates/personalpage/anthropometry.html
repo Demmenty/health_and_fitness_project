@@ -7,7 +7,7 @@
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-<div class="container pt-5">
+<div class="container main_container d-flex flex-column justify-content-between pt-5">
 
     <!-- записанные измерения -->
     <section name="anthropometry_entries">
@@ -270,11 +270,9 @@
     <br>
 
     <!-- переход к ежедневным показателям -->
-    <a href="{% url 'measurements' %}">
-        <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" width="38" title="К измерениям">
+    <a href="{% url 'measurements' %}" class="mt-auto mb-2">
+        <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="К измерениям">
     </a>
-    <br>
-    <br>
 </div>
 
 <!-- модальное окно для внесения новой записи -->
@@ -337,7 +335,7 @@
                     </div>
                     <!-- текущий статус доступа к фото -->
                     <p class="text-muted my-3">
-                        <span class="royal_blue">&#9658;</span>
+                        <span class="text-royalblue">&#9658;</span>
                         {% if photoaccess_allowed %}
                             <span id="photo_access_status">эксперт имеет доступ к фотографиям</span>
                         {% else %}

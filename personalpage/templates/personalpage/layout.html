@@ -27,11 +27,7 @@
         <ul class="nav justify-content-center mb-md-0" id="nav_string">
           <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
           <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
-          <li>
-            <form method="get" action="{% url 'mealjournal' %}">
-              <button type="submit" class="nav_link" id="link_meal" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-            </form>
-          </li>
+          <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal">питание</a></li>
           <li><a href="#" class="nav_link" id="link_workout">тренировки</a></li>
         </ul>
         <!-- навигация выпадающим меню -->
@@ -43,11 +39,7 @@
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
               <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
               <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements_drop">измерения</a></li>
-              <li>
-                <form method="get" action="{% url 'mealjournal' %}">
-                  <button type="submit" class="nav_link" id="link_meal_drop" data-bs-toggle="modal" data-bs-target="#load_cat">питание</button>
-                </form>
-              </li>
+              <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal_drop">питание</a></li>
               <li><a href="#" class="nav_link" id="link_workout_drop">тренировки</a></li>
             </ul>
           </div>
@@ -66,13 +58,6 @@
       {% block content %}
       {% endblock %}
   </main>
-
-  <!-- загрузочный кот -->
-  <div class="modal fade cat_with_coffee" id="load_cat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog cat_with_coffee">
-        <img src="{% static 'common/gif/cat_with_coffee.gif' %}" class="cat_with_coffee">
-    </div>
-  </div>
 
   <footer>
     <div class="container px-0">

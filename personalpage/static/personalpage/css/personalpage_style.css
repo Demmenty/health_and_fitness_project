@@ -10,6 +10,19 @@ body {
     display: flex;
     flex-direction: column;
 }
+.main_container {
+    min-height: 55vh;
+}
+@media (min-width: 576px) {
+    .main_container {
+        min-height: 72vh;
+    }
+}
+@media (min-width: 768px) {
+    .main_container {
+        min-height: 80vh;
+    }
+}
 
 /* скролл */
 ::-webkit-scrollbar {
@@ -355,7 +368,7 @@ footer {
 /* стиль кнопок */
 
 /* main */
-.royal_blue {
+.text-royalblue {
     color: #5271ff;
 }
 .hidden_element {
@@ -783,28 +796,12 @@ table {
     width: 152px;
     align-self: center;
 }
-.min-vh {
-    min-height: 64vh;
-}
-@media (min-width: 576px) {
-    .min-vh {
-        min-height: 79vh;
-    }  
-}
 #select_month_section {
     max-width: 310px;
 }
 /* foodbymonth */
 
 /* foodbydate */
-.min-vh {
-    min-height: 64vh;
-}
-@media (min-width: 576px) {
-    .min-vh {
-        min-height: 79vh;
-    }  
-}
 #select_date_section {
     max-width: 310px;
 }
