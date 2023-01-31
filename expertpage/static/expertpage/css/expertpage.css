@@ -10,6 +10,9 @@ body {
     display: flex;
     flex-direction: column;
 }
+.text-transparent {
+    color: #ffffff00;
+}
 .text-royalblue {
     color: #5271ff !important;
 }
@@ -18,6 +21,9 @@ body {
 }
 .text-success {
     color: #00c0f0 !important;
+}
+.transition_common {
+    transition: all 1s ease;
 }
 .border-blueshadow {
     border: 1px solid #ced4da;

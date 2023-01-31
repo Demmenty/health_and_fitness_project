@@ -207,6 +207,7 @@ $(document).ready(function(){
     })
     // отправка формы 
     $('#recommend_nutrition_form').submit(function () {
+        
         let statusField = $('#recommend_nutrition_status');
 
         $.ajax({

@@ -64,43 +64,47 @@ function closeForm() {
 }
 
 // сохранение формы заявки (заметки эксперта к ней)
-$('form[name="signup_form"]').on('submit', function() {
+$('form[name="signup_form"]').submit(function() {
 
     let id = $(this).attr('id').slice(12);
-    let resultMsg = document.getElementById('result_msg_' + id);
+    let statusField = $('#result_msg_' + id);
 
-    var request = $.ajax({
-        data: $(this).serialize(), // данные формы
-        type: $(this).attr('method'), // метод отправки запроса
-        url: $(this).attr('action'), // функция обработки
-    });
+    $.ajax({
+        data: $(this).serialize(),
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
 
-    request.done(function(response) {
-        resultMsg.textContent = response.result;
-        if (response.result == 'заметка сохранена') {
-            resultMsg.classList.add('text-success');
+        success: function (response) {
+            // уведомление
+            statusField.text(response.result);
+            // визуальные эффекты
+            if (response.result == 'заметка сохранена') {
+                statusField.addClass('text-info');
+            }
+            else {
+                statusField.addClass('text-danger');
+            }
             setTimeout(() => {
-                resultMsg.classList.remove('text-success');
-            }, 1500);
-        }
-        else {
-            resultMsg.classList.add('text-error');
+                statusField.removeClass('text-info');
+                statusField.removeClass('text-danger');
+            }, 2000);
+        },
+        error: function (response) {
+            // уведомление
+            if (response.status === 0) {
+                statusField.text('нет соединения с сервером :(');
+            }
+            else {
+                statusField.text('возникла ошибка! статус ' + 
+                        response.status + ' ' + response.statusText);
+            }
+            // визуальные эффекты
+            statusField.addClass('text-danger');
             setTimeout(() => {
-                resultMsg.classList.remove('text-error');
-            }, 1500);
+                statusField.removeClass('text-danger');
+            }, 2000);
         }
-      });
-       
-    request.fail(function(response) {
-        resultMsg.textContent = ("возникла ошибка " +
-                                "( status " + response.status +
-                                 " " + response.statusText + " )");
-        resultMsg.classList.add('text-error');
-        setTimeout(() => {
-            resultMsg.classList.remove('text-error');
-        }, 1500);
     });
-
     return false;
 });
 
