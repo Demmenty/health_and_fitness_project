@@ -29,6 +29,10 @@ body {
     border-color: #5271ff;
 }
 
+#today_measure_block {
+    min-width: 290px;
+}
+
 /* скролл */
 ::-webkit-scrollbar {
     max-width: 9px;
@@ -520,7 +524,15 @@ caption {
 }
 .tablerow_name {
     text-align: left;
-    width: 128px;
+    width: 150px;
+}
+#today_measure_block {
+    min-width: 290px;
+}
+@media (min-width: 768px) {
+    #today_measure_block {
+        max-width: 50%;
+    }
 }
 /* client_mainpage */
 
@@ -660,13 +672,10 @@ input[type="radio"]:hover {
 #input_period {
     max-width: 70px;
 }
-.today_measure_table {
-    max-width: 500px;
-    min-width: 285px;
-}
 .comment_pic_royalblue {
     filter: hue-rotate(36deg);
 }
+
 /* measurements */
 
 /* mealjournal */

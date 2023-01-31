@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="container main_container d-flex flex-column justify-content-between pt-5">
+
     <section name="today_measurements">
         <!-- табличка за сегодня -->
         {% if today_measure %}
@@ -12,13 +13,10 @@
             <table class="table table-bordered align-middle text-center" id="today_measure_table">
                 <!-- структура для большого экрана -->
                 <thead class="table-light align-middle">
-                    <tr class="d-none d-md-table-row">
+                    <tr class="d-none d-lg-table-row">
                         <th>Дата</th>
                         <th class="d-none d-xl-table-cell">День</th>
-                        <th>
-                            <span class="d-lg-none">Само-<br>чувствие</span>
-                            <span class="d-none d-lg-inline">Самочувствие</span>
-                        </th>
+                        <th>Самочувствие</th>
                         <th>Масса</th>
                         <th>Процент жира</th>
                         <th>Пульс</th>
@@ -32,11 +30,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="d-none d-md-table-row">
+                    <tr class="d-none d-lg-table-row">
                         <td class="text-nowrap">{{ today_measure.date|date:"j b" }}</td>
                         <td class="d-none d-xl-table-cell">{{ today_measure.date|date:"D" }}</td>
                         <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% endif %}</td>
-                        <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
+                        <td class="text-nowrap">{% if today_measure.weight %}{{ today_measure.weight }} кг{% endif %}</td>
                         <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% endif %}</td>
                         <td>{{ today_measure.pulse|default_if_none:"" }}</td>
                         {% if today_measure.pressure_upper and today_measure.pressure_lower %}
@@ -49,7 +47,7 @@
                     </tr>
                 </tbody>
                 <!-- структура для маленького экрана -->
-                <tbody class="d-md-none">
+                <tbody class="d-lg-none">
                     <tr>
                         <th class="tablerow_name table-light">Самочувствие</th>
                         <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
@@ -91,10 +89,10 @@
                 </tbody>                
             </table>
             <!-- комментарий за сегодня -->
-            <div {% if today_measure.comment %} class="d-flex align-items-center mb-3" 
-                {% else %} class="d-flex align-items-center mb-3 hidden_element"
+            <div {% if today_measure.comment %} class="d-flex align-items-start mb-3" 
+                {% else %} class="d-flex align-items-start mb-3 hidden_element"
                 {% endif %} id="today_comment_container">
-                <div class="text-center ms-2 me-3">
+                <div class="text-center mt-2 ms-2 me-3">
                     <img src="{% static 'personalpage/img/comment_pic_24x20.png' %}" class="comment_pic_royalblue" title="комментарий">
                 </div>
                 <div class="border border-grey rounded w-100 p-2 px-3" id="today_comment">

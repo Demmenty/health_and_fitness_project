@@ -5,54 +5,57 @@
 
 {% block content %}
 
-<div class="container d-flex flex-column flex-sm-row justify-content-between pt-5">
+<div class="container d-flex flex-column justify-content-between pt-5">
 
-    <div class="d-flex flex-column me-sm-4 mb-4">
-        <p>Дата региcтрации: {{ date_joined }}</p>
-        <p>Возраст: {{ client_age }}</p>
-        <!-- анкета -->
-        <div class="mb-3">
-            {% if health_questionary_filled %}
-                &#10004;
-                <form method="get" action="{% url 'client_health_questionary' %}" class="d-inline">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
-                    <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
-                </form>
-                заполнена
+    <div class="d-flex flex-column flex-md-row justify-content-between">
+        <!-- общая инфо о клиенте -->
+        <div class="d-flex flex-column me-sm-4 mb-4">
+            <p>Дата региcтрации: {{ date_joined }}</p>
+            <p>Возраст: {{ client_age }}</p>
+            <!-- анкета -->
+            <div class="mb-3">
+                {% if health_questionary_filled %}
+                    &#10004;
+                    <form method="get" action="{% url 'client_health_questionary' %}" class="d-inline">
+                        <input type="hidden" value="{{ client_id }}" name="client_id">
+                        <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
+                    </form>
+                    заполнена
+                {% else %}
+                    &#10006; Анкета здоровья не заполнена
+                {% endif %}
+            </div>
+            <!-- дневник питания -->
+            {% if fs_connected %}
+            <p>&#10004; FatSecret подключен</p>
             {% else %}
-                &#10006; Анкета здоровья не заполнена
+            <p>&#10006; FatSecret не подключен</p>
             {% endif %}
         </div>
-        <!-- дневник питания -->
-        {% if fs_connected %}
-        <p>&#10004; FatSecret подключен</p>
-        {% else %}
-        <p>&#10006; FatSecret не подключен</p>
-        {% endif %}
-    </div>
 
-    <div class="d-flex flex-column">
         <!-- физические показатели сегодня  -->
-        <h5 class="text-royalblue align-self-center pt-1 mb-2">{% now "j E Y" %}</h5>
-        {% if today_measure %}
-            <div class="table-responsive today_measure_table" id="today_measure_table">
-                <table class="table table-bordered table-fixed text-center">
-                    <tr><th class="tablerow_name">Самочувствие</th><td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td></tr>
-                    <tr><th class="tablerow_name">Вес</th><td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td></tr>
-                    <tr><th class="tablerow_name">Процент жира</th><td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td></tr>
-                    <tr><th class="tablerow_name">Пульс в покое</th><td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td></tr>
-                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}<tr><th class="tablerow_name">Давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>{% endif %}
-                    <tr><th class="tablerow_name">Калории</th><td>{{ today_measure.calories|default_if_none:"-" }}</td></tr>
-                    <tr><th class="tablerow_name">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
-                    <tr><th class="tablerow_name">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
-                    <tr><th class="tablerow_name">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
-                    {% if today_measure.comment %}<tr id="tr_today_comment">{% else %}<tr id="tr_today_comment" class="hidden_element">{% endif %}
-                        <th class="tablerow_name">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>
-                </table>
-            </div>
-        {% else %}
-            <p class="text-center">&#10006; измерения отсутствуют</p>
-        {% endif %}
+        <div class="d-flex flex-column mx-auto mx-md-0" id="today_measure_block">
+            <h5 class="text-royalblue align-self-center pt-1 mb-2">{% now "j E Y" %}</h5>
+            {% if today_measure %}
+                <div class="table-responsive today_measure_table" id="today_measure_table">
+                    <table class="table table-bordered table-fixed text-center">
+                        <tr><th class="tablerow_name table-light">Самочувствие</th><td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td></tr>
+                        <tr><th class="tablerow_name table-light">Вес</th><td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td></tr>
+                        <tr><th class="tablerow_name table-light">Процент жира</th><td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td></tr>
+                        <tr><th class="tablerow_name table-light">Пульс в покое</th><td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td></tr>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}<tr><th class="tablerow_name table-light">Давление</th><td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td></tr>{% endif %}
+                        <tr><th class="tablerow_name table-light">Калории</th><td>{{ today_measure.calories|default_if_none:"-" }}</td></tr>
+                        <tr><th class="tablerow_name table-light">Белки</th><td>{{ today_measure.protein|default_if_none:"-" }}</td></tr>
+                        <tr><th class="tablerow_name table-light">Жиры</th><td>{{ today_measure.fats|default_if_none:"-" }}</td></tr>
+                        <tr><th class="tablerow_name table-light">Углеводы</th><td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td></tr>
+                        {% if today_measure.comment %}<tr id="tr_today_comment">{% else %}<tr id="tr_today_comment" class="hidden_element">{% endif %}
+                            <th class="tablerow_name table-light">Комментарий</th><td id="today_comment">{{ today_measure.comment }}</td></tr>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center">&#10006; измерения отсутствуют</p>
+            {% endif %}
+        </div>
     </div>
 
 </div>

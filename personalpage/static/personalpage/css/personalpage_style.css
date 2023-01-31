@@ -812,14 +812,21 @@ table {
 }
 /* foodbydate */
 
+
 /* personalpage */
-.today_measure_table {
-    max-width: 500px;
-    min-width: 285px;
+#today_measure_block {
+    min-width: 290px;
 }
+@media (min-width: 768px) {
+    #today_measure_block {
+        max-width: 50%;
+    }
+}
+
+
 .tablerow_name {
     text-align: left;
-    width: 128px;
+    width: 150px;
 }
 #input_period {
     max-width: 70px;
