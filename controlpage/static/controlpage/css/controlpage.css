@@ -18,6 +18,9 @@ body {
         min-height: 85vh;
     }  
 }
+.w-fit {
+    width: fit-content;
+}
 
 .form-check-input {
     min-width: 20px;
@@ -221,7 +224,7 @@ body {
     color: #3f54b2;
 }
 
-.cursor-move {
+.cursor-move:hover {
     cursor: move;
 }
 
@@ -793,27 +796,28 @@ input[type="radio"]:hover {
     mix-blend-mode: luminosity;
 }
 .container_photo {
-    border: 1px solid black;
     border-radius: 10px;
     padding: 5px;
     backface-visibility: hidden;
     background-color: #ebefff;
-    min-width: 300px;
-    max-width: 600px;
-    position: absolute;
-    z-index: 2;
-    top: 40%;
-    left: 10%;
-    right: 10%;
     box-shadow: 0 0 8px 1px #00000052;
+    z-index: 2;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+    width: 50vw;
+    min-width: 300px;
+    max-height: 80vh;
 }
 .container_photo img {
     border-radius: 10px;
-    width: -webkit-fill-available;
+    width: 100%;
 }
 .container_photo p {
     margin-bottom: 4px;
-    cursor: default;
+    cursor: move;
 }
 .close_photo_btn {
     float: right;

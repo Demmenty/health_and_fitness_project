@@ -24,6 +24,10 @@ body {
     }
 }
 
+.w-fit {
+    width: fit-content;
+}
+
 .form-check-input:checked {
     background-color: #5271ff;
     border-color: #5271ff;
@@ -540,11 +544,11 @@ table {
     border-radius: 3px;
 }
 .container_commentform {
-    border: 1px solid black;
     border-radius: 10px;
     padding: 5px;
     backface-visibility: hidden;
     background-color: #ebefff;
+    box-shadow: 0 0 8px 1px #00000052;
     width: 352px;
     max-width: 95vw;
     position: fixed;
@@ -639,10 +643,7 @@ table {
 
 
 /* anthropometry */
-.td_photo_btns {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+
 .show_photo_btn.shadow {
     box-shadow: 0 1px 4px 4px rgb(13 110 253 / 20%) !important;
     background-color: rgb(13 110 253 / 20%);
@@ -658,27 +659,28 @@ table {
     cursor: default;
 }
 .container_photo {
-    border: 1px solid black;
     border-radius: 10px;
     padding: 5px;
     backface-visibility: hidden;
     background-color: #ebefff;
-    min-width: 300px;
-    max-width: 600px;
-    position: absolute;
-    z-index: 2;
-    top: 40%;
-    left: 10%;
-    right: 10%;
     box-shadow: 0 0 8px 1px #00000052;
+    z-index: 2;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+    width: 50vw;
+    min-width: 300px;
+    max-height: 80vh;
 }
 .container_photo img {
     border-radius: 10px;
-    width: -webkit-fill-available;
+    width: 100%;
 }
 .container_photo p {
     margin-bottom: 4px;
-    cursor: default;
+    cursor: move;
 }
 .close_photo_btn {
     float: right;
