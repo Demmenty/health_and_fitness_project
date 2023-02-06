@@ -30,7 +30,7 @@ DEBUG = True
 # не забыть настроить !!!!
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'http://healthfitness-demmenty.pythonanywhere.com',
+    'healthfitness-demmenty.pythonanywhere.com',
 ]
 # это добавлено из-за ошибки 'Origin checking failed'
 CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
