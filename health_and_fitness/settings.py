@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 
 
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#5q!_-54)0@%4!*%3m87(g_!!5w(g+mlitm)ozqg+df5fxu8dx'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,7 +32,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '*',
 ]
-# это добавлено из-ха ошибки 'Origin checking failed'
+# это добавлено из-за ошибки 'Origin checking failed'
 CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
 
 
@@ -158,9 +159,6 @@ MEDIA_ROOT = BASE_DIR/'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# данные fatsecret - засунуть в вирт среду!!!
-FS_CONSUMER_KEY = '96509fd6591d4fb384386e1b75516777'
-FS_CONSUMER_SECRET = 'cb1398ad47344691b092cabce5647116'
-
-# FS_CONSUMER_KEY = os.getenv('FS_CONSUMER_KEY')
-# FS_CONSUMER_SECRET = os.getenv('FS_CONSUMER_SECRET')
+# данные fatsecret
+FS_CONSUMER_KEY = config('FS_CONSUMER_KEY')
+FS_CONSUMER_SECRET = config('FS_CONSUMER_SECRET')

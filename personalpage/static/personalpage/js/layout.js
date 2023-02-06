@@ -58,6 +58,15 @@ window.onload = function () {
             openLabelName = 'nutrition';
             openLabel = commentNutritionLabel;
         }
+        else if (pagePath == '/personalpage/training/') {
+            commentWorkout.classList.remove('hidden_element');
+            commentWorkoutLabel.classList.remove('closed');
+            navLinkWorkout.classList.add('text-royalblue');
+            navLinkWorkoutDrop.classList.add('hidden_element');
+            navLinkOpenDrop.textContent = 'тренировки';
+            openLabelName = 'workout';
+            openLabel = commentWorkoutLabel;
+        }
         else {
             commentGeneral.classList.remove('hidden_element');
             commentGeneralLabel.classList.remove('closed');

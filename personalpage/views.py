@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
-from measurements.forms import MeasurementForm, MeasurementCommentForm
+from measurements.forms import MeasurementForm
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from fatsecret_app.services import *
 from measurements.services import *
-from anthropometry.models import Anthropometry
 from anthropometry.forms import AnthropometryForm
 from anthropometry.services import *
 from client_info.services import *
@@ -414,3 +413,21 @@ def foodbymonth(request):
         'recommend_nutrition': recommend_nutrition,
     }
     return render(request, 'personalpage/foodbymonth.html', data)
+
+
+def training(request):
+    """Страница для контроля тренировок"""
+
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    if request.user.username == 'Parrabolla':
+        return redirect('expertpage')
+
+    # комментарий за сегодня от эксперта
+    today_commentary = get_today_commentary(request.user)
+
+    data = {
+        'today_commentary': today_commentary,
+    }
+    return render(request, 'personalpage/training.html', data)

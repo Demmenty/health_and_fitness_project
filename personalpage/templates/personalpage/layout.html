@@ -28,7 +28,7 @@
           <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
           <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
           <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal">питание</a></li>
-          <li><a href="#" class="nav_link" id="link_workout">тренировки</a></li>
+          <li><a href="{% url 'training' %}" class="nav_link" id="link_workout">тренировки</a></li>
         </ul>
         <!-- навигация выпадающим меню -->
         <div class="d-flex align-items-center justify-content-center mt-2" id="nav_dropdown">
@@ -40,7 +40,7 @@
               <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
               <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements_drop">измерения</a></li>
               <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal_drop">питание</a></li>
-              <li><a href="#" class="nav_link" id="link_workout_drop">тренировки</a></li>
+              <li><a href="{% url 'training' %}" class="nav_link" id="link_workout_drop">тренировки</a></li>
             </ul>
           </div>
         </div>
