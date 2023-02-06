@@ -29,7 +29,7 @@ DEBUG = True
 
 # не забыть настроить !!!!
 ALLOWED_HOSTS = [
-    'http://127.0.0.1:8000/',
+    '127.0.0.1',
     'http://healthfitness-demmenty.pythonanywhere.com',
 ]
 # это добавлено из-за ошибки 'Origin checking failed'
