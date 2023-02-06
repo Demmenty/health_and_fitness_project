@@ -4,9 +4,11 @@ from django.conf import settings
 from .models import FatSecretEntry
 import pickle
 from datetime import date, datetime, time, timedelta
-# from time import sleep
 from common.utils import datetime_into_epoch, epoch_into_datetime
+from pathlib import Path
 
+
+CURRENT_DIR = Path(__file__).resolve().parent
 
 # сессии
 def create_common_fs_session():
@@ -415,12 +417,12 @@ def _save_foodinfo_into_foodcache(food_info) -> None:
                 'serving_description': dic['serving_description'] })
 
     # открываем сохраненные данные о продуктах из файла
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'rb') as file:
         food_cache = pickle.load(file)
         food_cache.update(temp_food_cache)
 
     # записываем измененный кеш обратно в файл
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'wb') as f:
         pickle.dump(food_cache, f)
 
 
@@ -428,7 +430,7 @@ def _get_foodinfo_from_foodcache(food_id:str):
     """добыча из кеша инфо о продукте в виде словаря:
     {'food_name': {данные для расчета нормального количества}}"""
 
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'rb') as file:
         daily_total_cache = pickle.load(file)
 
     if daily_total_cache.get(food_id):
@@ -443,7 +445,7 @@ def save_foodmetric_into_foodcache(prods_without_info) -> None:
     """получает словарь с продуктами, которым добавили метрику
     вручную в дневнике питания, и сохраняет в food_info_cache"""
 
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'rb') as file:
         food_info_cache = pickle.load(file)
 
     count_of_prods = len(prods_without_info.get('food_id'))
@@ -465,7 +467,7 @@ def save_foodmetric_into_foodcache(prods_without_info) -> None:
                     dic["metric_serving_unit"] = metric_serving_unit
                     break
             
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'wb') as f:
             pickle.dump(food_info_cache, f)   
 
 
@@ -569,7 +571,7 @@ def _save_daily_total_in_cache(user, entry_date: datetime, daily_total:dict) -> 
     if (date.today() - entry_date).days < 3:
         return 
 
-    with open('fatsecret_app/daily_total_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'daily_total_cache.pickle', 'rb') as file:
         daily_total_cache = pickle.load(file)
 
     if daily_total_cache.get(user.id):
@@ -580,7 +582,7 @@ def _save_daily_total_in_cache(user, entry_date: datetime, daily_total:dict) -> 
     else:
         daily_total_cache.update({user.id:{entry_date:daily_total}})
 
-    with open('fatsecret_app/daily_total_cache.pickle', 'wb') as file:
+    with open(CURRENT_DIR / 'daily_total_cache.pickle', 'wb') as file:
         pickle.dump(daily_total_cache, file)
 
 
@@ -591,7 +593,7 @@ def _get_daily_total_from_cache(user, entry_date: datetime) -> dict:
 
     entry_date = entry_date.date()
 
-    with open('fatsecret_app/daily_total_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'daily_total_cache.pickle', 'rb') as file:
         daily_total_cache = pickle.load(file)
 
     if daily_total_cache.get(user.id):
@@ -668,7 +670,7 @@ def _save_monthly_total_in_cache(user, entry_month: datetime, monthly_total:dict
     if entry_month == current_month:
         return
 
-    with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'monthly_total_cache.pickle', 'rb') as file:
         monthly_total_cache = pickle.load(file)
 
     # если такого юзера еще не записано - сохраняем
@@ -676,7 +678,7 @@ def _save_monthly_total_in_cache(user, entry_month: datetime, monthly_total:dict
 
         monthly_total_cache.update({user.id:{entry_month:monthly_total}})
 
-        with open('fatsecret_app/monthly_total_cache.pickle', 'wb') as file:
+        with open(CURRENT_DIR / 'monthly_total_cache.pickle', 'wb') as file:
             pickle.dump(monthly_total_cache, file)
 
     # если такой юзер записан, но нет такого месяца - сохраняем
@@ -684,7 +686,7 @@ def _save_monthly_total_in_cache(user, entry_month: datetime, monthly_total:dict
 
         monthly_total_cache[user.id].update({entry_month:monthly_total})
 
-        with open('fatsecret_app/monthly_total_cache.pickle', 'wb') as file:
+        with open(CURRENT_DIR / 'monthly_total_cache.pickle', 'wb') as file:
             pickle.dump(monthly_total_cache, file)
 
 
@@ -695,7 +697,7 @@ def _get_monthly_total_from_cache(user, entry_month: datetime) -> dict:
 
     entry_month = entry_month.strftime("%Y-%m")
 
-    with open('fatsecret_app/monthly_total_cache.pickle', 'rb') as file:
+    with open(CURRENT_DIR / 'monthly_total_cache.pickle', 'rb') as file:
         monthly_total_cache = pickle.load(file)
 
     if monthly_total_cache.get(user.id):
@@ -707,13 +709,10 @@ def _get_monthly_total_from_cache(user, entry_month: datetime) -> dict:
     return {}
 
 
-
-
-
 def _clean_food_info_cache() -> None:
     """очистка файла кеша food_info_cache.pickle"""
 
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'wb') as f:
         pickle.dump({}, f)
 
 
@@ -721,7 +720,7 @@ def _remove_prods_without_info_from_cache() -> None:
     """удаление записей о продуктах без метрики для тестов
     id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха"""
 
-    with open('fatsecret_app/food_info_cache.pickle', 'rb') as f:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'rb') as f:
         food_cache = pickle.load(f)
 
     #  твистер - (184г)
@@ -733,9 +732,8 @@ def _remove_prods_without_info_from_cache() -> None:
         print(food_cache.get('62258251'))
         del food_cache['62258251']
 
-    with open('fatsecret_app/food_info_cache.pickle', 'wb') as f:
+    with open(CURRENT_DIR / 'food_info_cache.pickle', 'wb') as f:
         pickle.dump(food_cache, f)
 
 
 # _remove_prods_without_info_from_cache()
-
