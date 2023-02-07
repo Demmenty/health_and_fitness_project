@@ -116,8 +116,11 @@ def set_weight_in_fatsecret(user, measure_weight: str, measure_date: date) -> No
         measure_datetime = datetime.combine(measure_date, time())
         measure_date_int = datetime_into_epoch(measure_datetime)
 
-        # проверяем существующие внесения веса в fatsecret
-        monthly_weights = fs_session.weights_get_month()
+        try:
+            # проверяем существующие внесения веса в fatsecret
+            monthly_weights = fs_session.weights_get_month()
+        except KeyError:
+            ...
 
         if monthly_weights:
             if type(monthly_weights) is dict:
