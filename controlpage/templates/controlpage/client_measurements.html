@@ -21,7 +21,7 @@
                             <span class="d-lg-none">Само-<br>чувствие</span>
                             <span class="d-none d-lg-inline">Самочувствие</span>
                         </th>
-                        <th>Масса</th>
+                        <th>Вес</th>
                         <th>Процент жира</th>
                         <th>Пульс</th>
                         {% if today_measure.pressure_upper and today_measure.pressure_lower %}
@@ -121,7 +121,7 @@
                             <span class="d-xl-none">Само-<br>чувствие</span>
                             <span class="d-none d-xl-inline">Самочувствие</span>
                         </th>
-                        <th>Масса</th>
+                        <th>Вес</th>
                         <th class="">Процент жира</th>
                         <th>Пульс</th>
                         {% if need_to_show_pressure %}
@@ -289,7 +289,7 @@
         
                 <div class="col-12 col-md-6 py-3 px-1">
                 <table class="table table-borderless caption-top align-middle text-center">
-                    <caption class="text-center"><h4>Жирность</h4></caption>
+                    <caption class="text-center"><h4>Процент жира</h4></caption>
                     {% for form in colorset_forms|slice:"10:15" %}
                     <tr>
                         {{ form.index }}
