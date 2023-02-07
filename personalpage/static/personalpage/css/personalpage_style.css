@@ -132,12 +132,56 @@ body {
     right: 0;
     left: 15px;
     z-index: 10;
-    margin-top: -448px;
+    margin-top: -341px;
     margin-right: 15px;
+}
+@media (min-width: 450px) {
+    #commentary_container {
+        float: right;
+        left: unset;
+    }
 }
 @media (min-width: 576px) {
     #commentary_container {
-        margin-top: -506px;
+        margin-top: -326px;
+        margin-right: 109px;
+    }
+}
+@media (min-width: 768px) {
+    #commentary_container {
+        margin-top: -395px;
+    }
+}
+@media (min-width: 1535px) {
+    #commentary_container {
+        position: relative;
+        margin-right: 8px;
+    }
+}
+@media (min-width: 450px) {
+    #row_commentary_labels {
+        flex-wrap: nowrap !important;
+    }
+}
+.commentary_textfield {
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    z-index: 1;
+    position: relative;
+    height: 162px;
+    overflow: auto;
+    margin-top: 1rem;
+}
+@media (min-width: 450px) {
+    .commentary_textfield {
+        margin-top: 0;
+        width: 384px;
+        height: 210px;
+    }
+}
+@media (min-width: 768px) {
+    .commentary_textfield {
+        height: 279px; 
     }
 }
 
@@ -163,25 +207,11 @@ body {
 }
 
  
-.commentary_textfield {
-    border: 1px solid #ced4da;
-    border-radius: 10px;
-    z-index: 1;
-    position: relative;
-    height: 232px;
-    overflow: auto;
-    margin-top: 1rem;
-}
-@media (min-width: 576px) {
-    .commentary_textfield {
-        height: 279px; 
-    }
-}
 
 #dialog_part_svg {
     filter: drop-shadow(11px 5px 3px #9fbfc5);
     z-index: 11;
-    margin: -6px 63px 34px 0px;
+    margin: -4px 63px 34px 0px;
     transform: rotate(270deg) scaleX(-1);
     height: 20px;
 }
@@ -199,28 +229,8 @@ body {
     font-weight: 500;
 }
 
-@media (min-width: 450px) {
-    #commentary_container {
-        margin-top: -417px;
-        margin-right: 15px;
-        float: right;
-        left: unset;
-    }
-    #row_commentary_labels {
-        flex-wrap: nowrap !important;
-    }
-    .commentary_textfield {
-        margin-top: 0;
-        width: 384px;
-        height: 238px;
-    }
-}
 /* sm */
 @media (min-width: 576px) {
-    #commentary_container {
-        margin-top: -357px;
-        margin-right: 109px;
-    }
     #dialog_part_svg {
         filter: drop-shadow(11px 5px 3px #9fbfc5);
         margin: 18px -6px 17px -10px;
@@ -233,11 +243,6 @@ body {
         position: static;
         float: right;
         margin-right: -86px;
-    }
-    #commentary_container {
-        position: relative;
-        margin-top: -357px;
-        margin-right: 8px;
     }
     #count_of_unread {
         position: static;

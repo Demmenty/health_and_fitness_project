@@ -69,7 +69,7 @@
 
       <!-- окно комментария эксперта -->
       <div class="d-flex flex-column flex-sm-row hidden_element" id="commentary_container">
-        <div class="d-flex flex-column border rounded border-blueshadow p-3 bg-white">
+        <div class="d-flex flex-column border rounded border-blueshadow p-2 p-sm-3 bg-white">
           <!-- информация коммента -->
           <form id="commentary_form" class="" action="{% url 'get_commentary' %}" data-action-mark-readed="{% url 'mark_comment_readed' %}">
 
@@ -90,10 +90,10 @@
               </tr>
             </table>
             
-            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_general">{{ today_commentary.general }}</div>
-            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_measurements">{{ today_commentary.measurements }}</div>
-            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
-            <div class="commentary_textfield p-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_general">{{ today_commentary.general }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_measurements">{{ today_commentary.measurements }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
 
             <span class="hidden_element" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
             <span class="hidden_element" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
