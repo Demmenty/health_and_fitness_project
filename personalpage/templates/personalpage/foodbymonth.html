@@ -140,9 +140,9 @@
             <img src="{% static 'common/gif/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
             <h6 class="text-center text-muted"><i>нужно немножечко подождать...</i></h6>
         </div>
-        <form action="{% url 'get_monthly_top' %}" method="get" class="" id="get_top_form">
+        <form action="{% url 'get_monthly_top' %}" method="get" class="w-fit mx-auto my-4" id="get_top_form">
             <input type="hidden" value="{{ briefmonth|date:'Y-m' }}" name="month">
-            <button type="submit" class="btn btn-primary d-block mx-auto my-4" id="calc_top_btn">
+            <button type="submit" class="btn btn-primary" id="calc_top_btn">
                 ТОП-10
             </button>
         </form>
