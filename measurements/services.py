@@ -85,7 +85,7 @@ def create_avg_for_measures(period_measures) -> dict:
             if day['feel']:
                 feel_total += int(day['feel'])
                 days += 1
-        avg = int(feel_total / days)
+        avg = round(feel_total / days)
         avg_data['feel'] = str(avg) + "/10"
 
     if any(day['weight'] for day in period_measures):
