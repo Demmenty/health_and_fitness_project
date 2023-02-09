@@ -22,6 +22,10 @@ body {
     width: fit-content;
 }
 
+.comment_section:hover {
+    cursor: pointer;
+}
+
 .form-check-input {
     min-width: 20px;
     min-height: 20px;
