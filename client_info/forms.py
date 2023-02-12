@@ -197,7 +197,6 @@ class HealthQuestionaryForm(ModelForm):
             'parameter416_exp': TextInput(attrs={
                 'class': 'form-control hidden_element',
                 'placeholder': 'Укажите стаж занятий',
-                'required': False,
             }),
             'parameter417': TextInput(attrs={
                 'class': 'form-control hidden_element',
