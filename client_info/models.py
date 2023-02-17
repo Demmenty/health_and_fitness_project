@@ -18,7 +18,7 @@ class ClientContact(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     telegram = models.URLField('Telegram', max_length=250, null=True, blank=True)
     whatsapp = models.URLField('Whatsapp', max_length=250, null=True, blank=True)
-    discord = models.URLField('Discord', max_length=250, null=True, blank=True)
+    discord = models.CharField('Discord', max_length=250, null=True, blank=True)
     skype = models.URLField('Skype', max_length=250, null=True, blank=True)
     vkontakte = models.URLField('Vkontakte', max_length=250, null=True, blank=True)
     facebook = models.URLField('Facebook', max_length=250, null=True, blank=True)

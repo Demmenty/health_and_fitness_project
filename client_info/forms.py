@@ -17,24 +17,30 @@ class ClientContactForm(ModelForm):
         widgets = {
             'telegram': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 't.me/myname'
             }),
             'whatsapp': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'https://wa.me/myphone'
             }),
             'discord': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'Myusername'
             }),
             'skype': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'join.skype.com/invite/mycode'
             }),
             'vkontakte': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'https://vk.com/myid'
             }),
             'facebook': TextInput(attrs={
                 'class': 'form-control mb-4',
+                'placeholder': 'www.facebook.com/myname&id'
             }),
             'preferred_contact': Select(attrs={
-                'class': 'form-control',
+                'class': 'form-control mb-2',
             }),
         }
 

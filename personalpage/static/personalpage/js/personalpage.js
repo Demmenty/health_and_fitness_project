@@ -1,5 +1,31 @@
 $(document).ready(function(){
 
+    // кнопки помощи в контактах
+    $('#telegram_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#telegram_help').toggleClass("hidden_element")
+    })
+    $('#whatsapp_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#whatsapp_help').toggleClass("hidden_element")
+    })
+    $('#discord_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#discord_help').toggleClass("hidden_element")
+    })
+    $('#skype_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#skype_help').toggleClass("hidden_element")
+    })
+    $('#vkontakte_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#vkontakte_help').toggleClass("hidden_element")
+    })
+    $('#facebook_help_btn').click(function() {
+        $(this).toggleClass("open");
+        $('#facebook_help').toggleClass("hidden_element")
+    })
+
     // сохранение контактов
     $('#contacts_form').submit(function () {
 

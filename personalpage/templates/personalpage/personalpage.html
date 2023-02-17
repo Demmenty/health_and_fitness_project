@@ -125,7 +125,97 @@
             <div class="modal-body px-4">
                 <form method="post" action="{% url 'save_contacts' %}" id="contacts_form" class="w-100">
                     {% csrf_token %}
-                    {{ contacts_form.as_p }}
+                    <label for="id_telegram">Telegram:</label>
+                    <svg id="telegram_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.telegram }}
+                    <div class="hidden_element contacts_help my-3" id="telegram_help">
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">t.me/demmenty</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/telegram_help_img2.jpg' %}" class="mb-3">
+                        <img src="{% static 'personalpage/img/telegram_help_img.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_whatsapp">Whatsapp:</label>
+                    <svg id="whatsapp_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.whatsapp }}
+                    <div class="hidden_element contacts_help my-3" id="whatsapp_help">
+                        <p>укажите номер вашего телефона, который привязан к Whatsapp, после ссылки на "wa.me"</p>
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">wa.me/79603280691</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/whatsapp_help_img.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_discord">Discord:</label>
+                    <svg id="discord_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.discord }}
+                    <div class="hidden_element contacts_help my-3" id="discord_help">
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">Demmenty#5187</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/discord_help_img.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_telegram">Skype:</label>
+                    <svg id="skype_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.skype }}
+                    <div class="hidden_element contacts_help my-3" id="skype_help">
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">join.skype.com/invite/ANfPTptWeOxA</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/skype_help_img.jpg' %}" class="mb-3">
+                        <img src="{% static 'personalpage/img/skype_help_img2.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_vkontakte">Vkontakte:</label>
+                    <svg id="vkontakte_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.vkontakte }}
+                    <div class="hidden_element contacts_help my-3" id="vkontakte_help">
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">vk.com/id93683216</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/vkontakte_help_img.jpg' %}" class="mb-3">
+                        <img src="{% static 'personalpage/img/vkontakte_help_img2.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_facebook">Facebook:</label>
+                    <svg id="facebook_help_btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                    </svg>
+                    {{ contacts_form.facebook }}
+                    <div class="hidden_element contacts_help my-3" id="facebook_help">
+                        <div class="d-flex align-items-center">
+                            <p class="me-3">Пример:</p>
+                            <p class=" form-control overflow-auto bg-light">facebook.com/parabola.parabola.963</p>
+                        </div>
+                        <img src="{% static 'personalpage/img/facebook_help_img.jpg' %}" class="mb-3">
+                        <img src="{% static 'personalpage/img/facebook_help_img2.jpg' %}">
+                    </div>
+                    <br>
+                    <label for="id_preferred_contact">Предпочтительный способ связи:</label>
+                    {{ contacts_form.preferred_contact }}
                     <p class="text-center transition_common text-transparent" id="contacts_status">&nbsp;</p>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Закрыть</button>
                     <button type="submit" class="btn btn-primary float-end">Сохранить</button>

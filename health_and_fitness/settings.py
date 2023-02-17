@@ -32,7 +32,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'healthfitness-demmenty.pythonanywhere.com',
 ]
+
 CURRENT_DOMAIN = 'http://healthfitness-demmenty.pythonanywhere.com'
+# при смене домена поменять "Allowed IP Addresses" на FS
 
 # это добавлено из-за ошибки 'Origin checking failed'
 CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
