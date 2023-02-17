@@ -60,6 +60,9 @@ def get_daily_nutrition_fs(user, request_date: datetime) -> dict:
     if not monthly_nutrition:
         return {}
 
+    if len(monthly_nutrition) == 1:
+        monthly_nutrition = [monthly_nutrition]
+        
     for day in monthly_nutrition:
         if day['date_int'] == datetime_into_epoch(request_date):
             return day
