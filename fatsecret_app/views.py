@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from .services import *
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 fs_session = create_common_fs_session()
@@ -16,8 +17,9 @@ def fatsecretauth(request):
     # 1) получаем адрес подключения и направляем по нему
     if request.GET.get('oauth_verifier') is None:
 
-        auth_url = fs_session.get_authorize_url(
-                callback_url="http://127.0.0.1:8000/fatsecret_app/auth/")
+        callback_url = settings.CURRENT_DOMAIN + "/fatsecret_app/auth/"
+
+        auth_url = fs_session.get_authorize_url(callback_url=callback_url)
 
         return redirect(auth_url)
 
