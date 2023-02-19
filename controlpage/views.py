@@ -35,7 +35,9 @@ def client_mainpage(request):
 
     # существоВание анкеты и возраст клиента
     health_questionary_filled = is_health_questionary_filled_by(client)
-    client_age = get_age_of(client)
+    meet_questionary_filled = is_meet_questionary_filled_by(client)
+    client_height = get_height(client)
+    client_age = get_age_string(client)
 
     # проверка подключения FatSecret
     fs_connected = user_has_fs_entry(client)
@@ -49,9 +51,11 @@ def client_mainpage(request):
         'clientname': client.username,
         'client_id': client_id,
         'health_questionary_filled': health_questionary_filled,
+        'meet_questionary_filled': meet_questionary_filled,
         'fs_connected': fs_connected,
         'today_measure': today_measure,
         'client_age': client_age,
+        'client_height': client_height,
         'date_joined': date_joined,
         'client_contacts': client_contacts,
         'client_remark': client_remark,
@@ -89,6 +93,40 @@ def client_health_questionary(request):
         'client_remark': client_remark,
     }
     return render(request, 'controlpage/client_health_questionary.html', data)
+
+
+def client_meet_questionary(request):
+    """Анкета здоровья клиента"""
+
+    # проверка пользователя
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+    if request.user.username != 'Parrabolla':
+        return redirect('homepage')
+
+    # определение клиента
+    client_id = request.GET['client_id']
+    client = User.objects.get(id=client_id)
+
+    # контакты клиента
+    client_contacts = get_contacts_of(client)
+    # комментарий и заметки
+    client_remark = get_remark_forms(client)
+    # анкета здоровья
+    meet_questionary = get_meet_questionary_of(client)
+    meet_questionary_form = get_meet_questionary_form_for(client)
+    readiness_choices = MeetQuestionary.READINESS_CHOICES
+    
+    data = {
+        'clientname': client.username,
+        'client_id': client_id,
+        'meet_questionary': meet_questionary,
+        'meet_questionary_form': meet_questionary_form,
+        'readiness_choices': readiness_choices,
+        'client_contacts': client_contacts,
+        'client_remark': client_remark,
+    }
+    return render(request, 'controlpage/client_meet_questionary.html', data)
 
 
 def client_measurements(request):

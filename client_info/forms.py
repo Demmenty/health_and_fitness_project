@@ -1,5 +1,6 @@
-from .models import HealthQuestionary, ClientContact
-from django.forms import ModelForm, TextInput, Select, SelectDateWidget, CheckboxInput
+from .models import HealthQuestionary, MeetQuestionary, ClientContact
+from django.forms import (
+    ModelForm, TextInput, Textarea, Select, SelectDateWidget, CheckboxInput, NumberInput)
 
 
 class ClientContactForm(ModelForm):
@@ -219,4 +220,133 @@ class HealthQuestionaryForm(ModelForm):
             'confirm': CheckboxInput(attrs={
                 'class': 'form-check-input',
             }),
+        }
+
+
+class MeetQuestionaryForm(ModelForm):
+    class Meta:
+        model = MeetQuestionary
+        fields = [
+            'sex',
+            'sex_comment',
+            'height',
+            'weight',
+            'weight_min',
+            'weight_max',
+            'weight_avg',
+            'daily_steps',
+            'sleep_time',
+            'wakeup_time',
+            'sleep_problems',
+            'daily_meals_amount',
+            'daily_snacks_amount',
+            'common_meal',
+            'weekly_meal',
+            'yearly_meal',
+            'favorite_meal',
+            'goal',
+            'goal_mark',
+            'goal_attempts',
+            'goal_obstacle',
+            'goal_importance',
+            'goal_maxtime',
+            'readiness_to_change',
+        ]
+        widgets = {
+            'sex': Select(attrs={
+                'class': 'form-control text-center',
+            }),
+            'sex_comment': Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'прокомментируйте свой ответ',
+                'rows': "2",
+            }),
+            'height': NumberInput(attrs={
+                'class': 'form-control d-inline text-center',
+                'min': '0',
+            }),
+            'weight': NumberInput(attrs={
+                'class': 'form-control d-inline text-center',
+                'min': '0',
+            }),
+            'weight_min': NumberInput(attrs={
+                'class': 'form-control d-inline text-center',
+                'min': '0',
+            }),
+            'weight_max': NumberInput(attrs={
+                'class': 'form-control d-inline text-center',
+                'min': '0',
+            }),
+            'weight_avg': NumberInput(attrs={
+                'class': 'form-control d-inline text-center',
+                'min': '0',
+            }),
+            'daily_steps': TextInput(attrs={
+                'class': 'form-control text-center',
+            }),
+            'sleep_time': TextInput(attrs={
+                'class': 'form-control text-center',
+            }),
+            'wakeup_time': TextInput(attrs={
+                'class': 'form-control text-center',
+            }),
+            'sleep_problems': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'daily_meals_amount': TextInput(attrs={
+                'class': 'form-control text-center',
+            }),
+            'daily_snacks_amount': TextInput(attrs={
+                'class': 'form-control text-center',
+            }),
+            'common_meal': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'weekly_meal': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'yearly_meal': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'favorite_meal': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'goal': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'goal_mark': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'goal_attempts': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'goal_obstacle': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'goal_importance': NumberInput(attrs={
+                'class': 'form-range',
+                'type': 'range',
+                'max': '10',
+                'oninput': "goalvalue.value=value",
+            }),
+            'goal_maxtime': Textarea(attrs={
+                'class': 'form-control',
+                'rows': "6",
+            }),
+            'readiness_to_change': NumberInput(attrs={
+                'class': 'form-range',
+                'type': 'range',
+                'min': '1',
+                'max': '6',
+                'oninput': "readinessvalue.value=value",
+            })
         }

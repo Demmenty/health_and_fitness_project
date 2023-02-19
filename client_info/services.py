@@ -1,7 +1,8 @@
-from .models import HealthQuestionary, ClientContact
-from .forms import HealthQuestionaryForm, ClientContactForm
+from .models import HealthQuestionary, ClientContact, MeetQuestionary
+from .forms import HealthQuestionaryForm, ClientContactForm, MeetQuestionaryForm
 from datetime import date
 from common.utils import get_noun_ending
+from typing import Optional, Union
 
 
 # health_questionary
@@ -34,8 +35,10 @@ def get_health_questionary_form_for(user):
     return health_questionary_form
 
    
-def get_age_of(user) -> str:
-    """возвращает количество полных лет по дню рождения в анкете здоровья"""
+def get_age_string(user) -> str:
+    """возвращает количество полных лет по дню рождения в анкете здоровья
+    в формате 'количество + лет\года\год' или 'неизвестно' 
+    """
 
     health_questionary = get_health_questionary_of(user)
 
@@ -50,9 +53,27 @@ def get_age_of(user) -> str:
         (today.month == birthdate.month and today.day < birthdate.day)):
             age = age - 1
 
-        client_age = (str(age) + ' ' + get_noun_ending(age, 'год', 'года', 'лет'))
+        client_age = str(age) + ' ' + get_noun_ending(age, 'год', 'года', 'лет')
 
     return client_age
+
+
+def get_age_int(user) -> Union[int, None]:
+    """возвращает количество полных лет по дню рождения в анкете здоровья"""
+
+    health_questionary = get_health_questionary_of(user)
+
+    if health_questionary:
+
+        birthdate = health_questionary.birth_date
+
+        today = date.today()
+        age = today.year - birthdate.year
+        if (today.month < birthdate.month or
+        (today.month == birthdate.month and today.day < birthdate.day)):
+            age = age - 1
+
+        return age
 
 
 def get_normal_pressure_of(user) -> str:
@@ -70,7 +91,45 @@ def get_normal_pressure_of(user) -> str:
     return normal_pressure 
 
 
+# meet_questionary
+def is_meet_questionary_filled_by(user) -> bool:
+    """проверяет, заполнил ли клиент анкету здоровья"""
 
+    result = MeetQuestionary.objects.filter(user=user).exists()
+
+    return result
+
+
+def get_meet_questionary_of(user):
+    """достает данные анкеты здоровья клиента из БД (либо None)"""
+
+    meet_questionary = MeetQuestionary.objects.filter(user=user).first()
+
+    return meet_questionary
+
+
+def get_meet_questionary_form_for(user):
+    """возвращает форму для заполнения анкеты здоровья клиента"""
+
+    instance = MeetQuestionary.objects.filter(user=user).first()
+
+    if instance:
+        meet_questionary_form = MeetQuestionaryForm(instance=instance)
+    else:
+        meet_questionary_form = MeetQuestionaryForm()
+
+    return meet_questionary_form
+
+
+def get_height(user) -> Union[int, None]:
+    """возвращает рост клиента по анкете знакомства или None"""
+
+    meet_questionary = MeetQuestionary.objects.filter(user=user).first()
+
+    if meet_questionary:
+        height = meet_questionary.height
+
+        return int(height)
 
 
 # client_contacts

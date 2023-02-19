@@ -78,6 +78,9 @@ body {
 .text-royalblue {
     color: #5271ff !important;
 }
+.bg-royalblue {
+    color: #5271ff !important;
+}
 
 .border-blueshadow {
     border: 1px solid #ced4da;
@@ -875,7 +878,7 @@ table {
 
 /* health_questionary */
 @media screen and (min-width: 576px) {
-    .health_questionary_container {
+    .questionary_container {
         border: 1px solid #dee2e6;
         border-radius: 10px;
         padding: 30px;
@@ -985,3 +988,42 @@ table {
     margin-bottom: auto;
 }
 /* health_questionary */
+
+/* meet_questionary */
+input[type='range']::-webkit-slider-thumb {
+    background: #5271ff;
+}
+input[type='range']::-moz-range-thumb {
+    background: #5271ff;
+}
+input[type='range']::-ms-thumb {
+    background: #5271ff;
+}
+
+#meet_questionary_form .title {
+	text-transform: uppercase;
+	line-height: 1.5;
+	text-align: center;
+	position: relative;
+}
+#meet_questionary_form .title span {
+	background: #fff;
+	display: inline-block;
+	padding: 0 10px;
+	position: relative;
+}
+#meet_questionary_form .title:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;        
+	width: 100%;
+	height: 2px;
+	background: #d9dfff;
+}
+
+#meet_questionary_container {
+    max-width: 936px;
+} 
+
+/* meet_questionary */

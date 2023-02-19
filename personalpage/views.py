@@ -23,6 +23,7 @@ def personalpage(request):
         return redirect('expertpage')
 
     health_questionary_filled = is_health_questionary_filled_by(request.user)
+    meet_questionary_filled = is_meet_questionary_filled_by(request.user)
 
     # контакты клиента
     contacts_filled = is_contacts_filled_by(request.user)
@@ -40,11 +41,73 @@ def personalpage(request):
     data = {
         'today_measure': today_measure,
         'health_questionary_filled': health_questionary_filled,
+        'meet_questionary_filled': meet_questionary_filled,
         'contacts_form': contacts_form,
         'contacts_filled': contacts_filled,
         'today_commentary': today_commentary,
     }
     return render(request, 'personalpage/personalpage.html', data)
+
+
+def meet_questionary(request):
+    """Страница заполнения анкеты знакомства"""
+
+    if request.user.is_anonymous:
+        return redirect('loginuser')
+
+    # открываем анкету
+    if request.method == 'GET':
+       
+        meet_questionary = get_meet_questionary_of(request.user)
+        meet_questionary_form = get_meet_questionary_form_for(request.user)
+        readiness_choices = MeetQuestionary.READINESS_CHOICES
+        age = get_age_int(request.user)
+        today_commentary = get_today_commentary(request.user)
+
+        data = {
+            'meet_questionary': meet_questionary,
+            'meet_questionary_form': meet_questionary_form,
+            'readiness_choices': readiness_choices,
+            'age': age,
+            'today_commentary': today_commentary,
+        }
+        return render(request, 'personalpage/meet_questionary.html', data)
+
+    # сохраняем анкету
+    if request.method == 'POST':
+
+        form = MeetQuestionaryForm(request.POST)
+
+        if form.is_valid():
+            instance = get_meet_questionary_of(request.user)
+
+            if instance:
+                form = MeetQuestionaryForm(request.POST, instance=instance)
+                form.save()
+                return redirect('personalpage')
+            else:
+                new_form = form.save(commit=False)
+                new_form.user = request.user
+                new_form.save()
+                return redirect('personalpage')
+
+        else:
+            meet_questionary = get_meet_questionary_of(request.user)
+            meet_questionary_form = get_meet_questionary_form_for(request.user)
+            readiness_choices = MeetQuestionary.READINESS_CHOICES
+            age = get_age_int(request.user)
+            today_commentary = get_today_commentary(request.user)
+
+            data = {
+                'meet_questionary': meet_questionary,
+                'meet_questionary_form': meet_questionary_form,
+                'readiness_choices': readiness_choices,
+                'age': age,
+                'today_commentary': today_commentary,
+                'error': 'Данные введены некорректно. Попробуйте ещё раз.',
+            }
+            return render(request, 'personalpage/meet_questionary.html', data)
+
 
 
 def health_questionary(request):

@@ -73,3 +73,55 @@ class HealthQuestionary(models.Model):
 
     def __str__(self):
         return f"Анкета здоровья клиента {self.user}"
+
+
+class MeetQuestionary(models.Model):
+    """модель для хранения общих данных клиента, заполняемая в начале ведения"""
+
+    SEX_CHOICES = [
+        ('M', 'Мужской'),
+        ('F', 'Женский'),
+        ('?', 'Свой вариант'),
+    ]
+    READINESS_CHOICES = [
+        ('1', 'Не вижу необходимости в серьёзных переменах, хочу лишь слегка скорректировать образ жизни.'),
+        ('2', 'Готов к переменам в образе жизни, скоро начну их воплощать.'),
+        ('3', 'Хочу изменить свой образ жизни, но не уверен, что смогу.'),
+        ('4', 'Начал менять образ жизни в течение последнего полугода.'),
+        ('5', 'Работаю над изменением образа жизни, но чувствую, что нуждаюсь в помощи, чтобы продвинуться дальше.'),
+        ('6', 'Активно работаю над собой, продвигаюсь, но хочу делать это ещё лучше.'),
+    ]
+
+    date = models.DateField('Дата заполнения', auto_now_add=True, help_text='Дата заполнения')
+    date_update = models.DateField('Дата обновления', auto_now=True, help_text='Дата последнего редактирования')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sex = models.CharField('Биологический пол', choices=SEX_CHOICES, max_length=1)
+    sex_comment = models.TextField('Прокомментируйте свой ответ', default="", blank=True)
+    height = models.PositiveSmallIntegerField('Рост')
+    weight = models.PositiveSmallIntegerField('Текущий вес')
+    weight_min = models.PositiveSmallIntegerField('Минимальный вес за последние 5 лет')
+    weight_max = models.PositiveSmallIntegerField('Максимальный вес за последние 5 лет')
+    weight_avg = models.PositiveSmallIntegerField('Средний вес между 20-25 годами', null=True, blank=True, help_text="указывайте, если вам сейчас 30 лет и более")
+    daily_steps = models.CharField('Среднее количество шагов в сутки', max_length=255)
+
+    sleep_time = models.CharField('Время укладывания ко сну', max_length=255)
+    wakeup_time = models.CharField('Время вставания после сна', max_length=255)
+    sleep_problems = models.TextField('Как часто нарушается и на какое время', default="", blank=True)
+
+    daily_meals_amount = models.CharField('Количество полноценных приёмов пищи в сутки', max_length=255)
+    daily_snacks_amount = models.CharField('Количество перекусов в сутки', max_length=255)
+    common_meal = models.TextField("5 видов пищи, которую вы едите наиболее часто и регулярно")
+    weekly_meal = models.TextField("5 видов пищи, которую вы едите примерно раз в неделю")
+    yearly_meal = models.TextField("5 видов пищи, которую вы едите несколько раз в год")
+    favorite_meal = models.TextField("5 видов пищи, которую вы считаете самой вкусной, желанной и любимой")
+
+    goal = models.TextField('Ваша цель')
+    goal_mark = models.TextField('Какой показатель поможет нам эту цель измерить? (например, килограммы)')
+    goal_attempts = models.TextField('Были ли ранее попытки достичь этой цели? Опишите их и назовите количество')
+    goal_obstacle = models.TextField('Главные препятствия к достижению вашей цели')
+    goal_importance = models.PositiveSmallIntegerField("Насколько важна указанная цель")
+    goal_maxtime = models.TextField('Какое максимальное количество времени можно уделить достижению цели')
+    readiness_to_change = models.CharField("Готовность к изменениям", choices=READINESS_CHOICES, max_length=1)
+
+    def __str__(self):
+        return f"Анкета знакомства с клиентом {self.user}"

@@ -12,7 +12,23 @@
         <div class="d-flex flex-column me-sm-4 mb-4">
             <p>Дата региcтрации: {{ date_joined }}</p>
             <p>Возраст: {{ client_age }}</p>
-            <!-- анкета -->
+            {% if meet_questionary_filled %}
+                <p>Рост: {{ client_height }} см</p>
+            {% endif %}
+            <!-- анкета знакомства -->
+            <div class="mb-3">
+                {% if meet_questionary_filled %}
+                    &#10004;
+                    <form method="get" action="{% url 'client_meet_questionary' %}" class="d-inline">
+                        <input type="hidden" value="{{ client_id }}" name="client_id">
+                        <input type="submit" class="link" title="Открыть анкету" value="Анкета знакомства">
+                    </form>
+                    заполнена
+                {% else %}
+                    &#10006; Анкета знакомства не заполнена
+                {% endif %}
+            </div>
+            <!-- анкета здоровья -->
             <div class="mb-3">
                 {% if health_questionary_filled %}
                     &#10004;

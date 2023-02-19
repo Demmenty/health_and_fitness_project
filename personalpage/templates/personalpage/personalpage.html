@@ -12,6 +12,16 @@
         <!-- общая инфо о клиенте -->
         <div class="d-flex flex-column me-sm-4 mb-4">
             <h2 class="clientname text-break mb-4">{{ user.username }}</h2>
+            <!-- анкета знакомства -->
+            {% if meet_questionary_filled %}
+                <p> &#10004; 
+                    <a class="link" href="{% url 'meet_questionary' %}">Анкета знакомства</a> заполнена
+                </p>
+            {% else %}
+                <p> &#10006; 
+                    <a class="link" href="{% url 'meet_questionary' %}">Анкета знакомства</a> не заполнена
+                </p>
+            {% endif %}
             <!-- анкета здоровья -->
             {% if health_questionary_filled %}
                 <p> &#10004; 

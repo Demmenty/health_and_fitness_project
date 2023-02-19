@@ -4,7 +4,8 @@ const client_id = document.getElementById('id_client').value;
 $(document).ready(function() {
     pagePath = document.location.pathname;
     if ((pagePath == '/controlpage/main/') ||
-        (pagePath == '/controlpage/health_questionary/')) {
+        (pagePath == '/controlpage/health_questionary/') ||
+        (pagePath == '/controlpage/meet_questionary/')) {
         // открытие соотв.текста и вкладки комментария
         $("#id_general_comment").removeClass('hidden_element');
         $("#id_general_label").removeClass('closed');

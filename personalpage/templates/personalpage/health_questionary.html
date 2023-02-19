@@ -1,11 +1,11 @@
 {% extends 'personalpage/layout.html' %}
 {% load static %}
 
-{% block title %}Анкета клиента{% endblock %}
+{% block title %}Анкета здоровья{% endblock %}
 
 {% block content %}
 <div class="container pt-5">
-    <div class="container health_questionary_container mt-3">
+    <div class="container questionary_container mt-3">
         
         <form method="POST" action="">
             {% csrf_token %}
