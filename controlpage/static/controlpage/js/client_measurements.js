@@ -3,6 +3,12 @@ const colorsetError = document.getElementById("colorset_error");
 // переменная для хранения настроек цветовых границ
 var colorSet = false;
 
+// применение readonly к комментам клиента
+const commetTextAreas = document.querySelectorAll(".container_commentform textarea");
+commetTextAreas.forEach ( textArea => {
+  textArea.readOnly = true;
+})
+
 // чтобы было что закрывать при открытии первого коммента
 commentForm = document.getElementById("comment1");
 

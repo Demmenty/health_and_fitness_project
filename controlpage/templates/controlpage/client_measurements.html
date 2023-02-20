@@ -187,17 +187,14 @@
             <!-- всплывающие комменты за период -->
             {% for comment in period_measure_comment_forms %}
             <div class="container_commentform hidden_element" id="comment{{ forloop.counter }}">
-                <form method="post" class="d-flex flex-column commentForm" id="commentForm{{ forloop.counter }}">
-                    {% csrf_token %}
-                    {{ comment.comment }}{{ comment.date }}
-                    <div class="d-flex justify-content-between align-items-center commentbtn_container mt-1">
-                        <button class="btn btn-outline-primary close_btn" type="button" 
-                        id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
-                        onclick="closeComment(event)">&#10006</button>
-                        <div id="comment{{ forloop.counter }}header" class="comment_header text-center">сохранено</div>
-                        <button class="btn btn-primary close_btn" type="submit">&#10003</button>
-                    </div>
-                </form>
+                <div class="d-flex justify-content-between align-items-center commentbtn_container mb-1">
+                    <div id="comment{{ forloop.counter }}header" class="comment_header w-fill">&nbsp;</div>
+                    <button class="btn btn-outline-primary close_btn" type="button" 
+                    id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}"
+                    onclick="closeComment(event)">&#10006</button>
+                </div>
+                {{ comment.date }}
+                {{ comment.comment }}
             </div>
             {% endfor %}
         </section>
