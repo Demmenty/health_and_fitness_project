@@ -1,3 +1,4 @@
+
 window.onload = function () {
     const pagePath = document.location.pathname;
     // кнопки навигации в header страницы
@@ -5,10 +6,12 @@ window.onload = function () {
     const navLinkMeasurements = document.getElementById('link_measurements');
     const navLinkMeal = document.getElementById('link_meal');
     const navLinkWorkout = document.getElementById('link_workout');
+    const navLinkSettings = document.getElementById('link_settings');
     const navLinkMainDrop = document.getElementById('link_main_drop');
     const navLinkMeasurementsDrop = document.getElementById('link_measurements_drop');
     const navLinkMealDrop = document.getElementById('link_meal_drop');
     const navLinkWorkoutDrop = document.getElementById('link_workout_drop');
+    const navLinkSettingsDrop = document.getElementById('link_settings_drop');
     // название открытой вкладки навигации dropdown
     const navLinkOpenDrop = document.getElementById('open_label_drop');
     // вкладки по категориям в окошке коммента отдельно
@@ -27,7 +30,7 @@ window.onload = function () {
     const commentLabels = document.querySelectorAll(".comment_section");
     // все сразу текстовые поля в окошке коммента
     const commentTextareas = document.querySelectorAll(".commentary_textfield");
-    
+
     // применение настроек в зависимости от открытой страницы
     setSettingsDependPath();
     function setSettingsDependPath() {
@@ -66,6 +69,16 @@ window.onload = function () {
             navLinkOpenDrop.textContent = 'тренировки';
             openLabelName = 'workout';
             openLabel = commentWorkoutLabel;
+        }
+        else if (pagePath == '/personalpage/settings') {
+            commentGeneral.classList.remove('hidden_element');
+            commentGeneralLabel.classList.remove('closed');
+            navLinkSettings.classList.add('svg-royalblue');
+            document.querySelector(".dropdown-menu hr").classList.add("hidden_element");
+            navLinkSettingsDrop.classList.add('hidden_element');
+            navLinkOpenDrop.textContent = 'настройки';
+            openLabelName = 'general';
+            openLabel = commentGeneralLabel;
         }
         else {
             commentGeneral.classList.remove('hidden_element');

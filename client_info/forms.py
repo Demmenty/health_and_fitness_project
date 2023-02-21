@@ -1,6 +1,19 @@
-from .models import HealthQuestionary, MeetQuestionary, ClientContact
+from .models import (
+    HealthQuestionary,
+    MeetQuestionary,
+    ClientContact,
+    ClientMemo,
+    )
 from django.forms import (
-    ModelForm, TextInput, Textarea, Select, SelectDateWidget, CheckboxInput, NumberInput)
+    ModelForm,
+    TextInput,
+    Textarea,
+    Select,
+    SelectDateWidget,
+    CheckboxInput,
+    NumberInput,
+    HiddenInput,
+    )
 
 
 class ClientContactForm(ModelForm):
@@ -42,6 +55,37 @@ class ClientContactForm(ModelForm):
             }),
             'preferred_contact': Select(attrs={
                 'class': 'form-control mb-2',
+            }),
+        }
+
+
+class ClientMemoForm(ModelForm):
+    class Meta:
+        model = ClientMemo
+        fields = [
+            'client',
+            'general',
+            'measurements',
+            'nutrition',
+            'workout',
+        ]
+        widgets = {
+            'client': HiddenInput(),
+            'general': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "memo_general_textarea",
+            }),
+            'measurements': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "memo_measurements_textarea",
+            }),
+            'nutrition': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "memo_nutrition_textarea",
+            }),
+            'workout': Textarea(attrs={
+                'class': 'form-control hidden_element mb-2',
+                'id': "memo_workout_textarea",
             }),
         }
 

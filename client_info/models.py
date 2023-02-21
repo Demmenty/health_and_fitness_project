@@ -28,6 +28,18 @@ class ClientContact(models.Model):
         return f"Контакты клиента {self.user}"
 
 
+class ClientMemo(models.Model):
+    """Модель для личной заметки клиента"""
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    general = models.TextField('Общее', default='', blank=True)
+    measurements = models.TextField('Измерения', default='', blank=True)
+    nutrition = models.TextField('Питание', default='', blank=True)
+    workout = models.TextField('Тренировки', default='', blank=True)
+    
+    def __str__(self):
+        return f"Личная заметка клиента {self.client}"
+
+
 class HealthQuestionary(models.Model):
     """модель для хранения данных анкеты здоровья клиента"""
     date = models.DateField('Дата заполнения', auto_now_add=True, help_text='Дата заполнения')

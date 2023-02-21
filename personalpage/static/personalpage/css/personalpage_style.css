@@ -24,6 +24,10 @@ body {
     }
 }
 
+.text-softgrey {
+    color: #545454;
+}
+
 .w-fit {
     width: fit-content;
 }
@@ -273,7 +277,54 @@ body {
     cursor: pointer;
 }
 
+/* main */
+/* clientmemo */
+#clientmemo_container {
+    width: 95%;
+    max-width: 600px !important;
+    position: fixed;
+    top: 4.5rem;
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 10;
+    background-color: #5271ff;
+}
+.memo_label {
+    color: #5271ff;
+    font-weight: 500;
+    background-color: white;
+    border-radius: 10px;
+    width: 40%;
+    padding: 0.25rem;
+    border: 1px solid #ced4da;
+    z-index: 2;
+}
+.memo_label.closed {
+    color: darkgray;
+    z-index: 0;
+}
+.memo_label:hover {
+    cursor: pointer;
+    color: #5271ff;
+}
+@media (min-width: 450px) {
+    .memo_label {
+        width: auto;
+        padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    }
+}
+#clientmemo_form textarea {
+    height: 50vh;
+    margin-top: -0.5rem;
+    position: relative;
+    z-index: 1;
+}
+#clientmemo_form textarea:focus {
+    border-color: #ced4da;
+    box-shadow: unset;
+}
 
+/* main */
 
 /* header */
 header {
@@ -326,11 +377,11 @@ header {
     }
 }
 
-#exit_pic {
-    filter: grayscale(1) brightness(0.9);
+header .svg-icon:hover {
+    filter: brightness(0) saturate(100%) invert(55%) sepia(78%) saturate(4826%) hue-rotate(215deg) brightness(97%) contrast(108%);
 }
-#exit_pic:hover {
-    filter: unset;
+.svg-royalblue {
+    filter: brightness(0) saturate(100%) invert(55%) sepia(78%) saturate(4826%) hue-rotate(215deg) brightness(97%) contrast(108%);
 }
 
 /* footer */
@@ -355,10 +406,10 @@ footer {
 .contact_ico:hover {
     filter: brightness();
 }
-#logout_btn {
+/* #logout_btn {
     width: 69px;
     text-align: end;
-}
+} */
 
 /* стиль кнопок */
 .btn-primary {

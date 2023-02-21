@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from .forms import ClientContactForm, HealthQuestionaryForm
-from .models import ClientContact, HealthQuestionary
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from .forms import ClientContactForm, ClientMemoForm
+from .models import ClientContact, ClientMemo
 
 
 def save_contacts(request):
@@ -21,8 +20,25 @@ def save_contacts(request):
         return JsonResponse(data, status=200)
 
     else:
-
         data = {'result': 'Ссылки введены некорректно. Попробуйте ещё раз.'}
         return JsonResponse(data, status=200)
 
 
+def save_clientmemo(request):
+    """сохраняет личную заметку клиента"""
+
+    if request.user.is_anonymous:
+        return JsonResponse({}, status=403)
+
+    form = ClientMemoForm(request.POST)
+
+    if form.is_valid():
+        instance = ClientMemo.objects.get(client=request.user)
+        form = ClientMemoForm(request.POST, instance=instance)
+        form.save()
+        return HttpResponse("Ok")
+    else:
+        data = {
+            'result': "Ошибка в полученных данных"
+        }
+        return JsonResponse(data, status=400)

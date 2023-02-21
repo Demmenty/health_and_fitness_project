@@ -1,5 +1,5 @@
-from .models import HealthQuestionary, ClientContact, MeetQuestionary
-from .forms import HealthQuestionaryForm, ClientContactForm, MeetQuestionaryForm
+from .models import HealthQuestionary, ClientContact, MeetQuestionary, ClientMemo
+from .forms import HealthQuestionaryForm, ClientContactForm, MeetQuestionaryForm, ClientMemoForm
 from datetime import date
 from common.utils import get_noun_ending
 from typing import Optional, Union
@@ -130,6 +130,17 @@ def get_height(user) -> Union[int, None]:
         height = meet_questionary.height
 
         return int(height)
+
+
+# client_memo
+def get_clientmemo_form_for(user):
+    """возвращает форму для личной заметки клиента"""
+
+    instance, is_created = ClientMemo.objects.get_or_create(client=user)
+
+    clientmemo_form = ClientMemoForm(instance=instance)
+
+    return clientmemo_form
 
 
 # client_contacts
