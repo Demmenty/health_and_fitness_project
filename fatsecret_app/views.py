@@ -3,34 +3,33 @@ from .services import *
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.conf import settings
-
-
-fs_session = create_common_fs_session()
+from common.services import services
+from common.cache_manager import cache
 
 
 def fatsecretauth(request):
     """Привязка пользователя к его аккаунту FatSecret"""
 
-    # надо, чтобы сессия не менялась
-    global fs_session
-
     # 1) получаем адрес подключения и направляем по нему
     if request.GET.get('oauth_verifier') is None:
 
         callback_url = settings.CURRENT_DOMAIN + "/fatsecret_app/auth/"
+        print("callback_url", callback_url)
 
-        auth_url = fs_session.get_authorize_url(callback_url=callback_url)
+        auth_url = services.fs.session.get_authorize_url(callback_url=callback_url)
 
         return redirect(auth_url)
 
     # 2) получаем ключи от FatSecret
     if request.GET.get('oauth_verifier'):
+        print("request get", request.GET)
 
         verifier_pin = request.GET.get('oauth_verifier')
+        print("verifier_pin", verifier_pin)
 
-        session_token = fs_session.authenticate(verifier_pin)
+        session_token = services.fs.session.authenticate(verifier_pin)
 
-        save_session_token(session_token, request.user)
+        services.fs.save_token(session_token, request.user)
         
         return redirect('mealjournal')
 
@@ -44,7 +43,7 @@ def foodmetricsave(request):
     prods_without_info = dict(request.POST)
     del prods_without_info['csrfmiddlewaretoken']
 
-    save_foodmetric_into_foodcache(prods_without_info)
+    cache.fs.save_foodmetric(prods_without_info)
 
     data = {'status': "инфа сохранена, круто!"}
     return JsonResponse(data, status=200)
@@ -67,6 +66,6 @@ def get_monthly_top(request):
     month_str = request.GET.get('month')
     month_datetime = datetime.strptime(month_str, "%Y-%m")
 
-    monthly_top = create_monthly_top(client, month_datetime)
+    monthly_top = services.fs.monthly_top(client, month_datetime)
 
     return JsonResponse(monthly_top, status=200)

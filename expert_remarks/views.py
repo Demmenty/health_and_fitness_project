@@ -173,8 +173,6 @@ def get_clientnote_form(request):
         data = {}
         return JsonResponse(data, status=403)
 
-    print(request.GET)
-
     client_id = request.GET['client_id']
     clientnote_date = request.GET['date'] + '-01'
 

@@ -12,7 +12,5 @@ media/
 .venv
 .venv/
 # Other
-workflow_notes
-fatsecret_app/daily_total_cache.pickle
-fatsecret_app/food_info_cache.pickle
-fatsecret_app/monthly_total_cache.pickle
+workflow_notes/
+fatsecret_app/cache/

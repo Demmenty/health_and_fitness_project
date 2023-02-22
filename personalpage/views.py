@@ -11,6 +11,7 @@ from expert_recommendations.services import *
 from common.utils import get_noun_ending
 from expert_remarks.services import get_today_commentary
 from .utils import *
+from common.services import services
 
 
 def personalpage(request):
@@ -32,7 +33,7 @@ def personalpage(request):
     contacts_form = get_contacts_form_for(request.user)
 
     #измерения за сегодня
-    if user_has_fs_entry(request.user):
+    if services.fs.is_connected(request.user):
         renew_measure_nutrition(request.user, datetime.now())
 
     today_measure = get_daily_measure(request.user)
@@ -204,7 +205,7 @@ def measurements(request):
 
     today_commentary = get_today_commentary(request.user)
 
-    if user_has_fs_entry(request.user):
+    if services.fs.is_connected(request.user):
         renew_weekly_measures_nutrition(request.user)
 
     today_measure = get_daily_measure(request.user)
@@ -254,7 +255,7 @@ def addmeasure(request):
 
         weekly_measure_forms = create_weekly_measure_forms(request.user)
         
-        fatsecret_connected = user_has_fs_entry(request.user)
+        fatsecret_connected = services.fs.is_connected(request.user)
         if fatsecret_connected:
             renew_weekly_measures_nutrition(request.user)
             
@@ -274,7 +275,7 @@ def addmeasure(request):
 
         clientmemo_form = get_clientmemo_form_for(request.user)
 
-        fatsecret_connected = user_has_fs_entry(request.user)
+        fatsecret_connected = services.fs.is_connected(request.user)
         form = MeasurementForm(request.POST)
     
         if form.is_valid():
@@ -282,7 +283,7 @@ def addmeasure(request):
             measure_weight = form.cleaned_data['weight']
 
             if fatsecret_connected and measure_weight:
-                set_weight_in_fatsecret(request.user, measure_weight, measure_date)
+                services.fs.send_weight(request.user, measure_weight, measure_date)
 
             instance = get_daily_measure(request.user, measure_date)
 
@@ -405,7 +406,7 @@ def mealjournal(request):
     today_commentary = get_today_commentary(request.user)
 
     # проверяем, привязан ли у пользователя аккаунт Fatsecret
-    if user_has_fs_entry(request.user) is False:
+    if services.fs.is_connected(request.user) is False:
         # показываем предложение подключить
         data = {
             'clientmemo_form': clientmemo_form,
@@ -415,8 +416,8 @@ def mealjournal(request):
         return render(request, 'personalpage/mealjournal.html', data)
     else:
         # или делаем подсчеты
-        daily_food = count_daily_food(request.user, datetime.today())
-        monthly_food = count_monthly_food(request.user, datetime.today())
+        daily_food = services.fs.daily_food(request.user, datetime.today())
+        monthly_food = services.fs.monthly_food(request.user, datetime.today())
 
         # словарь продуктов, для которых нет инфо о граммовке порции
         prods_without_info = {}
@@ -468,8 +469,8 @@ def foodbydate(request):
     # комментарий за сегодня от эксперта
     today_commentary = get_today_commentary(request.user)
 
-    daily_food = count_daily_food(request.user, briefdate)
-    daily_top = create_daily_top(request.user, briefdate)
+    daily_food = services.fs.daily_food(request.user, briefdate)
+    daily_top = services.fs.daily_top(request.user, briefdate)
     # рекомендации кбжу
     recommend_nutrition = get_nutrition_recommend(request.user)
 
@@ -511,7 +512,7 @@ def foodbymonth(request):
     prev_month = prev_month.strftime("%Y-%m")
     next_month = next_month.strftime("%Y-%m")
     
-    monthly_food = count_monthly_food(request.user, month_datetime)
+    monthly_food = services.fs.monthly_food(request.user, month_datetime)
     # рекомендации кбжу
     recommend_nutrition = get_nutrition_recommend(request.user)
 

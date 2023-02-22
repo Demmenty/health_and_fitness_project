@@ -3,6 +3,8 @@ from .forms import MeasurementForm, MeasurementCommentForm, MeasureColorFieldFor
 from datetime import date, timedelta
 from fatsecret_app.services import *
 from common.utils import date_into_epoch
+from common.services import services
+from fatsecret_app.decor import fs_error_catcher
 
 
 # measures
@@ -269,7 +271,7 @@ def create_colorset_forms(client) -> list:
     return colorset_forms
 
 
-# renew nutrition in measures
+@fs_error_catcher
 def renew_measure_nutrition(user, measure_date:datetime) -> None:
     """обновление кбжу в записи Measurements на данные из FS
     за выбранный день, если изменились калории"""
@@ -277,8 +279,7 @@ def renew_measure_nutrition(user, measure_date:datetime) -> None:
     measure = Measurement.objects.filter(user=user, date=measure_date.date()).first()
 
     if measure:
-        fs_nutrition = get_daily_nutrition_fs(user, measure_date)
-
+        fs_nutrition = services.fs.daily_nutrition(user, measure_date)
         if fs_nutrition:
             if fs_nutrition['calories'] != measure.calories:
                 measure.calories = fs_nutrition['calories']
@@ -288,11 +289,12 @@ def renew_measure_nutrition(user, measure_date:datetime) -> None:
                 measure.save()
 
 
+@fs_error_catcher
 def renew_weekly_measures_nutrition(user) -> None:
     """обновление кбжу в записях Measurements за последние 7 дней
     на данные из FS, но если изменились калории"""
 
-    weekly_nutrition_fs = get_weekly_nutrition_fs(user)
+    weekly_nutrition_fs = services.fs.weekly_nutrition(user)
 
     for i in range(7):
         measure_date = date.today() - timedelta(days=(6-i))

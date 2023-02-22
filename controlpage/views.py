@@ -9,6 +9,7 @@ from client_info.services import *
 from expert_recommendations.services import *
 from expert_remarks.services import get_remark_forms
 from common.utils import get_noun_ending
+from common.services import services
 
 
 def client_mainpage(request):
@@ -40,7 +41,7 @@ def client_mainpage(request):
     client_age = get_age_string(client)
 
     # проверка подключения FatSecret
-    fs_connected = user_has_fs_entry(client)
+    fs_connected = services.fs.is_connected(client)
     # измерения за сегодня
     if fs_connected:
         renew_measure_nutrition(client, datetime.now())
@@ -154,7 +155,7 @@ def client_measurements(request):
     normal_pressure = get_normal_pressure_of(client)
 
     # измерения клиента
-    if user_has_fs_entry(client):
+    if services.fs.is_connected(client):
         renew_weekly_measures_nutrition(client)
     # измерения за сегодня
     today_measure = get_daily_measure(client)
@@ -263,7 +264,7 @@ def client_mealjournal(request):
     }
 
     # проверяем, привязан ли у пользователя аккаунт Fatsecret
-    if user_has_fs_entry(client) is False:
+    if services.fs.is_connected(client) is False:
         # показываем уведомление
         data.update({
             'client_not_connected': True,
