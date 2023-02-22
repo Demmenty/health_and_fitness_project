@@ -34,8 +34,8 @@ ALLOWED_HOSTS = [
     'healthfitness-demmenty.pythonanywhere.com',
 ]
 
-# CURRENT_DOMAIN = 'http://healthfitness-demmenty.pythonanywhere.com'
-CURRENT_DOMAIN = 'http://127.0.0.1:8000/'
+CURRENT_DOMAIN = 'http://healthfitness-demmenty.pythonanywhere.com'
+# CURRENT_DOMAIN = 'http://127.0.0.1:8000/'
 # при смене домена поменять "Allowed IP Addresses" на FS
 
 # это добавлено из-за ошибки 'Origin checking failed'
