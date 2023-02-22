@@ -5,16 +5,16 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from common.services import services
 from common.cache_manager import cache
+from time import sleep
 
 
 def fatsecretauth(request):
     """Привязка пользователя к его аккаунту FatSecret"""
 
+    callback_url = settings.CURRENT_DOMAIN + "/fatsecret_app/auth/"
+
     # 1) получаем адрес подключения и направляем по нему
     if request.GET.get('oauth_verifier') is None:
-
-        callback_url = settings.CURRENT_DOMAIN + "/fatsecret_app/auth/"
-        print("callback_url", callback_url)
 
         auth_url = services.fs.session.get_authorize_url(callback_url=callback_url)
 
@@ -22,16 +22,19 @@ def fatsecretauth(request):
 
     # 2) получаем ключи от FatSecret
     if request.GET.get('oauth_verifier'):
-        print("request get", request.GET)
 
         verifier_pin = request.GET.get('oauth_verifier')
-        print("verifier_pin", verifier_pin)
 
-        session_token = services.fs.session.authenticate(verifier_pin)
+        try:
+            # тут иногда возникает ошибка - не смогла понять причину
+            session_token = services.fs.session.authenticate(verifier_pin)
+            services.fs.save_token(session_token, request.user)
+            return redirect('mealjournal')
 
-        services.fs.save_token(session_token, request.user)
-        
-        return redirect('mealjournal')
+        except KeyError as error:
+            print("загадочная ошибка, пробуем снова", error)
+            auth_url = services.fs.session.get_authorize_url(callback_url=callback_url)
+            return redirect(auth_url)
 
 
 def foodmetricsave(request):

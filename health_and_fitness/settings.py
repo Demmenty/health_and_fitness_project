@@ -25,25 +25,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+DEBUG = False
 
 # не забыть настроить !!!!
 ALLOWED_HOSTS = [
-    '127.0.0.1',
     'healthfitness-demmenty.pythonanywhere.com',
 ]
 
-# CURRENT_DOMAIN = 'http://healthfitness-demmenty.pythonanywhere.com'
-CURRENT_DOMAIN = 'http://127.0.0.1:8000/'
-# при смене домена поменять "Allowed IP Addresses" на FS
+CURRENT_DOMAIN = 'http://healthfitness-demmenty.pythonanywhere.com/'
 
 # это добавлено из-за ошибки 'Origin checking failed'
 CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
