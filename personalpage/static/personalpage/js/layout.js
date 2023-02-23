@@ -114,6 +114,7 @@ window.onload = function () {
     
     // изменение категорий коммента при нажатии на вкладки
     function changeCommentCategory(event) {
+        returnCopy2MemoBtn();
         // закрываем все вкладки и текстовые поля
         commentLabels.forEach (label => {
             label.classList.add('closed');
@@ -225,6 +226,7 @@ window.onload = function () {
     
                 // в случае успеха:
                 if (this.status === 200) {
+                    returnCopy2MemoBtn();
                     // меняем дату заголовка коммента на выбранную
                     inputDateComment.value = dateString;
                     // фиксируем текущую дату коммента
@@ -386,4 +388,40 @@ window.onload = function () {
         }
         request.send();
     } 
+
+    // закрыть коммент на крестик
+    const closeCommentBtn = document.getElementById("close_commentary_btn");
+    closeCommentBtn.addEventListener('click', closeCommentary, false);
+    function closeCommentary() {
+        commentaryContainer.classList.add("hidden_element");
+    }
+
+    // копирование текста комментария в личную заметку
+    const copy2MemoBtn = document.getElementById("copy2memo_icon");
+    const copyied2MemoImg = document.getElementById("copy2memo_done_icon");
+    const clientMemoSaveBtn = document.querySelector("#clientmemo_form button[type='submit']");
+
+    copy2MemoBtn.addEventListener('click', copyToMemo, false);
+    function copyToMemo() {
+
+        let commentArea = document.querySelector("#commentary_form .commentary_textfield:not(.hidden_element)");
+        let commentSectionName = commentArea.getAttribute("id").slice(3);
+        let commentText = commentArea.innerHTML;
+        
+        let memoArea = document.getElementById("memo_" + commentSectionName + "_textarea");
+        let memoText = memoArea.value;
+
+        memoArea.value = memoText + commentText + "\n";
+        clientMemoSaveBtn.click();
+
+        copy2MemoBtn.classList.add("hidden_element");
+        copyied2MemoImg.classList.remove("hidden_element");
+    }
+
+    // вернуть кнопку копировать в заметку обратно
+    function returnCopy2MemoBtn() {
+        copy2MemoBtn.classList.remove("hidden_element");
+        copyied2MemoImg.classList.add("hidden_element");
+    }
+
 } 

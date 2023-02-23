@@ -213,7 +213,17 @@ body {
     color: #5271ff !important;
 }
 
- 
+#copy2memo_icon {
+    opacity: .5;
+}
+#copy2memo_done_icon {
+    opacity: .5;
+}
+#copy2memo_icon:hover {
+    filter: brightness(0) saturate(100%) invert(55%) sepia(78%) saturate(4826%) hue-rotate(215deg) brightness(97%) contrast(108%);
+    opacity: unset;
+}
+
 
 #dialog_part_svg {
     filter: drop-shadow(11px 5px 3px #9fbfc5);
