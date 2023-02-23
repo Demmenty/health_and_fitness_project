@@ -272,8 +272,8 @@ def client_mealjournal(request):
         return render(request, 'controlpage/client_mealjournal.html', data)  
     else:
         # делаем подсчеты
-        daily_food = count_daily_food(client, datetime.today())
-        monthly_food = count_monthly_food(client, datetime.today())
+        daily_food = services.fs.daily_food(client, datetime.today())
+        monthly_food = services.fs.monthly_food(client, datetime.today())
 
         # словарь продуктов, для которых нет инфо о граммовке порции
         prods_without_info = {}
@@ -328,8 +328,8 @@ def client_foodbydate(request):
     prev_date = prev_date.strftime("%Y-%m-%d")
     next_date = next_date.strftime("%Y-%m-%d")
 
-    daily_food = count_daily_food(client, briefdate)
-    daily_top = create_daily_top(client, briefdate)
+    daily_food = services.fs.daily_food(client, briefdate)
+    daily_top = services.fs.daily_top(client, briefdate)
     recommend_nutrition_form = get_nutrition_recommend_form(client)  
 
     data = {
@@ -377,7 +377,7 @@ def client_foodbymonth(request):
     prev_month = prev_month.strftime("%Y-%m")
     next_month = next_month.strftime("%Y-%m") 
 
-    monthly_food = count_monthly_food(client, month_datetime)
+    monthly_food = services.fs.monthly_food(client, month_datetime)
     recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
