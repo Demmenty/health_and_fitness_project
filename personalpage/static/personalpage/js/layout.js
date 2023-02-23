@@ -411,7 +411,13 @@ window.onload = function () {
         let memoArea = document.getElementById("memo_" + commentSectionName + "_textarea");
         let memoText = memoArea.value;
 
-        memoArea.value = memoText + commentText + "\n";
+        if (memoText == "") {
+            memoArea.value = commentText;
+        }
+        else {
+            memoArea.value = memoText + "\n\n" + commentText;
+        }
+        
         clientMemoSaveBtn.click();
 
         copy2MemoBtn.classList.add("hidden_element");
