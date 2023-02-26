@@ -18,7 +18,9 @@
         </div>
         <br>
         <br>
+
         <h4 class="text-center">1.Наличие потенциально опасных субъективных ощущений</h4>
+
         <h6 class="p-3">Имеются ли в настоящее время:</h6>
         <div class="boolquestion">  
             <p class="question">{{ health_questionary_form.parameter11.label }}</p>
@@ -137,9 +139,10 @@
         </div>
         <br>
         <br>
-        <h4 class="text-center">3.Наличие диагностированных заболеваний</h4>
-        <h6 class="p-3">Были в прошлом или есть в настоящее время:</h6>
 
+        <h4 class="text-center">3.Наличие диагностированных заболеваний</h4>
+
+        <h6 class="p-3">Были в прошлом или есть в настоящее время:</h6>
         <div class="boolquestion">  
             <p class="question">{{ health_questionary_form.parameter31.label }}</p>
             <div class="boolanswers">
@@ -230,7 +233,9 @@
             Если клиент ответил «нет» в Разделе 2 и одновременно ответил «да» хотя бы на один вопрос в Разделе 3, допуск
             к любым тренировкам производится только на основании письменного медицинского заключения.</p>
         <br>
+
         <h4 class="text-center">4.Дополнительная информация о состоянии здоровья</h4>
+
         <br>
         <div class="openquestion">
             <div class="openquestion_line">
@@ -247,7 +252,7 @@
                 </div>
             </div>
             {% if health_questionary.norm_pressure != 'no' %}
-            <input type="text" value="{{ health_questionary.norm_pressure }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.norm_pressure }}</p>
             {% endif %}
         </div>
         <br>
@@ -266,7 +271,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter42 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter42 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter42 }}</p>
             {% endif %}
         </div>
         <br>
@@ -285,7 +290,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter43 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter43 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter43 }}</p>
             {% endif %}
         </div>
         <br>
@@ -304,7 +309,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter44 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter44 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter44 }}</p>
             {% endif %}
         </div>
         <br>
@@ -323,7 +328,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter45 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter45 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter45 }}</p>
             {% endif %}
         </div>
         <br>
@@ -342,7 +347,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter46 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter46 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter46 }}</p>
             {% endif %}
         </div>
         <br>
@@ -361,7 +366,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter47 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter47 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter47 }}</p>
             {% endif %}
         </div>
         <br>
@@ -380,7 +385,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter48 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter48 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter48 }}</p>
             {% endif %}
         </div>
         <br>
@@ -399,7 +404,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter49 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter49 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter49 }}</p>
             {% endif %}
         </div>
         <br>
@@ -418,7 +423,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter410 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter410 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter410 }}</p>
             {% endif %}
         </div>
         <br>
@@ -437,7 +442,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter411 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter411 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter411 }}</p>
             {% endif %}
         </div>
         <br>
@@ -456,7 +461,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter412 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter412 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter412 }}</p>
             {% endif %}
         </div>
         <br>
@@ -475,7 +480,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter413 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter413 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter413 }}</p>
             {% endif %}
         </div>
         <br>
@@ -494,7 +499,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter414 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter414 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter414 }}</p>
             {% endif %}
         </div>
         <br>
@@ -513,7 +518,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter415 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter415 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter415 }}</p>
             {% endif %}
         </div>
         <br>
@@ -537,7 +542,7 @@
             </div>
             {% if health_questionary.parameter416 != 'no' %}
             <p class="question">стаж занятий:</p>
-            <input type="text" value="{{ health_questionary.parameter416_exp }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter416_exp }}</p>
             {% endif %}
         </div>
         <br>
@@ -556,7 +561,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter417 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter417 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter417 }}</p>
             {% endif %}
         </div>
         <br>
@@ -575,7 +580,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter418 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter418 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter418 }}</p>
             {% endif %}
         </div>
         <br>
@@ -594,7 +599,7 @@
                 </div>
             </div>
             {% if health_questionary.parameter419 != 'no' %}
-            <input type="text" value="{{ health_questionary.parameter419 }}" class="form-control" disabled>
+            <p class="form-control mb-0 bg-light">{{ health_questionary.parameter419 }}</p>
             {% endif %}
         </div>
     </div>
