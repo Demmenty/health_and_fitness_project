@@ -66,8 +66,13 @@ class FatsecretManager():
         try:
             # проверяем существующие внесения веса в fatsecret
             monthly_weights = session.weights_get_month()
-        except KeyError:
-            ...
+        except KeyError as error:
+            print("Возникла KeyError при отправке веса в FatSecret!", error)
+    
+            session.weight_update(
+                current_weight_kg=measure_weight,
+                date=measure_datetime)
+            return
 
         if monthly_weights:
             if type(monthly_weights) is dict:
