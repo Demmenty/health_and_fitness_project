@@ -404,30 +404,3 @@ def client_foodbymonth(request):
         "recommend_nutrition_form": recommend_nutrition_form,
     }
     return render(request, "controlpage/client_foodbymonth.html", data)
-
-
-def client_training(request):
-    """Cтраница контроля за тренировками клиентом"""
-
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
-    if request.user.username != "Parrabolla":
-        return redirect("homepage")
-
-    # определение клиента
-    client_id = request.GET["client_id"]
-    client = User.objects.get(id=client_id)
-
-    # контакты клиента
-    client_contacts = get_contacts_of(client)
-    # комментарий и заметки
-    client_remark = get_remark_forms(client)
-
-    data = {
-        "clientname": client.username,
-        "client_id": client_id,
-        "client_contacts": client_contacts,
-        "client_remark": client_remark,
-    }
-    return render(request, "controlpage/client_training.html", data)

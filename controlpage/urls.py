@@ -25,5 +25,4 @@ urlpatterns = [
     path("mealjournal/", views.client_mealjournal, name="client_mealjournal"),
     path("foodbydate/", views.client_foodbydate, name="client_foodbydate"),
     path("foodbymonth/", views.client_foodbymonth, name="client_foodbymonth"),
-    path("training/", views.client_training, name="client_training"),
 ]
