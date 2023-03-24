@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "authentication",
     "common",
     "homepage",
+    "layouts",
     "consultation_signup",
     "client_info",
     "personalpage",
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
     "expertpage",
     "expert_remarks",
     "expert_recommendations",
+    "training",
     "django_cleanup",
 ]
 

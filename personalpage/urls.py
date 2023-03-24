@@ -17,5 +17,4 @@ urlpatterns = [
     path("mealjournal/", views.mealjournal, name="mealjournal"),
     path("foodbydate/", views.foodbydate, name="foodbydate"),
     path("foodbymonth/", views.foodbymonth, name="foodbymonth"),
-    path("training/", views.training, name="training"),
 ]
