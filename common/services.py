@@ -1,4 +1,3 @@
-from typing import Optional
 from fatsecret_app.services import FatsecretManager
 
 

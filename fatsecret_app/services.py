@@ -298,7 +298,11 @@ class FatsecretManager():
             'calories': 0
         }
 
-        monthly_entries = session.food_entries_get_month(date=request_date)
+        try:
+            monthly_entries = session.food_entries_get_month(date=request_date)
+        except KeyError:
+            return {}
+        
         if not monthly_entries:
             return {}
 
