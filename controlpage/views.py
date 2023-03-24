@@ -1,31 +1,33 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from datetime import date, datetime, timedelta
+
 from dateutil.relativedelta import relativedelta
-from fatsecret_app.services import *
-from measurements.services import *
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+
 from anthropometry.services import *
 from client_info.services import *
+from common.services import services
+from common.utils import get_noun_ending
 from expert_recommendations.services import *
 from expert_remarks.services import get_remark_forms
-from common.utils import get_noun_ending
-from common.services import services
+from fatsecret_app.services import *
+from measurements.services import *
 
 
 def client_mainpage(request):
     """Главная страница контроля за клиентом
-     - аналог personalpage, но для эксперта"""
+    - аналог personalpage, но для эксперта"""
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
-    
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
+
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
-    
+
     # контакты клиента
     client_contacts = get_contacts_of(client)
     # комментарий и заметки
@@ -49,19 +51,19 @@ def client_mainpage(request):
     today_measure = get_daily_measure(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'health_questionary_filled': health_questionary_filled,
-        'meet_questionary_filled': meet_questionary_filled,
-        'fs_connected': fs_connected,
-        'today_measure': today_measure,
-        'client_age': client_age,
-        'client_height': client_height,
-        'date_joined': date_joined,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
+        "clientname": client.username,
+        "client_id": client_id,
+        "health_questionary_filled": health_questionary_filled,
+        "meet_questionary_filled": meet_questionary_filled,
+        "fs_connected": fs_connected,
+        "today_measure": today_measure,
+        "client_age": client_age,
+        "client_height": client_height,
+        "date_joined": date_joined,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
     }
-    return render(request, 'controlpage/client_mainpage.html', data)
+    return render(request, "controlpage/client_mainpage.html", data)
 
 
 def client_health_questionary(request):
@@ -69,12 +71,12 @@ def client_health_questionary(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
 
     # контакты клиента
@@ -84,16 +86,16 @@ def client_health_questionary(request):
     # анкета здоровья
     health_questionary = get_health_questionary_of(client)
     health_questionary_form = get_health_questionary_form_for(client)
-    
+
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'health_questionary': health_questionary,
-        'health_questionary_form': health_questionary_form,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
+        "clientname": client.username,
+        "client_id": client_id,
+        "health_questionary": health_questionary,
+        "health_questionary_form": health_questionary_form,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
     }
-    return render(request, 'controlpage/client_health_questionary.html', data)
+    return render(request, "controlpage/client_health_questionary.html", data)
 
 
 def client_meet_questionary(request):
@@ -101,12 +103,12 @@ def client_meet_questionary(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
 
     # контакты клиента
@@ -117,17 +119,17 @@ def client_meet_questionary(request):
     meet_questionary = get_meet_questionary_of(client)
     meet_questionary_form = get_meet_questionary_form_for(client)
     readiness_choices = MeetQuestionary.READINESS_CHOICES
-    
+
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'meet_questionary': meet_questionary,
-        'meet_questionary_form': meet_questionary_form,
-        'readiness_choices': readiness_choices,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
+        "clientname": client.username,
+        "client_id": client_id,
+        "meet_questionary": meet_questionary,
+        "meet_questionary_form": meet_questionary_form,
+        "readiness_choices": readiness_choices,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
     }
-    return render(request, 'controlpage/client_meet_questionary.html', data)
+    return render(request, "controlpage/client_meet_questionary.html", data)
 
 
 def client_measurements(request):
@@ -135,12 +137,12 @@ def client_measurements(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
-    
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
+
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
 
     # контакты клиента
@@ -161,19 +163,19 @@ def client_measurements(request):
     today_measure = get_daily_measure(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
-        'today_measure': today_measure,
-        'colorsettings_exist': colorsettings_exist,
-        'colorset_forms': colorset_forms,
-        'normal_pressure': normal_pressure,
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
+        "today_measure": today_measure,
+        "colorsettings_exist": colorsettings_exist,
+        "colorset_forms": colorset_forms,
+        "normal_pressure": normal_pressure,
     }
 
     # измерения за период дней
-    if request.GET.get('selectperiod'):
-        period = int(request.GET['selectperiod'])
+    if request.GET.get("selectperiod"):
+        period = int(request.GET["selectperiod"])
     else:
         period = 7
 
@@ -181,19 +183,25 @@ def client_measurements(request):
 
     if period_measures:
         period_measures_avg = create_avg_for_measures(period_measures)
-        period_measure_comment_forms = get_measure_comment_forms(period_measures)
-        period_as_string = f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
-        need_to_show_pressure = bool(period_measures_avg.get('pressure'))
+        period_measure_comment_forms = get_measure_comment_forms(
+            period_measures
+        )
+        period_as_string = (
+            f"{period} {get_noun_ending(period, 'день', 'дня', 'дней')}"
+        )
+        need_to_show_pressure = bool(period_measures_avg.get("pressure"))
 
-        data.update({     
-            'period_measures': period_measures,
-            'period_measures_avg': period_measures_avg,
-            'period_measure_comment_forms': period_measure_comment_forms,
-            'period_as_string': period_as_string,
-            'need_to_show_pressure': need_to_show_pressure,
-        })
+        data.update(
+            {
+                "period_measures": period_measures,
+                "period_measures_avg": period_measures_avg,
+                "period_measure_comment_forms": period_measure_comment_forms,
+                "period_as_string": period_as_string,
+                "need_to_show_pressure": need_to_show_pressure,
+            }
+        )
 
-    return render(request, 'controlpage/client_measurements.html', data)
+    return render(request, "controlpage/client_measurements.html", data)
 
 
 def client_anthropometry(request):
@@ -201,12 +209,12 @@ def client_anthropometry(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
     client_contacts = get_contacts_of(client)
@@ -217,7 +225,7 @@ def client_anthropometry(request):
     entries = get_anthropo_entries(client)
 
     # если запрошен полный список измерений
-    if request.GET.get('show_all_entries'):
+    if request.GET.get("show_all_entries"):
         show_all_entries = True
     else:
         show_all_entries = False
@@ -226,15 +234,15 @@ def client_anthropometry(request):
     photoaccess_allowed = is_photoaccess_allowed(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
-        'entries': entries,
-        'show_all_entries': show_all_entries, 
-        'photoaccess_allowed': photoaccess_allowed,
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
+        "entries": entries,
+        "show_all_entries": show_all_entries,
+        "photoaccess_allowed": photoaccess_allowed,
     }
-    return render(request, 'controlpage/client_anthropometry.html', data)
+    return render(request, "controlpage/client_anthropometry.html", data)
 
 
 def client_mealjournal(request):
@@ -244,12 +252,12 @@ def client_mealjournal(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
     client_contacts = get_contacts_of(client)
@@ -257,19 +265,21 @@ def client_mealjournal(request):
     client_remark = get_remark_forms(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
     }
 
     # проверяем, привязан ли у пользователя аккаунт Fatsecret
     if services.fs.is_connected(client) is False:
         # показываем уведомление
-        data.update({
-            'client_not_connected': True,
-        })
-        return render(request, 'controlpage/client_mealjournal.html', data)  
+        data.update(
+            {
+                "client_not_connected": True,
+            }
+        )
+        return render(request, "controlpage/client_mealjournal.html", data)
     else:
         # делаем подсчеты
         daily_food = services.fs.daily_food(client, datetime.today())
@@ -277,45 +287,47 @@ def client_mealjournal(request):
 
         # словарь продуктов, для которых нет инфо о граммовке порции
         prods_without_info = {}
-        if daily_food.get('without_info'):
-            prods_without_info.update(daily_food['without_info'])
-        if monthly_food.get('without_info'):
-            prods_without_info.update(monthly_food['without_info'])
+        if daily_food.get("without_info"):
+            prods_without_info.update(daily_food["without_info"])
+        if monthly_food.get("without_info"):
+            prods_without_info.update(monthly_food["without_info"])
 
         # для поля выбора (потом сделать через js)
         previous_month = date.today() + relativedelta(months=-1)
         previous_month = previous_month.strftime("%Y-%m")
         # рекомендации кбжу
         recommend_nutrition_form = get_nutrition_recommend_form(client)
-    
-        data.update({
-            'daily_food': daily_food,
-            'monthly_food': monthly_food,
-            'prods_without_info': prods_without_info,
-            'previous_month': previous_month,
-            'recommend_nutrition_form': recommend_nutrition_form,
-        })
-        return render(request, 'controlpage/client_mealjournal.html', data)   
+
+        data.update(
+            {
+                "daily_food": daily_food,
+                "monthly_food": monthly_food,
+                "prods_without_info": prods_without_info,
+                "previous_month": previous_month,
+                "recommend_nutrition_form": recommend_nutrition_form,
+            }
+        )
+        return render(request, "controlpage/client_mealjournal.html", data)
 
 
 def client_foodbydate(request):
     """Получение данных за опр.день из FatSecret
     С ТОП-3 по количеству и калориям
     """
-    
+
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # получаем введенную дату, проверяем, форматируем
-    briefdate = request.GET.get('date')
+    briefdate = request.GET.get("date")
     if not briefdate:
-        return redirect('mealjournal')
+        return redirect("mealjournal")
     briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
     client_contacts = get_contacts_of(client)
@@ -330,41 +342,41 @@ def client_foodbydate(request):
 
     daily_food = services.fs.daily_food(client, briefdate)
     daily_top = services.fs.daily_top(client, briefdate)
-    recommend_nutrition_form = get_nutrition_recommend_form(client)  
+    recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
-        'briefdate': briefdate,
-        'prev_date': prev_date,
-        'next_date': next_date,
-        'daily_food': daily_food,
-        'daily_top': daily_top, 
-        'recommend_nutrition_form': recommend_nutrition_form, 
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
+        "briefdate": briefdate,
+        "prev_date": prev_date,
+        "next_date": next_date,
+        "daily_food": daily_food,
+        "daily_top": daily_top,
+        "recommend_nutrition_form": recommend_nutrition_form,
     }
-    return render(request, 'controlpage/client_foodbydate.html', data)
+    return render(request, "controlpage/client_foodbydate.html", data)
 
 
 def client_foodbymonth(request):
     """Страница подробной статистики по КБЖУ за месяц из FatSecret
-       с кнопочкой подсчета ТОП-10 продуктов
+    с кнопочкой подсчета ТОП-10 продуктов
     """
-    
+
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
 
     # получаем введенный месяц, проверяем, форматируем
-    month_str = request.GET.get('month')
+    month_str = request.GET.get("month")
     if month_str is None or not month_str:
-        return redirect('mealjournal')
+        return redirect("mealjournal")
     month_datetime = datetime.strptime(month_str, "%Y-%m")
 
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
     client_contacts = get_contacts_of(client)
@@ -375,23 +387,23 @@ def client_foodbymonth(request):
     prev_month = month_datetime + relativedelta(months=-1)
     next_month = month_datetime + relativedelta(months=1)
     prev_month = prev_month.strftime("%Y-%m")
-    next_month = next_month.strftime("%Y-%m") 
+    next_month = next_month.strftime("%Y-%m")
 
     monthly_food = services.fs.monthly_food(client, month_datetime)
     recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
-        'briefmonth': month_datetime,
-        'prev_month': prev_month,
-        'next_month': next_month,
-        'monthly_food': monthly_food,
-        'recommend_nutrition_form': recommend_nutrition_form,
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
+        "briefmonth": month_datetime,
+        "prev_month": prev_month,
+        "next_month": next_month,
+        "monthly_food": monthly_food,
+        "recommend_nutrition_form": recommend_nutrition_form,
     }
-    return render(request, 'controlpage/client_foodbymonth.html', data)
+    return render(request, "controlpage/client_foodbymonth.html", data)
 
 
 def client_training(request):
@@ -399,24 +411,23 @@ def client_training(request):
 
     # проверка пользователя
     if request.user.is_anonymous:
-        return redirect('loginuser')
-    if request.user.username != 'Parrabolla':
-        return redirect('homepage')
-    
+        return redirect("loginuser")
+    if request.user.username != "Parrabolla":
+        return redirect("homepage")
+
     # определение клиента
-    client_id = request.GET['client_id']
+    client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
-    
+
     # контакты клиента
     client_contacts = get_contacts_of(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
     data = {
-        'clientname': client.username,
-        'client_id': client_id,
-        'client_contacts': client_contacts,
-        'client_remark': client_remark,
+        "clientname": client.username,
+        "client_id": client_id,
+        "client_contacts": client_contacts,
+        "client_remark": client_remark,
     }
-    return render(request, 'controlpage/client_training.html', data)
-    
+    return render(request, "controlpage/client_training.html", data)

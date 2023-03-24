@@ -1,7 +1,7 @@
 from fatsecret_app.cache_manager import FatsecretCacheManager
 
 
-class CacheManager():
+class CacheManager:
     def __init__(self):
         self.fs = FatsecretCacheManager()
 

@@ -1,8 +1,10 @@
-from django.http import JsonResponse
 from itertools import zip_longest
+
 from django.contrib.auth.models import User
-from .models import Measurement
+from django.http import JsonResponse
+
 from .forms import MeasurementCommentForm
+from .models import Measurement
 from .services import *
 
 
@@ -13,15 +15,15 @@ def save_measure_comment(request):
     # проверяем на корректность
     if form.is_valid():
         # получаем дату из формы
-        comment_date = form.cleaned_data['date']
+        comment_date = form.cleaned_data["date"]
         # получаем запись из БД с этим числом
-        measure = Measurement.objects.get(date=comment_date, user=request.user) 
+        measure = Measurement.objects.get(date=comment_date, user=request.user)
         # перезаписываем
         form = MeasurementCommentForm(request.POST, instance=measure)
         form.save()
-        new_comment = form.cleaned_data['comment']
+        new_comment = form.cleaned_data["comment"]
         data = {
-            'new_comment': new_comment,
+            "new_comment": new_comment,
         }
         return JsonResponse(data, status=200)
 
@@ -31,10 +33,10 @@ def get_color_settings(request):
 
     if request.user.is_anonymous:
         return JsonResponse({}, status=403)
-    
-    if request.GET.get('client_id'):
+
+    if request.GET.get("client_id"):
         # если запрос от эксперта о клиенте
-        client_id = request.GET.get('client_id')
+        client_id = request.GET.get("client_id")
         client = User.objects.get(id=client_id)
     else:
         # если запрос от самого клиента
@@ -48,23 +50,22 @@ def get_color_settings(request):
 def save_color_settings(request):
     """Сохранение настроек цветов для показателей клиента через ajax"""
 
-    if request.user.username != 'Parrabolla':
+    if request.user.username != "Parrabolla":
         return JsonResponse({}, status=403)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # определение клиента
-        client_id = request.POST.get('client_id')
+        client_id = request.POST.get("client_id")
         client = User.objects.get(id=client_id)
 
         # параметры цветовых настроек
-        indices = request.POST.getlist('index')
-        colors = request.POST.getlist('color')
-        low_limits = request.POST.getlist('low_limit')
-        up_limits = request.POST.getlist('upper_limit')
+        indices = request.POST.getlist("index")
+        colors = request.POST.getlist("color")
+        low_limits = request.POST.getlist("low_limit")
+        up_limits = request.POST.getlist("upper_limit")
         # кулёк из параметров цветовых настроек
         colorset_values = zip_longest(indices, colors, low_limits, up_limits)
 
         save_measeurecolor_settings(client, colorset_values)
 
         return JsonResponse({}, status=200)
-    

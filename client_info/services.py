@@ -1,8 +1,20 @@
-from .models import HealthQuestionary, ClientContact, MeetQuestionary, ClientMemo
-from .forms import HealthQuestionaryForm, ClientContactForm, MeetQuestionaryForm, ClientMemoForm
 from datetime import date
-from common.utils import get_noun_ending
 from typing import Optional, Union
+
+from common.utils import get_noun_ending
+
+from .forms import (
+    ClientContactForm,
+    ClientMemoForm,
+    HealthQuestionaryForm,
+    MeetQuestionaryForm,
+)
+from .models import (
+    ClientContact,
+    ClientMemo,
+    HealthQuestionary,
+    MeetQuestionary,
+)
 
 
 # health_questionary
@@ -34,26 +46,29 @@ def get_health_questionary_form_for(user):
 
     return health_questionary_form
 
-   
+
 def get_age_string(user) -> str:
     """возвращает количество полных лет по дню рождения в анкете здоровья
-    в формате 'количество + лет\года\год' или 'неизвестно' 
+    в формате 'количество + лет\года\год' или 'неизвестно'
     """
 
     health_questionary = get_health_questionary_of(user)
 
     if not health_questionary:
-        client_age = 'неизвестно'
+        client_age = "неизвестно"
     else:
         birthdate = health_questionary.birth_date
 
         today = date.today()
         age = today.year - birthdate.year
-        if (today.month < birthdate.month or
-        (today.month == birthdate.month and today.day < birthdate.day)):
+        if today.month < birthdate.month or (
+            today.month == birthdate.month and today.day < birthdate.day
+        ):
             age = age - 1
 
-        client_age = str(age) + ' ' + get_noun_ending(age, 'год', 'года', 'лет')
+        client_age = (
+            str(age) + " " + get_noun_ending(age, "год", "года", "лет")
+        )
 
     return client_age
 
@@ -64,13 +79,13 @@ def get_age_int(user) -> Union[int, None]:
     health_questionary = get_health_questionary_of(user)
 
     if health_questionary:
-
         birthdate = health_questionary.birth_date
 
         today = date.today()
         age = today.year - birthdate.year
-        if (today.month < birthdate.month or
-        (today.month == birthdate.month and today.day < birthdate.day)):
+        if today.month < birthdate.month or (
+            today.month == birthdate.month and today.day < birthdate.day
+        ):
             age = age - 1
 
         return age
@@ -82,13 +97,13 @@ def get_normal_pressure_of(user) -> str:
     health_questionary = get_health_questionary_of(user)
 
     if not health_questionary:
-        normal_pressure = 'не заполнено'
-    elif health_questionary.norm_pressure == 'no':
-        normal_pressure = 'не знает'
+        normal_pressure = "не заполнено"
+    elif health_questionary.norm_pressure == "no":
+        normal_pressure = "не знает"
     else:
         normal_pressure = health_questionary.norm_pressure
 
-    return normal_pressure 
+    return normal_pressure
 
 
 # meet_questionary
@@ -154,20 +169,22 @@ def get_contacts_of(user) -> dict:
         return {}
     else:
         fields = [
-            'telegram',
-            'whatsapp',
-            'discord',
-            'skype',
-            'vkontakte',
-            'facebook',
+            "telegram",
+            "whatsapp",
+            "discord",
+            "skype",
+            "vkontakte",
+            "facebook",
         ]
-        for field in fields: 
+        for field in fields:
             if getattr(instance, field):
                 # если хотя бы одно поле контактов не пустое - делаем словарь и возвращаем
                 client_contacts = {}
                 for f in fields:
                     client_contacts[f] = getattr(instance, f)
-                client_contacts['preferred'] = getattr(instance, 'preferred_contact')
+                client_contacts["preferred"] = getattr(
+                    instance, "preferred_contact"
+                )
                 return client_contacts
         # иначе контакты считаются пустыми
         return {}
@@ -196,21 +213,15 @@ def is_contacts_filled_by(user) -> bool:
     else:
         # проверка, что заполнено хотя бы 1 поле
         fields = [
-            'telegram',
-            'whatsapp',
-            'discord',
-            'skype',
-            'vkontakte',
-            'facebook',
+            "telegram",
+            "whatsapp",
+            "discord",
+            "skype",
+            "vkontakte",
+            "facebook",
         ]
         for field in fields:
             if getattr(entry, field):
                 return True
 
         return False
-
-           
-
-
-
-

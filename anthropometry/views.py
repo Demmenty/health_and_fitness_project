@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render
+
 from .forms import AnthropoPhotoAccessForm
 from .models import Anthropometry, AnthropometryPhotoAccess
-from django.http import JsonResponse
 
 
 # Create your views here.
@@ -16,9 +17,8 @@ def photoaccess_change(request):
         form = AnthropoPhotoAccessForm(request.POST, instance=instance)
         form.save()
 
-        photoaccess_allowed = form.cleaned_data['photo_access']
+        photoaccess_allowed = form.cleaned_data["photo_access"]
         data = {
-            'photoaccess_allowed': photoaccess_allowed,
-            }
+            "photoaccess_allowed": photoaccess_allowed,
+        }
         return JsonResponse(data, status=200)
-
