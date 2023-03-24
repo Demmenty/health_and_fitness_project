@@ -8,7 +8,7 @@ from .models import NutritionRecommendation
 def save_nutrition_recommendation(request):
     """Сохранение рекомендуемых КБЖУ от эксперта через ajax"""
 
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return JsonResponse({}, status=403)
 
     # получаем форму из запроса

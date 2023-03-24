@@ -50,7 +50,7 @@ def get_color_settings(request):
 def save_color_settings(request):
     """Сохранение настроек цветов для показателей клиента через ajax"""
 
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return JsonResponse({}, status=403)
 
     if request.method == "POST":

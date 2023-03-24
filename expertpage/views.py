@@ -13,7 +13,7 @@ def expertpage(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # список зарегистрированных клиентов
@@ -37,7 +37,7 @@ def consult_requests_page(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # функция сохранения заметки к заявке консультации

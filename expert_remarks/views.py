@@ -10,7 +10,7 @@ def get_commentary_form(request):
     """Получение формы коммента клиенту для эксперта
     для выбранной на странице даты через скрипт в layout"""
 
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
 
@@ -40,7 +40,7 @@ def save_commentary_form(request):
     """Сохранение формы коммента для клиента через аякс-скрипт
     Используется в controlpage/layout.html
     """
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
 
@@ -175,7 +175,7 @@ def get_clientnote_form(request):
     """Получение формы коммента клиенту для эксперта
     для выбранной на странице даты через скрипт в layout"""
 
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
 
@@ -205,7 +205,7 @@ def get_clientnote_form(request):
 
 def save_clientnote_form(request):
     """Сохранение формы заметки о клиенте через аякс-скрипт"""
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
 
@@ -236,7 +236,7 @@ def save_clientnote_form(request):
 # заметки о клиенте для эксперта (совокупная)
 def save_full_clientnote_form(request):
     """Сохранение формы совокупной заметки о клиенте через аякс-скрипт"""
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
 

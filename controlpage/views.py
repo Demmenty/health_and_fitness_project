@@ -22,7 +22,7 @@ def client_mainpage(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -77,7 +77,7 @@ def client_health_questionary(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -111,7 +111,7 @@ def client_meet_questionary(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -145,7 +145,7 @@ def client_measurements(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -217,7 +217,7 @@ def client_anthropometry(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -260,7 +260,7 @@ def client_mealjournal(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # определение клиента
@@ -324,7 +324,7 @@ def client_foodbydate(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # получаем введенную дату, проверяем, форматируем
@@ -373,7 +373,7 @@ def client_foodbymonth(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username != "Parrabolla":
+    if not request.user.is_expert:
         return redirect("homepage")
 
     # получаем введенный месяц, проверяем, форматируем

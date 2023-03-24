@@ -25,7 +25,7 @@ def personalpage(request):
     # проверка пользователя
     if request.user.is_anonymous:
         return redirect("loginuser")
-    if request.user.username == "Parrabolla":
+    if request.user.is_expert:
         return redirect("expertpage")
 
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
@@ -222,7 +222,7 @@ def measurements(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
-    if request.user.username == "Parrabolla":
+    if request.user.is_expert:
         return redirect("expertpage")
 
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
