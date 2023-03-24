@@ -5,7 +5,9 @@ from django.shortcuts import redirect, render
 
 from anthropometry.forms import AnthropometryForm
 from anthropometry.services import *
-from client_info.services import *
+from client_info.forms import MeetQuestionaryForm, HealthQuestionaryForm
+from client_info.manager import ClientInfoManager
+from client_info.models import MeetQuestionary
 from common.services import services
 from common.utils import get_noun_ending
 from expert_recommendations.services import *
@@ -26,14 +28,18 @@ def personalpage(request):
     if request.user.username == "Parrabolla":
         return redirect("expertpage")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
-    health_questionary_filled = is_health_questionary_filled_by(request.user)
-    meet_questionary_filled = is_meet_questionary_filled_by(request.user)
+    health_questionary_filled = ClientInfoManager.is_health_questionary_filled(
+        request.user
+    )
+    meet_questionary_filled = ClientInfoManager.is_meet_questionary_filled(
+        request.user
+    )
 
     # контакты клиента
-    contacts_filled = is_contacts_filled_by(request.user)
-    contacts_form = get_contacts_form_for(request.user)
+    contacts_filled = ClientInfoManager.is_contacts_filled(request.user)
+    contacts_form = ClientInfoManager.get_contacts_form(request.user)
 
     # измерения за сегодня
     if services.fs.is_connected(request.user):
@@ -62,7 +68,7 @@ def client_settings(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     data = {
         "clientmemo_form": clientmemo_form,
@@ -79,12 +85,14 @@ def meet_questionary(request):
 
     # открываем анкету
     if request.method == "GET":
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
-        meet_questionary = get_meet_questionary_of(request.user)
-        meet_questionary_form = get_meet_questionary_form_for(request.user)
+        meet_questionary = ClientInfoManager.get_meet_questionary(request.user)
+        meet_questionary_form = ClientInfoManager.get_meet_questionary_form(
+            request.user
+        )
         readiness_choices = MeetQuestionary.READINESS_CHOICES
-        age = get_age_int(request.user)
+        age = ClientInfoManager.get_age(request.user)
         today_commentary = get_today_commentary(request.user)
 
         data = {
@@ -102,7 +110,7 @@ def meet_questionary(request):
         form = MeetQuestionaryForm(request.POST)
 
         if form.is_valid():
-            instance = get_meet_questionary_of(request.user)
+            instance = ClientInfoManager.get_meet_questionary(request.user)
 
             if instance:
                 form = MeetQuestionaryForm(request.POST, instance=instance)
@@ -115,11 +123,17 @@ def meet_questionary(request):
                 return redirect("personalpage")
 
         else:
-            clientmemo_form = get_clientmemo_form_for(request.user)
-            meet_questionary = get_meet_questionary_of(request.user)
-            meet_questionary_form = get_meet_questionary_form_for(request.user)
+            clientmemo_form = ClientInfoManager.get_clientmemo_form(
+                request.user
+            )
+            meet_questionary = ClientInfoManager.get_meet_questionary(
+                request.user
+            )
+            meet_questionary_form = (
+                ClientInfoManager.get_meet_questionary_form(request.user)
+            )
             readiness_choices = MeetQuestionary.READINESS_CHOICES
-            age = get_age_int(request.user)
+            age = ClientInfoManager.get_age(request.user)
             today_commentary = get_today_commentary(request.user)
 
             data = {
@@ -142,10 +156,14 @@ def health_questionary(request):
 
     # открываем анкету
     if request.method == "GET":
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
-        health_questionary = get_health_questionary_of(request.user)
-        health_questionary_form = get_health_questionary_form_for(request.user)
+        health_questionary = ClientInfoManager.get_health_questionary(
+            request.user
+        )
+        health_questionary_form = (
+            ClientInfoManager.get_health_questionary_form(request.user)
+        )
         # комментарий за сегодня от эксперта
         today_commentary = get_today_commentary(request.user)
 
@@ -162,7 +180,7 @@ def health_questionary(request):
         form = HealthQuestionaryForm(request.POST)
 
         if form.is_valid():
-            instance = get_health_questionary_of(request.user)
+            instance = ClientInfoManager.get_health_questionary(request.user)
 
             if instance:
                 form = HealthQuestionaryForm(request.POST, instance=instance)
@@ -175,10 +193,14 @@ def health_questionary(request):
                 return redirect("personalpage")
 
         else:
-            clientmemo_form = get_clientmemo_form_for(request.user)
-            health_questionary = get_health_questionary_of(request.user)
-            health_questionary_form = get_health_questionary_form_for(
+            clientmemo_form = ClientInfoManager.get_clientmemo_form(
                 request.user
+            )
+            health_questionary = ClientInfoManager.get_health_questionary(
+                request.user
+            )
+            health_questionary_form = (
+                ClientInfoManager.get_health_questionary_form(request.user)
             )
             today_commentary = get_today_commentary(request.user)
 
@@ -203,7 +225,7 @@ def measurements(request):
     if request.user.username == "Parrabolla":
         return redirect("expertpage")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     today_commentary = get_today_commentary(request.user)
 
@@ -258,7 +280,7 @@ def addmeasure(request):
         return redirect("loginuser")
 
     if request.method == "GET":
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
         weekly_measure_forms = create_weekly_measure_forms(request.user)
 
@@ -279,7 +301,7 @@ def addmeasure(request):
         return render(request, "personalpage/addmeasure.html", data)
 
     if request.method == "POST":
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
         fatsecret_connected = services.fs.is_connected(request.user)
         form = MeasurementForm(request.POST)
@@ -330,7 +352,7 @@ def anthropometry(request):
         return redirect("loginuser")
 
     if request.method == "GET":
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
         # сделанные измерения
         entries = get_anthropo_entries(request.user)
 
@@ -379,7 +401,9 @@ def anthropometry(request):
             return redirect("anthropometry")
 
         else:
-            clientmemo_form = get_clientmemo_form_for(request.user)
+            clientmemo_form = ClientInfoManager.get_clientmemo_form(
+                request.user
+            )
             add_anthropo_error = "Введены некорректные данные"
 
             # сделанные измерения
@@ -412,7 +436,7 @@ def mealjournal(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     # комментарий за сегодня от эксперта
     today_commentary = get_today_commentary(request.user)
@@ -464,7 +488,7 @@ def foodbydate(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     # получаем введенную дату, проверяем, форматируем
     briefdate = request.GET.get("date")
@@ -507,7 +531,7 @@ def foodbymonth(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
-    clientmemo_form = get_clientmemo_form_for(request.user)
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     # месяц, за который нужно посчитать стату,
     # введенный на предыдущей странице

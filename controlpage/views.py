@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
 from anthropometry.services import *
-from client_info.services import *
+from client_info.manager import ClientInfoManager
+from client_info.models import MeetQuestionary
 from common.services import services
 from common.utils import get_noun_ending
 from expert_recommendations.services import *
@@ -29,7 +30,7 @@ def client_mainpage(request):
     client = User.objects.get(id=client_id)
 
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
@@ -37,10 +38,14 @@ def client_mainpage(request):
     date_joined = client.date_joined.date()
 
     # существоВание анкеты и возраст клиента
-    health_questionary_filled = is_health_questionary_filled_by(client)
-    meet_questionary_filled = is_meet_questionary_filled_by(client)
-    client_height = get_height(client)
-    client_age = get_age_string(client)
+    health_questionary_filled = ClientInfoManager.is_health_questionary_filled(
+        client
+    )
+    meet_questionary_filled = ClientInfoManager.is_meet_questionary_filled(
+        client
+    )
+    client_height = ClientInfoManager.get_height(client)
+    client_age = ClientInfoManager.get_age_as_string(client)
 
     # проверка подключения FatSecret
     fs_connected = services.fs.is_connected(client)
@@ -80,12 +85,14 @@ def client_health_questionary(request):
     client = User.objects.get(id=client_id)
 
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
     # анкета здоровья
-    health_questionary = get_health_questionary_of(client)
-    health_questionary_form = get_health_questionary_form_for(client)
+    health_questionary = ClientInfoManager.get_health_questionary(client)
+    health_questionary_form = ClientInfoManager.get_health_questionary_form(
+        client
+    )
 
     data = {
         "clientname": client.username,
@@ -112,12 +119,12 @@ def client_meet_questionary(request):
     client = User.objects.get(id=client_id)
 
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
     # анкета здоровья
-    meet_questionary = get_meet_questionary_of(client)
-    meet_questionary_form = get_meet_questionary_form_for(client)
+    meet_questionary = ClientInfoManager.get_meet_questionary(client)
+    meet_questionary_form = ClientInfoManager.get_meet_questionary_form(client)
     readiness_choices = MeetQuestionary.READINESS_CHOICES
 
     data = {
@@ -146,7 +153,7 @@ def client_measurements(request):
     client = User.objects.get(id=client_id)
 
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
@@ -154,7 +161,7 @@ def client_measurements(request):
     colorsettings_exist = user_has_measeurecolor_settings(client)
     colorset_forms = create_colorset_forms(client)
     # указанное в анкете нормальное давление
-    normal_pressure = get_normal_pressure_of(client)
+    normal_pressure = ClientInfoManager.get_normal_pressure(client)
 
     # измерения клиента
     if services.fs.is_connected(client):
@@ -217,7 +224,7 @@ def client_anthropometry(request):
     client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
@@ -260,7 +267,7 @@ def client_mealjournal(request):
     client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
@@ -330,7 +337,7 @@ def client_foodbydate(request):
     client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
@@ -379,7 +386,7 @@ def client_foodbymonth(request):
     client_id = request.GET["client_id"]
     client = User.objects.get(id=client_id)
     # контакты клиента
-    client_contacts = get_contacts_of(client)
+    client_contacts = ClientInfoManager.get_contacts(client)
     # комментарий и заметки
     client_remark = get_remark_forms(client)
 
