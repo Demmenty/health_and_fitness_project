@@ -307,7 +307,11 @@ class FatsecretManager:
 
         monthly_avg = {"protein": 0, "fat": 0, "carbo": 0, "calories": 0}
 
-        monthly_entries = session.food_entries_get_month(date=request_date)
+        try:
+            monthly_entries = session.food_entries_get_month(date=request_date)
+        except KeyError:
+            return {}
+        
         if not monthly_entries:
             return {}
 
