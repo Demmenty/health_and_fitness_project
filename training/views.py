@@ -1,13 +1,9 @@
-from django.shortcuts import render, redirect
-from expert_remarks.services import get_today_commentary
-from client_info.services import get_clientmemo_form_for
-from fatsecret_app.services import *
-from measurements.services import *
-from expert_recommendations.services import *
-from anthropometry.services import *
-from client_info.services import *
-from expert_remarks.services import get_remark_forms
 from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+
+from client_info.manager import ClientInfoManager
+from expert_recommendations.services import *
+from expert_remarks.services import get_remark_forms, get_today_commentary
 
 
 def training(request):
@@ -15,21 +11,19 @@ def training(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
-    
+
     if request.user.is_expert:
         template = "training/expertpage_training.html"
-        # определение клиента
-        client_id = request.GET["client_id"]
-        client = User.objects.get(id=client_id)
 
-        # контакты клиента
-        client_contacts = get_contacts_of(client)
+        client = User.objects.get(id=request.GET["client_id"])
+
+        client_contacts = ClientInfoManager.get_contacts(client)
         # комментарий и заметки
         client_remark = get_remark_forms(client)
 
         data = {
             "clientname": client.username,
-            "client_id": client_id,
+            "client_id": client.id,
             "client_contacts": client_contacts,
             "client_remark": client_remark,
         }
@@ -38,9 +32,8 @@ def training(request):
     if not request.user.is_expert:
         template = "training/clientpage_training.html"
 
-        clientmemo_form = get_clientmemo_form_for(request.user)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
-        # комментарий за сегодня от эксперта
         today_commentary = get_today_commentary(request.user)
 
         data = {
