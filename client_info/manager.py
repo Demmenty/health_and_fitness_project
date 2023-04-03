@@ -201,6 +201,15 @@ class ClientInfoManager:
 
         return meet_questionary_form
 
+    def get_sex(user: User) -> str | None:
+        """возвращает пол клиента ("M","F","?")"""
+
+        instance = MeetQuestionary.objects.filter(user=user).first()
+        if not instance:
+            return
+
+        return instance.sex
+
     def get_clientmemo_form(user: User) -> ClientMemoForm:
         """возвращает форму для личной заметки клиента"""
 
