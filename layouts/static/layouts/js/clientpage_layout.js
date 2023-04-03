@@ -61,7 +61,7 @@ window.onload = function () {
             openLabelName = 'nutrition';
             openLabel = commentNutritionLabel;
         }
-        else if (pagePath == '/training') {
+        else if (pagePath == '/training/') {
             commentWorkout.classList.remove('hidden_element');
             commentWorkoutLabel.classList.remove('closed');
             navLinkWorkout.classList.add('text-royalblue');
@@ -451,7 +451,7 @@ $(document).ready(function() {
         $('#memo_nutrition_textarea').removeClass('hidden_element');
         $('#memo_nutrition_label').removeClass('closed');
     }
-    else if (pagePath == '/training') {
+    else if (pagePath == '/training/') {
         $('#memo_workout_textarea').removeClass('hidden_element');
         $('#memo_workout_label').removeClass('closed');
     }

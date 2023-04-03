@@ -39,7 +39,7 @@ $(document).ready(function() {
         $('#navlink_measurements_drop').addClass('hidden_element');
         $('#open_label_drop').text('измерения');
     }
-    else if (pagePath == '/training') {
+    else if (pagePath == '/training/') {
         $("#id_workout_comment").removeClass('hidden_element');
         $("#id_workout_label").removeClass('closed');
         $("#id_workout_note").removeClass('hidden_element');
