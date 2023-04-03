@@ -1,10 +1,484 @@
 {% extends 'layouts/clientpage_layout.html' %}
 {% load static %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'training/css/training.css' %}">
+{% endblock %}
 {% block title %}Тренировки{% endblock %}
 
 {% block content %}
-<div class="container main_container d-flex flex-column justify-content-between pt-5">
-    <h3 class="text-center">Раздел скоро появится &#128076;</h2>
+<div class="container main_container d-flex flex-column pt-5">
+
+  <!-- календарь -->
+  <div class="calendar-container">
+    <div class="calendar">
+
+      <div class="year-header"> 
+        <span class="left-button" id="prev"> &lang; </span> 
+        <span class="year" id="label"></span> 
+        <span class="right-button" id="next"> &rang; </span>
+      </div> 
+
+      <div class="calendar-content">
+          <table class="months-table mb-2"> 
+            <tbody>
+              <tr class="months-row">
+                <td class="month">Янв</td> 
+                <td class="month">Фев</td> 
+                <td class="month">Мар</td> 
+                <td class="month">Апр</td> 
+                <td class="month">Май</td> 
+                <td class="month">Июн</td> 
+                <td class="month">Июл</td>
+                <td class="month">Авг</td> 
+                <td class="month">Сен</td> 
+                <td class="month">Окт</td>          
+                <td class="month">Ноя</td>
+                <td class="month">Дек</td>
+              </tr>
+            </tbody>
+          </table> 
+          
+          <table class="days-table"> 
+            <td class="day">ВС</td> 
+            <td class="day">ПН</td> 
+            <td class="day">ВТ</td> 
+            <td class="day">СР</td> 
+            <td class="day">ЧТ</td> 
+            <td class="day">ПТ</td> 
+            <td class="day">СБ</td>
+          </table> 
+
+          <div class="frame"> 
+            <table class="dates-table"> 
+                <tbody class="tbody">             
+                </tbody> 
+            </table>
+          </div> 
+      </div>
+
+    </div>
+  </div>
+
+  <br><br>
+
+  <!-- карточка дня -->
+  <div class="day-container">
+      <h3 class="text-center" id="chosen-date" data-year="" data-month="" data-day=""></h3>
+
+      <!-- тренировки -->
+      <div class="trainings-container">
+      </div>
+
+      <button type="button" class="btn btn-outline-primary" id="add-training-btn">Добавить тренировку</button>
+      
+      <!-- выбор типа новой тренировки -->
+      <div class="" id="select_training_container">
+          <p>Выберите тип тренировки</p>
+          <div class="d-flex">
+              <select name="type" class="form-control" required id="selected_type">
+                  <option value="" selected></option>
+                  <option value="P">Силовая</option>
+                  <option value="R">Круговая</option>
+                  <option value="E">Выносливость</option>
+                  <option value="I">Интервальная</option>
+              </select>
+              <button type="button" class="btn btn-primary" id="add-new-training-btn">OK</button>
+          </div>
+      </div>
+
+  </div>
+
+  <!-- формы тренировок -->
+  <div class="training power-training" id="">
+    <h4 class="text-center">Силовая тренировка</h4>
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
+        {% csrf_token %}
+        {{ training_forms.power }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+  </div>
+
+  <div class="training round-training" id="">
+    <h4 class="text-center">Круговая силовая тренировка</h4>
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
+      {% csrf_token %}
+      {{ training_forms.round }}
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+  </div>
+
+  <div class="training endurance-training" id="">
+    <h4 class="text-center">Тренировка выносливости</h4>
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
+      {% csrf_token %}
+      {{ training_forms.endurance }}
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+  </div>
+
+  <div class="training interval-training" id="">
+    <h4 class="text-center">Тренировка выносливости интервальная</h4>
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
+      {% csrf_token %}
+      {{ training_forms.interval }}
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+  </div>
+
+  <!-- формы отчетов об упражнениях -->
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form power-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.power.exercise }}
+    {{ exercise_report_forms.power.training }}
+    <table class="table table-sm table-bordered exercises-table text-center align-middle">
+      <thead class="table-light align-middle">
+        <tr class="text-center">
+          <th>Упражнение</th>
+          <th>Вес</th>
+          <th colspan="2">Подходы</th>
+          <th colspan="2">Повторы</th>
+          <th colspan="2">Нагрузка</th>
+          <th>Выполнено</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="exercise-name col-3"></td>
+          <td class="col-2">{{ exercise_report_forms.power.weight }}</td>
+          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.approaches_due }}</td>
+          <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.approaches_made }}</td>
+          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.repeats_due }}</td>
+          <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.repeats_made }}</td>
+          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.load_due }}</td>
+          <td class="col-1" title="Получено">{{ exercise_report_forms.power.load_get }}</td>
+          <td class="col-1">{{ exercise_report_forms.power.is_done }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form endurance-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.endurance.exercise }}
+    {{ exercise_report_forms.endurance.training }}
+    <table class="table table-sm table-bordered exercises-table text-center align-middle">
+      <thead class="table-light align-middle">
+        <tr class="text-center">
+          <th>Упражнение</th>
+          <th>Время</th>
+          <th>Средний пульс</th>
+          <th>Выполнено</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="exercise-name col-5"></td>
+          <td class="col-3" title="Количество минут">{{ exercise_report_forms.endurance.minutes }}</td>
+          <td class="col-3">{{ exercise_report_forms.endurance.pulse_avg }}</td>
+          <td class="col-1">{{ exercise_report_forms.endurance.is_done }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form interval-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.interval.exercise }}
+    {{ exercise_report_forms.interval.training }}
+    <table class="table table-sm table-bordered exercises-table text-center align-middle">
+      <thead class="table-light align-middle">
+        <tr>
+          <th rowspan="2">Упражнение</th>
+          <th colspan="2">Высокая нагрузка</th>
+          <th colspan="2">Низкая нагрузка</th>
+          <th rowspan="2">Циклы</th>
+          <th rowspan="2">Выполнено</th>
+        </tr>
+        <tr>
+          <th>Время</th>
+          <th>Пульс</th>
+          <th>Время</th>
+          <th>Пульс</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="exercise-name col-2"></td>
+          <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.high_load_time }}</td>
+          <td class="col-2">{{ exercise_report_forms.interval.high_load_pulse }}</td>
+          <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.low_load_time }}</td>
+          <td class="col-2">{{ exercise_report_forms.interval.low_load_pulse }}</td>
+          <td class="col-1">{{ exercise_report_forms.interval.cycles }}</td>
+          <td class="col-1">{{ exercise_report_forms.interval.is_done }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  
+  <!-- окно выбора упражнений -->
+  <div class="exercise-selection" id="exercise-selection" data-training="">
+    <div class="d-flex align-items-baseline justify-content-end">
+      <h3 class="text-center col-11 ms-auto">Выбор упражнения</h3>
+      <button type="button" class="btn-close col-1 ms-auto"></button>
+    </div>
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column col-4" id="exercises-list">
+      {% for exercise in exercises %}
+        <div class="exercise-row border justify-content-between d-flex" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+          <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
+          <div class="col-2 text-end exercise-btn-group" data-exercise-id="{{ exercise.id }}">
+            {% if exercise.author == client %}
+              <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+            {% endif %}
+            <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
+            <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+          </div>
+        </div>
+      {% endfor %}
+      <button type="button" class="btn btn-outline-primary" id="exercise-create-btn">Создать упражнение</button>
+      </div>
+
+      <div class="d-flex flex-column col-8" id="exercises-info">
+
+        {% for exercise in exercises %}
+          <div class="exercise-info border p-2" id="exercise-info-{{ exercise.id }}">
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="ms-3 mb-0">{{ exercise.name }}</h4>
+              {% if exercise.icon %}
+                <img src="{{ exercise.icon.url }}" class="exercise-icon">
+              {% endif %}
+            </div>
+
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="exercise-info-toggle" data-toggle="detail-description-{{ exercise.id }}">
+                  <div class="col-11">Описание</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail" id="detail-description-{{ exercise.id }}">
+                  <hr></hr>
+                  <div class="container">
+                    <p>{{ exercise.description }}</p>
+                  </div>
+                </div>
+              </li>
+              {% if exercise.target_muscles %}
+                <li class="list-group-item">
+                  <div class="exercise-info-toggle" data-toggle="detail-target-muscles-{{ exercise.id }}">
+                    <div class="col-11">Целевые мышцы</div>
+                    <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                  </div>
+                  <div class="exercise-info-detail" id="detail-target-muscles-{{ exercise.id }}">
+                    <hr></hr>
+                    <div class="container">
+                      <p>{{ exercise.target_muscles }}</p>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+              {% if exercise.mistakes %}
+                <li class="list-group-item">
+                  <div class="exercise-info-toggle" data-toggle="detail-mistakes-{{ exercise.id }}">
+                    <div class="col-11">Частые ошибки</div>
+                    <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                  </div>
+                  <div class="exercise-info-detail" id="detail-mistakes-{{ exercise.id }}">
+                    <hr></hr>
+                    <div class="container">
+                      <p>{{ exercise.mistakes }}</p>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+              {% if exercise.photo_init_pose and exercise.photo_work_pose %}
+                <li class="list-group-item">
+                  <div class="exercise-info-toggle" data-toggle="detail-photo-{{ exercise.id }}">
+                    <div class="col-11">Фото</div>
+                    <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                  </div>
+                  <div class="exercise-info-detail" id="detail-photo-{{ exercise.id }}">
+                    <hr></hr>
+                    <div class="container d-flex">
+                      {% if exercise.photo_init_pose %}
+                        <div class="d-flex flex-column w-50">
+                          <p class="text-center">Исходная позиция</p>
+                          <img src="{{ exercise.photo_init_pose.url }}" class="exercise-photo-init-pose">
+                        </div>
+                      {% endif %}
+                      {% if exercise.photo_work_pose %}
+                        <div class="d-flex flex-column w-50">
+                          <p class="text-center">Рабочая позиция</p>
+                          <img src="{{ exercise.photo_work_pose.url }}" class="exercise-photo-work-pose">
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+              {% if exercise.video %}
+                <li class="list-group-item">
+                  <div class="exercise-info-toggle" data-toggle="detail-video-{{ exercise.id }}">
+                    <div class="col-11">Видео</div>
+                    <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                  </div>
+                  <div class="exercise-info-detail" id="detail-video-{{ exercise.id }}">
+                    <hr></hr>
+                    <div class="container">
+                      <a href="{{ exercise.video }}" class="video-ref">{{ exercise.video }}</a>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+              <li class="list-group-item">
+                <div class="exercise-info-toggle" data-toggle="detail-areas-{{ exercise.id }}">
+                  <div class="col-11">Зоны воздействия</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail" id="detail-areas-{{ exercise.id }}">
+                  <hr></hr>
+                  <div class="container">
+                    <p class="exercise-info-areas d-none" data-exercise-id="{{ exercise.id }}">
+                      {{ exercise.effect_areas }}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+          </div>
+        {% endfor %}
+
+        <h4 class="text-center">Задействованные зоны</h4>
+        <div class="d-flex border dummy-container">
+          {% if client_sex == "F" %}
+            <div class="border dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500" />
+                  <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/hips_front.png' %}" x="153" y="398" height="290" width="192" class="effect-area-pic area-hips-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/press_front.png' %}" x="215" y="274" height="196" width="67" class="effect-area-pic area-press"/> 
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_left.png' %}" x="120" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_rigth.png' %}" x="315" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>  
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_left.png' %}" x="169" y="281" height="166" width="51" class="effect-area-pic area-sides"/>
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_rigth.png' %}" x="276" y="281" height="166" width="51" class="effect-area-pic area-sides"/>     
+              </svg>
+            </div>
+            <div class="border dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500" />
+                <image xlink:href="{% static 'training/img/female_area/upperspine_back.png' %}" x="151" y="151" height="132" width="210" class="effect-area-pic area-upperspine"/>  
+                <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/hips_back.png' %}" x="157" y="476" height="220" width="198" class="effect-area-pic area-hips-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shins_back.png' %}" x="184" y="687" height="229" width="143" class="effect-area-pic area-shins"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_left.png' %}" x="131" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_rigth.png' %}" x="326" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/female_area/spine_back.png' %}" x="184" y="278" height="148" width="146" class="effect-area-pic area-spine"/>
+              </svg>
+            </div>
+          {% else %}
+            <div class="border dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500" />   
+              </svg>
+            </div>
+            <div class="border dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500" />   
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- окно создания упражнения -->
+  <div class="exercise-creation" id="exercise-creation">
+    <div class="d-flex align-items-baseline justify-content-end">
+      <h3 class="text-center col-11 ms-auto">Создание упражнения</h3>
+      <button type="button" class="btn-close col-1 ms-auto"></button>
+    </div>
+    <form method="post" action="{% url 'save_exercise' %}" class="exercise-creation-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ exercise_form }}
+      <div class="d-flex flex-row">
+
+        <div class="d-flex flex-column col-4">
+          <p>Зоны воздействия:</p>
+          <ul class="effect-areas-list">
+          </ul>
+        </div>
+
+        <div class="d-flex border dummy-container">
+          {% if client_sex == "F" %}
+            <div class="border dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500" />
+                  <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/hips_front.png' %}" x="153" y="398" height="290" width="192" class="effect-area-pic area-hips-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/press_front.png' %}" x="215" y="274" height="196" width="67" class="effect-area-pic area-press"/> 
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_left.png' %}" x="120" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_rigth.png' %}" x="315" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>  
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_left.png' %}" x="169" y="281" height="166" width="51" class="effect-area-pic area-sides"/>
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_rigth.png' %}" x="276" y="281" height="166" width="51" class="effect-area-pic area-sides"/>     
+              </svg>
+            </div>
+            <div class="border dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500" />
+                <image xlink:href="{% static 'training/img/female_area/upperspine_back.png' %}" x="151" y="151" height="132" width="210" class="effect-area-pic area-upperspine"/>  
+                <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/hips_back.png' %}" x="157" y="476" height="220" width="198" class="effect-area-pic area-hips-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shins_back.png' %}" x="184" y="687" height="229" width="143" class="effect-area-pic area-shins"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_left.png' %}" x="131" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_rigth.png' %}" x="326" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/female_area/spine_back.png' %}" x="184" y="278" height="148" width="146" class="effect-area-pic area-spine"/>
+              </svg>
+            </div>
+          {% else %}
+            <div class="border dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500" />   
+              </svg>
+            </div>
+            <div class="border dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500" />   
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+      <button type="submit" class="btn btn-primary float-end" id="save-exercise-btn">Сохранить</button>
+    </form>
+  </div>
+
+  <br>
+  <br>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{% static 'training/js/training.js' %}"></script>
 {% endblock %}
