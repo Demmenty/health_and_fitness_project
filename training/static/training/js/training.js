@@ -29,14 +29,17 @@ $(document).ready(function(){
 
     // обработчики нажатий на зоны на кукле
     $("#exercise-creation").find(".effect-area-pic").click(selectAreaInCreation);
+    $("#exercise-editing").find(".effect-area-pic").click(selectAreaInEditing);
     $("#exercise-selection").find(".effect-area-pic").click(selectAreaInSelection);
 
     // обработчики закрытия окошек
     $("#exercise-creation").find(".btn-close").click(closeExerciseCreation);
     $("#exercise-selection").find(".btn-close").click(closeExerciseSelection);
+    $("#exercise-editing").find(".btn-close").click(closeExerciseEditing);
 
-    // обработчик сохранения упражнения
+    // обработчики сохранения упражнения
     $(".exercise-creation-form").on("submit", saveExercise);
+    $(".exercise-editing-form").on("submit", updateExercise);
 
     // обработчик клика на упражнение в списке при выборе
     $(".exercise-name").on("click", selectExercise);
@@ -50,6 +53,7 @@ $(document).ready(function(){
     // обработчики кнопок упражнений в окне выбора
     $(".btn-exercise-add").on("click", addNewExerciseReport);
     $(".btn-exercise-remove").on("click", removeExerciseReport);
+    $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
 // TODO редактирование и удаление упражнения
@@ -514,7 +518,7 @@ function selectAreaInSelection() {
 }
 
 function translateExerciseAreas() {
-    // перевести инфо о зонах упражнения
+    // перевести инфо о зонах упражнений
 
     $(".exercise-info-areas").each(function() {
         let info = $("<p class='exercise-info-areas-ru'></p>");
@@ -666,16 +670,19 @@ function removeExerciseReport() {
     $('#exercise-row-' + exercise_id).find(".btn-exercise-remove").hide();
 }
 
-// СОЗДАНИЕ\РЕДАКТИРОВАНИЕ УПРАЖНЕНИЯ
+var selected_areas = new Set();
+
+// СОЗДАНИЕ УПРАЖНЕНИЯ
 function openExerciseCreation() {
-    // открытие окна создания упражнения для тренировки
+    // открытие окна создания упражнения
 
     $("#exercise-creation").show();
 }
 
 function closeExerciseCreation() {
-    // закрытие окна создания упражнения для тренировки
+    // закрытие окна создания упражнения
 
+    clearExerciseCreation();
     $("#exercise-creation").hide();
 }
 
@@ -692,10 +699,8 @@ function clearExerciseCreation() {
     selected_areas.clear();
 }
 
-var selected_areas = new Set();
-
 function selectAreaInCreation() {
-    // обработчик клика на зону при создании\редактировании упражнения
+    // обработчик клика на зону при создании упражнения
     console.log("selectAreaInCreation");
 
     let div = $("#exercise-creation");
@@ -714,7 +719,7 @@ function selectAreaInCreation() {
         // убрать из сета
         selected_areas.delete(selected_area);
         // убрать из списка
-        $("#" + selected_area + "-row").remove();
+        div.find("#" + selected_area + "-row").remove();
     }
     else {
         // добавить в сет
@@ -723,7 +728,148 @@ function selectAreaInCreation() {
         let area_name = effect_areas[selected_area];
         $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(".effect-areas-list");
+            .appendTo(div.find(".effect-areas-list"));
+    }
+}
+
+// РЕДАКТИРОВАНИЕ УПРАЖНЕНИЯ
+function openExerciseEditing() {
+    // открытие окна редактирования упражнения
+    console.log("openExerciseEditing");
+
+    // получение инфы об упражнение и заполнение формы
+    let exercise_id = $(this).closest(".exercise-btn-group").data("exercise-id");
+    getExercise(exercise_id);
+
+    $("#exercise-editing").show();
+}
+
+function closeExerciseEditing() {
+    // закрытие окна редактирования упражнения
+
+    clearExerciseEditing();
+    $("#exercise-editing").hide();
+}
+
+function clearExerciseEditing() {
+    // резет окна редактирования упражнения
+    console.log("clearExerciseEditing");
+
+    let div = $("#exercise-editing");
+
+    div.find(".exercise-editing-form").trigger("reset");
+    div.find(".colored").removeClass("colored");
+    div.find(".effect-area-row").remove();
+    div.find(".exercise-icon").remove();
+    div.find(".exercise-photo").remove();
+    div.find("#id_exercise_id").val("");
+
+    selected_areas.clear();
+}
+
+function getExercise(exercise_id) {
+    // получение данных упражнения из бд
+    console.log("getExercise");
+
+    $.ajax({
+        data: {exercise_id: exercise_id},
+        method: "get",
+        url: "/training/ajax/get_exercise/",
+
+        success: function (exercise_data) {
+            console.log("успех");
+
+            fillExerciseForm(exercise_data);
+        },
+        error: function (response) {
+            console.log("не успех");
+            console.log(response);
+        },             
+    });
+}
+
+function fillExerciseForm(exercise_data) {
+    // заполнение формы упражнения данными из бд
+    console.log("fillExerciseForm");
+
+    let data = exercise_data[0];
+    let form = $(".exercise-editing-form");
+
+    // обычные поля
+    form.find("#id_name").val(data.fields.name);
+    form.find("#id_author").val(data.fields.author);
+    form.find("#id_exercise_type option[value='" + data.fields.exercise_type + "']")
+        .prop('selected', true);
+    form.find("#id_description").val(data.fields.description);
+    form.find("#id_target_muscles").val(data.fields.target_muscles);
+    form.find("#id_mistakes").val(data.fields.mistakes);
+    form.find("#id_video").val(data.fields.video);
+    form.find("#id_exercise_id").val(data.pk);
+
+    // картинки
+    if(data.fields.icon) {
+        let icon = $("<img src='/media/" + data.fields.icon + "' class='exercise-icon'>");
+        icon.insertBefore(form.find("#id_icon"));
+    }
+    if(data.fields.photo_init_pose) {
+        let photo_init = $("<img src='/media/" + data.fields.photo_init_pose + 
+                           "' class='exercise-photo'>");
+        photo_init.insertBefore(form.find("#id_photo_init_pose"));
+    }
+    if(data.fields.photo_work_pose) {
+        let photo_work = $("<img src='/media/" + data.fields.photo_work_pose + 
+                        "' class='exercise-photo'>");
+        photo_work.insertBefore(form.find("#id_photo_work_pose"));
+    }
+
+    // зоны воздействия
+    let areas = data.fields.effect_areas.split(",");
+
+    for (let i in areas) {
+        let area = areas[i];
+        if(!area) return;
+
+        selected_areas.add(area);
+
+        form.find("." + area).addClass("colored");
+
+        let area_name = effect_areas[area];
+        $("<li class='effect-area-row' id='"+ area + "-row"+"'></li>")
+            .append(area_name)
+            .appendTo(form.find(".effect-areas-list"));
+    }
+}
+
+function selectAreaInEditing() {
+    // обработчик клика на зону при редактировании упражнения
+    console.log("selectAreaInEditing");
+
+    let div = $("#exercise-editing");
+    let pic = $(this);
+
+    // определить зоны с таким же классом, как у нажатой
+    let pics = div.find("." + pic.attr('class').split(' ').join('.'));
+
+    // добавить\убрать подсветку зонам
+    pics.toggleClass("colored");
+
+    // контроль выбранных зон
+    let selected_area = pic.attr('class').split(' ')[1];
+
+    if(selected_areas.has(selected_area)) {
+        // убрать из сета
+        selected_areas.delete(selected_area);
+        // убрать из списка
+        div.find("#" + selected_area + "-row").remove();
+    }
+    else {
+        // добавить в сет
+        selected_areas.add(selected_area);
+        // добавить в список
+        let area_name = effect_areas[selected_area];
+        $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
+            .append(area_name)
+            .appendTo(div.find(".effect-areas-list"));
     }
 }
 
@@ -733,7 +879,7 @@ function saveExercise() {
     console.log("saveExercise");
 
     let formData = new FormData(this);
-    // правильно внести зоны воздействия
+    // внести зоны воздействия
     formData.set("effect_areas", Array.from(selected_areas));
 
     $.ajax({
@@ -746,9 +892,7 @@ function saveExercise() {
     
         success: function (response) {
             console.log("успех");
-            // очистка и закрытие окна
-            clearExerciseCreation();
-            $("#exercise-creation").hide();
+            closeExerciseCreation();
         },
         error: function (response) {
             console.log("не успех");
@@ -756,11 +900,40 @@ function saveExercise() {
         },
     });
 
-    // закрыть окно создания упражнения
-    $("#exercise-creation").hide();
     return false;
     // запросить новый список упражнений или добавить созданное
     // повесить обработчики на кнопки упражнения
+}
+
+function updateExercise() {
+    // сохранение упражнения после редактирования
+    console.log("updateExercise");
+
+    let formData = new FormData(this);
+    // внести зоны воздействия
+    formData.set("effect_areas", Array.from(selected_areas));
+
+    $.ajax({
+        data: formData,
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+    
+        success: function (response) {
+            console.log("успех");
+            console.log(response);
+            closeExerciseEditing();
+        },
+        error: function (response) {
+            console.log("не успех");
+            console.log(response);
+        },
+    });
+
+    return false;
+    // TODO изменить упражнение в окне выбора!
 }
 
 function saveTraining() {
