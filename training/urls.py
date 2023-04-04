@@ -20,9 +20,19 @@ urlpatterns = [
         name="save_training",
     ),
     path(
+        "ajax/get_exercise/",
+        api.get_exercise,
+        name="get_exercise",
+    ),
+    path(
         "ajax/save_exercise/",
         api.save_exercise,
         name="save_exercise",
+    ),
+    path(
+        "ajax/update_exercise/",
+        api.update_exercise,
+        name="update_exercise",
     ),
     path(
         "ajax/save_exercise_report/",
