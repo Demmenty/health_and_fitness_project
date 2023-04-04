@@ -255,6 +255,11 @@ td.table-date.nil {
 .exercise-info-detail {
     display: none;
 }
+.exercise-photo {
+    max-width: 200px;
+    max-height: 200px;
+    align-self: center;
+}
 
 /* зоны воздействия на кукле */
 .effect-area-pic {
@@ -270,8 +275,24 @@ td.table-date.nil {
     filter: invert(37%) sepia(92%) saturate(607%) hue-rotate(194deg) brightness(106%) contrast(197%) blur(2px);
 }
 
-/* окно создания/редактирования упражнения */
+/* окна создания и редактирования упражнения */
 .exercise-creation {
+    z-index: 10;
+    padding: 1rem;
+    background: #fff;
+    position:absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 10px;
+    right: 10px;
+    border-top-right-radius:3px;
+    border-bottom-right-radius: 3px;
+    display:none;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+.exercise-editing {
     z-index: 10;
     padding: 1rem;
     background: #fff;
