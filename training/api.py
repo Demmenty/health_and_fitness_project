@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.core.serializers import serialize
 from django.http import JsonResponse
 from .forms import TrainingForm, ExerciseForm, ExerciseReportForm
-from .models import Training, ExerciseReport
+from .models import Training, ExerciseReport, Exercise
 
 
 def get_trainings(request):
@@ -28,16 +28,60 @@ def get_exercise_reports(request):
     return HttpResponse(data, content_type="application/json")
 
 
+def get_exercise(request):
+    """Получение данных о упражнении"""
+
+    exercise_id = request.GET.get("exercise_id")
+
+    exercise = Exercise.objects.filter(id=exercise_id)
+    data = serialize("json", exercise)
+
+    return HttpResponse(data, content_type="application/json")
+
+
 def save_exercise(request):
-    """Сохранение упражнения"""
+    """Сохранение нового упражнения"""
+
+    client_id = request.POST.get("client")
+    # можно самому клиенту или эксперту
+    # TODO вынести в декораторы
+    if request.user.id != int(client_id) and not request.user.is_expert:
+        return JsonResponse({}, status=403)
 
     form = ExerciseForm(request.POST, request.FILES)
+
     if form.is_valid():
         # TODO проверить, что такого названия еще нет
-        form.save()
-        return JsonResponse({}, status=200)
+        exercise = form.save()
 
-    return JsonResponse({}, status=400)
+        data = {
+            "exercise_id": exercise.id,
+        }
+        return JsonResponse(data, status=200)
+
+    data = {"form_errors": form.errors}
+    return JsonResponse(data, status=400)
+
+
+def update_exercise(request):
+    """Перезапись упражнения"""
+
+    exercise_id = request.POST.get("exercise_id")
+
+    form = ExerciseForm(request.POST, request.FILES)
+
+    if form.is_valid():
+        instance = Exercise.objects.filter(id=exercise_id).first()
+        form = ExerciseForm(request.POST, request.FILES, instance=instance)
+        form.save()
+
+        data = {
+            "exercise_id": exercise_id,
+        }
+        return JsonResponse(data, status=200)
+
+    data = {"form_errors": form.errors}
+    return JsonResponse(data, status=400)
 
 
 def save_training(request):
@@ -52,12 +96,10 @@ def save_training(request):
     form = TrainingForm(request.POST)
 
     if form.is_valid():
-        client = form.cleaned_data["client"]
-        date = form.cleaned_data["date"]
-        training_type = form.cleaned_data["training_type"]
-
         Training.objects.filter(
-            client=client, date=date, training_type=training_type
+            client=form.cleaned_data["client"],
+            date=form.cleaned_data["date"],
+            training_type=form.cleaned_data["training_type"],
         ).delete()
 
         training = form.save()
@@ -67,8 +109,8 @@ def save_training(request):
         }
         return JsonResponse(data, status=200)
 
-    # TODO вернуть ошибки формы
-    return JsonResponse({}, status=400)
+    data = {"form_errors": form.errors}
+    return JsonResponse(data, status=400)
 
 
 def save_exercise_report(request):
@@ -82,6 +124,6 @@ def save_exercise_report(request):
             "exercise_report": exercise_report.id,
         }
         return JsonResponse(data, status=200)
-    
-    # TODO вернуть ошибки формы
-    return JsonResponse({}, status=200)
+
+    data = {"form_errors": form.errors}
+    return JsonResponse(data, status=400)
