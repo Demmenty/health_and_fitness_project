@@ -1,6 +1,9 @@
 body { 
     background: #F3F5F9; 
 } 
+.blank {
+    display: none;
+}
 
 /* календарь */
 .calendar-content {
@@ -209,8 +212,11 @@ td.table-date.nil {
 }
 /* окно выбора упражнений: список */
 .exercise-row {
+    display: flex;
+    justify-content: space-between;
     padding: 0.25rem 0.5rem;
     align-items: center;
+    border: 1px solid #dee2e6;
 }
 .exercise-row.colored {
     background-color: #dff1ff;
@@ -229,6 +235,13 @@ td.table-date.nil {
 /* окно выбора упражнений: инфо */
 .exercise-info {
     display: none;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+}
+.exercise-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .exercise-icon {
     max-width: 50px;

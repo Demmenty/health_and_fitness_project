@@ -89,141 +89,7 @@
 
   </div>
 
-  <!-- формы тренировок -->
-  <div class="training power-training" id="">
-    <h4 class="text-center">Силовая тренировка</h4>
-    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-    <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
-        {% csrf_token %}
-        {{ training_forms.power }}
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
-  </div>
 
-  <div class="training round-training" id="">
-    <h4 class="text-center">Круговая силовая тренировка</h4>
-    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-    <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
-      {% csrf_token %}
-      {{ training_forms.round }}
-      <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
-  </div>
-
-  <div class="training endurance-training" id="">
-    <h4 class="text-center">Тренировка выносливости</h4>
-    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-    <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
-      {% csrf_token %}
-      {{ training_forms.endurance }}
-      <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
-  </div>
-
-  <div class="training interval-training" id="">
-    <h4 class="text-center">Тренировка выносливости интервальная</h4>
-    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-    <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
-      {% csrf_token %}
-      {{ training_forms.interval }}
-      <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
-  </div>
-
-  <!-- формы отчетов об упражнениях -->
-  <form method="post" action="{% url 'save_exercise_report' %}" 
-  class="exercise-report-form power-exercise-report">
-    {% csrf_token %}
-    {{ exercise_report_forms.power.exercise }}
-    {{ exercise_report_forms.power.training }}
-    <table class="table table-sm table-bordered exercises-table text-center align-middle">
-      <thead class="table-light align-middle">
-        <tr class="text-center">
-          <th>Упражнение</th>
-          <th>Вес</th>
-          <th colspan="2">Подходы</th>
-          <th colspan="2">Повторы</th>
-          <th colspan="2">Нагрузка</th>
-          <th>Выполнено</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="exercise-name col-3"></td>
-          <td class="col-2">{{ exercise_report_forms.power.weight }}</td>
-          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.approaches_due }}</td>
-          <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.approaches_made }}</td>
-          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.repeats_due }}</td>
-          <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.repeats_made }}</td>
-          <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.load_due }}</td>
-          <td class="col-1" title="Получено">{{ exercise_report_forms.power.load_get }}</td>
-          <td class="col-1">{{ exercise_report_forms.power.is_done }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
-
-  <form method="post" action="{% url 'save_exercise_report' %}" 
-  class="exercise-report-form endurance-exercise-report">
-    {% csrf_token %}
-    {{ exercise_report_forms.endurance.exercise }}
-    {{ exercise_report_forms.endurance.training }}
-    <table class="table table-sm table-bordered exercises-table text-center align-middle">
-      <thead class="table-light align-middle">
-        <tr class="text-center">
-          <th>Упражнение</th>
-          <th>Время</th>
-          <th>Средний пульс</th>
-          <th>Выполнено</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="exercise-name col-5"></td>
-          <td class="col-3" title="Количество минут">{{ exercise_report_forms.endurance.minutes }}</td>
-          <td class="col-3">{{ exercise_report_forms.endurance.pulse_avg }}</td>
-          <td class="col-1">{{ exercise_report_forms.endurance.is_done }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
-
-  <form method="post" action="{% url 'save_exercise_report' %}" 
-  class="exercise-report-form interval-exercise-report">
-    {% csrf_token %}
-    {{ exercise_report_forms.interval.exercise }}
-    {{ exercise_report_forms.interval.training }}
-    <table class="table table-sm table-bordered exercises-table text-center align-middle">
-      <thead class="table-light align-middle">
-        <tr>
-          <th rowspan="2">Упражнение</th>
-          <th colspan="2">Высокая нагрузка</th>
-          <th colspan="2">Низкая нагрузка</th>
-          <th rowspan="2">Циклы</th>
-          <th rowspan="2">Выполнено</th>
-        </tr>
-        <tr>
-          <th>Время</th>
-          <th>Пульс</th>
-          <th>Время</th>
-          <th>Пульс</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="exercise-name col-2"></td>
-          <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.high_load_time }}</td>
-          <td class="col-2">{{ exercise_report_forms.interval.high_load_pulse }}</td>
-          <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.low_load_time }}</td>
-          <td class="col-2">{{ exercise_report_forms.interval.low_load_pulse }}</td>
-          <td class="col-1">{{ exercise_report_forms.interval.cycles }}</td>
-          <td class="col-1">{{ exercise_report_forms.interval.is_done }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
-
-  
   <!-- окно выбора упражнений -->
   <div class="exercise-selection" id="exercise-selection" data-training="">
     <div class="d-flex align-items-baseline justify-content-end">
@@ -231,11 +97,13 @@
       <button type="button" class="btn-close col-1 ms-auto"></button>
     </div>
     <div class="d-flex flex-row">
+      <!-- список названий -->
+      <!-- TODO добавить скролл -->
       <div class="d-flex flex-column col-4" id="exercises-list">
       {% for exercise in exercises %}
-        <div class="exercise-row border justify-content-between d-flex" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+        <div class="exercise-row" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
           <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
-          <div class="col-2 text-end exercise-btn-group" data-exercise-id="{{ exercise.id }}">
+          <div class="col-2 text-end exercise-btn-group">
             {% if exercise.author == client %}
               <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
             {% endif %}
@@ -246,26 +114,23 @@
       {% endfor %}
       <button type="button" class="btn btn-outline-primary" id="exercise-create-btn">Создать упражнение</button>
       </div>
-
+      <!-- подробная информация -->
       <div class="d-flex flex-column col-8" id="exercises-info">
-
         {% for exercise in exercises %}
-          <div class="exercise-info border p-2" id="exercise-info-{{ exercise.id }}">
-            
-            <div class="d-flex justify-content-between align-items-center">
-              <h4 class="ms-3 mb-0">{{ exercise.name }}</h4>
+          <div class="exercise-info" id="exercise-info-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+            <div class="exercise-info-header">
+              <h4>{{ exercise.name }}</h4>
               {% if exercise.icon %}
                 <img src="{{ exercise.icon.url }}" class="exercise-icon">
               {% endif %}
             </div>
-
             <ul class="list-group">
-              <li class="list-group-item">
-                <div class="exercise-info-toggle" data-toggle="detail-description-{{ exercise.id }}">
+              <li class="list-group-item description">
+                <div class="exercise-info-toggle">
                   <div class="col-11">Описание</div>
                   <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                 </div>
-                <div class="exercise-info-detail" id="detail-description-{{ exercise.id }}">
+                <div class="exercise-info-detail">
                   <hr></hr>
                   <div class="container">
                     <p>{{ exercise.description }}</p>
@@ -273,12 +138,12 @@
                 </div>
               </li>
               {% if exercise.target_muscles %}
-                <li class="list-group-item">
-                  <div class="exercise-info-toggle" data-toggle="detail-target-muscles-{{ exercise.id }}">
+                <li class="list-group-item target-muscles">
+                  <div class="exercise-info-toggle">
                     <div class="col-11">Целевые мышцы</div>
                     <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                   </div>
-                  <div class="exercise-info-detail" id="detail-target-muscles-{{ exercise.id }}">
+                  <div class="exercise-info-detail">
                     <hr></hr>
                     <div class="container">
                       <p>{{ exercise.target_muscles }}</p>
@@ -287,12 +152,12 @@
                 </li>
               {% endif %}
               {% if exercise.mistakes %}
-                <li class="list-group-item">
-                  <div class="exercise-info-toggle" data-toggle="detail-mistakes-{{ exercise.id }}">
+                <li class="list-group-item mistakes">
+                  <div class="exercise-info-toggle">
                     <div class="col-11">Частые ошибки</div>
                     <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                   </div>
-                  <div class="exercise-info-detail" id="detail-mistakes-{{ exercise.id }}">
+                  <div class="exercise-info-detail">
                     <hr></hr>
                     <div class="container">
                       <p>{{ exercise.mistakes }}</p>
@@ -301,37 +166,33 @@
                 </li>
               {% endif %}
               {% if exercise.photo_init_pose and exercise.photo_work_pose %}
-                <li class="list-group-item">
-                  <div class="exercise-info-toggle" data-toggle="detail-photo-{{ exercise.id }}">
+                <li class="list-group-item photo">
+                  <div class="exercise-info-toggle">
                     <div class="col-11">Фото</div>
                     <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                   </div>
-                  <div class="exercise-info-detail" id="detail-photo-{{ exercise.id }}">
+                  <div class="exercise-info-detail">
                     <hr></hr>
                     <div class="container d-flex">
-                      {% if exercise.photo_init_pose %}
-                        <div class="d-flex flex-column w-50">
-                          <p class="text-center">Исходная позиция</p>
-                          <img src="{{ exercise.photo_init_pose.url }}" class="exercise-photo">
-                        </div>
-                      {% endif %}
-                      {% if exercise.photo_work_pose %}
-                        <div class="d-flex flex-column w-50">
-                          <p class="text-center">Рабочая позиция</p>
-                          <img src="{{ exercise.photo_work_pose.url }}" class="exercise-photo">
-                        </div>
-                      {% endif %}
+                      <div class="d-flex flex-column w-50">
+                        <p class="text-center">Исходная позиция</p>
+                        <img src="{{ exercise.photo_init_pose.url }}" class="exercise-photo init">
+                      </div>
+                      <div class="d-flex flex-column w-50">
+                        <p class="text-center">Рабочая позиция</p>
+                        <img src="{{ exercise.photo_work_pose.url }}" class="exercise-photo work">
+                      </div>
                     </div>
                   </div>
                 </li>
               {% endif %}
               {% if exercise.video %}
-                <li class="list-group-item">
-                  <div class="exercise-info-toggle" data-toggle="detail-video-{{ exercise.id }}">
+                <li class="list-group-item video">
+                  <div class="exercise-info-toggle">
                     <div class="col-11">Видео</div>
                     <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                   </div>
-                  <div class="exercise-info-detail" id="detail-video-{{ exercise.id }}">
+                  <div class="exercise-info-detail">
                     <hr></hr>
                     <div class="container">
                       <a href="{{ exercise.video }}" class="video-ref">{{ exercise.video }}</a>
@@ -339,25 +200,27 @@
                   </div>
                 </li>
               {% endif %}
-              <li class="list-group-item">
-                <div class="exercise-info-toggle" data-toggle="detail-areas-{{ exercise.id }}">
-                  <div class="col-11">Зоны воздействия</div>
-                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-                </div>
-                <div class="exercise-info-detail" id="detail-areas-{{ exercise.id }}">
-                  <hr></hr>
-                  <div class="container">
-                    <p class="exercise-info-areas d-none" data-exercise-id="{{ exercise.id }}">
-                      {{ exercise.effect_areas }}
-                    </p>
+              {% if exercise.effect_areas %}
+                <li class="list-group-item areas">
+                  <div class="exercise-info-toggle">
+                    <div class="col-11">Зоны воздействия</div>
+                    <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
                   </div>
-                </div>
-              </li>
+                  <div class="exercise-info-detail">
+                    <hr></hr>
+                    <div class="container">
+                      <!-- TODO убрать лишнюю data -->
+                      <p class="exercise-info-areas d-none" data-exercise-id="{{ exercise.id }}">
+                        {{ exercise.effect_areas }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
             </ul>
-
           </div>
         {% endfor %}
-
+        <!-- кукла -->
         <h4 class="text-center">Задействованные зоны</h4>
         <div class="d-flex border dummy-container">
           {% if client_sex == "F" %}
@@ -406,7 +269,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- окно создания упражнения -->
   <div class="exercise-creation" id="exercise-creation">
@@ -541,10 +403,238 @@
     </form>
   </div>
 
-  <br>
-  <br>
+  <br><br>
+
 </div>
 
+
+<!-- ЗАГОТОВКИ -->
+<!-- формы тренировок -->
+<div class="training power-training" id="">
+  <h4 class="text-center">Силовая тренировка</h4>
+  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+  <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
+      {% csrf_token %}
+      {{ training_forms.power }}
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<div class="training round-training" id="">
+  <h4 class="text-center">Круговая силовая тренировка</h4>
+  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+  <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
+    {% csrf_token %}
+    {{ training_forms.round }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<div class="training endurance-training" id="">
+  <h4 class="text-center">Тренировка выносливости</h4>
+  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+  <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
+    {% csrf_token %}
+    {{ training_forms.endurance }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<div class="training interval-training" id="">
+  <h4 class="text-center">Тренировка выносливости интервальная</h4>
+  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+  <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
+    {% csrf_token %}
+    {{ training_forms.interval }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</div>
+
+<!-- формы отчетов об упражнениях -->
+<form method="post" action="{% url 'save_exercise_report' %}" 
+class="exercise-report-form power-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.power.exercise }}
+  {{ exercise_report_forms.power.training }}
+  <table class="table table-sm table-bordered exercises-table text-center align-middle">
+    <thead class="table-light align-middle">
+      <tr class="text-center">
+        <th>Упражнение</th>
+        <th>Вес</th>
+        <th colspan="2">Подходы</th>
+        <th colspan="2">Повторы</th>
+        <th colspan="2">Нагрузка</th>
+        <th>Выполнено</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="exercise-name col-3"></td>
+        <td class="col-2">{{ exercise_report_forms.power.weight }}</td>
+        <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.approaches_due }}</td>
+        <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.approaches_made }}</td>
+        <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.repeats_due }}</td>
+        <td class="col-1" title="Выполнено">{{ exercise_report_forms.power.repeats_made }}</td>
+        <td class="col-1" title="Запланировано">{{ exercise_report_forms.power.load_due }}</td>
+        <td class="col-1" title="Получено">{{ exercise_report_forms.power.load_get }}</td>
+        <td class="col-1">{{ exercise_report_forms.power.is_done }}</td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<form method="post" action="{% url 'save_exercise_report' %}" 
+class="exercise-report-form endurance-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.endurance.exercise }}
+  {{ exercise_report_forms.endurance.training }}
+  <table class="table table-sm table-bordered exercises-table text-center align-middle">
+    <thead class="table-light align-middle">
+      <tr class="text-center">
+        <th>Упражнение</th>
+        <th>Время</th>
+        <th>Средний пульс</th>
+        <th>Выполнено</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="exercise-name col-5"></td>
+        <td class="col-3" title="Количество минут">{{ exercise_report_forms.endurance.minutes }}</td>
+        <td class="col-3">{{ exercise_report_forms.endurance.pulse_avg }}</td>
+        <td class="col-1">{{ exercise_report_forms.endurance.is_done }}</td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<form method="post" action="{% url 'save_exercise_report' %}" 
+class="exercise-report-form interval-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.interval.exercise }}
+  {{ exercise_report_forms.interval.training }}
+  <table class="table table-sm table-bordered exercises-table text-center align-middle">
+    <thead class="table-light align-middle">
+      <tr>
+        <th rowspan="2">Упражнение</th>
+        <th colspan="2">Высокая нагрузка</th>
+        <th colspan="2">Низкая нагрузка</th>
+        <th rowspan="2">Циклы</th>
+        <th rowspan="2">Выполнено</th>
+      </tr>
+      <tr>
+        <th>Время</th>
+        <th>Пульс</th>
+        <th>Время</th>
+        <th>Пульс</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="exercise-name col-2"></td>
+        <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.high_load_time }}</td>
+        <td class="col-2">{{ exercise_report_forms.interval.high_load_pulse }}</td>
+        <td class="col-2" title="Количество минут">{{ exercise_report_forms.interval.low_load_time }}</td>
+        <td class="col-2">{{ exercise_report_forms.interval.low_load_pulse }}</td>
+        <td class="col-1">{{ exercise_report_forms.interval.cycles }}</td>
+        <td class="col-1">{{ exercise_report_forms.interval.is_done }}</td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<!-- строка упражнения в списке выбора -->
+<div class="exercise-row blank" id="" data-exercise-id="">
+  <p class="exercise-name mb-0 col-10"></p>
+  <div class="col-2 text-end exercise-btn-group">
+    <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+    <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
+    <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+  </div>
+</div>
+
+<!-- инфо упражнения в окне выбора -->
+<div class="exercise-info blank" id="" data-exercise-id="">
+
+  <div class="exercise-info-header">
+    <h4></h4>
+    <img src="" class="exercise-icon">
+  </div>
+
+  <ul class="list-group">
+    <li class="list-group-item description">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Описание</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <p></p>
+      </div>
+    </li>
+    <li class="list-group-item target-muscles">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Целевые мышцы</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <p></p>
+      </div>
+    </li>
+    <li class="list-group-item mistakes">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Частые ошибки</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <p></p>
+      </div>
+    </li>
+    <li class="list-group-item photo">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Фото</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <div class="d-flex">
+          <div class="d-flex flex-column w-50">
+            <p class="text-center">Исходная позиция</p>
+            <img src="" class="exercise-photo init">
+          </div>
+          <div class="d-flex flex-column w-50">
+            <p class="text-center">Рабочая позиция</p>
+            <img src="" class="exercise-photo work">
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item video">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Видео</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <a href="" class="video-ref"></a>
+      </div>
+    </li>
+    <li class="list-group-item areas">
+      <div class="exercise-info-toggle">
+        <div class="col-11">Зоны воздействия</div>
+        <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+      </div>
+      <div class="exercise-info-detail">
+        <hr></hr>
+        <p class="exercise-info-areas d-none">
+        </p>
+      </div>
+    </li>
+  </ul>
+
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{% static 'training/js/training.js' %}"></script>

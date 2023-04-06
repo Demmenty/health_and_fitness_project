@@ -5,6 +5,8 @@ from .forms import TrainingForm, ExerciseForm, ExerciseReportForm
 from .models import Training, ExerciseReport, Exercise
 
 
+# TODO сделать classы View
+
 def get_trainings(request):
     """Получение данных тренировки за переданный день"""
 
@@ -42,11 +44,7 @@ def get_exercise(request):
 def save_exercise(request):
     """Сохранение нового упражнения"""
 
-    client_id = request.POST.get("client")
-    # можно самому клиенту или эксперту
-    # TODO вынести в декораторы
-    if request.user.id != int(client_id) and not request.user.is_expert:
-        return JsonResponse({}, status=403)
+    # TODO можно самому клиенту или эксперту - в декораторы
 
     form = ExerciseForm(request.POST, request.FILES)
 
@@ -56,6 +54,7 @@ def save_exercise(request):
 
         data = {
             "exercise_id": exercise.id,
+            "exercise_name": exercise.name,
         }
         return JsonResponse(data, status=200)
 
@@ -73,10 +72,11 @@ def update_exercise(request):
     if form.is_valid():
         instance = Exercise.objects.filter(id=exercise_id).first()
         form = ExerciseForm(request.POST, request.FILES, instance=instance)
-        form.save()
+        exercise: Exercise = form.save()
 
         data = {
-            "exercise_id": exercise_id,
+            "exercise_id": exercise.id,
+            "exercise_name": exercise.name,
         }
         return JsonResponse(data, status=200)
 
