@@ -1,11 +1,12 @@
-from django.http import HttpResponse
 from django.core.serializers import serialize
-from django.http import JsonResponse
-from .forms import TrainingForm, ExerciseForm, ExerciseReportForm
-from .models import Training, ExerciseReport, Exercise
+from django.db.models.deletion import ProtectedError
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 
+from .forms import ExerciseForm, ExerciseReportForm, TrainingForm
+from .models import Exercise, ExerciseReport, Training, User
 
 # TODO сделать classы View
+
 
 def get_trainings(request):
     """Получение данных тренировки за переданный день"""
@@ -82,6 +83,28 @@ def update_exercise(request):
 
     data = {"form_errors": form.errors}
     return JsonResponse(data, status=400)
+
+
+def delete_exercise(request):
+    """Удаление упражнения"""
+
+    if request.method == "POST":
+        exercise_id = request.POST.get("exercise_id")
+        exercise = Exercise.objects.filter(id=exercise_id).first()
+
+        if not request.user.is_expert:
+            if not request.user == exercise.author:
+                msg = "У вас нет прав на удаление этого упражнения"
+                return HttpResponseForbidden(msg)
+
+        try:
+            exercise.delete()
+        except ProtectedError:
+            msg = "Нельзя удалить упражнение, сохраненное в тренировке"
+            return HttpResponseForbidden(msg)
+        
+        msg = 'Упражнение удалено'
+        return HttpResponse(msg)
 
 
 def save_training(request):

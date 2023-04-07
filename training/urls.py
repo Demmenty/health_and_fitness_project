@@ -35,6 +35,11 @@ urlpatterns = [
         name="update_exercise",
     ),
     path(
+        "ajax/delete_exercise/",
+        api.delete_exercise,
+        name="delete_exercise",
+    ),
+    path(
         "ajax/save_exercise_report/",
         api.save_exercise_report,
         name="save_exercise_report",

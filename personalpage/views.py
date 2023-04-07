@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 
 from anthropometry.forms import AnthropometryForm
 from anthropometry.services import *
-from client_info.forms import MeetQuestionaryForm, HealthQuestionaryForm
+from client_info.forms import HealthQuestionaryForm, MeetQuestionaryForm
 from client_info.manager import ClientInfoManager
 from client_info.models import MeetQuestionary
 from common.services import services

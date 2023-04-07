@@ -40,6 +40,8 @@ $(document).ready(function(){
     // обработчики сохранения упражнения
     $(".exercise-creation-form").on("submit", saveExercise);
     $(".exercise-editing-form").on("submit", updateExercise);
+    // обработчик кнопки удаления упражнения
+    $("#delete-exercise-btn").on("click", deleteExercise);
 
     // обработчик клика на упражнение в списке при выборе
     $(".exercise-name").on("click", selectExercise);
@@ -538,9 +540,6 @@ function selectAreaInSelection() {
 
 function translateExerciseAreas() {
     // перевести инфо о зонах упражнения
-    console.log("translateExerciseAreas");
-    console.log("$(this)", $(this));
-
     let info = $("<p class='exercise-info-areas-ru'></p>");
     let areas_eng = $.trim($(this).text()).split(',');
     let areas_ru = new Array();
@@ -982,6 +981,13 @@ function changeExerciseInSelection(exercise_id) {
     });
 }
 
+function deleteExerciseFromSelection(exercise_id) {
+    // удаление упражнения из списка для выбора
+
+    $("#exercise-row-" + exercise_id).remove();
+    $("#exercise-info-" + exercise_id).remove();
+}
+
 function changeExerciseNameInTraining(id, name) {
     // изменение названия упражнения в тренировках в случае редактирования
     let row = $("#exercise-row-" + id);
@@ -996,7 +1002,7 @@ function changeExerciseNameInTraining(id, name) {
     }
 }
 
-// СОХРАНЕНИЕ ДАННЫХ НА СЕРВЕРЕ
+// ИЗМЕНЕНИЕ ДАННЫХ НА СЕРВЕРЕ
 function saveExercise() {
     // сохранение упражнения
     console.log("saveExercise");
@@ -1065,6 +1071,39 @@ function updateExercise() {
     })
 
     return false;
+}
+
+function deleteExercise() {
+    // удаление упражнения
+
+    let form = $(this).closest("form");
+    let id = form.find("#id_exercise_id").val();
+    let token = form.find("input[name='csrfmiddlewaretoken']").val();
+
+    let formData = new FormData();
+    formData.set("exercise_id", id);
+    formData.set("csrfmiddlewaretoken", token);
+
+    request = $.ajax({
+        data: formData,
+        type: "post",
+        url: "ajax/delete_exercise/",
+        cache: false,
+        contentType: false,
+        processData: false,
+    
+        success: function () {
+            console.log("успех");
+        },
+        error: function () {
+            console.log("не успех");
+        },
+    });
+
+    request.done(function() {
+        deleteExerciseFromSelection(id);
+        closeExerciseEditing();
+    })
 }
 
 function saveTraining() {
