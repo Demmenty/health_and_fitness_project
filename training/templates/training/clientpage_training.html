@@ -416,7 +416,8 @@
   <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
       {% csrf_token %}
       {{ training_forms.power }}
-      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
   </form>
 </div>
 
@@ -426,7 +427,8 @@
   <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
     {% csrf_token %}
     {{ training_forms.round }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
   </form>
 </div>
 
@@ -436,7 +438,8 @@
   <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
     {% csrf_token %}
     {{ training_forms.endurance }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
   </form>
 </div>
 
@@ -446,7 +449,8 @@
   <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
     {% csrf_token %}
     {{ training_forms.interval }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
   </form>
 </div>
 

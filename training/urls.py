@@ -20,6 +20,11 @@ urlpatterns = [
         name="save_training",
     ),
     path(
+        "ajax/delete_training/",
+        api.delete_training,
+        name="delete_training",
+    ),
+    path(
         "ajax/get_exercise/",
         api.get_exercise,
         name="get_exercise",

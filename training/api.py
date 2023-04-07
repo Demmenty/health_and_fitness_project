@@ -20,6 +20,24 @@ def get_trainings(request):
     return HttpResponse(data, content_type="application/json")
 
 
+def delete_training(request):
+    """Удаление тренировки"""
+
+    if request.method == "POST":
+        training_id = request.POST.get("training_id")
+        training = Training.objects.filter(id=training_id).first()
+
+        if not request.user.is_expert:
+            if not request.user == training.client:
+                msg = "У вас нет прав на удаление тренировки"
+                return HttpResponseForbidden(msg)
+
+        training.delete()
+
+        msg = 'Тренировка удалена'
+        return HttpResponse(msg)
+
+
 def get_exercise_reports(request):
     """Получение данных о проведении упражнений за тренировку"""
 

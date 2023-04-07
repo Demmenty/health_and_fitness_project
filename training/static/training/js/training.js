@@ -58,7 +58,6 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO удаление тренировки
 // TODO не забыть про куклу мужика
 // TODO после сохранения нового упражнения - добавлять в список
 // TODO поправить области тыка на упражнение
@@ -229,7 +228,8 @@ function addSavedTrainings(trainings_data) {
         let div = trainings_div[type].clone();
 
         // добавляем id контейнеру тренировки
-        div.attr("id", "training-" + data.pk)
+        div.attr("id", "training-" + data.pk);
+        div.attr("data-training-id", data.pk);
 
         // заполняем поля ввода
         for (var field in data.fields) {
@@ -253,8 +253,10 @@ function addSavedTrainings(trainings_data) {
         // обработчик клика на выбор упражнений
         div.find(".add-exercise-btn").on("click", openExerciseSelection);
 
-        // обработчик сохранения этой тренировки
+        // обработчик клика на кнопку сохранения
         div.find(".training_form").on("submit", saveTraining);
+        // обработчик клика на кнопку удаления
+        div.find(".delete-training-btn").on("click", deleteTraining);
     }
 }
 
@@ -285,8 +287,10 @@ function addNewTraining() {
     // обработчик клика на выбор упражнений
     div.find(".add-exercise-btn").on("click", openExerciseSelection);
 
-    // обработчик сохранения этой тренировки
+    // обработчик клика на кнопку сохранения
     div.find(".training_form").on("submit", saveTraining);
+    // обработчик клика на кнопку удаления
+    div.find(".delete-training-btn").on("click", deleteTraining);
 }
 
 function openTrainingSelection() {
@@ -327,10 +331,16 @@ function saveTraining() {
     });
 
     request.done(function(response) {
+        let id = response.training_id;
+
+        // добавляем id контейнеру тренировки
+        form.closest(".training").attr("id", "training-" + id);
+        form.closest(".training").attr("data-training-id", id);
+
         // сохранение записей упражнений к тренировке
         let exercise_forms = form.closest(".training").find(".exercise-report-form");
         exercise_forms.each(function() {
-            $(this).find("#id_training").val(response.training_id);
+            $(this).find("#id_training").val(id);
         })
         exercise_forms.each(saveExerciseReport);
 
@@ -338,6 +348,50 @@ function saveTraining() {
     });
 
     return false;
+}
+
+function deleteTraining() {
+    // удаление тренировки
+    console.log("deleteTraining");
+
+    let div = $(this).closest(".training");
+    let training_id = div.data("training-id");
+
+    if(!training_id) {
+        // если нет id, значит треня не сохранена на сервере
+        div.remove();
+        return
+    }
+
+    let form = $(this).closest("form");
+    let token = form.find("input[name='csrfmiddlewaretoken']").val();
+
+    let formData = new FormData();
+    formData.set("training_id", training_id);
+    formData.set("csrfmiddlewaretoken", token);
+
+    request = $.ajax({
+        data: formData,
+        type: "post",
+        url: "ajax/delete_training/",
+        cache: false,
+        contentType: false,
+        processData: false,
+    
+        success: function () {
+            showSuccessAlert("Тренировка удалена")
+        },
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },
+    });
+
+    request.done(function() {
+        div.remove();
+    })
 }
 
 
