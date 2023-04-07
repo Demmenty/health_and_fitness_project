@@ -58,7 +58,6 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO удаление упражнения
 // TODO удаление тренировки
 // TODO не забыть про куклу мужика
 // TODO общее впсплывающее сообщение об ошибках
@@ -209,11 +208,12 @@ function getTrainings(date) {
         method: "get",
         url: "/training/ajax/get_trainings/",
 
-        success: function () {
-            console.log("успех");
-        },
-        error: function () {
-            console.log("не успех");
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },             
     });
 }
@@ -227,11 +227,12 @@ function getExercise(exercise_id) {
         method: "get",
         url: "/training/ajax/get_exercise/",
 
-        success: function () {
-            console.log("успех");
-        },
-        error: function () {
-            console.log("не успех");
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },             
     });
 }
@@ -245,12 +246,13 @@ function getExerciseReports(training_id) {
         method: "get",
         url: "/training/ajax/get_exercise_reports/",
 
-        success: function () {
-            console.log("успех");
-        },
-        error: function () {
-            console.log("не успех");
-        },             
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },            
     });
 }
 
@@ -366,6 +368,17 @@ function addNewTraining() {
     //     $("#selected_type").find("option[value='" + training_type + "']").hide();
     //     $("#add-training-btn").show();
     // }
+}
+
+function deleteExerciseFromTraining(id) {
+    // удаление записи упражнения из тренировки
+    // (для случая удаления упражнения, внесенного в несохраненную треню)
+
+    $(".training .exercise-report-form").each(function() {
+        if($(this).find("#id_exercise").val() == id) {
+            $(this).remove()
+        }
+    })
 }
 
 // ВЫБОР ТРЕНИРОВКИ
@@ -660,7 +673,7 @@ function addNewExerciseReport() {
 }
 
 function removeExerciseReport() {
-    // удаление упражнения из тренировки
+    // убрать запись упражнения из тренировки
     console.log("removeExerciseReport");
     
     let exercise_id = $(this).closest(".exercise-row").data("exercise-id");
@@ -1020,10 +1033,13 @@ function saveExercise() {
         processData: false,
     
         success: function () {
-            console.log("успех");
+            showSuccessAlert("Упражнение сохранено")
         },
-        error: function () {
-            console.log("не успех");
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },
     });
 
@@ -1054,10 +1070,13 @@ function updateExercise() {
         processData: false,
     
         success: function () {
-            console.log("успех");
+            showSuccessAlert("Упражнение изменено");
         },
-        error: function () {
-            console.log("не успех");
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },
     });
 
@@ -1093,15 +1112,19 @@ function deleteExercise() {
         processData: false,
     
         success: function () {
-            console.log("успех");
+            showSuccessAlert("Упражнение удалено")
         },
-        error: function () {
-            console.log("не успех");
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },
     });
 
     request.done(function() {
         deleteExerciseFromSelection(id);
+        deleteExerciseFromTraining(id);
         closeExerciseEditing();
     })
 }
@@ -1113,34 +1136,33 @@ function saveTraining() {
     let form = $(this);
     let formData = new FormData(this);
 
-    $.ajax({
+    request = $.ajax({
         data: formData,
         type: form.attr('method'),
         url: form.attr('action'),
         processData: false,
         contentType: false,
 
-        success: function (response) {
-            console.log("успех");
-            console.log("response", response);
-
-            let exercise_forms = form.closest(".training").find(".exercise-report-form");
-            
-            // добавление id тренировки записям упражнений
-            exercise_forms.each(function() {
-                $(this).find("#id_training").val(response.training_id);
-            })
-            // сохранение записей упражнений
-            exercise_forms.each(saveExerciseReport);
-
-            // уведомление об успешном сохранении
-            console.log("успешный успех");
-        },
+        success: function () {},
         error: function (response) {
-            console.log("не успех");
-            console.log("response", response);
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },
     });
+
+    request.done(function(response) {
+        // сохранение записей упражнений к тренировке
+        let exercise_forms = form.closest(".training").find(".exercise-report-form");
+        exercise_forms.each(function() {
+            $(this).find("#id_training").val(response.training_id);
+        })
+        exercise_forms.each(saveExerciseReport);
+
+        showSuccessAlert("Тренировка сохранена");
+    });
+
     return false;
 }
 
@@ -1157,13 +1179,12 @@ function saveExerciseReport() {
         processData: false,
         contentType: false,
 
-        success: function (response) {
-            console.log("успех");
-            console.log("response", response)
-        },
+        success: function () {},
         error: function (response) {
-            console.log("не успех");
-            console.log("response", response);
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
         },
     });
 }

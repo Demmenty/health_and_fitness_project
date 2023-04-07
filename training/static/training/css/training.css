@@ -2,7 +2,7 @@ body {
     background: #F3F5F9; 
 } 
 .blank {
-    display: none;
+    display: none !important;
 }
 
 /* календарь */
@@ -325,8 +325,6 @@ td.table-date.nil {
     content: '►  ';
     color: #5271ff;
 }
-
-
 
 /* Tablets and smaller */
 @media only screen and (max-width: 780px) {

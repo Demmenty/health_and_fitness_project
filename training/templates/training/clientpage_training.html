@@ -408,7 +408,6 @@
 
 </div>
 
-
 <!-- ЗАГОТОВКИ -->
 <!-- формы тренировок -->
 <div class="training power-training" id="">
@@ -636,7 +635,8 @@ class="exercise-report-form interval-exercise-report">
   </ul>
 
 </div>
+{% endblock %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="{% static 'training/js/training.js' %}"></script>
+{% block script %}
+  <script src="{% static 'training/js/training.js' %}"></script>
 {% endblock %}
