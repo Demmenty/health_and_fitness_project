@@ -226,7 +226,7 @@
           {% if client_sex == "F" %}
             <div class="border dummy-front">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500" />
+                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500"/>
                   <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
                   <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
                   <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
@@ -240,7 +240,7 @@
             </div>
             <div class="border dummy-back">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500" />
+                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500"/>
                 <image xlink:href="{% static 'training/img/female_area/upperspine_back.png' %}" x="151" y="151" height="132" width="210" class="effect-area-pic area-upperspine"/>  
                 <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
                 <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
@@ -255,12 +255,30 @@
           {% else %}
             <div class="border dummy-front">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+                <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
               </svg>
             </div>
             <div class="border dummy-back">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+                <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+                <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_back.png' %}" x="160" y="304" height="166" width="180" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/male_area/upperspine_back.png' %}" x="148" y="152" height="161" width="202" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
               </svg>
             </div>
           {% endif %}
@@ -320,12 +338,30 @@
           {% else %}
             <div class="border dummy-front">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+                <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
               </svg>
             </div>
             <div class="border dummy-back">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+                <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+                <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_back.png' %}" x="160" y="304" height="166" width="180" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/male_area/upperspine_back.png' %}" x="148" y="152" height="161" width="202" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
               </svg>
             </div>
           {% endif %}
@@ -387,12 +423,30 @@
           {% else %}
             <div class="border dummy-front">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+                <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
               </svg>
             </div>
             <div class="border dummy-back">
               <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500" />   
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+                <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+                <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_back.png' %}" x="160" y="304" height="166" width="180" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/male_area/upperspine_back.png' %}" x="148" y="152" height="161" width="202" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
               </svg>
             </div>
           {% endif %}
