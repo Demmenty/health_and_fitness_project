@@ -60,7 +60,6 @@ $(document).ready(function(){
 
 // TODO поправить области тыка на упражнение
 // TODO автозаполнение полей (+интервальная)
-// TODO убрать вариант создания тренировок одинакового типа
 
 // КАЛЕНДАРЬ
 function init_calendar(date) {
@@ -165,8 +164,10 @@ function date_click(event) {
 
     request.done(function(trainings_data) {
         if(trainings_data.length > 0) {
-            addSavedTrainings(trainings_data)
+            addSavedTrainings(trainings_data);
         }
+        closeTrainingSelection();
+        controlTrainingTypeSelect();
     });
 };
 
@@ -261,7 +262,7 @@ function addSavedTrainings(trainings_data) {
 function addNewTraining() {
     // добавление новой тренировки
     
-    let type = $("#selected_type").val();
+    let type = $("#training_type_select").val();
     if(!type) return;
 
     // убираем меню выбора тренировки
@@ -289,19 +290,45 @@ function addNewTraining() {
     div.find(".training_form").on("submit", saveTraining);
     // обработчик клика на кнопку удаления
     div.find(".delete-training-btn").on("click", deleteTraining);
+
+    controlTrainingTypeSelect();
 }
 
 function openTrainingSelection() {
     // открыть меню выбора типа новой тренировки
 
-    $("#select_training_container").show();
+    $("#training_type_selection").show();
     $("#add-training-btn").hide();
+}
+
+function controlTrainingTypeSelect() {
+    // ограничение создания трень с одинаковым типом
+    // если трень нет - создает свежий селект
+    // если есть - создает селект без использованных вариантов
+    // если все типы есть - убирает кнопку
+
+    $("#training_type_selection").find("select").remove();
+    let new_select = training_type_select.clone();
+
+    let curr_trainings = $("#trainings-container").find(".training");
+
+    curr_trainings.each(function() {
+        let type = $(this).find("#id_training_type").val();
+        new_select.find("option[value='" + type + "']").remove();
+    })
+
+    if(new_select.find("option").length == 1) {
+        $("#add-training-btn").hide();
+    }
+    else {
+        new_select.insertBefore("#add-new-training-btn");
+    }
 }
 
 function closeTrainingSelection() {
     // закрыть меню выбора типа новой тренировки
 
-    $("#select_training_container").hide();
+    $("#training_type_selection").hide();
     $("#add-training-btn").show();
 }
 
@@ -358,6 +385,7 @@ function deleteTraining() {
     if(!training_id) {
         // если нет id, значит треня не сохранена на сервере
         div.remove();
+        controlTrainingTypeSelect();
         return
     }
 
@@ -389,6 +417,7 @@ function deleteTraining() {
 
     request.done(function() {
         div.remove();
+        controlTrainingTypeSelect();
     })
 }
 
@@ -1299,3 +1328,5 @@ const training_type_to_exercise_type = {
     "E": "E",
     "I": "E",
 }
+
+const training_type_select = $("#training_type_select").clone();

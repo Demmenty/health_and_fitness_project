@@ -166,7 +166,7 @@ td.table-date.nil {
 }
 
 /* окно выбора тренировки */
-#select_training_container {
+#training_type_selection {
     display: flex;
     flex-direction: column;
     display: none;

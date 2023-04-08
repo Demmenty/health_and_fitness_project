@@ -67,28 +67,27 @@
       <h3 class="text-center" id="chosen-date" data-year="" data-month="" data-day=""></h3>
 
       <!-- тренировки -->
-      <div class="trainings-container">
+      <div class="trainings-container" id="trainings-container">
       </div>
 
       <button type="button" class="btn btn-outline-primary" id="add-training-btn">Добавить тренировку</button>
-      
+
       <!-- выбор типа новой тренировки -->
-      <div class="" id="select_training_container">
-          <p>Выберите тип тренировки</p>
-          <div class="d-flex">
-              <select name="type" class="form-control" required id="selected_type">
-                  <option value="" selected></option>
-                  <option value="P">Силовая</option>
-                  <option value="R">Круговая</option>
-                  <option value="E">Выносливость</option>
-                  <option value="I">Интервальная</option>
-              </select>
-              <button type="button" class="btn btn-primary" id="add-new-training-btn">OK</button>
-          </div>
+      <div id="training_type_selection">
+        <p>Выберите тип тренировки</p>
+        <div class="d-flex">
+          <select name="type" class="form-control" required id="training_type_select">
+              <option value="" selected></option>
+              <option value="P">Силовая</option>
+              <option value="R">Круговая</option>
+              <option value="E">Выносливость</option>
+              <option value="I">Интервальная</option>
+          </select>
+          <button type="button" class="btn btn-primary" id="add-new-training-btn">OK</button>
+        </div>
       </div>
 
   </div>
-
 
   <!-- окно выбора упражнений -->
   <div class="exercise-selection" id="exercise-selection" data-training="">
