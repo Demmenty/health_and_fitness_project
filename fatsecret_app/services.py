@@ -127,7 +127,7 @@ class FatsecretManager:
             current_month_nutrition = session.food_entries_get_month()
         except KeyError:
             return {}
-        
+
         if type(current_month_nutrition) is dict:
             week_nutrition_list += [current_month_nutrition]
         else:

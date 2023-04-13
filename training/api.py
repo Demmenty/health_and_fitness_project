@@ -34,7 +34,7 @@ def delete_training(request):
 
         training.delete()
 
-        msg = 'Тренировка удалена'
+        msg = "Тренировка удалена"
         return HttpResponse(msg)
 
 
@@ -120,8 +120,8 @@ def delete_exercise(request):
         except ProtectedError:
             msg = "Нельзя удалить упражнение, сохраненное в тренировке"
             return HttpResponseForbidden(msg)
-        
-        msg = 'Упражнение удалено'
+
+        msg = "Упражнение удалено"
         return HttpResponse(msg)
 
 

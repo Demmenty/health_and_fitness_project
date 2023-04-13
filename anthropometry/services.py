@@ -1,6 +1,6 @@
 from datetime import date
 
-from .forms import AnthropoPhotoAccessForm
+from .forms import AnthropometryPhotoAccessForm
 from .models import Anthropometry, AnthropometryPhotoAccess
 
 
@@ -44,7 +44,7 @@ def get_anthropo_photoaccess_form(user):
         user=user
     )
 
-    form = AnthropoPhotoAccessForm(instance=instance)
+    form = AnthropometryPhotoAccessForm(instance=instance)
 
     return form
 

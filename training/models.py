@@ -51,7 +51,7 @@ class Exercise(models.Model):
 
     def __str__(self):
         return f"Упражнение '{self.name}', автор: {self.author}"
-    
+
     class Meta:
         verbose_name = "Упражнение"
         verbose_name_plural = "Упражнения"
@@ -93,7 +93,7 @@ class Training(models.Model):
 
     def __str__(self):
         return f"Тренировка клиента {self.client}, {self.date}"
-    
+
     class Meta:
         verbose_name = "Тренировка"
         verbose_name_plural = "Тренировки"
@@ -160,7 +160,7 @@ class ExerciseReport(models.Model):
             return f"Выполнено: {self.exercise}, {self.training}"
         else:
             return f"Запланировано: {self.exercise}, {self.training}"
-        
+
     class Meta:
         verbose_name = "Отчет об упражнении"
         verbose_name_plural = "Отчеты об упражнениях"

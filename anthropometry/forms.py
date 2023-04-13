@@ -99,7 +99,7 @@ class AnthropometryForm(ModelForm):
         }
 
 
-class AnthropoPhotoAccessForm(ModelForm):
+class AnthropometryPhotoAccessForm(ModelForm):
     class Meta:
         model = AnthropometryPhotoAccess
         fields = ["photo_access"]
