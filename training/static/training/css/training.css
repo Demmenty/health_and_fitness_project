@@ -5,12 +5,12 @@ body {
     display: none !important;
 }
 .not-implemented {
-    color: grey !important;
-    fill: grey !important;
+    color: darkgrey !important;
+    fill: darkgrey !important;
 }
 .not-implemented:hover {
-    color: grey !important;
-    fill: grey !important;
+    color: darkgrey !important;
+    fill: darkgrey !important;
     cursor: default !important;
 }
 
@@ -70,6 +70,11 @@ body {
 
 .training-menu-item span {
     display: none;
+}
+
+.training-menu .dropdown-item {
+    font-size: 15px;
+    padding: 0rem 1rem;
 }
 
 .training-menu .dropdown-toggle::after {
