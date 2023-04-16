@@ -4,6 +4,79 @@ body {
 .blank {
     display: none !important;
 }
+.not-implemented {
+    color: grey !important;
+    fill: grey !important;
+}
+.not-implemented:hover {
+    color: grey !important;
+    fill: grey !important;
+    cursor: default !important;
+}
+
+/* меню доп.функций */
+.training-menu {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    background-color: white;
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
+    -moz-box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
+    -webkit-box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
+}
+
+.training-menu-date {
+    background-color: #5271ff;
+    color: white;
+    width: 10rem;
+    font-size: 18px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+.training-menu-date span {
+    vertical-align: middle;
+}
+
+.training-menu-btns {
+    display: flex;
+    padding: 0.5rem 1rem;
+    gap: 1.5rem;
+}
+
+.training-menu-item {
+    display: flex;
+    align-items: center;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.training-menu-item:hover {
+    color: #5271ff;
+    fill: #5271ff;
+    cursor: pointer;
+}
+
+.training-menu-item.active {
+    color: #5271ff;
+    fill: #5271ff;
+    cursor: pointer;
+}
+
+.training-menu-item span {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .training-menu-item span {
+        margin-left: 0.5rem;
+        display: inline;
+    }
+}
 
 /* календарь */
 .calendar-content {
@@ -19,7 +92,7 @@ body {
 }
 .calendar-container  { 
     position: relative;
-    margin: 0px auto; 
+    margin: 0px auto 2rem auto; 
     height: 100%;
     background: #fff;
     font: 13px Helvetica, Arial, san-serif; 
@@ -29,6 +102,7 @@ body {
     box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
     -moz-box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
     -webkit-box-shadow: 0px 0px 7px 0px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
+    display: none;
 }
 .calendar-container:after{
     clear:both;
@@ -325,82 +399,3 @@ td.table-date.nil {
     content: '►  ';
     color: #5271ff;
 }
-
-/* Tablets and smaller */
-@media only screen and (max-width: 780px) {
-    .content {
-        overflow: visible;
-        position:relative;
-        max-width: 100%;
-        width: 370px;
-        height: 100%;
-        background: #52A0FD;
-        background: -moz-linear-gradient(left,  #52A0FD 0%, #00C9FB 80%, #00C9FB 100%);
-        background: -webkit-linear-gradient(left,  #52A0FD 0%, #00C9FB 80%, #00C9FB 100%);
-        background: linear-gradient(to right,  #52A0FD 0%, #00C9FB 80%, #00C9FB 100%);  
-    }
-    .dialog {
-        width:370px;
-        height: 450px;
-        border-radius: 3px;
-        top:0;
-        left:0;
-    }
-    .training-container {
-        float:none;
-        overflow: visible;
-        margin: 0 auto;
-        padding: 0;
-        display: block;
-        left: 0;
-        border-radius: 3px;
-    }
-
-    .calendar-container {
-        float: none;
-        padding: 0;
-        margin: 0 auto;
-        display: block;
-        left: 0;
-        border-radius: 3px;
-    }
-}
-
-/* Small phone screens */
-@media only screen and (max-width: 400px) {
-    .content, .training-container, .year-header, .calendar-container {
-        width: 320px;
-    }
-    .dialog {
-        width: 320px;
-    }
-    .months-table {
-        display: block;
-        margin: 0 auto;
-        width: 320px;
-    }
-    .event-card {
-        width: 300px;
-    }
-    .day {
-        padding: 0 7px;
-    }
-    .month {
-        display: inline-block;
-        padding: 10px 10px;
-        font-size: .8rem;
-    }
-    .table-date {
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
-    }
-    .training-date, .event-count, .event-cancelled {
-        font-size: .8rem;
-    }
-    .add-button{
-        bottom: 10px;
-        right: 10px;
-        padding: 0.5rem 1.5rem;
-    }
-} 

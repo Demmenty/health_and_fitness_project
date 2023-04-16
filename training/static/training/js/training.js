@@ -6,6 +6,9 @@ $(document).ready(function(){
     $("#chosen-date").data("month", today.getMonth()+1);
     $("#chosen-date").data("day", today.getDate());
 
+    // обработчик показа календаря
+    $("#calendar-btn").click(toggleCalendar);
+
     // обработчики кликов на календарь
     $(".right-button").click({date: today}, next_year);
     $(".left-button").click({date: today}, prev_year);
@@ -62,6 +65,13 @@ $(document).ready(function(){
 // TODO автозаполнение полей (+интервальная)
 
 // КАЛЕНДАРЬ
+function toggleCalendar() {
+    // показ\скрытие календарика
+
+    $(this).toggleClass("active");
+    $(".calendar-container").toggle();
+}
+
 function init_calendar(date) {
     // инициализация календаря
 
