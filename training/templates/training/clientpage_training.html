@@ -17,13 +17,29 @@
     </div>
 
     <div class="training-menu-btns">
-      <div class="training-menu-item" id="calendar-btn">
+      <div class="training-menu-item" id="calendar-btn" title="Показать календарь">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
           <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
           <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
         </svg>
         <span>Календарь</span>
       </div>
+
+      <div class="training-menu-item dropdown-toggle" id="add-training-btn" title="Добавить тренировку" data-bs-toggle="dropdown" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        <span>Тренировка</span>
+      </div>
+
+      <ul class="dropdown-menu training-type-select" aria-labelledby="add-training-btn">
+        <li class="dropdown-item" type="P">Силовая</li>
+        <li class="dropdown-item" type="R">Круговая</li>
+        <li class="dropdown-item" type="E">Выносливость</li>
+        <li class="dropdown-item" type="I">Интервальная</li>
+      </ul>
+
       <div class="training-menu-item not-implemented" id="periodization-btn" title="Пока не сделано :(">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
@@ -91,30 +107,8 @@
     </div>
   </div>
 
-  <!-- карточка дня -->
-  <div class="day-container">
-
-      <!-- тренировки -->
-      <div class="trainings-container" id="trainings-container">
-      </div>
-
-      <button type="button" class="btn btn-outline-primary" id="add-training-btn">Добавить тренировку</button>
-
-      <!-- выбор типа новой тренировки -->
-      <div id="training_type_selection">
-        <p>Выберите тип тренировки</p>
-        <div class="d-flex">
-          <select name="type" class="form-control" required id="training_type_select">
-              <option value="" selected></option>
-              <option value="P">Силовая</option>
-              <option value="R">Круговая</option>
-              <option value="E">Выносливость</option>
-              <option value="I">Интервальная</option>
-          </select>
-          <button type="button" class="btn btn-primary" id="add-new-training-btn">OK</button>
-        </div>
-      </div>
-
+  <!-- тренировки -->
+  <div class="trainings-container" id="trainings-container">
   </div>
 
   <!-- окно выбора упражнений -->
@@ -510,47 +504,63 @@
 <!-- ЗАГОТОВКИ -->
 <!-- формы тренировок -->
 <div class="training power-training" id="">
-  <h4 class="text-center">Силовая тренировка</h4>
-  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-  <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
-      {% csrf_token %}
-      {{ training_forms.power }}
-      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
-      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-  </form>
+  <div class="training-header">
+    <span>Силовая тренировка</span>
+  </div>
+  <div class="training-content">
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
+        {% csrf_token %}
+        {{ training_forms.power }}
+        <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+        <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
 </div>
 
 <div class="training round-training" id="">
-  <h4 class="text-center">Круговая силовая тренировка</h4>
-  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-  <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
-    {% csrf_token %}
-    {{ training_forms.round }}
-    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
-    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-  </form>
+  <div class="training-header">
+    <span>Круговая тренировка</span>
+  </div>
+  <div class="training-content">
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
+      {% csrf_token %}
+      {{ training_forms.round }}
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
 </div>
 
 <div class="training endurance-training" id="">
-  <h4 class="text-center">Тренировка выносливости</h4>
-  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-  <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
-    {% csrf_token %}
-    {{ training_forms.endurance }}
-    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
-    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-  </form>
+  <div class="training-header">
+    <span>Тренировка выносливости</span>
+  </div>
+  <div class="training-content">
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
+      {% csrf_token %}
+      {{ training_forms.endurance }}
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
 </div>
 
 <div class="training interval-training" id="">
-  <h4 class="text-center">Тренировка выносливости интервальная</h4>
-  <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
-  <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
-    {% csrf_token %}
-    {{ training_forms.interval }}
-    <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
-    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-  </form>
+  <div class="training-header">
+    <span>Тренировка интервальная</span>
+  </div>
+  <div class="training-content">
+    <button type="button" class="btn btn-outline-primary add-exercise-btn">Выбор упражнений</button>
+    <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
+      {% csrf_token %}
+      {{ training_forms.interval }}
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
 </div>
 
 <!-- формы отчетов об упражнениях -->

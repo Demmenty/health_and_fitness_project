@@ -23,9 +23,8 @@ $(document).ready(function(){
     // показать карточку за сегодня, имитируя клик на сегодняшнюю дату
     $(".active-date").trigger("click");
 
-    // обработчик кнопок добавления тренировки
-    $("#add-training-btn").click(openTrainingSelection);
-    $("#add-new-training-btn").click(addNewTraining);
+    // обработчик кнопки добавления тренировки
+    $(".training-type-select .dropdown-item:not(.disabled)").click(addNewTraining);
 
     // обработчик кнопки создания нового упражнения
     $("#exercise-create-btn").click(openExerciseCreation);
@@ -67,6 +66,13 @@ $(document).ready(function(){
 // КАЛЕНДАРЬ
 function toggleCalendar() {
     // показ\скрытие календарика
+
+    if ($(this).attr("title") == "Показать календарь") {
+        $(this).attr("title", "Скрыть календарь")
+    }
+    else {
+        $(this).attr("title", "Показать календарь")
+    }
 
     $(this).toggleClass("active");
     $(".calendar-container").toggle();
@@ -176,7 +182,6 @@ function date_click(event) {
         if(trainings_data.length > 0) {
             addSavedTrainings(trainings_data);
         }
-        closeTrainingSelection();
         controlTrainingTypeSelect();
     });
 };
@@ -205,7 +210,6 @@ function prev_year(event) {
 // ТРЕНИРОВКИ
 function getTrainings(date) {
     // получение тренировок за выбранную дату
-    console.log("getTraining");
 
     client = $("#id_client").val();
     date_formatted = (date.year +"-"+
@@ -255,7 +259,6 @@ function addSavedTrainings(trainings_data) {
         });
 
         // отображаем тренировку в карточке
-        div.append($("<br>"));
         div.appendTo(".trainings-container");
         div.show();
 
@@ -271,12 +274,8 @@ function addSavedTrainings(trainings_data) {
 
 function addNewTraining() {
     // добавление новой тренировки
-    
-    let type = $("#training_type_select").val();
-    if(!type) return;
 
-    // убираем меню выбора тренировки
-    closeTrainingSelection();
+    let type = $(this).attr("type");
 
     // получаем форму тренировки выбранного типа
     let div = trainings_div[type].clone()
@@ -289,7 +288,6 @@ function addNewTraining() {
     div.find("#id_date").val(date_formatted);
 
     // отображаем тренировку в карточке
-    div.append($("<br>"));
     div.appendTo(".trainings-container");
     div.show();
 
@@ -301,45 +299,23 @@ function addNewTraining() {
     // обработчик клика на кнопку удаления
     div.find(".delete-training-btn").on("click", deleteTraining);
 
-    controlTrainingTypeSelect();
-}
-
-function openTrainingSelection() {
-    // открыть меню выбора типа новой тренировки
-
-    $("#training_type_selection").show();
-    $("#add-training-btn").hide();
+    // деактивация выбора тренировки такого же типа
+    $(".training-type-select li[type='" + type + "']").addClass("disabled");
 }
 
 function controlTrainingTypeSelect() {
-    // ограничение создания трень с одинаковым типом
-    // если трень нет - создает свежий селект
-    // если есть - создает селект без использованных вариантов
-    // если все типы есть - убирает кнопку
-
-    $("#training_type_selection").find("select").remove();
-    let new_select = training_type_select.clone();
+    // ограничивает создание трень с одинаковым типом
+    // путем деактивации соответствующей опции выбора новой тренировки
 
     let curr_trainings = $("#trainings-container").find(".training");
+    let training_select = $(".training-type-select");
+
+    training_select.find("li").removeClass("disabled");
 
     curr_trainings.each(function() {
         let type = $(this).find("#id_training_type").val();
-        new_select.find("option[value='" + type + "']").remove();
+        training_select.find("li[type='" + type + "']").addClass("disabled");
     })
-
-    if(new_select.find("option").length == 1) {
-        $("#add-training-btn").hide();
-    }
-    else {
-        new_select.insertBefore("#add-new-training-btn");
-    }
-}
-
-function closeTrainingSelection() {
-    // закрыть меню выбора типа новой тренировки
-
-    $("#training_type_selection").hide();
-    $("#add-training-btn").show();
 }
 
 function saveTraining() {
@@ -1338,5 +1314,3 @@ const training_type_to_exercise_type = {
     "E": "E",
     "I": "E",
 }
-
-const training_type_select = $("#training_type_select").clone();
