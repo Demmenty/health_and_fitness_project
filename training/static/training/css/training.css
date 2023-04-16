@@ -4,6 +4,9 @@ body {
 .blank {
     display: none !important;
 }
+.form-control::placeholder {
+    color: #b9b9b9;
+}
 .not-implemented {
     color: darkgrey !important;
     fill: darkgrey !important;
@@ -24,6 +27,8 @@ body {
     margin-top: 0.5rem;
     border-radius: 5px;
     height: 40px;
+    max-width: 23rem;
+    width: 100%;
     box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
     -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
     -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
@@ -32,8 +37,8 @@ body {
 .training-menu-date {
     background-color: #5271ff;
     color: white;
-    width: 10rem;
     font-size: 18px;
+    width: 100%;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     text-align: center;
@@ -85,6 +90,9 @@ body {
 }
 
 @media (min-width: 768px) {
+    .training-menu {
+        max-width: 50rem;
+    }
     .training-menu-item span {
         margin-left: 0.5rem;
         display: inline;
@@ -232,13 +240,15 @@ td.table-date.nil {
 /* тренировки */
 .trainings-container {
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     margin-bottom: 1.5rem;
 }
 .training {
-    display: flex;
     display: none;
-    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
@@ -252,6 +262,9 @@ td.table-date.nil {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     height: 40px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 .training-header span {
     display: inline-block;
@@ -259,23 +272,77 @@ td.table-date.nil {
     line-height: 40px;
 }
 .training-content {
-    padding: 10px;
+    padding: 15px 10px 10px 10px;
 }
 .add-exercise-btn {
-    display: block;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+    align-items: center;
+    width: fit-content;
     margin-left: auto;
     margin-right: auto;
 }
+.add-exercise-btn:hover {
+    color: #5271ff;
+    fill: #5271ff;
+    cursor: pointer;
+}
+.training-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+}
+.training-field .form-control {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.training-comment {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+
 /* карточка тренировки: упражнения */
-.exercises-table .form-control {
-    border: none;
-    padding: 0;
-}
-.exercises-table .form-control:focus {
-    box-shadow: none;
-}
 .exercise-report-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
     display: none;
+} 
+.exercise-report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+    border: 1px solid #d9d9de;
+    border-radius: 5px;
+    background-color: #eef5fb;
+    padding: 7px;
+}
+.exercise-help-btn {
+    min-width: 20px;
+}
+.exercise-help-btn:hover {
+    cursor: pointer;
+}
+.exercise-report-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+}
+.exercise-report-form .form-control {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+#id_is_done {
+    border-radius: 5px !important;
+    width: 24px !important; 
+    height: 24px !important;
 }
 
 /* окно выбора упражнений */

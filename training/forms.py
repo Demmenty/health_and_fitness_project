@@ -104,21 +104,24 @@ class PowerTrainingForm(ModelForm):
             ),
             "tiredness_due": NumberInput(
                 attrs={
-                    "class": "form-control text-center",
+                    "class": "form-control",
                     "min": "0",
                     "max": "10",
+                    "placeholder": "план",
                 }
             ),
             "tiredness_get": NumberInput(
                 attrs={
-                    "class": "form-control text-center",
+                    "class": "form-control",
                     "min": "0",
                     "max": "10",
+                    "placeholder": "факт",
                 }
             ),
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
+                    "rows": "6",
                 }
             ),
         }
@@ -152,6 +155,7 @@ class RoundTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
+                    "placeholder": "план",
                 }
             ),
             "tiredness_get": NumberInput(
@@ -159,23 +163,27 @@ class RoundTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
-                }
-            ),
-            "comment": Textarea(
-                attrs={
-                    "class": "form-control",
+                    "placeholder": "факт",
                 }
             ),
             "minutes": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "минуты",
                 }
             ),
             "pulse_avg": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "средний",
+                }
+            ),
+            "comment": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "6",
                 }
             ),
         }
@@ -209,6 +217,7 @@ class EnduranceTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
+                    "placeholder": "план",
                 }
             ),
             "tiredness_get": NumberInput(
@@ -216,23 +225,27 @@ class EnduranceTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
-                }
-            ),
-            "comment": Textarea(
-                attrs={
-                    "class": "form-control",
+                    "placeholder": "факт",
                 }
             ),
             "minutes": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "минуты",
                 }
             ),
             "pulse_avg": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "средний",
+                }
+            ),
+            "comment": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "6",
                 }
             ),
         }
@@ -266,6 +279,7 @@ class IntervalTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
+                    "placeholder": "план",
                 }
             ),
             "tiredness_get": NumberInput(
@@ -273,23 +287,27 @@ class IntervalTrainingForm(ModelForm):
                     "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
-                }
-            ),
-            "comment": Textarea(
-                attrs={
-                    "class": "form-control",
+                    "placeholder": "факт",
                 }
             ),
             "minutes": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "минуты",
                 }
             ),
             "pulse_max": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "максимум",
+                }
+            ),
+            "comment": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "6",
                 }
             ),
         }
@@ -333,36 +351,42 @@ class PowerExerciseReportForm(ModelForm):
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "план",
                 }
             ),
             "approaches_made": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "факт",
                 }
             ),
             "repeats_due": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "план",
                 }
             ),
             "repeats_made": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "факт",
                 }
             ),
             "load_due": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "план",
                 }
             ),
             "load_get": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "факт",
                 }
             ),
             "is_done": CheckboxInput(
@@ -392,12 +416,14 @@ class EnduranceExerciseReportForm(ModelForm):
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "минуты",
                 }
             ),
             "pulse_avg": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "средний",
                 }
             ),
             "is_done": CheckboxInput(
@@ -431,24 +457,28 @@ class IntervalExerciseReportForm(ModelForm):
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "мин",
                 }
             ),
             "high_load_pulse": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "пульс",
                 }
             ),
             "low_load_time": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "мин",
                 }
             ),
             "low_load_pulse": NumberInput(
                 attrs={
                     "class": "form-control text-center",
                     "min": "0",
+                    "placeholder": "пульс",
                 }
             ),
             "cycles": NumberInput(

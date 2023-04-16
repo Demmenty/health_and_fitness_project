@@ -2,10 +2,10 @@
 .alert {
     position: fixed;
     top: 77px;
-    right: 20px;
+    right: 14px;
     border-radius: 12px;
     background: #fff;
-    padding: 15px;
+    padding: 15px 10px;
     box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transform: translateX(calc(100% + 30px));

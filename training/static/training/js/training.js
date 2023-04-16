@@ -62,6 +62,7 @@ $(document).ready(function(){
 
 // TODO поправить области тыка на упражнение
 // TODO автозаполнение полей (+интервальная)
+// TODO убирать из списка неподходящие упражнения
 
 // КАЛЕНДАРЬ
 function toggleCalendar() {
@@ -337,6 +338,9 @@ function saveTraining() {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
             }
+            else if (response.status == 400) {
+                showDangerAlert("Неверно заполнена форма")
+            }
             else showDangerAlert(response.responseText)
         },
     });
@@ -451,6 +455,9 @@ function saveExercise() {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
             }
+            else if (response.status == 400) {
+                showDangerAlert("Неверно заполнена форма")
+            }
             else showDangerAlert(response.responseText)
         },
     });
@@ -487,6 +494,9 @@ function updateExercise() {
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
+            }
+            else if (response.status == 400) {
+                showDangerAlert("Неверно заполнена форма")
             }
             else showDangerAlert(response.responseText)
         },
@@ -1134,12 +1144,22 @@ function addSavedExerciseReports(reports_data) {
         // берем соответствующую типу форму для записи
         let form = exercise_report_forms[type].clone();
 
-        // заполняем поля ввода
+        // заполняем название и поля ввода
+        exercise_name = $("#exercise-row-" + exercise_report.fields.exercise).text();
+        form.find(".exercise-name").text(exercise_name);
+
         for (let field in exercise_report.fields) {
+            if (field == "is_done") {
+                if (exercise_report.fields.is_done == true) {
+                    form.find("#id_is_done" ).prop("checked", true)
+                }
+                continue
+            }
             form.find("#id_" + field).val(exercise_report.fields[field]);
-            exercise_name = $("#exercise-row-" + exercise_report.fields.exercise).text();
-            form.find(".exercise-name").text(exercise_name);
         }
+
+        console.log("exercise_report.fields.is_done", exercise_report.fields.is_done);
+
 
         // вставка формы в тренировку и показ
         form.insertBefore(training_div.find(".add-exercise-btn"));
@@ -1239,7 +1259,12 @@ function saveExerciseReport() {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
             }
-            else showDangerAlert(response.responseText)
+            else if (response.status == 400) {
+                showDangerAlert("Неверно заполнена форма")
+            }
+            else {
+                showDangerAlert(response.responseText)
+            }
         },
     });
 }
