@@ -63,6 +63,7 @@ $(document).ready(function(){
 // TODO поправить области тыка на упражнение
 // TODO автозаполнение полей (+интервальная)
 // TODO убирать из списка неподходящие упражнения
+// TODO кнопка автозаполнения как в прошлый раз
 
 // КАЛЕНДАРЬ
 function toggleCalendar() {
@@ -265,7 +266,7 @@ function addSavedTrainings(trainings_data) {
 
         // обработчик клика на выбор упражнений
         div.find(".add-exercise-btn").on("click", openExerciseSelection);
-
+        
         // обработчик клика на кнопку сохранения
         div.find(".training_form").on("submit", saveTraining);
         // обработчик клика на кнопку удаления
@@ -1151,15 +1152,15 @@ function addSavedExerciseReports(reports_data) {
         for (let field in exercise_report.fields) {
             if (field == "is_done") {
                 if (exercise_report.fields.is_done == true) {
-                    form.find("#id_is_done" ).prop("checked", true)
+                    form.find("#id_is_done").prop("checked", true)
                 }
                 continue
             }
             form.find("#id_" + field).val(exercise_report.fields[field]);
         }
 
-        console.log("exercise_report.fields.is_done", exercise_report.fields.is_done);
-
+        // автозаполнение полей тренировки при выполнении
+        form.find("#id_is_done").on("change", autoFillExerciseReport);
 
         // вставка формы в тренировку и показ
         form.insertBefore(training_div.find(".add-exercise-btn"));
@@ -1196,6 +1197,9 @@ function addExerciseToTraining() {
     // добавить в форму название
     exercise_name = $("#exercise-row-" + exercise_id).find(".exercise-name").text();
     form.find(".exercise-name").text(exercise_name);
+
+    // автозаполнение полей тренировки при выполнении
+    form.find("#id_is_done").on("change", autoFillExerciseReport);
 
     // вставка формы в тренировку
     form.insertBefore(training.find(".add-exercise-btn"));
@@ -1239,6 +1243,70 @@ function deleteExerciseReport(exercise_id) {
             $(this).remove()
         }
     })
+}
+
+function autoFillExerciseReport() {
+    // автозаполнение полей, если нажата отметка о выполнении
+
+    if(!$(this).is(':checked')) {
+        return
+    }
+
+    let form = $(this).closest("form");
+
+    // автозаполнение при силовой тренировке
+    if (form.hasClass("power-exercise-report")) {
+        // заполняет фактические поля по плановым
+        if (!form.find("#id_approaches_made").val()) {
+            form.find("#id_approaches_made").val(form.find("#id_approaches_due").val());
+        }
+        if (!form.find("#id_repeats_made").val()) {
+            form.find("#id_repeats_made").val(form.find("#id_repeats_due").val());
+        }
+        if (!form.find("#id_load_get").val()) {
+            form.find("#id_load_get").val(form.find("#id_load_due").val());
+        }
+        return
+    }
+
+    // автозаполнение при интервальной тренировке
+    if (form.hasClass("interval-exercise-report")) {
+        let training = form.closest(".training");
+        let report_forms = training.find(".interval-exercise-report");
+
+        // время
+        let total_time = 0;
+
+        report_forms.each(function() {
+            let time_high = parseInt($(this).find("#id_high_load_time").val());
+            let time_low = parseInt($(this).find("#id_low_load_time").val());
+            let cycles = parseInt($(this).find("#id_cycles").val());
+
+            if (Number.isInteger(time_high) && Number.isInteger(time_low) && Number.isInteger(cycles)) {
+                total_time += (time_high + time_low) * cycles;
+            }
+        })
+        if (total_time > 0) {
+            training.find("#id_minutes").val(total_time)
+        }
+
+        // пульс
+        let pulse = parseInt(form.find("#id_high_load_pulse").val());
+
+        if (Number.isInteger(pulse)) {
+
+            let curr_max_pulse = training.find("#id_pulse_max").val();
+            if (curr_max_pulse) {
+                curr_max_pulse = parseInt(curr_max_pulse)
+            }
+            else curr_max_pulse = 0
+
+            if (pulse > curr_max_pulse) {
+                training.find("#id_pulse_max").val(pulse);
+            }
+        }
+        return
+    }
 }
 
 function saveExerciseReport() {
