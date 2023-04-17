@@ -36,7 +36,7 @@ $(document).ready(function(){
 
     // обработчики закрытия окошек
     $("#exercise-creation").find(".btn-close").click(closeExerciseCreation);
-    $("#exercise-selection").find(".btn-close").click(closeExerciseSelection);
+    $("#exercise-selection-close-btn").click(closeExerciseSelection);
     $("#exercise-editing").find(".btn-close").click(closeExerciseEditing);
 
     // обработчики сохранения упражнения
@@ -557,6 +557,9 @@ function openExerciseSelection() {
     // открытие окна выбора упражнений для тренировки
     console.log("openExerciseSelection");
 
+    // скрыть все открытые описания
+    $(".exercise-info").hide();
+
     let training = $(this).closest(".training");
     
     // установить активную тренировку
@@ -614,8 +617,9 @@ function selectExercise() {
     let row = $(this).closest(".exercise-row");
     let was_selected = row.hasClass("selected");
 
-    // скрыть все инфо
-    div.find(".exercise-info").hide();
+    // показать\скрыть подробности
+    row.next(".exercise-info").slideToggle();
+
     // удалить все отметки и подсветки
     div.find(".selected").removeClass("selected");
     div.find(".colored").removeClass("colored");
@@ -637,9 +641,6 @@ function selectExercise() {
 
     // встроить видео с ютуба в инфо
     embedVideo(exercise_id);
-
-    // открыть инфо
-    info.show();
 
     // выделить зоны выбранного упражнения
     let areas = $.trim(info.find(".exercise-info-areas").text()).split(',');
@@ -684,7 +685,7 @@ function addExerciseToSelection(exercise_id) {
 
         // вставить и показать
         row.insertBefore($("#exercise-create-btn"));
-        $("#exercises-info").prepend(info);
+        info.insertBefore($("#exercise-create-btn"));
         row.removeClass("blank");
         info.removeClass("blank");
     });
@@ -860,7 +861,7 @@ function embedVideo(exercise_id) {
 
     function getYoutubeFrame(video_id) {
         return $('<div class="video-frame-container">' + 
-            '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + 
+            '<iframe src="https://www.youtube.com/embed/' + 
             video_id + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write;' + 
             ' encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' + 
             '</div>')
