@@ -108,7 +108,7 @@ class FatsecretManager():
                 return day
 
 
-    def weekly_nutrition(self, user) -> Union[dict, None]:
+    def weekly_nutrition(self, user) -> dict:
         """получение словаря с кбжу из FS за последние 7 дней
         ключи словаря - date_int:str"""
 
@@ -117,7 +117,11 @@ class FatsecretManager():
         week_nutrition_list = []
 
         # получаем данные по текущему месяцу
-        current_month_nutrition = session.food_entries_get_month()
+        try:
+            current_month_nutrition = session.food_entries_get_month()
+        except KeyError:
+            return {}
+        
         if type(current_month_nutrition) is dict:
             week_nutrition_list += [current_month_nutrition]
         else:
