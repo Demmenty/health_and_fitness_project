@@ -64,6 +64,7 @@ $(document).ready(function(){
 // TODO автозаполнение полей (+интервальная)
 // TODO убирать из списка неподходящие упражнения
 // TODO кнопка автозаполнения как в прошлый раз
+// TODO уведомление-картинка при отсутствии тренировок
 
 // КАЛЕНДАРЬ
 function toggleCalendar() {
@@ -557,6 +558,10 @@ function openExerciseSelection() {
     // открытие окна выбора упражнений для тренировки
     console.log("openExerciseSelection");
 
+    // затемнение сзади
+    $("main").append($("<div class='backdrop lvl1'></div>"));
+    $(".backdrop.lvl1").on("click", closeExerciseSelection);
+
     // скрыть все открытые описания
     $(".exercise-info").hide();
 
@@ -570,7 +575,10 @@ function openExerciseSelection() {
     clearExerciseSelection();
 
     // отметить уже добавленные упражнения
-    markAddedExercises()
+    markAddedExercises();
+
+    // прокрутить наверх
+    $("body, html").animate({scrollTop: 0}, 1);
 
     // показать окно
     $("#exercise-selection").show();
@@ -585,7 +593,9 @@ function openExerciseSelection() {
 
 function closeExerciseSelection() {
     // закрытие окна выбора упражнений для тренировки
+    console.log("closeExerciseSelection");
 
+    $(".backdrop").remove();
     $("#exercise-selection").hide();
 }
 

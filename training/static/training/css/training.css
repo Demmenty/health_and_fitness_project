@@ -16,6 +16,21 @@ body {
     fill: darkgrey !important;
     cursor: default !important;
 }
+.backdrop {
+    opacity: 0.3;
+    background-color: #61696e;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.backdrop.lvl1 {
+    z-index: 100;
+}
+.backdrop.lvl2 {
+    z-index: 102;
+}
 
 /* меню доп.функций */
 .training-menu {
@@ -371,7 +386,7 @@ td.table-date.nil {
 
 /* окно выбора упражнений */
 .exercise-selection {
-    z-index: 5;
+    z-index: 101;
     background: #fff;
     position:absolute;
     margin-left: auto;
@@ -381,9 +396,8 @@ td.table-date.nil {
     border-top-right-radius:3px;
     border-bottom-right-radius: 5px;
     display:none;
-    border: 1px solid #ced4da;
     border-radius: 10px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
+    box-shadow: 0 0 7px 1px #6b7789;
 }
 .exercise-selection-header {
     background: #5271ff;
@@ -405,17 +419,36 @@ td.table-date.nil {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    gap: 1rem;
+}
+.exercise-selection-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-between;
+}
+.exercise-selection-btns button {
+    width: fit-content;
+    align-self: center;
+}
+
+@media (min-width: 768px) {
+    .exercise-selection-content {
+        flex-direction: row;
+    }
 }
 
 /* окно выбора упражнений: список */
 .exercise-selection-list {
     display: flex;
     flex-direction: column;
-    max-height: 60vh;
+    height: 43vh;
     overflow: auto;
     border-radius: 5px;
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+    resize: vertical;
 }
 .exercise-row {
     display: flex;
@@ -437,6 +470,12 @@ td.table-date.nil {
 .btn-exercise-add:hover,
 .btn-exercise-remove:hover {
     filter: invert(37%) sepia(94%) saturate(2281%) hue-rotate(218deg) brightness(102%) contrast(103%);
+}
+
+@media (min-width: 768px) {
+    .exercise-selection-list {
+        height: 100%;
+    }
 }
 /* окно выбора упражнений: инфо */
 .exercise-info {
@@ -503,7 +542,12 @@ td.table-date.nil {
         height: 315px;
     }
 }
-
+/* кукла */
+.dummy-container {
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: space-around;
+}
 
 /* зоны воздействия на кукле */
 .effect-area-pic {
