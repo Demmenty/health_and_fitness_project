@@ -1,13 +1,15 @@
 # HEALTH & FITNESS
 
-Web service for assistance in the work of a personal trainer.
+коммерческий фриланс проект
 
+## Описание
 
-## Demo
+веб-сервис для удобства ведения клиентов фитнес-специалистом.
+
+## Демо
 
 https://healthfitness-demmenty.pythonanywhere.com
 
-
-### Technology
+## Технологии
 
 Django, SQLite, HTML, CSS, Javascript, Jquery, Bootstrap.
