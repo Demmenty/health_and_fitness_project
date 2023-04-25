@@ -599,7 +599,7 @@ td.table-date.nil {
 
 /* окна создания и редактирования упражнения */
 .exercise-creation {
-    z-index: 10;
+    z-index: 103;
     padding: 1rem;
     background: #fff;
     position:absolute;
@@ -615,7 +615,7 @@ td.table-date.nil {
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
 .exercise-editing {
-    z-index: 10;
+    z-index: 103;
     padding: 1rem;
     background: #fff;
     position:absolute;

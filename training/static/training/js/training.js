@@ -60,8 +60,6 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO поправить области тыка на упражнение
-// TODO автозаполнение полей (+интервальная)
 // TODO убирать из списка неподходящие упражнения
 // TODO кнопка автозаполнения как в прошлый раз
 // TODO уведомление-картинка при отсутствии тренировок
@@ -904,14 +902,21 @@ var selected_areas = new Set();
 
 function openExerciseCreation() {
     // открытие окна создания упражнения
+    console.log("openExerciseCreation");
+
+    // затемнение сзади
+    $("main").append($("<div class='backdrop lvl2'></div>"));
+    $(".backdrop.lvl2").on("click", closeExerciseCreation);
 
     $("#exercise-creation").show();
 }
 
 function closeExerciseCreation() {
     // закрытие окна создания упражнения
+    console.log("closeExerciseCreation");
 
     clearExerciseCreation();
+    $(".backdrop.lvl2").remove();
     $("#exercise-creation").hide();
 }
 
@@ -966,6 +971,10 @@ function openExerciseEditing() {
     // открытие окна редактирования упражнения
     console.log("openExerciseEditing");
 
+    // затемнение сзади
+    $("main").append($("<div class='backdrop lvl2'></div>"));
+    $(".backdrop.lvl2").on("click", closeExerciseEditing);
+
     // получение инфы об упражнении
     let exercise_id = $(this).closest(".exercise-row").data("exercise-id");
     let request = getExercise(exercise_id);
@@ -981,8 +990,10 @@ function openExerciseEditing() {
 
 function closeExerciseEditing() {
     // закрытие окна редактирования упражнения
+    console.log("closeExerciseEditing");
 
     clearExerciseEditing();
+    $(".backdrop.lvl2").remove();
     $("#exercise-editing").hide();
 }
 
