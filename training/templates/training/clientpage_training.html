@@ -127,7 +127,7 @@
           <!-- название -->
           <div class="exercise-row" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
             <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
-            <div class="col-2 text-end exercise-btn-group">
+            <div class="exercise-btn-group col-2">
               {% if exercise.author == client %}
                 <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
               {% endif %}

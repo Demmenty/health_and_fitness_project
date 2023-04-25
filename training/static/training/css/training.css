@@ -480,6 +480,10 @@ td.table-date.nil {
 .exercise-row:hover {
     cursor: pointer;
 }
+.exercise-btn-group {
+    white-space: nowrap;
+    text-align: end;
+}
 .btn-exercise-edit:hover, 
 .btn-exercise-add:hover,
 .btn-exercise-remove:hover {
