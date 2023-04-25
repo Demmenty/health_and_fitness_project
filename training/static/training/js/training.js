@@ -1257,11 +1257,8 @@ function deleteExerciseReport(exercise_id) {
 }
 
 function autoFillExerciseReport() {
-    // автозаполнение полей, если нажата отметка о выполнении
-
-    if(!$(this).is(':checked')) {
-        return
-    }
+    // автозаполнение полей формы тренировки
+    // по нажатию на чекбокс выполнения упражнения
 
     let form = $(this).closest("form");
 
@@ -1280,42 +1277,99 @@ function autoFillExerciseReport() {
         return
     }
 
+    // автозаполнение при тренировке выносливости
+    if (form.hasClass("endurance-exercise-report")) {
+        let training = form.closest(".training");
+        let report_forms = training.find(".endurance-exercise-report");
+
+        // запоняем суммарное время и средний пульс
+        let total_time = 0;
+        let total_pulse = 0;
+        let pulse_count = 0;
+
+        report_forms.each(function() {
+
+            if ($(this).find("#id_is_done").is(':checked')) {
+
+                let time = parseInt($(this).find("#id_minutes").val());
+                let pulse = parseInt($(this).find("#id_pulse_avg").val());
+    
+                if (Number.isInteger(time)) {
+                    total_time += time;
+                }
+                if (Number.isInteger(pulse)) {
+                    total_pulse += pulse;
+                    pulse_count += 1;
+                }
+            }
+        })
+
+        if (total_time > 0) {
+            training.find(".training_form #id_minutes").val(total_time);
+        }
+        else {
+            training.find(".training_form #id_minutes").val("");
+        }
+
+        if (total_pulse > 0) {
+            let avg_pulse = total_pulse / pulse_count;
+            training.find(".training_form #id_pulse_avg").val(avg_pulse);
+        }
+        else {
+            training.find(".training_form #id_pulse_avg").val("");
+        }
+
+        return
+    }
+
     // автозаполнение при интервальной тренировке
     if (form.hasClass("interval-exercise-report")) {
         let training = form.closest(".training");
         let report_forms = training.find(".interval-exercise-report");
 
-        // время
+        // запоняем суммарное время и максимальный пульс
         let total_time = 0;
+        let max_pulse = 0;
 
         report_forms.each(function() {
-            let time_high = parseInt($(this).find("#id_high_load_time").val());
-            let time_low = parseInt($(this).find("#id_low_load_time").val());
-            let cycles = parseInt($(this).find("#id_cycles").val());
 
-            if (Number.isInteger(time_high) && Number.isInteger(time_low) && Number.isInteger(cycles)) {
-                total_time += (time_high + time_low) * cycles;
+            if ($(this).find("#id_is_done").is(':checked')) {
+
+                let time_high = parseInt($(this).find("#id_high_load_time").val());
+                let time_low = parseInt($(this).find("#id_low_load_time").val());
+                let cycles = parseInt($(this).find("#id_cycles").val());
+                let pulse_high = parseInt($(this).find("#id_high_load_pulse").val());
+                let pulse_low = parseInt($(this).find("#id_low_load_pulse").val());
+    
+                if (Number.isInteger(time_high) && 
+                    Number.isInteger(time_low) && 
+                    Number.isInteger(cycles)) {
+                    total_time += (time_high + time_low) * cycles;
+                }
+
+                if (pulse_high > max_pulse) {
+                    max_pulse = pulse_high;
+                }
+                if (pulse_low > max_pulse) {
+                    max_pulse = pulse_low;
+                }
             }
         })
+
         if (total_time > 0) {
-            training.find("#id_minutes").val(total_time)
+            training.find("#id_minutes").val(total_time);
+        }
+        else {
+            training.find("#id_minutes").val("");
         }
 
-        // пульс
-        let pulse = parseInt(form.find("#id_high_load_pulse").val());
-
-        if (Number.isInteger(pulse)) {
-
-            let curr_max_pulse = training.find("#id_pulse_max").val();
-            if (curr_max_pulse) {
-                curr_max_pulse = parseInt(curr_max_pulse)
-            }
-            else curr_max_pulse = 0
-
-            if (pulse > curr_max_pulse) {
-                training.find("#id_pulse_max").val(pulse);
-            }
+        if (max_pulse > 0) {
+            training.find("#id_pulse_max").val(max_pulse);
         }
+        else {
+            training.find("#id_pulse_max").val("");
+        }
+
         return
     }
 }
