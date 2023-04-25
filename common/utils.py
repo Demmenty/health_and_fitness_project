@@ -1,11 +1,10 @@
-from datetime import date, timedelta
 from datetime import date, datetime, time, timedelta
 
 
 def get_noun_ending(number, one, two, five) -> str:
     """возвращает вариант слова с правильным окончанием в зависимости от числа
-       Нужно передать число и соответствующие варианты
-       например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
+    Нужно передать число и соответствующие варианты
+    например: get_noun_ending(4, 'слон', 'слона', 'слонов'))
     """
     n = abs(number)
     n %= 100

@@ -39,16 +39,7 @@ $(document).ready(function() {
         $('#navlink_measurements_drop').addClass('hidden_element');
         $('#open_label_drop').text('измерения');
     }
-    else if (pagePath == '/controlpage/training/') {
-        $("#id_workout_comment").removeClass('hidden_element');
-        $("#id_workout_label").removeClass('closed');
-        $("#id_workout_note").removeClass('hidden_element');
-        $("#id_workout_note_label").removeClass('closed');
-        $('#navlink_workout').addClass('text-royalblue');
-        $('#navlink_workout_drop').addClass('hidden_element');
-        $('#open_label_drop').text('тренировки');
-    }
-    else if (pagePath == '/controlpage/workout/') {
+    else if (pagePath == '/training/') {
         $("#id_workout_comment").removeClass('hidden_element');
         $("#id_workout_label").removeClass('closed');
         $("#id_workout_note").removeClass('hidden_element');
@@ -510,3 +501,36 @@ clientNoteContainer.bind('click', function()
     {getUp(clientNoteContainer)});
 fullClientNoteContainer.bind('click', function()
     {getUp(fullClientNoteContainer)});
+
+// УВЕДОМЛЕНИЯ
+const success_alert = $("#success-alert");
+const danger_alert = $("#danger-alert");
+
+$(document).ready(function() {
+    $(".alert .btn-close").on("click", hideAlert);
+})
+
+function showSuccessAlert(msg) {
+    success_alert.find(".text").text("");
+    success_alert.find(".text").text(msg);
+
+    success_alert.addClass("active");
+    setTimeout(() => {
+        success_alert.removeClass("active");
+    }, 4000);
+}
+
+function showDangerAlert(msg) {
+    danger_alert.find(".text").text("");
+    danger_alert.find(".text").text(msg);
+
+    danger_alert.addClass("active");
+    setTimeout(() => {
+        danger_alert.removeClass("active");
+    }, 4000);
+}
+
+function hideAlert() {
+    success_alert.removeClass("active");
+    danger_alert.removeClass("active");
+}

@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ControlpageConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'controlpage'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "controlpage"

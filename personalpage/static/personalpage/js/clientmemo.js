@@ -16,7 +16,7 @@ $(document).ready(function() {
         $('#memo_nutrition_textarea').removeClass('hidden_element');
         $('#memo_nutrition_label').removeClass('closed');
     }
-    else if (pagePath == '/personalpage/training/') {
+    else if (pagePath == '/training/') {
         $('#memo_workout_textarea').removeClass('hidden_element');
         $('#memo_workout_label').removeClass('closed');
     }

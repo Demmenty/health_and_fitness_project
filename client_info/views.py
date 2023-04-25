@@ -1,4 +1,5 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+
 from .forms import ClientContactForm, ClientMemoForm
 from .models import ClientContact, ClientMemo
 
@@ -12,15 +13,17 @@ def save_contacts(request):
     form = ClientContactForm(request.POST)
 
     if form.is_valid():
-        instance, is_created = ClientContact.objects.get_or_create(user=request.user)
+        instance, is_created = ClientContact.objects.get_or_create(
+            user=request.user
+        )
         form = ClientContactForm(request.POST, instance=instance)
         form.save()
 
-        data = {'result': 'Контакты сохранены'}
+        data = {"result": "Контакты сохранены"}
         return JsonResponse(data, status=200)
 
     else:
-        data = {'result': 'Ссылки введены некорректно. Попробуйте ещё раз.'}
+        data = {"result": "Ссылки введены некорректно. Попробуйте ещё раз."}
         return JsonResponse(data, status=200)
 
 
@@ -38,7 +41,5 @@ def save_clientmemo(request):
         form.save()
         return HttpResponse("Ok")
     else:
-        data = {
-            'result': "Ошибка в полученных данных"
-        }
+        data = {"result": "Ошибка в полученных данных"}
         return JsonResponse(data, status=400)

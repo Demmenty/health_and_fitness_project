@@ -1,5 +1,5 @@
-from .models import NutritionRecommendation
 from .forms import NutritionRecommendationForm
+from .models import NutritionRecommendation
 
 
 def get_nutrition_recommend(client):
@@ -21,5 +21,3 @@ def get_nutrition_recommend_form(client):
         form = NutritionRecommendationForm()
 
     return form
-
-
