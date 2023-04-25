@@ -692,10 +692,14 @@ function addExerciseToSelection(exercise_id) {
         info.find('.exercise-info-toggle').on("click", toggleInfoRow);
 
         // вставить и показать
-        row.insertBefore($("#exercise-create-btn"));
-        info.insertBefore($("#exercise-create-btn"));
+        let item = $('<li class="list-group-item" data-exercise-id='+ exercise_id +'>');
+        item.append(row);
+        item.append(info);
+        $("#exercises-list").append(item);
         row.removeClass("blank");
         info.removeClass("blank");
+        
+        $("#no-exercises-notice").remove();
     });
 }
 

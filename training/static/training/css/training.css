@@ -451,7 +451,7 @@ td.table-date.nil {
         max-width: 940px;
     }
     .exercise-selection-content {
-        height: 40rem;
+        height: 42rem;
     }
 }
 
@@ -459,12 +459,9 @@ td.table-date.nil {
 .exercise-selection-list {
     display: flex;
     flex-direction: column;
-    height: 43vh;
+    max-height: 43vh;
     overflow: auto;
     border-radius: 5px;
-    border-bottom: 1px solid #dee2e6;
-    border-top: 1px solid #dee2e6;
-    border-left: 1px solid #dee2e6;
     resize: vertical;
 }
 .exercise-row {
@@ -492,7 +489,14 @@ td.table-date.nil {
 @media (min-width: 768px) {
     .exercise-selection-list {
         resize: none;
+        width: 48%;
+        max-height: unset;
         height: 100% !important;
+    }
+}
+@media (min-width: 992px) {
+    .exercise-selection-list {
+        width: 40%;
     }
 }
 /* окно выбора упражнений: инфо */

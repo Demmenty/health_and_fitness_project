@@ -119,6 +119,9 @@
     <div class="exercise-selection-content">
       <!-- список доступных упражнений -->
       <div class="exercise-selection-list" id="exercises-list">
+        {% if not exercises %}
+          <p class="text-center" id="no-exercises-notice">Упражнения отсутствуют</p>
+        {% endif %}
         {% for exercise in exercises %}
         <li class="list-group-item" data-exercise-id="{{ exercise.id }}">
           <!-- название -->
