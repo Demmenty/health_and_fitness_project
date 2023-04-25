@@ -313,6 +313,9 @@ def renew_weekly_measures_nutrition(user) -> None:
 
     weekly_nutrition_fs = services.fs.weekly_nutrition(user)
 
+    if not weekly_nutrition_fs:
+        return
+
     for i in range(7):
         measure_date = date.today() - timedelta(days=(6 - i))
         measure = Measurement.objects.filter(

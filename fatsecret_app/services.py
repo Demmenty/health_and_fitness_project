@@ -114,7 +114,7 @@ class FatsecretManager:
             if day["date_int"] == datetime_into_epoch(request_date):
                 return day
 
-    def weekly_nutrition(self, user) -> Union[dict, None]:
+    def weekly_nutrition(self, user) -> dict:
         """получение словаря с кбжу из FS за последние 7 дней
         ключи словаря - date_int:str"""
 
