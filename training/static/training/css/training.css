@@ -432,9 +432,26 @@ td.table-date.nil {
     align-self: center;
 }
 
+@media (min-width: 576px) {
+    .exercise-selection {
+        max-width: 520px;
+    } 
+}
 @media (min-width: 768px) {
+    .exercise-selection {
+        max-width: 700px;
+    }
     .exercise-selection-content {
         flex-direction: row;
+        height: 34rem;
+    }
+}
+@media (min-width: 992px) {
+    .exercise-selection {
+        max-width: 940px;
+    }
+    .exercise-selection-content {
+        height: 40rem;
     }
 }
 
@@ -474,7 +491,8 @@ td.table-date.nil {
 
 @media (min-width: 768px) {
     .exercise-selection-list {
-        height: 100%;
+        resize: none;
+        height: 100% !important;
     }
 }
 /* окно выбора упражнений: инфо */
@@ -542,11 +560,27 @@ td.table-date.nil {
         height: 315px;
     }
 }
+@media (min-width: 768px) {
+    .exercise-photo {
+        max-width: 23rem;
+    }
+    .video-frame-container iframe {
+        width: 23rem;
+        height: 12rem;
+    }
+}
 /* кукла */
+.dummy-and-btns-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .dummy-container {
     display: flex;
-    margin-bottom: 1rem;
     justify-content: space-around;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* зоны воздействия на кукле */
