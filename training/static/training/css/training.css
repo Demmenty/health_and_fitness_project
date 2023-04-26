@@ -568,9 +568,6 @@ td.table-date.nil {
     }
 }
 @media (min-width: 768px) {
-    .exercise-photo {
-        max-width: 23rem;
-    }
     .video-frame-container iframe {
         width: 23rem;
         height: 12rem;
@@ -647,7 +644,35 @@ td.table-date.nil {
 }
 .exercise-creation-content .form-control,
 .exercise-editing-content .form-control {
+    margin-bottom: 0.75rem;
+}
+.exercise-editing-photo-container {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 1rem;
+    margin-top: -0.5rem;
+}
+.exercise-editing-icon-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    margin-top: -0.5rem;
+}
+.exercise-editing-photo-container label,
+.exercise-editing-icon-container label {
+    white-space: nowrap;
+    width: 142px;
+}
+.exercise-editing-icon-container img {
+    max-width: 5rem;
+    max-height: 5rem;
+    border-radius: 0.375rem;
+    margin-top: 0.5rem
+}
+.exercise-editing-photo-container img {
+    width: 100%;
+    align-self: center;
+    border-radius: 0.375rem;
 }
 .exercise-creation-areas,
 .exercise-editing-areas {
@@ -666,6 +691,13 @@ td.table-date.nil {
     .exercise-editing {
         max-width: 520px;
     }
+    .exercise-editing-photo-container {
+        flex-direction: row;
+    }
+    .exercise-editing-photo-container img {
+        width: 71.5%;
+        margin-top: 0.5rem
+    }
     .exercise-creation-areas,
     .exercise-editing-areas {
         flex-direction: row;
@@ -679,10 +711,51 @@ td.table-date.nil {
     .exercise-editing {
         max-width: 700px;
     }
+    .exercise-creation-content, 
+    .exercise-editing-content {
+        padding: 16px;
+    }
+    .exercise-creation label,
+    .exercise-editing label {
+        white-space: nowrap;
+        width: 11rem;
+    }
+    .exercise-creation #id_name, 
+    .exercise-editing #id_name,
+    .exercise-creation #id_exercise_type, 
+    .exercise-editing #id_exercise_type,
+    .exercise-creation #id_icon, 
+    .exercise-editing #id_icon,
+    .exercise-creation #id_photo_init_pose, 
+    .exercise-editing #id_photo_init_pose,
+    .exercise-creation #id_photo_work_pose, 
+    .exercise-editing #id_photo_work_pose  {
+        display: unset;
+        width: 491px;
+        margin-left: -3px;
+    }
+    .exercise-editing-photo-container img {
+        width: 73.5%;
+    }
 }
 @media (min-width: 992px) {
     .exercise-creation, 
     .exercise-editing {
         max-width: 940px;
+    }
+    .exercise-creation #id_name, 
+    .exercise-editing #id_name,
+    .exercise-creation #id_exercise_type, 
+    .exercise-editing #id_exercise_type,
+    .exercise-creation #id_icon, 
+    .exercise-editing #id_icon,
+    .exercise-creation #id_photo_init_pose, 
+    .exercise-editing #id_photo_init_pose,
+    .exercise-creation #id_photo_work_pose, 
+    .exercise-editing #id_photo_work_pose  {
+        width: 731px;
+    }
+    .exercise-editing-photo-container img {
+        width: 80.5%;
     }
 }

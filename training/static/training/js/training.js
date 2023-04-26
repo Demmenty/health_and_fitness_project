@@ -1041,19 +1041,34 @@ function fillExerciseForm(data) {
     form.find("#id_exercise_id").val(data.pk);
 
     // картинки
+    form.find(".exercise-editing-icon-container").remove();
     if(data.fields.icon) {
-        let icon = $("<img src='/media/" + data.fields.icon + "' class='exercise-icon'>");
-        icon.insertBefore(form.find("#id_icon"));
+        let icon = $(
+            "<div class='exercise-editing-icon-container'>" + 
+            "<label>Текущая иконка:</label>" + 
+            "<img src='/media/" + data.fields.icon + "'>" + 
+            "</div>"
+        );
+        icon.insertAfter(form.find("#id_icon"));
     }
+    form.find(".exercise-editing-photo-container").remove();
     if(data.fields.photo_init_pose) {
-        let photo_init = $("<img src='/media/" + data.fields.photo_init_pose + 
-                           "' class='exercise-photo'>");
-        photo_init.insertBefore(form.find("#id_photo_init_pose"));
+        let photo_init = $(
+            "<div class='exercise-editing-photo-container'>" + 
+            "<label>Текущее фото:</label>" + 
+            "<img src='/media/" + data.fields.photo_init_pose + "'>" + 
+            "</div>"
+        );
+        photo_init.insertAfter(form.find("#id_photo_init_pose"));
     }
     if(data.fields.photo_work_pose) {
-        let photo_work = $("<img src='/media/" + data.fields.photo_work_pose + 
-                        "' class='exercise-photo'>");
-        photo_work.insertBefore(form.find("#id_photo_work_pose"));
+        let photo_work = $(
+            "<div class='exercise-editing-photo-container'>" + 
+            "<label>Текущее фото:</label>" + 
+            "<img src='/media/" + data.fields.photo_work_pose + "'>" + 
+            "</div>"
+        );
+        photo_work.insertAfter(form.find("#id_photo_work_pose"));
     }
 
     // зоны воздействия
