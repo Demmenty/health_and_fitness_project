@@ -116,9 +116,10 @@
             <p class="text-center" id="no-exercises-notice">Упражнения отсутствуют</p>
           {% endif %}
           {% for exercise in exercises %}
-          <li class="list-group-item" data-exercise-id="{{ exercise.id }}">
+          <li class="exercise-item exercise-type-{{ exercise.exercise_type }} list-group-item" 
+          id="exercise-item-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
             <!-- название -->
-            <div class="exercise-row" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+            <div class="exercise-row">
               <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
               <div class="exercise-btn-group col-2">
                 {% if for_expert or exercise.author == client %}
@@ -129,7 +130,7 @@
               </div>
             </div>
             <!-- описание -->
-            <div class="exercise-info" id="exercise-info-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+            <div class="exercise-info">
               <ul class="list-group">
                 <li class="list-group-item description">
                   <div class="exercise-info-toggle">
@@ -204,8 +205,7 @@
                     </div>
                     <div class="exercise-info-detail">
                       <hr>
-                      <!-- TODO убрать лишнюю data -->
-                      <p class="exercise-info-areas d-none" data-exercise-id="{{ exercise.id }}">
+                      <p class="exercise-info-areas d-none">
                         {{ exercise.effect_areas }}
                       </p>
                     </div>
@@ -311,7 +311,7 @@
         <span>Создание упражнения</span>
       </div>
       <div class="exercise-creation-content">
-        <form method="post" action="{% url 'save_exercise' %}" class="exercise-creation-form" enctype="multipart/form-data">
+        <form method="post" action="{% url 'save_exercise' %}" id="exercise-creation-form" enctype="multipart/form-data">
           {% csrf_token %}
           {{ exercise_form }}
 
@@ -400,7 +400,7 @@
         <span>Редактирование упражнения</span>
       </div>
       <div class="exercise-editing-content">
-        <form method="post" action="{% url 'update_exercise' %}" class="exercise-editing-form" enctype="multipart/form-data">
+        <form method="post" action="{% url 'update_exercise' %}" id="exercise-editing-form" enctype="multipart/form-data">
           {% csrf_token %}
           {{ exercise_form }}
           <input type='hidden' name='exercise_id' id="id_exercise_id" value=""></input>
@@ -742,87 +742,86 @@
     </div>
   </form>
   
-  <!-- строка упражнения в списке выбора -->
-  <div class="exercise-row blank" id="" data-exercise-id="">
-    <p class="exercise-name mb-0 col-10"></p>
-    <div class="col-2 text-end exercise-btn-group">
-      <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
-      <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
-      <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+  <!-- упражнение в списке выбора -->
+  <li class="exercise-item list-group-item blank" id="" data-exercise-id="">
+    <div class="exercise-row">
+      <p class="exercise-name mb-0 col-10"></p>
+      <div class="col-2 text-end exercise-btn-group">
+        <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+        <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
+        <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+      </div>
     </div>
-  </div>
-  
-  <!-- инфо упражнения в окне выбора -->
-  <div class="exercise-info blank" id="" data-exercise-id="">
-    <ul class="list-group">
-      <li class="list-group-item description">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Описание</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <p></p>
-        </div>
-      </li>
-      <li class="list-group-item target-muscles">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Целевые мышцы</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <p></p>
-        </div>
-      </li>
-      <li class="list-group-item mistakes">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Частые ошибки</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <p></p>
-        </div>
-      </li>
-      <li class="list-group-item photo">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Фото</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <div class="exercise-photo-container">
-            <span>Исходная позиция</span>
-            <img src="" class="exercise-photo init">
+    <div class="exercise-info">
+      <ul class="list-group">
+        <li class="list-group-item description">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Описание</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
           </div>
-          <div class="exercise-photo-container">
-            <span>Рабочая позиция</span>
-            <img src="" class="exercise-photo work">
+          <div class="exercise-info-detail">
+            <hr>
+            <p></p>
           </div>
-        </div>
-      </li>
-      <li class="list-group-item video">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Видео</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <a href="" class="video-ref"></a>
-        </div>
-      </li>
-      <li class="list-group-item areas">
-        <div class="exercise-info-toggle">
-          <div class="col-11">Зоны воздействия</div>
-          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
-        </div>
-        <div class="exercise-info-detail">
-          <hr>
-          <p class="exercise-info-areas d-none">
-          </p>
-        </div>
-      </li>
-    </ul>
-  
-</div>
+        </li>
+        <li class="list-group-item target-muscles">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Целевые мышцы</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+          </div>
+          <div class="exercise-info-detail">
+            <hr>
+            <p></p>
+          </div>
+        </li>
+        <li class="list-group-item mistakes">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Частые ошибки</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+          </div>
+          <div class="exercise-info-detail">
+            <hr>
+            <p></p>
+          </div>
+        </li>
+        <li class="list-group-item photo">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Фото</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+          </div>
+          <div class="exercise-info-detail">
+            <hr>
+            <div class="exercise-photo-container">
+              <span>Исходная позиция</span>
+              <img src="" class="exercise-photo init">
+            </div>
+            <div class="exercise-photo-container">
+              <span>Рабочая позиция</span>
+              <img src="" class="exercise-photo work">
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item video">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Видео</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+          </div>
+          <div class="exercise-info-detail">
+            <hr>
+            <a href="" class="video-ref"></a>
+          </div>
+        </li>
+        <li class="list-group-item areas">
+          <div class="exercise-info-toggle">
+            <div class="col-11">Зоны воздействия</div>
+            <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+          </div>
+          <div class="exercise-info-detail">
+            <hr>
+            <p class="exercise-info-areas d-none">
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </li>
