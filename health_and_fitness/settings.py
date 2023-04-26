@@ -151,6 +151,7 @@ STATICFILES_DIRS = [
     (BASE_DIR / "expertpage" / "static"),
     (BASE_DIR / "homepage" / "static"),
     (BASE_DIR / "personalpage" / "static"),
+    (BASE_DIR / "training" / "static"),
 ]
 
 STATIC_ROOT = BASE_DIR / "static"
