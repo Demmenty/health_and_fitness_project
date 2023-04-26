@@ -10,6 +10,7 @@
 {% block title %}{{ client.username }}: тренировки{% endblock %}
 
 {% block content %}
+  <param data-is-expert="true" id="page-param">
   {% draw_training_content client for_expert %}
 {% endblock %}
 

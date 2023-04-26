@@ -66,6 +66,8 @@ $(document).ready(function(){
 // TODO не забыть окрашивание дат календаря по тренировкам
 // TODO добавить иконки упражнениям
 
+const is_expert = $("#page-param").data("is-expert");
+
 // КАЛЕНДАРЬ
 function toggleCalendar() {
     // показ\скрытие календарика
@@ -1208,6 +1210,8 @@ function addSavedExerciseReports(reports_data) {
         // вставка формы в тренировку и показ
         report_form.insertBefore(training.find(".add-exercise-btn"));
         report_form.show();
+
+        disableFieldsForExpert();
     }
 }
 
@@ -1246,6 +1250,8 @@ function addExerciseToTraining() {
     // вставка формы в тренировку
     report_form.insertBefore(training.find(".add-exercise-btn"));
     report_form.show();
+
+    disableFieldsForExpert();
 }
 
 function removeExerciseFromTraining() {
@@ -1429,6 +1435,14 @@ function saveExerciseReport() {
             }
         },
     });
+}
+
+function disableFieldsForExpert() {
+    // деактивирует чекбокс выполнения упражнений для эксперта
+
+    if (is_expert) {
+        $("input[name='is_done']").attr("disabled", true);
+    }
 }
 
 
