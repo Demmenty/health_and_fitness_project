@@ -59,6 +59,8 @@ class Anthropometry(models.Model):
         ordering = ["-date"]
         # при запросе должна быть сортировка по убыванию даты
         get_latest_by = "date"
+        verbose_name = "Антропометрия"
+        verbose_name_plural = "Антропометрии"
 
 
 class AnthropometryPhotoAccess(models.Model):
@@ -72,3 +74,7 @@ class AnthropometryPhotoAccess(models.Model):
             return f"Клиент {self.user} разрешил доступ к своим фото"
         else:
             return f"Клиент {self.user} не разрешил доступ к своим фото"
+
+    class Meta:
+        verbose_name = "Доступ к фото"
+        verbose_name_plural = "Доступы к фото"

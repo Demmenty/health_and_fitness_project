@@ -1,8 +1,9 @@
 from django.db import models
 
 
-# модель для записей на консультацию
 class ConsultationSignup(models.Model):
+    """модель заявок на консультацию"""
+
     date = models.DateField("Дата заполнения заявки", auto_now_add=True)
     name = models.CharField(
         "Имя", max_length=100, help_text="Как к вам обращаться?"
@@ -32,3 +33,7 @@ class ConsultationSignup(models.Model):
 
     def __str__(self):
         return f"Заявка № {self.id} от {self.date}, {self.name}"
+    
+    class Meta:
+        verbose_name = "Заявка на консультацию"
+        verbose_name_plural = "Заявки на консультацию"
