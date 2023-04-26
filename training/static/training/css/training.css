@@ -17,7 +17,7 @@ body {
     cursor: default !important;
 }
 .backdrop {
-    opacity: 0.3;
+    opacity: 0.4;
     background-color: #61696e;
     position: fixed;
     top: 0;
@@ -461,7 +461,6 @@ td.table-date.nil {
     flex-direction: column;
     max-height: 43vh;
     overflow: auto;
-    border-radius: 5px;
     resize: vertical;
 }
 .exercise-row {
@@ -606,9 +605,9 @@ td.table-date.nil {
 }
 
 /* окна создания и редактирования упражнения */
-.exercise-creation {
+.exercise-creation, 
+.exercise-editing {
     z-index: 103;
-    padding: 1rem;
     background: #fff;
     position:absolute;
     margin-left: auto;
@@ -618,27 +617,72 @@ td.table-date.nil {
     border-top-right-radius:3px;
     border-bottom-right-radius: 5px;
     display:none;
-    border: 1px solid #ced4da;
     border-radius: 10px;
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
-.exercise-editing {
-    z-index: 103;
-    padding: 1rem;
-    background: #fff;
-    position:absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 10px;
-    right: 10px;
-    border-top-right-radius:3px;
-    border-bottom-right-radius: 5px;
-    display:none;
-    border: 1px solid #ced4da;
-    border-radius: 10px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
+.exercise-creation-header, 
+.exercise-editing-header {
+    background: #5271ff;
+    color: white;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 40px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.exercise-creation-header span, 
+.exercise-editing-header span {
+    display: inline-block;
+    font-size: 20px;
+    line-height: 40px;
+}
+.exercise-creation-content, 
+.exercise-editing-content {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 1rem;
+}
+.exercise-creation-content .form-control,
+.exercise-editing-content .form-control {
+    margin-bottom: 1rem;
+}
+.exercise-creation-areas,
+.exercise-editing-areas {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
 }
 .effect-areas-list li::marker {
     content: '►  ';
     color: #5271ff;
+}
+
+@media (min-width: 576px) {
+    .exercise-creation, 
+    .exercise-editing {
+        max-width: 520px;
+    }
+    .exercise-creation-areas,
+    .exercise-editing-areas {
+        flex-direction: row;
+    }
+    .effect-areas-list {
+        min-width: 35%;
+    }
+}
+@media (min-width: 768px) {
+    .exercise-creation, 
+    .exercise-editing {
+        max-width: 700px;
+    }
+}
+@media (min-width: 992px) {
+    .exercise-creation, 
+    .exercise-editing {
+        max-width: 940px;
+    }
 }

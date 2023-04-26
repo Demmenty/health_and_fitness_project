@@ -35,9 +35,8 @@ $(document).ready(function(){
     $("#exercise-selection").find(".effect-area-pic").click(selectAreaInSelection);
 
     // обработчики закрытия окошек
-    $("#exercise-creation").find(".btn-close").click(closeExerciseCreation);
     $("#exercise-selection-close-btn").click(closeExerciseSelection);
-    $("#exercise-editing").find(".btn-close").click(closeExerciseEditing);
+    $("#exercise-creation-close-btn").click(closeExerciseCreation);
 
     // обработчики сохранения упражнения
     $(".exercise-creation-form").on("submit", saveExercise);

@@ -67,7 +67,7 @@ class ExerciseForm(ModelForm):
             "video": TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "прямая ссылка (желательно ютуб)",
+                    "placeholder": "прямая ссылка (ютуб, желательно)",
                 }
             ),
         }
