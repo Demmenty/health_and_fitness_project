@@ -4,18 +4,6 @@ from django.shortcuts import redirect, render
 from client_info.manager import ClientInfoManager
 from expert_remarks.services import get_remark_forms, get_today_commentary
 
-from .forms import (
-    EnduranceExerciseReportForm,
-    EnduranceTrainingForm,
-    ExerciseForm,
-    IntervalExerciseReportForm,
-    IntervalTrainingForm,
-    PowerExerciseReportForm,
-    PowerTrainingForm,
-    RoundTrainingForm,
-)
-from .manager import TrainingManager
-
 
 # TODO сделать классом и переименовать в TrainingView
 def training(request):
@@ -25,54 +13,33 @@ def training(request):
         return redirect("loginuser")
 
     if request.user.is_expert:
-        template = "training/expertpage_training.html"
+        template = "training/expertpage.html"
+
         client = User.objects.get(id=request.GET["client_id"])
         client_contacts = ClientInfoManager.get_contacts(client)
         client_remark = get_remark_forms(client)
-        exercise_form = ExerciseForm(initial={"author": request.user})
 
+        # TODO поменять layout, чтобы передавать только client
         data = {
-            "clientname": client.username,
+            "client": client,
             "client_id": client.id,
+            "clientname": client.username,
             "client_contacts": client_contacts,
             "client_remark": client_remark,
+            "for_expert": True,
         }
+        return render(request, template, data)
 
-    else:
-        template = "training/clientpage_training.html"
+    if not request.user.is_expert:
+        template = "training/clientpage.html"
         client = request.user
         clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
         today_commentary = get_today_commentary(client)
-        exercise_form = ExerciseForm(initial={"author": client})
 
         data = {
             "client": client,
+            "client_id": client.id,
             "clientmemo_form": clientmemo_form,
             "today_commentary": today_commentary,
         }
-
-    client_sex = ClientInfoManager.get_sex(client)
-    exercises = TrainingManager.get_exercises(client)
-    training_forms = {
-        "power": PowerTrainingForm(initial={"client": client}),
-        "round": RoundTrainingForm(initial={"client": client}),
-        "endurance": EnduranceTrainingForm(initial={"client": client}),
-        "interval": IntervalTrainingForm(initial={"client": client}),
-    }
-    exercise_report_forms = {
-        "power": PowerExerciseReportForm(),
-        "endurance": EnduranceExerciseReportForm(),
-        "interval": IntervalExerciseReportForm(),
-    }
-
-    data.update(
-        {
-            "client_sex": client_sex,
-            "training_forms": training_forms,
-            "exercises": exercises,
-            "exercise_form": exercise_form,
-            "exercise_report_forms": exercise_report_forms,
-        }
-    )
-
-    return render(request, template, data)
+        return render(request, template, data)

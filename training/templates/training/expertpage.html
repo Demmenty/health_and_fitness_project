@@ -1,0 +1,18 @@
+{% extends 'layouts/expertpage_layout.html' %}
+
+{% load draw_training_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'training/css/training.css' %}">
+{% endblock %}
+
+{% block title %}{{ client.username }}: тренировки{% endblock %}
+
+{% block content %}
+  {% draw_training_content client for_expert %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'training/js/training.js' %}"></script>
+{% endblock %}

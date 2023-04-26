@@ -1,13 +1,5 @@
-{% extends 'layouts/expertpage_layout.html' %}
 {% load static %}
 
-{% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'training/css/training.css' %}">
-{% endblock %}
-
-{% block title %}{{ clientname }}: тренировки{% endblock %}
-
-{% block content %}
 <div class="container main_container d-flex flex-column pt-4">
 
     <!-- меню дополнительных функций -->
@@ -53,7 +45,7 @@
           </svg>
           <span>Статистика</span>
         </div>
-      </div>
+    </div>
   
     </div>
   
@@ -129,7 +121,9 @@
             <div class="exercise-row" id="exercise-row-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
               <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
               <div class="exercise-btn-group col-2">
-                <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+                {% if for_expert or exercise.author == client %}
+                  <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+                {% endif %}
                 <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
                 <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
               </div>
@@ -210,6 +204,7 @@
                     </div>
                     <div class="exercise-info-detail">
                       <hr>
+                      <!-- TODO убрать лишнюю data -->
                       <p class="exercise-info-areas d-none" data-exercise-id="{{ exercise.id }}">
                         {{ exercise.effect_areas }}
                       </p>
@@ -494,11 +489,11 @@
   
     <br>
   
-</div>
-
-<!-- ЗАГОТОВКИ -->
-<!-- формы тренировок -->
-<div class="training power-training" id="">
+  </div>
+  
+  <!-- ЗАГОТОВКИ -->
+  <!-- формы тренировок -->
+  <div class="training power-training" id="">
     <div class="training-header">
       <span>Силовая тренировка</span>
     </div>
@@ -529,9 +524,9 @@
           <button type="submit" class="btn btn-primary float-end">Сохранить</button>
       </form>
     </div>
-</div>
+  </div>
   
-<div class="training round-training" id="">
+  <div class="training round-training" id="">
     <div class="training-header">
       <span>Круговая тренировка</span>
     </div>
@@ -570,9 +565,9 @@
         <button type="submit" class="btn btn-primary float-end">Сохранить</button>
       </form>
     </div>
-</div>
+  </div>
   
-<div class="training endurance-training" id="">
+  <div class="training endurance-training" id="">
     <div class="training-header">
       <span>Тренировка выносливости</span>
     </div>
@@ -611,9 +606,9 @@
         <button type="submit" class="btn btn-primary float-end">Сохранить</button>
       </form>
     </div>
-</div>
+  </div>
   
-<div class="training interval-training" id="">
+  <div class="training interval-training" id="">
     <div class="training-header">
       <span>Тренировка интервальная</span>
     </div>
@@ -652,116 +647,116 @@
         <button type="submit" class="btn btn-primary float-end">Сохранить</button>
       </form>
     </div>
-</div>
-
-<!-- формы отчетов об упражнениях -->
-<form method="post" action="{% url 'save_exercise_report' %}" 
-class="exercise-report-form power-exercise-report">
-  {% csrf_token %}
-  {{ exercise_report_forms.power.exercise }}
-  {{ exercise_report_forms.power.training }}
-  <div class="exercise-report-header">
-    <span class="exercise-name"></span>
-    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
-      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
-    </svg>
   </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Вес</span>
-    {{ exercise_report_forms.power.weight }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Подходы</span>
-    {{ exercise_report_forms.power.approaches_due }}
-    {{ exercise_report_forms.power.approaches_made }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Повторы</span>
-    {{ exercise_report_forms.power.repeats_due }}
-    {{ exercise_report_forms.power.repeats_made }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Нагрузка</span>
-    {{ exercise_report_forms.power.load_due }}
-    {{ exercise_report_forms.power.load_get }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Выполнено</span>
-    {{ exercise_report_forms.power.is_done }}
-  </div>
-</form>
-
-<form method="post" action="{% url 'save_exercise_report' %}" 
-class="exercise-report-form endurance-exercise-report">
-  {% csrf_token %}
-  {{ exercise_report_forms.endurance.exercise }}
-  {{ exercise_report_forms.endurance.training }}
-  <div class="exercise-report-header">
-    <span class="exercise-name"></span>
-    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
-      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
-    </svg>
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Время</span>
-    {{ exercise_report_forms.endurance.minutes }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Пульс</span>
-    {{ exercise_report_forms.endurance.pulse_avg }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Выполнено</span>
-    {{ exercise_report_forms.endurance.is_done }}
-  </div>
-</form>
-
-<form method="post" action="{% url 'save_exercise_report' %}" 
-class="exercise-report-form interval-exercise-report">
-  {% csrf_token %}
-  {{ exercise_report_forms.interval.exercise }}
-  {{ exercise_report_forms.interval.training }}
-  <div class="exercise-report-header">
-    <span class="exercise-name"></span>
-    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
-      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
-    </svg>
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Макс нагрузка</span>
-    {{ exercise_report_forms.interval.high_load_time }}
-    {{ exercise_report_forms.interval.high_load_pulse }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Мин нагрузка</span>
-    {{ exercise_report_forms.interval.low_load_time }}
-    {{ exercise_report_forms.interval.low_load_pulse }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Повторы цикла</span>
-    {{ exercise_report_forms.interval.cycles }}
-  </div>
-  <div class="exercise-report-field">
-    <span class="col-4">Выполнено</span>
-    {{ exercise_report_forms.interval.is_done }}
-  </div>
-</form>
-
-<!-- строка упражнения в списке выбора -->
-<div class="exercise-row blank" id="" data-exercise-id="">
+  
+  <!-- формы отчетов об упражнениях -->
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form power-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.power.exercise }}
+    {{ exercise_report_forms.power.training }}
+    <div class="exercise-report-header">
+      <span class="exercise-name"></span>
+      <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+      </svg>
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Вес</span>
+      {{ exercise_report_forms.power.weight }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Подходы</span>
+      {{ exercise_report_forms.power.approaches_due }}
+      {{ exercise_report_forms.power.approaches_made }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Повторы</span>
+      {{ exercise_report_forms.power.repeats_due }}
+      {{ exercise_report_forms.power.repeats_made }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Нагрузка</span>
+      {{ exercise_report_forms.power.load_due }}
+      {{ exercise_report_forms.power.load_get }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Выполнено</span>
+      {{ exercise_report_forms.power.is_done }}
+    </div>
+  </form>
+  
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form endurance-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.endurance.exercise }}
+    {{ exercise_report_forms.endurance.training }}
+    <div class="exercise-report-header">
+      <span class="exercise-name"></span>
+      <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+      </svg>
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Время</span>
+      {{ exercise_report_forms.endurance.minutes }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Пульс</span>
+      {{ exercise_report_forms.endurance.pulse_avg }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Выполнено</span>
+      {{ exercise_report_forms.endurance.is_done }}
+    </div>
+  </form>
+  
+  <form method="post" action="{% url 'save_exercise_report' %}" 
+  class="exercise-report-form interval-exercise-report">
+    {% csrf_token %}
+    {{ exercise_report_forms.interval.exercise }}
+    {{ exercise_report_forms.interval.training }}
+    <div class="exercise-report-header">
+      <span class="exercise-name"></span>
+      <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+        <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+      </svg>
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Макс нагрузка</span>
+      {{ exercise_report_forms.interval.high_load_time }}
+      {{ exercise_report_forms.interval.high_load_pulse }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Мин нагрузка</span>
+      {{ exercise_report_forms.interval.low_load_time }}
+      {{ exercise_report_forms.interval.low_load_pulse }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Повторы цикла</span>
+      {{ exercise_report_forms.interval.cycles }}
+    </div>
+    <div class="exercise-report-field">
+      <span class="col-4">Выполнено</span>
+      {{ exercise_report_forms.interval.is_done }}
+    </div>
+  </form>
+  
+  <!-- строка упражнения в списке выбора -->
+  <div class="exercise-row blank" id="" data-exercise-id="">
     <p class="exercise-name mb-0 col-10"></p>
-    <div class="exercise-btn-group col-2">
+    <div class="col-2 text-end exercise-btn-group">
       <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
       <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
       <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
     </div>
-</div>
-
-<!-- инфо упражнения в окне выбора -->
-<div class="exercise-info blank" id="" data-exercise-id="">
+  </div>
+  
+  <!-- инфо упражнения в окне выбора -->
+  <div class="exercise-info blank" id="" data-exercise-id="">
     <ul class="list-group">
       <li class="list-group-item description">
         <div class="exercise-info-toggle">
@@ -834,8 +829,3 @@ class="exercise-report-form interval-exercise-report">
     </ul>
   
 </div>
-{% endblock %}
-
-{% block script %}
-  <script src="{% static 'training/js/training.js' %}"></script>
-{% endblock %}
