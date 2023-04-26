@@ -67,6 +67,7 @@ $(document).ready(function(){
 // при сохранении тренировки и прочего
 // назвать все модели по-русски
 // TODO кнопку is_done деактивировать у эксперта
+// TODO не забыть окрашивание дат календаря по тренировкам
 
 // КАЛЕНДАРЬ
 function toggleCalendar() {
@@ -860,6 +861,8 @@ function createExerciseInfo(data) {
         info.find(".areas").remove();
     }
 
+    info.removeClass("blank");
+
     return info;
 }
 
@@ -1120,7 +1123,7 @@ function changeExerciseInSelection(exercise_id) {
         $("#exercise-info-" + data.pk).remove();
         let info = createExerciseInfo(data);
         info.find('.exercise-info-toggle').on("click", toggleInfoRow);
-        $("#exercises-info").prepend(info);
+        info.insertAfter(row);
     });
 }
 
