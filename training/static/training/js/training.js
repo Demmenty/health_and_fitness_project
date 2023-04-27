@@ -37,7 +37,8 @@ $(document).ready(function(){
     // обработчики закрытия окошек
     $("#exercise-selection-close-btn").click(closeExerciseSelection);
     $("#exercise-creation-close-btn").click(closeExerciseCreation);
-
+    $("#exercise-help-close-btn").click(closeExerciseHelp);
+    
     // обработчики сохранения упражнения
     $("#exercise-creation-form").on("submit", saveExercise);
     $("#exercise-editing-form").on("submit", updateExercise);
@@ -63,8 +64,8 @@ $(document).ready(function(){
 // TODO уведомление-картинка при отсутствии тренировок
 // TODO не забыть окрашивание дат календаря по тренировкам
 // TODO добавить иконки упражнениям
-// TODO сделать фото универсальными!
 // TODO инфо упражнения при клике на знак вопроса
+// TODO тык на exercise-row не убирает подсветку
 
 const is_expert = $("#page-param").data("is-expert");
 
@@ -1164,6 +1165,51 @@ function changeExerciseNameInTraining(exercise_id, name) {
     }
 }
 
+function openExerciseHelp() {
+    // показывает окно помощи по упражнению в тренировке
+    console.log("showExerciseHelp");
+
+    let div = $("#exercise-help");
+    let exercise_id = $(this).closest("form").find("#id_exercise").val();
+    let exercise_name = $(this).prev(".exercise-name").text();
+
+    embedVideo(exercise_id);
+    let exercise_info = $("#exercise-item-" + exercise_id + " .exercise-info").clone();
+
+    // затемнение сзади
+    $("main").append($("<div class='backdrop lvl1'></div>"));
+    $(".backdrop.lvl1").on("click", closeExerciseHelp);
+
+    // наполнить окно данными (из инфы в окне выбора)
+    div.find(".exercise-container-header span").text(exercise_name);
+
+    exercise_info.find(".list-group-item").each(function() {
+        if ($(this).hasClass("target-muscles")) return;
+        if ($(this).hasClass("areas")) return;
+
+        let header = $(this).find(".exercise-info-toggle div").text();
+        let content = $(this).find(".exercise-info-detail");
+        
+        div.find(".info").append(header);
+        div.find(".info").append(content);
+        content.show();
+    })
+
+    // показать окно
+    $("#exercise-help").show();
+    $("body, html").animate({scrollTop: 0}, 1);
+}
+
+function closeExerciseHelp() {
+    // закрывает окно помощи по упражнению
+
+    let div = $("#exercise-help");
+
+    $(".backdrop").remove();
+    div.hide();
+    div.find(".info").empty();
+}
+
 
 // ОТЧЕТЫ ВЫПОЛНЕНИЯ УПРАЖНЕНИЙ
 function getExerciseReports(training_id) {
@@ -1211,8 +1257,9 @@ function addSavedExerciseReports(reports_data) {
             report_form.find("#id_" + field).val(exercise_report.fields[field]);
         }
 
-        // навешиваем обработчик автозаполнения
+        // навешиваем обработчики
         report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+        report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
 
         // вставка формы в тренировку и показ
         report_form.insertBefore(training.find(".add-exercise-btn"));
@@ -1251,8 +1298,9 @@ function addExerciseToTraining() {
     report_form.find("#id_exercise").val(exercise_id);
     report_form.find(".exercise-name").text(exercise_name);
 
-    // автозаполнение полей тренировки при выполнении
+    // навешиваем обработчики
     report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+    report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
 
     // вставка формы в тренировку
     report_form.insertBefore(training.find(".add-exercise-btn"));
