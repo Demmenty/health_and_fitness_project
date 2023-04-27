@@ -554,6 +554,9 @@ td.table-date.nil {
 .exercise-info-detail hr {
     margin: 0.25rem 0;
 }
+.exercise-info-detail p {
+    white-space: pre-wrap;
+}
 .exercise-photo-container {
     display: flex;
     flex-direction: column;
