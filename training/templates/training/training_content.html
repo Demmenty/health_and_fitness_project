@@ -166,7 +166,7 @@
                   </div>
                 </li>
               {% endif %}
-              {% if exercise.photo_init_pose and exercise.photo_work_pose %}
+              {% if exercise.photo_1 or exercise.photo_2 %}
                 <li class="list-group-item photo">
                   <div class="exercise-info-toggle">
                     <div class="col-11">Фото</div>
@@ -175,12 +175,12 @@
                   <div class="exercise-info-detail">
                     <hr>
                     <div class="exercise-photo-container">
-                      <span>Исходная позиция</span>
-                      <img src="{{ exercise.photo_init_pose.url }}" class="exercise-photo init">
-                    </div>
-                    <div class="exercise-photo-container">
-                      <span>Рабочая позиция</span>
-                      <img src="{{ exercise.photo_work_pose.url }}" class="exercise-photo work">
+                      {% if exercise.photo_1 %}
+                        <img src="{{ exercise.photo_1.url }}" class="exercise-photo photo_1">
+                      {% endif %}
+                      {% if exercise.photo_2 %}
+                        <img src="{{ exercise.photo_2.url }}" class="exercise-photo photo_2">
+                      {% endif %}
                     </div>
                   </div>
                 </li>
@@ -306,18 +306,18 @@
   </div>
 
   <!-- окно создания упражнения -->
-  <div class="exercise-creation" id="exercise-creation">
-    <div class="exercise-creation-header">
+  <div class="exercise-container" id="exercise-creation">
+    <div class="exercise-container-header">
       <span>Создание упражнения</span>
     </div>
-    <div class="exercise-creation-content">
-      <form method="post" action="{% url 'save_exercise' %}" id="exercise-creation-form" enctype="multipart/form-data">
+    <div class="exercise-content">
+      <form method="post" action="{% url 'save_exercise' %}" class="exercise-form" 
+      id="exercise-creation-form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ exercise_form }}
-
+        {{ exercise_form.as_div }}
         <span>Зоны воздействия:</span>
-        <div class="exercise-creation-areas">
-          <ul class="effect-areas-list">
+        <div class="areas-container">
+          <ul class="areas-list">
           </ul>
           <div class="dummy-container">
             {% if client_sex == "F" %}
@@ -387,27 +387,28 @@
             {% endif %}
           </div>
         </div>
-
-        <button type="button" class="btn btn-outline-primary" id="exercise-creation-close-btn">Отмена</button>
-        <button type="submit" class="btn btn-primary float-end" id="save-exercise-btn">Сохранить</button>
+        <div class="btns-container">
+          <button type="button" class="btn btn-outline-primary" id="exercise-creation-close-btn">Отмена</button>
+          <button type="submit" class="btn btn-primary float-end" id="save-exercise-btn">Сохранить</button>
+        </div>
       </form>
     </div>
   </div>
 
   <!-- окно редактирования упражнения -->
-  <div class="exercise-editing" id="exercise-editing">
-    <div class="exercise-editing-header">
+  <div class="exercise-container" id="exercise-editing">
+    <div class="exercise-container-header">
       <span>Редактирование упражнения</span>
     </div>
-    <div class="exercise-editing-content">
-      <form method="post" action="{% url 'update_exercise' %}" id="exercise-editing-form" enctype="multipart/form-data">
+    <div class="exercise-content">
+      <form method="post" action="{% url 'update_exercise' %}" class="exercise-form" 
+      id="exercise-editing-form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ exercise_form }}
+        {{ exercise_form.as_div }}
         <input type='hidden' name='exercise_id' id="id_exercise_id" value=""></input>
-
         <span>Зоны воздействия:</span>
-        <div class="exercise-editing-areas">
-          <ul class="effect-areas-list">
+        <div class="areas-container">
+          <ul class="areas-list">
           </ul>
           <div class="dummy-container">
             {% if client_sex == "F" %}
@@ -477,9 +478,10 @@
             {% endif %}
           </div>
         </div>
-
-        <button type="button" class="btn btn-danger" id="delete-exercise-btn">Удалить</button>
-        <button type="submit" class="btn btn-primary float-end" id="update-exercise-btn">Сохранить</button>
+        <div class="btns-container">
+          <button type="button" class="btn btn-danger" id="delete-exercise-btn">Удалить</button>
+          <button type="submit" class="btn btn-primary float-end" id="update-exercise-btn">Сохранить</button>
+        </div>
       </form>
     </div>
   </div>
@@ -792,12 +794,8 @@ class="exercise-report-form interval-exercise-report">
         <div class="exercise-info-detail">
           <hr>
           <div class="exercise-photo-container">
-            <span>Исходная позиция</span>
-            <img src="" class="exercise-photo init">
-          </div>
-          <div class="exercise-photo-container">
-            <span>Рабочая позиция</span>
-            <img src="" class="exercise-photo work">
+            <img src="" class="exercise-photo photo_1">
+            <img src="" class="exercise-photo photo_2">
           </div>
         </div>
       </li>

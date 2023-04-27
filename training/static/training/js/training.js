@@ -59,12 +59,12 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO убирать из списка неподходящие упражнения
 // TODO кнопка автозаполнения как в прошлый раз
 // TODO уведомление-картинка при отсутствии тренировок
-// TODO кнопку is_done деактивировать у эксперта
 // TODO не забыть окрашивание дат календаря по тренировкам
 // TODO добавить иконки упражнениям
+// TODO сделать фото универсальными!
+// TODO инфо упражнения при клике на знак вопроса
 
 const is_expert = $("#page-param").data("is-expert");
 
@@ -829,11 +829,15 @@ function createExerciseInfo(data) {
     else {
         info.find(".mistakes").remove();
     }
-    if(data.fields.photo_init_pose && data.fields.photo_work_pose) {
-        info.find(".exercise-photo.init")
-            .attr("src", "/media/" + data.fields.photo_init_pose);
-        info.find(".exercise-photo.work")
-            .attr("src", "/media/" + data.fields.photo_work_pose);
+    if(data.fields.photo_1 || data.fields.photo_2) {
+        if (data.fields.photo_1) {
+            info.find(".exercise-photo.photo_1")
+                .attr("src", "/media/" + data.fields.photo_1);
+        }
+        if (data.fields.photo_2) {
+            info.find(".exercise-photo.photo_2")
+                .attr("src", "/media/" + data.fields.photo_2);
+        }
     }
     else {
         info.find(".photo").remove();
@@ -968,7 +972,7 @@ function selectAreaInCreation() {
         let area_name = effect_areas[selected_area];
         $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(div.find(".effect-areas-list"));
+            .appendTo(div.find(".areas-list"));
     }
 }
 
@@ -1037,35 +1041,38 @@ function fillExerciseForm(data) {
     form.find("#id_video").val(data.fields.video);
     form.find("#id_exercise_id").val(data.pk);
 
-    // картинки
-    form.find(".exercise-editing-icon-container").remove();
+    // иконки
+    form.find(".icon-container").remove();
     if(data.fields.icon) {
-        let icon = $(
-            "<div class='exercise-editing-icon-container'>" + 
+        let icon_container = $(
+            "<div class='icon-container'>" + 
             "<label>Текущая иконка:</label>" + 
             "<img src='/media/" + data.fields.icon + "'>" + 
             "</div>"
         );
-        icon.insertAfter(form.find("#id_icon"));
+        icon_container.insertAfter(form.find("#id_icon").closest("div"));
     }
-    form.find(".exercise-editing-photo-container").remove();
-    if(data.fields.photo_init_pose) {
-        let photo_init = $(
-            "<div class='exercise-editing-photo-container'>" + 
-            "<label>Текущее фото:</label>" + 
-            "<img src='/media/" + data.fields.photo_init_pose + "'>" + 
+    // фото
+    form.find(".photo-container").remove();
+    if(data.fields.photo_1 || data.fields.photo_2) {
+        let photo_container = $(
+            "<div class='photo-container'>" + 
+            "<label>Текущие фото:</label>" + 
             "</div>"
         );
-        photo_init.insertAfter(form.find("#id_photo_init_pose"));
-    }
-    if(data.fields.photo_work_pose) {
-        let photo_work = $(
-            "<div class='exercise-editing-photo-container'>" + 
-            "<label>Текущее фото:</label>" + 
-            "<img src='/media/" + data.fields.photo_work_pose + "'>" + 
-            "</div>"
-        );
-        photo_work.insertAfter(form.find("#id_photo_work_pose"));
+        let photo_div = $("<div></div>");
+        if(data.fields.photo_1) {
+            photo_div.append(
+                $("<img src='/media/" + data.fields.photo_1 + "'>")
+            )
+        }
+        if(data.fields.photo_2) {
+            photo_div.append(
+                $("<img src='/media/" + data.fields.photo_2 + "'>")
+            )
+        }
+        photo_container.append(photo_div);
+        photo_container.insertAfter(form.find("#id_photo_2").closest("div"));
     }
 
     // зоны воздействия
@@ -1082,7 +1089,7 @@ function fillExerciseForm(data) {
         let area_name = effect_areas[area];
         $("<li class='effect-area-row' id='"+ area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(form.find(".effect-areas-list"));
+            .appendTo(form.find(".areas-list"));
     }
 }
 
@@ -1113,7 +1120,7 @@ function selectAreaInEditing() {
         let area_name = effect_areas[selected_area];
         $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(div.find(".effect-areas-list"));
+            .appendTo(div.find(".areas-list"));
     }
 }
 
