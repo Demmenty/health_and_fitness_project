@@ -30,15 +30,15 @@ class Exercise(models.Model):
         null=True,
         blank=True,
     )
-    photo_init_pose = models.ImageField(
-        "Исходное положение",
+    photo_1 = models.ImageField(
+        "Фото или гифка",
         upload_to="training/img/exercise_photos/",
         max_length=255,
         null=True,
         blank=True,
     )
-    photo_work_pose = models.ImageField(
-        "Рабочее положение",
+    photo_2 = models.ImageField(
+        "Фото или гифка",
         upload_to="training/img/exercise_photos/",
         max_length=255,
         null=True,

@@ -54,12 +54,12 @@ class ExerciseForm(ModelForm):
                 }
             ),
             "effect_areas": HiddenInput(),
-            "photo_init_pose": ClearableFileInput(
+            "photo_1": ClearableFileInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "photo_work_pose": ClearableFileInput(
+            "photo_2": ClearableFileInput(
                 attrs={
                     "class": "form-control",
                 }
