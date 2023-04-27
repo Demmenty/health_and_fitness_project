@@ -631,23 +631,24 @@ function selectExercise() {
     // обработчик клика на упражнение из списка
     console.log("selectExercise");
 
-    let selection_div = $("#exercise-selection");
     let exercise_item = $(this).closest(".exercise-item");
     let exercise_row = exercise_item.find(".exercise-row");
-    let exercise_id = exercise_item.data("exercise-id");
     let was_selected = exercise_row.hasClass("selected");
-
+    
     // показать\скрыть подробности
     exercise_item.find(".exercise-info").slideToggle();
-
+    
+    if (was_selected) return;
+    
+    let selection_div = $("#exercise-selection");
+    let exercise_id = exercise_item.data("exercise-id");
+    
     // удалить все отметки и подсветки
     selection_div.find(".selected").removeClass("selected");
     selection_div.find(".colored").removeClass("colored");
     selection_div.find(".high-colored").removeClass("high-colored");
     // отметить добавленные упражнения заново
     markAddedExercises();
-
-    if (was_selected) return;
 
     // выделить строку выбранного упражнения
     exercise_row.addClass("selected");
