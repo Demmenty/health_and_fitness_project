@@ -5,9 +5,14 @@ from . import api, views
 urlpatterns = [
     path("", views.training, name="training"),
     path(
-        "ajax/get_trainings/",
-        api.get_trainings,
-        name="get_trainings",
+        "ajax/get_day_trainings/",
+        api.get_day_trainings,
+        name="get_day_trainings",
+    ),
+    path(
+        "ajax/get_last_training/",
+        api.get_last_training,
+        name="get_last_training",
     ),
     path(
         "ajax/get_month_training_types/",

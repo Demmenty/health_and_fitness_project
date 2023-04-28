@@ -1,15 +1,21 @@
 from django.core.serializers import serialize
 from django.db.models.deletion import ProtectedError
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+    JsonResponse,
+)
 
 from .forms import ExerciseForm, ExerciseReportForm, TrainingForm
-from .models import Exercise, ExerciseReport, Training, User
+from .models import Exercise, ExerciseReport, Training
 
 # TODO сделать classы View
+# TODO сделать схемы, поставить ограничения доступа
 
 
-def get_trainings(request):
-    """Получение данных тренировки за переданный день"""
+def get_day_trainings(request):
+    """Получение тренировок за переданный день"""
 
     date = request.GET.get("date")
     client = request.GET.get("client")
@@ -20,17 +26,38 @@ def get_trainings(request):
     return HttpResponse(data, content_type="application/json")
 
 
+def get_last_training(request):
+    """Возвращает последнюю тренировку"""
+
+    client = request.GET.get("client")
+    training_type = request.GET.get("training_type")
+
+    if training_type:
+        trainings = Training.objects.filter(
+            client=client, training_type=training_type
+        )
+    else:
+        trainings = Training.objects.filter(client=client)
+
+    if not trainings:
+        return HttpResponseNotFound("Тренировка не найдена")
+
+    training = trainings.latest("date")
+    data = serialize("json", [training])
+
+    return HttpResponse(data, content_type="application/json")
+
+
 def get_month_training_types(request):
-    """Возвращает типы тренировок за месяц"""
+    """Возвращает типы тренировок за месяц (для календаря)"""
 
     month = request.GET.get("month")
     year = request.GET.get("year")
     client = request.GET.get("client")
 
     result = Training.objects.filter(
-        client=client, 
-        date__year=year, 
-        date__month=month).values_list('date', 'training_type')
+        client=client, date__year=year, date__month=month
+    ).values_list("date", "training_type")
 
     data = {}
 
@@ -70,8 +97,11 @@ def get_exercise_reports(request):
     training_id = request.GET.get("training_id")
 
     exercise_reports = ExerciseReport.objects.filter(training=training_id)
+    
+    if not exercise_reports:
+        return HttpResponseNotFound("Записи упражнений отсутствуют")
+    
     data = serialize("json", exercise_reports)
-
     return HttpResponse(data, content_type="application/json")
 
 
