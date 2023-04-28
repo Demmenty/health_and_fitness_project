@@ -62,7 +62,6 @@ $(document).ready(function(){
 
 // TODO кнопка автозаполнения как в прошлый раз
 // TODO уведомление-картинка при отсутствии тренировок
-// TODO не забыть окрашивание дат календаря по тренировкам
 // TODO добавить иконки упражнениям
 
 const is_expert = $("#page-param").data("is-expert");
@@ -215,7 +214,7 @@ function date_click(event) {
     $(".trainings-container").empty();
 
     // получение данных о тренировках за этот день
-    let request = getTrainings(event.data);
+    let request = getDayTrainings(event.data);
 
     request.done(function(trainings_data) {
         if(trainings_data.length > 0) {
@@ -247,7 +246,7 @@ function prev_year(event) {
 
 
 // ТРЕНИРОВКИ
-function getTrainings(date) {
+function getDayTrainings(date) {
     // получение тренировок за выбранную дату
 
     client = $("#id_client").val();
@@ -258,7 +257,27 @@ function getTrainings(date) {
     return $.ajax({
         data: {date: date_formatted, client: client},
         method: "get",
-        url: "/training/ajax/get_trainings/",
+        url: "/training/ajax/get_day_trainings/",
+
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },             
+    });
+}
+
+function getLastTraining(training_type) {
+    // получение последней тренировки с сервера с нужным типом
+
+    let client = $("#id_client").val();
+
+    return $.ajax({
+        data: {training_type: training_type, client: client},
+        method: "get",
+        url: "/training/ajax/get_last_training/",
 
         success: function () {},
         error: function (response) {
@@ -312,19 +331,18 @@ function addSavedTrainings(trainings_data) {
         let request = getExerciseReports(data.pk);
         // вставляем их формы в тренировку
         request.done(function(exercise_reports_data) {
-            if(exercise_reports_data.length > 0) {
-                addSavedExerciseReports(exercise_reports_data)
-            }
+            addSavedExerciseReports(exercise_reports_data)
         });
 
         // отображаем тренировку в карточке
         div.appendTo(".trainings-container");
         div.show();
 
-        // обработчики кликов на кнопки
-        div.find(".add-exercise-btn").on("click", openExerciseSelection);
+        // обработчики кнопок
+        div.find("#add-exercise-btn").on("click", openExerciseSelection);
         div.find(".training_form").on("submit", saveTraining);
         div.find(".delete-training-btn").on("click", deleteTraining);
+        div.find("#fill-like-last-btn").remove();
     }
 }
 
@@ -349,13 +367,73 @@ function addNewTraining() {
     div.show();
 
     // обработчики кликов на кнопки
-    div.find(".add-exercise-btn").on("click", openExerciseSelection);
+    div.find("#add-exercise-btn").on("click", openExerciseSelection);
+    div.find("#fill-like-last-btn").on("click", fillTrainingLikeLast);
     div.find(".training_form").on("submit", saveTraining);
     div.find(".delete-training-btn").on("click", deleteTraining);
 
     // деактивация выбора тренировки такого же типа
     $(".training-type-select li[type='" + training_type + "']")
         .addClass("disabled");
+}
+
+function fillTrainingLikeLast() {
+    // заполняет форму тренировки аналогично последней с таким типом
+    console.log("fillTrainingLikeLast");
+
+    let training_div = $(this).closest(".training-content");
+    let training_form = training_div.find(".training_form");
+    let training_type = training_form.find("#id_training_type").val();
+
+    // получаем последнюю треню с сервера
+    let request = getLastTraining(training_type);
+    request.done(function(training_data) {
+        let data = training_data[0];
+
+        // заполняем поля тренировки (предварительные)
+        training_form.find("#id_tiredness_due").val(data.fields.tiredness_due);
+        training_form.find("#id_comment").val(data.fields.comment);
+
+        // получаем записи упражнений этой тренировки
+        let request = getExerciseReports(data.pk);
+        request.done(function(exercise_reports_data) {
+
+            for (let i in exercise_reports_data) {
+                let report = exercise_reports_data[i];
+                let report_form = exercise_report_forms[training_type].clone();
+                
+                // заполняем название
+                let exercise_name = $("#exercise-item-" + report.fields.exercise)
+                    .find(".exercise-row").text();
+                report_form.find(".exercise-name").text(exercise_name);
+
+                // заполняем поля отчета об упражнении (предварительные)
+                report_form.find("#id_exercise").val(report.fields.exercise);
+                report_form.find("#id_minutes").val(report.fields.minutes);
+                report_form.find("#id_weight").val(report.fields.weight);
+                report_form.find("#id_approaches_due").val(report.fields.approaches_due);
+                report_form.find("#id_repeats_due").val(report.fields.repeats_due);
+                report_form.find("#id_load_due").val(report.fields.load_due);
+                report_form.find("#id_high_load_time").val(report.fields.high_load_time);
+                report_form.find("#id_low_load_time").val(report.fields.low_load_time);
+                report_form.find("#id_cycles").val(report.fields.cycles);
+
+                // обработчики кнопок
+                report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+                if (is_expert) {
+                    report_form.find("#id_is_done").attr("disabled", true);
+                }
+                else {
+                    report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+                }
+                // вставка формы в тренировку и показ
+                report_form.insertBefore(training_div.find(".training-additional-btns"));
+                report_form.show();
+            }
+        });
+    });
+    // убираем кнопку, она больше не нужна
+    $(this).remove();
 }
 
 function controlTrainingTypeSelect() {
@@ -1324,7 +1402,7 @@ function addSavedExerciseReports(reports_data) {
         report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
 
         // вставка формы в тренировку и показ
-        report_form.insertBefore(training.find(".add-exercise-btn"));
+        report_form.insertBefore(training.find(".training-additional-btns"));
         report_form.show();
 
         disableFieldsForExpert();
@@ -1360,12 +1438,13 @@ function addExerciseToTraining() {
     report_form.find("#id_exercise").val(exercise_id);
     report_form.find(".exercise-name").text(exercise_name);
 
-    // навешиваем обработчики
+    // обработка кнопок
     report_form.find("#id_is_done").on("change", autoFillExerciseReport);
     report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+    training.find("#fill-like-last-btn").remove();
 
     // вставка формы в тренировку
-    report_form.insertBefore(training.find(".add-exercise-btn"));
+    report_form.insertBefore(training.find(".training-additional-btns"));
     report_form.show();
 
     disableFieldsForExpert();

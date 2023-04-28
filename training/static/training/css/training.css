@@ -316,17 +316,21 @@ td.table-date.nil {
 .training-content {
     padding: 15px 10px 10px 10px;
 }
-.add-exercise-btn {
+.training-additional-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.5rem;
+}
+.training-btn {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
     gap: 0.5rem;
     align-items: center;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }
-.add-exercise-btn:hover {
+.training-btn:hover {
     color: #5271ff;
     fill: #5271ff;
     cursor: pointer;
@@ -346,7 +350,11 @@ td.table-date.nil {
     flex-direction: column;
     margin-bottom: 0.5rem;
 }
-
+@media (min-width: 576px) {
+    .training-additional-btns {
+        flex-direction: row;
+    }
+}
 @media (min-width: 768px) {
     .training {
         width: 516px;
