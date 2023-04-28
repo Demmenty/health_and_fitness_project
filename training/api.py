@@ -20,6 +20,32 @@ def get_trainings(request):
     return HttpResponse(data, content_type="application/json")
 
 
+def get_month_training_types(request):
+    """Возвращает типы тренировок за месяц"""
+
+    month = request.GET.get("month")
+    year = request.GET.get("year")
+    client = request.GET.get("client")
+
+    result = Training.objects.filter(
+        client=client, 
+        date__year=year, 
+        date__month=month).values_list('date', 'training_type')
+
+    data = {}
+
+    for item in result:
+        day = item[0].day
+        training_type = item[1]
+
+        if data.get(day):
+            data[day].append(training_type)
+        else:
+            data[day] = [training_type]
+
+    return JsonResponse(data, status=200)
+
+
 def delete_training(request):
     """Удаление тренировки"""
 
