@@ -14,7 +14,6 @@ from training.forms import (
 )
 from training.manager import TrainingManager
 
-
 register = template.Library()
 
 

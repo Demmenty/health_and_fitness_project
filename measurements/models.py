@@ -105,7 +105,7 @@ class MeasureColor(models.Model):
 
     def __str__(self):
         return f"{self.meaning}"
-    
+
     class Meta:
         verbose_name = "Окрашивание дневных измерений"
         verbose_name_plural = "Окрашивания дневных измерений"
@@ -118,7 +118,7 @@ class MeasureIndex(models.Model):
 
     def __str__(self):
         return f"{self.index_name}"
-    
+
     class Meta:
         verbose_name = "Показатель измерений"
         verbose_name_plural = "Показатели измерений"
@@ -151,7 +151,7 @@ class MeasureColorField(models.Model):
 
     def __str__(self):
         return f"Настройки цвета для клиента {self.user}: {self.color}, {self.index}"
-    
+
     class Meta:
         verbose_name = "Границы цветов измерений для клиента"
         verbose_name_plural = "Границы цветов измерений для клиентов"

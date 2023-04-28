@@ -33,7 +33,7 @@ class ConsultationSignup(models.Model):
 
     def __str__(self):
         return f"Заявка № {self.id} от {self.date}, {self.name}"
-    
+
     class Meta:
         verbose_name = "Заявка на консультацию"
         verbose_name_plural = "Заявки на консультацию"

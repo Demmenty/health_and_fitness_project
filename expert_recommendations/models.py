@@ -23,7 +23,7 @@ class NutritionRecommendation(models.Model):
 
     def __str__(self):
         return f"Рекомендуемый уровень КБЖУ для клиента {self.user}"
-    
+
     class Meta:
         verbose_name = "Рекомендация КБЖУ"
         verbose_name_plural = "Рекомендации КБЖУ"

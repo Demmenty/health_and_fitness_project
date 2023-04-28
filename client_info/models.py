@@ -58,7 +58,7 @@ class ClientMemo(models.Model):
 
     def __str__(self):
         return f"Личная заметка клиента {self.client}"
-    
+
     class Meta:
         verbose_name = "Личная заметка клиента"
         verbose_name_plural = "Личные заметки клиентов"
@@ -190,7 +190,7 @@ class HealthQuestionary(models.Model):
 
     def __str__(self):
         return f"Анкета здоровья клиента {self.user}"
-    
+
     class Meta:
         verbose_name = "Анкета здоровья клиента"
         verbose_name_plural = "Анкеты здоровья клиентов"
@@ -302,7 +302,7 @@ class MeetQuestionary(models.Model):
 
     def __str__(self):
         return f"Анкета знакомства с клиентом {self.user}"
-    
+
     class Meta:
         verbose_name = "Анкета знакомства клиента"
         verbose_name_plural = "Анкеты знакомства клиентов"

@@ -104,7 +104,7 @@ class PowerTrainingForm(ModelForm):
             ),
             "tiredness_due": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
                     "placeholder": "план",
@@ -112,7 +112,7 @@ class PowerTrainingForm(ModelForm):
             ),
             "tiredness_get": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
                     "placeholder": "факт",

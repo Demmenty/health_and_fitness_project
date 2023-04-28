@@ -13,7 +13,7 @@ class FatSecretEntry(models.Model):
 
     def __str__(self):
         return f"Данные для использования FS клиента {self.user}"
-    
+
     class Meta:
         verbose_name = "Данные для входа в Fatsecret"
         verbose_name_plural = "Данные для входа в Fatsecret"

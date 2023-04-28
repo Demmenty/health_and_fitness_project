@@ -59,7 +59,7 @@ class FullClientnote(models.Model):
 
     def __str__(self):
         return f"Заметка о клиенте {self.client}"
-    
+
     class Meta:
         verbose_name = "Заметка о клиенте"
         verbose_name_plural = "Заметки о клиентах"
