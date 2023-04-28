@@ -123,6 +123,41 @@ function init_calendar(date) {
     }
     calendar_days.append(row);
     $(".year").text(year);
+
+    colorCalendarDays(month+1, year);
+}
+
+function colorCalendarDays(month, year) {
+    // окрашивает открытый месяц календаря по тренировкам
+    console.log("colorCalendarDays month, year", month, year);
+
+    let request = getMonthTrainingTypes(month, year);
+
+    request.done(function(month_training_types) {
+        let table_dates = $("#calendar .table-date");
+        
+        // убрать предыдущие пометки
+        table_dates.removeClass("power");
+        table_dates.removeClass("endurance");
+
+        // добавить новые в соответствии с полученными данными
+        table_dates.each(function() {
+            let day = $(this).text();
+
+            if (month_training_types.hasOwnProperty(day)) {
+                let training_type = month_training_types[day];
+
+                if (training_type.includes("P") || 
+                    training_type.includes("R")) {
+                    $(this).addClass("power");
+                }
+                if (training_type.includes("E") || 
+                    training_type.includes("I")) {
+                    $(this).addClass("endurance");
+                }
+            }
+        }) 
+    });
 }
 
 function is_chosen_date(year, month, day) {
@@ -235,6 +270,26 @@ function getTrainings(date) {
     });
 }
 
+function getMonthTrainingTypes(month, year) {
+    // получение типов тренировок за выбранный месяц с сервера
+
+    let client = $("#id_client").val();
+
+    return $.ajax({
+        data: {month: month, year: year, client: client},
+        method: "get",
+        url: "/training/ajax/get_month_training_types/",
+
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },             
+    });
+}
+
 function addSavedTrainings(trainings_data) {
     // добавление тренировок (по данным из бд)
     console.log("addSavedTrainings", trainings_data)
@@ -319,7 +374,7 @@ function controlTrainingTypeSelect() {
 }
 
 function saveTraining() {
-    // сохранение тренировки
+    // сохранение тренировки на сервере
     console.log("saveTraining");
 
     let form = $(this);
@@ -332,7 +387,11 @@ function saveTraining() {
         processData: false,
         contentType: false,
 
-        success: function () {},
+        success: function () {
+            let month = $(".active-month").attr("value");
+            let year = $("#calendar .year").text();
+            colorCalendarDays(month, year);
+        },
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
@@ -394,7 +453,11 @@ function deleteTraining() {
         processData: false,
     
         success: function () {
-            showSuccessAlert("Тренировка удалена")
+            let month = $(".active-month").attr("value");
+            let year = $("#calendar .year").text();
+
+            colorCalendarDays(month, year);
+            showSuccessAlert("Тренировка удалена");
         },
         error: function (response) {
             if(response.status == 0) {

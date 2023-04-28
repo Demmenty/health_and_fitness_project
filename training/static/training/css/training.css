@@ -252,8 +252,17 @@ td.table-date.nil {
     border-color:#52A0FD;
     box-shadow: 0 2px 8px RGBA(130, 180, 255, .9);
 }
-.active-date{ 
+.calendar-content .table-date.active-date{ 
     border-color: #5271ff;
+}
+.calendar-content .table-date.power {
+    background-color: #e3ecfb;
+}
+.calendar-content .table-date.endurance {
+    background-color: #def4f4;
+}
+.calendar-content .table-date.power.endurance {
+    background-color: #e9d2f4;
 }
 .event-date.active-date {
     background: #52A0FD;
