@@ -316,7 +316,7 @@
       <span>Создание упражнения</span>
     </div>
     <div class="exercise-content">
-      <form method="post" action="{% url 'save_exercise' %}" class="exercise-form" 
+      <form method="post" action="{% url 'exercises' 'save' %}" class="exercise-form" 
       id="exercise-creation-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ exercise_form.as_div }}
@@ -406,7 +406,7 @@
       <span>Редактирование упражнения</span>
     </div>
     <div class="exercise-content">
-      <form method="post" action="{% url 'update_exercise' %}" class="exercise-form" 
+      <form method="post" action="{% url 'exercises' 'update' %}" class="exercise-form" 
       id="exercise-editing-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ exercise_form.as_div }}
@@ -531,7 +531,7 @@
       </div>
     </div>
     <hr>
-    <form method="post" action="{% url 'save_training' %}" class="training_form power_training_form">
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form power_training_form">
         {% csrf_token %}
         {{ training_forms.power.date }}
         {{ training_forms.power.client }}
@@ -573,7 +573,7 @@
       </div>
     </div>
     <hr>
-    <form method="post" action="{% url 'save_training' %}" class="training_form round_training_form">
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form round_training_form">
       {% csrf_token %}
       {{ training_forms.round.date }}
       {{ training_forms.round.client }}
@@ -623,7 +623,7 @@
       </div>
     </div>
     <hr>
-    <form method="post" action="{% url 'save_training' %}" class="training_form endurance_training_form">
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form endurance_training_form">
       {% csrf_token %}
       {{ training_forms.endurance.date }}
       {{ training_forms.endurance.client }}
@@ -673,7 +673,7 @@
       </div>
     </div>
     <hr>
-    <form method="post" action="{% url 'save_training' %}" class="training_form interval_training_form">
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form interval_training_form">
       {% csrf_token %}
       {{ training_forms.interval.date }}
       {{ training_forms.interval.client }}
@@ -702,7 +702,7 @@
 </div>
 
 <!-- формы отчетов об упражнениях -->
-<form method="post" action="{% url 'save_exercise_report' %}" 
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
 class="exercise-report-form power-exercise-report">
   {% csrf_token %}
   {{ exercise_report_forms.power.exercise }}
@@ -739,7 +739,7 @@ class="exercise-report-form power-exercise-report">
   </div>
 </form>
 
-<form method="post" action="{% url 'save_exercise_report' %}" 
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
 class="exercise-report-form endurance-exercise-report">
   {% csrf_token %}
   {{ exercise_report_forms.endurance.exercise }}
@@ -765,7 +765,7 @@ class="exercise-report-form endurance-exercise-report">
   </div>
 </form>
 
-<form method="post" action="{% url 'save_exercise_report' %}" 
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
 class="exercise-report-form interval-exercise-report">
   {% csrf_token %}
   {{ exercise_report_forms.interval.exercise }}

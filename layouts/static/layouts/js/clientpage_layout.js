@@ -1,3 +1,5 @@
+const params = document.getElementById('page-param').dataset;
+console.log("params", params);
 
 window.onload = function () {
     const pagePath = document.location.pathname;

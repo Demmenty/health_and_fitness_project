@@ -62,8 +62,6 @@ $(document).ready(function(){
 
 // TODO добавить иконки упражнениям
 
-const is_expert = $("#page-param").data("is-expert");
-
 // КАЛЕНДАРЬ
 function toggleCalendar() {
     // показ\скрытие календарика
@@ -248,15 +246,14 @@ function prev_year(event) {
 function getDayTrainings(date) {
     // получение тренировок за выбранную дату
 
-    client = $("#id_client").val();
     date_formatted = (date.year +"-"+
                      ("0"+date.month).slice(-2) +"-"+ 
                      ("0"+date.day).slice(-2));
 
     return $.ajax({
-        data: {date: date_formatted, client: client},
+        data: {date: date_formatted, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_day_trainings/",
+        url: "/training/ajax/trainings.get_by_date/",
 
         success: function () {},
         error: function (response) {
@@ -271,12 +268,10 @@ function getDayTrainings(date) {
 function getLastTraining(training_type) {
     // получение последней тренировки с сервера с нужным типом
 
-    let client = $("#id_client").val();
-
     return $.ajax({
-        data: {training_type: training_type, client: client},
+        data: {training_type: training_type, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_last_training/",
+        url: "/training/ajax/trainings.get_last/",
 
         success: function () {},
         error: function (response) {
@@ -291,12 +286,10 @@ function getLastTraining(training_type) {
 function getMonthTrainingTypes(month, year) {
     // получение типов тренировок за выбранный месяц с сервера
 
-    let client = $("#id_client").val();
-
     return $.ajax({
-        data: {month: month, year: year, client: client},
+        data: {month: month, year: year, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_month_training_types/",
+        url: "/training/ajax/trainings.get_month_types/",
 
         success: function () {},
         error: function (response) {
@@ -421,7 +414,7 @@ function fillTrainingLikeLast() {
 
                 // обработчики кнопок
                 report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
-                if (is_expert) {
+                if (params.isExpert) {
                     report_form.find("#id_is_done").attr("disabled", true);
                 }
                 else {
@@ -521,13 +514,15 @@ function deleteTraining() {
     let token = form.find("input[name='csrfmiddlewaretoken']").val();
 
     let formData = new FormData();
+    formData.set("client", params.clientId);
     formData.set("training_id", training_id);
     formData.set("csrfmiddlewaretoken", token);
+    console.log(formData);
 
     request = $.ajax({
         data: formData,
         type: "post",
-        url: "ajax/delete_training/",
+        url: "ajax/trainings.delete/",
         cache: false,
         contentType: false,
         processData: false,
@@ -559,7 +554,6 @@ function toggleNoTrainingsSign() {
     // если нет - показывает картинку-уведомление
 
     let trainings_amount = $("#trainings-container").find(".training").length;
-    console.log("trainings_amount", trainings_amount);
 
     if (trainings_amount == 0) {
         $("#lazy-cat").show();
@@ -576,9 +570,9 @@ function getExercise(exercise_id) {
     console.log("getExercise");
 
     return $.ajax({
-        data: {exercise_id: exercise_id},
+        data: {exercise_id: exercise_id, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_exercise/",
+        url: "/training/ajax/exercises.get_by_id/",
 
         success: function () {},
         error: function (response) {
@@ -595,7 +589,7 @@ function saveExercise() {
     console.log("saveExercise");
 
     let formData = new FormData(this);
-    // внести зоны воздействия
+    formData.set("client", params.clientId);
     formData.set("effect_areas", Array.from(selected_areas));
 
     request = $.ajax({
@@ -612,9 +606,6 @@ function saveExercise() {
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
-            }
-            else if (response.status == 400) {
-                showDangerAlert("Неверно заполнена форма")
             }
             else showDangerAlert(response.responseText)
         },
@@ -635,7 +626,7 @@ function updateExercise() {
     console.log("updateExercise");
 
     let formData = new FormData(this);
-    // внести зоны воздействия
+    formData.set("client", params.clientId);
     formData.set("effect_areas", Array.from(selected_areas));
 
     request = $.ajax({
@@ -652,9 +643,6 @@ function updateExercise() {
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
-            }
-            else if (response.status == 400) {
-                showDangerAlert("Неверно заполнена форма")
             }
             else showDangerAlert(response.responseText)
         },
@@ -681,13 +669,14 @@ function deleteExercise() {
     let token = form.find("input[name='csrfmiddlewaretoken']").val();
 
     let formData = new FormData();
+    formData.set("client", params.clientId);
     formData.set("exercise_id", id);
     formData.set("csrfmiddlewaretoken", token);
 
     request = $.ajax({
         data: formData,
         type: "post",
-        url: "ajax/delete_exercise/",
+        url: "ajax/exercises.delete/",
         cache: false,
         contentType: false,
         processData: false,
@@ -1375,9 +1364,9 @@ function getExerciseReports(training_id) {
     console.log("getExerciseReport");
 
     return $.ajax({
-        data: {training_id: training_id},
+        data: {training_id: training_id, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_exercise_reports/",
+        url: "/training/ajax/exercise_reports.get_by_training/",
 
         success: function () {},
         error: function (response) {
@@ -1628,6 +1617,7 @@ function saveExerciseReport() {
     console.log("saveExerciseReport");
 
     let formData = new FormData(this);
+    formData.set("client", params.clientId);
 
     $.ajax({
         data: formData,
@@ -1654,7 +1644,7 @@ function saveExerciseReport() {
 function disableFieldsForExpert() {
     // деактивирует чекбокс выполнения упражнений для эксперта
 
-    if (is_expert) {
+    if (params.isExpert) {
         $("input[name='is_done']").attr("disabled", true);
     }
 }

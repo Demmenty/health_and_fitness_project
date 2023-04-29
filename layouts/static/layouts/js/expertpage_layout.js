@@ -1,4 +1,5 @@
-const client_id = document.getElementById('id_client').value;
+const params = document.getElementById('page-param').dataset;
+console.log("params", params);
 
 // применение настроек в зависимости от открытой страницы
 $(document).ready(function() {
@@ -118,7 +119,7 @@ function changeCommentaryForm(chosenCommentaryDate) {
     let url = commentaryForm.data('action-get');
 
     request.open("GET", 
-        url + "?client_id=" + client_id + "&date=" + chosenCommentaryDate);
+        url + "?client_id=" + params.clientId + "&date=" + chosenCommentaryDate);
 
     request.onreadystatechange = function() {
         if(this.readyState === 4) {
@@ -287,7 +288,7 @@ function changeClientnoteForm(chosenClientnoteDate) {
     let request = new XMLHttpRequest();
     let url = clientNoteForm.data('action-get');
     request.open("GET",
-        url + "?client_id=" + client_id + "&date=" + chosenClientnoteDate);
+        url + "?client_id=" + params.clientId + "&date=" + chosenClientnoteDate);
 
     request.onreadystatechange = function() {
         if(this.readyState === 4) {
