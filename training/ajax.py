@@ -113,7 +113,7 @@ class TrainingView(ClientSelfOrExpertAllowedAJAXMixin, View):
     def _save_training(self, request):
         """Сохранение новой тренировки"""
 
-        client_id = request.GET.get("client")
+        client_id = request.POST.get("client")
         form = TrainingForm(request.POST)
 
         if form.is_valid():
@@ -136,15 +136,18 @@ class TrainingView(ClientSelfOrExpertAllowedAJAXMixin, View):
     def _delete_training(self, request):
         """Удаляет тренировку из бд"""
 
-        client_id = request.GET.get("client")
+        client_id = request.POST.get("client")
         training_id = request.POST.get("training_id")
 
         if not training_id:
             return HttpResponseBadRequest("Необходим training_id")
 
         training = Training.objects.filter(
-            client=client_id, id=training_id
-        ).first()
+            client=client_id, id=training_id).first()
+
+        if not training:
+            return HttpResponseNotFound("Тренировка не найдена")
+        
         training.delete()
 
         return HttpResponse("Тренировка удалена")
