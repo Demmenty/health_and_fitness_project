@@ -1,16 +1,14 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 from client_info.manager import ClientInfoManager
 from expert_remarks.services import get_remark_forms, get_today_commentary
 
 
-# TODO сделать классом и переименовать в TrainingView
-def training(request):
+@login_required
+def trainingpage(request):
     """Страница для контроля тренировок"""
-
-    if request.user.is_anonymous:
-        return redirect("loginuser")
 
     if request.user.is_expert:
         template = "training/expertpage.html"

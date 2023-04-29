@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import AccessMixin
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 
 
-class ClientSelfOrExpertAllowedAJAXMixin(AccessMixin):
+class ClientOrExpertRequiredMixin(AccessMixin):
     """Запрос разрешен от лица самого клиента либо эксперта"""
 
     def dispatch(self, request, *args, **kwargs):

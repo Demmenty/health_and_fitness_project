@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -7,12 +8,10 @@ from consultation_signup.models import ConsultationSignup
 from .forms import ConsultationBrowseForm
 
 
+@login_required
 def expertpage(request):
     """Личный кабинет Параболы: список клиентов с уведомлениями"""
 
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if not request.user.is_expert:
         return redirect("homepage")
 

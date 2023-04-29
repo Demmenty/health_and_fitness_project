@@ -10,13 +10,13 @@ from django.http import (
 )
 from django.views import View
 
-from common.mixins import ClientSelfOrExpertAllowedAJAXMixin
+from common.mixins import ClientOrExpertRequiredMixin
 
 from .forms import ExerciseForm, ExerciseReportForm, TrainingForm
 from .models import Exercise, ExerciseReport, Training
 
 
-class TrainingView(ClientSelfOrExpertAllowedAJAXMixin, View):
+class TrainingView(ClientOrExpertRequiredMixin, View):
     """AJAX методы управления тренировками"""
 
     def get(self, request, method):
@@ -143,17 +143,18 @@ class TrainingView(ClientSelfOrExpertAllowedAJAXMixin, View):
             return HttpResponseBadRequest("Необходим training_id")
 
         training = Training.objects.filter(
-            client=client_id, id=training_id).first()
+            client=client_id, id=training_id
+        ).first()
 
         if not training:
             return HttpResponseNotFound("Тренировка не найдена")
-        
+
         training.delete()
 
         return HttpResponse("Тренировка удалена")
 
 
-class ExercisesView(ClientSelfOrExpertAllowedAJAXMixin, View):
+class ExercisesView(ClientOrExpertRequiredMixin, View):
     """AJAX методы управления упражнениями"""
 
     def get(self, request, method):
@@ -287,7 +288,7 @@ class ExercisesView(ClientSelfOrExpertAllowedAJAXMixin, View):
         return HttpResponse("Упражнение удалено")
 
 
-class ExerciseReportsView(ClientSelfOrExpertAllowedAJAXMixin, View):
+class ExerciseReportsView(ClientOrExpertRequiredMixin, View):
     """AJAX методы управления отчетами упражнений"""
 
     def get(self, request, method):

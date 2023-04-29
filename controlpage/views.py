@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
@@ -15,13 +16,11 @@ from fatsecret_app.services import *
 from measurements.services import *
 
 
+@login_required
 def client_mainpage(request):
     """Главная страница контроля за клиентом
     - аналог personalpage, но для эксперта"""
 
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if not request.user.is_expert:
         return redirect("homepage")
 
@@ -103,12 +102,10 @@ def client_health_questionary(request):
     return render(request, "controlpage/client_health_questionary.html", data)
 
 
+@login_required
 def client_meet_questionary(request):
     """Анкета здоровья клиента"""
 
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if not request.user.is_expert:
         return redirect("homepage")
 
@@ -207,12 +204,10 @@ def client_measurements(request):
     return render(request, "controlpage/client_measurements.html", data)
 
 
+@login_required
 def client_anthropometry(request):
     """Антропометрические данные клиента"""
 
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if not request.user.is_expert:
         return redirect("homepage")
 
@@ -311,13 +306,13 @@ def client_mealjournal(request):
         return render(request, "controlpage/client_mealjournal.html", data)
 
 
+@login_required
 def client_foodbydate(request):
-    """Получение данных за опр.день из FatSecret
+    """
+    Получение данных за опр.день из FatSecret
     С ТОП-3 по количеству и калориям
     """
 
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if not request.user.is_expert:
         return redirect("homepage")
 

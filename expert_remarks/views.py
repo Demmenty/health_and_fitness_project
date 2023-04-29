@@ -120,9 +120,9 @@ def get_commentary(request):
 def mark_comment_readed(request):
     """Запись инфо о том, что коммент прочитан клиентом
     через скрипт в layout"""
+    
     if request.user.is_anonymous:
-        data = {}
-        return JsonResponse(data, status=403)
+        return JsonResponse({}, status=403)
 
     client_id = request.user.id
     comment_date = request.GET["date"]
@@ -151,9 +151,9 @@ def mark_comment_readed(request):
 def count_unread_comments(request):
     """получение количества непрочитаных комментов
     через скрипт в layout"""
+
     if request.user.is_anonymous:
-        data = {}
-        return JsonResponse(data, status=403)
+        return JsonResponse({}, status=403)
 
     unread_comments = Commentary.objects.filter(
         Q(client=request.user),

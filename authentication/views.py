@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -56,11 +57,9 @@ def loginuser(request):
         return redirect("homepage")
 
 
+@login_required
 def logoutuser(request):
     """Обработка запроса выхода пользователя"""
-
-    if request.user.is_anonymous:
-        return redirect("homepage")
 
     if request.method == "POST":
         logout(request)

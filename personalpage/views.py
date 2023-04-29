@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from anthropometry.forms import AnthropometryForm
@@ -19,12 +20,10 @@ from measurements.services import *
 from .utils import *
 
 
+@login_required
 def personalpage(request):
     """Личный кабинет клиента"""
 
-    # проверка пользователя
-    if request.user.is_anonymous:
-        return redirect("loginuser")
     if request.user.is_expert:
         return redirect("expertpage")
 
@@ -80,11 +79,9 @@ def client_settings(request):
     return render(request, "personalpage/settings.html", data)
 
 
+@login_required
 def meet_questionary(request):
     """Страница заполнения анкеты знакомства"""
-
-    if request.user.is_anonymous:
-        return redirect("loginuser")
 
     client = request.user
 
@@ -227,11 +224,9 @@ def health_questionary(request):
             )
 
 
+@login_required
 def measurements(request):
     """Страница отслеживания ежедневных измерений"""
-
-    if request.user.is_anonymous:
-        return redirect("loginuser")
 
     if request.user.is_expert:
         return redirect("expertpage")
@@ -363,11 +358,9 @@ def addmeasure(request):
         return render(request, "personalpage/addmeasure.html", data)
 
 
+@login_required
 def anthropometry(request):
     """Страница внесения антропометрических измерений"""
-
-    if request.user.is_anonymous:
-        return redirect("loginuser")
 
     client = request.user
 
@@ -506,13 +499,11 @@ def mealjournal(request):
         return render(request, "personalpage/mealjournal.html", data)
 
 
+@login_required
 def foodbydate(request):
     """Получение данных за опр.день из FatSecret
     С ТОП-3 по количеству и калориям
     """
-
-    if request.user.is_anonymous:
-        return redirect("loginuser")
 
     client = request.user
 

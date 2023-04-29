@@ -2,9 +2,8 @@ from django.urls import path
 
 from training import ajax, views
 
-
 urlpatterns = [
-    path("", views.training, name="trainingpage"),
+    path("", views.trainingpage, name="trainingpage"),
     path(
         "ajax/trainings.<slug:method>/",
         ajax.TrainingView.as_view(),
