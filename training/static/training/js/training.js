@@ -74,7 +74,7 @@ function toggleCalendar() {
     }
 
     $(this).toggleClass("active");
-    $(".calendar-container").toggle();
+    $(".calendar-container").toggle(400);
 }
 
 function init_calendar(date) {
@@ -356,7 +356,7 @@ function addNewTraining() {
 
     // отображаем тренировку в карточке
     div.appendTo(".trainings-container");
-    div.show();
+    div.show(400);
 
     // обработчики кликов на кнопки
     div.find("#add-exercise-btn").on("click", openExerciseSelection);
@@ -504,9 +504,12 @@ function deleteTraining() {
 
     if(!training_id) {
         // если нет id, значит треня не сохранена на сервере
-        div.remove();
-        toggleNoTrainingsSign();
-        controlTrainingTypeSelect();
+        div.hide(400);
+        setTimeout(() => {
+            div.remove();
+            toggleNoTrainingsSign();
+            controlTrainingTypeSelect();
+        }, 400);
         return
     }
 
@@ -543,9 +546,12 @@ function deleteTraining() {
     });
 
     request.done(function() {
-        div.remove();
-        toggleNoTrainingsSign();
-        controlTrainingTypeSelect();
+        div.hide(400);
+        setTimeout(() => {
+            div.remove();
+            toggleNoTrainingsSign();
+            controlTrainingTypeSelect();
+        }, 400);
     })
 }
 
@@ -556,10 +562,10 @@ function toggleNoTrainingsSign() {
     let trainings_amount = $("#trainings-container").find(".training").length;
 
     if (trainings_amount == 0) {
-        $("#lazy-cat").show();
+        $("#lazy-cat").show('slow');
     }
     else {
-        $("#lazy-cat").hide();
+        $("#lazy-cat").hide('slow');
     }
 }
 
