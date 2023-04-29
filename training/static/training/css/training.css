@@ -401,6 +401,15 @@ td.table-date.nil {
     height: 24px !important;
 }
 
+/* кот-уведомление */
+.lazy-cat {
+    margin-top: auto;
+}
+.lazy-cat img {
+    width: 70%;
+    max-width: 22rem;
+}
+
 /* окно выбора упражнений */
 .exercise-selection {
     z-index: 101;

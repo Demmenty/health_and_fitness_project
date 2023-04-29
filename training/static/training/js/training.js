@@ -60,8 +60,6 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO кнопка автозаполнения как в прошлый раз
-// TODO уведомление-картинка при отсутствии тренировок
 // TODO добавить иконки упражнениям
 
 const is_expert = $("#page-param").data("is-expert");
@@ -220,6 +218,7 @@ function date_click(event) {
         if(trainings_data.length > 0) {
             addSavedTrainings(trainings_data);
         }
+        toggleNoTrainingsSign()
         controlTrainingTypeSelect();
     });
 };
@@ -375,6 +374,8 @@ function addNewTraining() {
     // деактивация выбора тренировки такого же типа
     $(".training-type-select li[type='" + training_type + "']")
         .addClass("disabled");
+    
+    toggleNoTrainingsSign()
 }
 
 function fillTrainingLikeLast() {
@@ -511,6 +512,7 @@ function deleteTraining() {
     if(!training_id) {
         // если нет id, значит треня не сохранена на сервере
         div.remove();
+        toggleNoTrainingsSign();
         controlTrainingTypeSelect();
         return
     }
@@ -547,8 +549,24 @@ function deleteTraining() {
 
     request.done(function() {
         div.remove();
+        toggleNoTrainingsSign();
         controlTrainingTypeSelect();
     })
+}
+
+function toggleNoTrainingsSign() {
+    // проверяет наличие тренировок в карточке дня
+    // если нет - показывает картинку-уведомление
+
+    let trainings_amount = $("#trainings-container").find(".training").length;
+    console.log("trainings_amount", trainings_amount);
+
+    if (trainings_amount == 0) {
+        $("#lazy-cat").show();
+    }
+    else {
+        $("#lazy-cat").hide();
+    }
 }
 
 
