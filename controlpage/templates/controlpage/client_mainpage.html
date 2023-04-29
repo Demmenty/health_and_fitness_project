@@ -1,7 +1,7 @@
 {% extends 'layouts/expertpage_layout.html' %}
 {% load static %}
 
-{% block title %}{{ clientname }}: фитнес-контроль{% endblock %}
+{% block title %}{{ client.username }}: фитнес-контроль{% endblock %}
 
 {% block content %}
 
@@ -20,7 +20,7 @@
                 {% if meet_questionary_filled %}
                     &#10004;
                     <form method="get" action="{% url 'client_meet_questionary' %}" class="d-inline">
-                        <input type="hidden" value="{{ client_id }}" name="client_id">
+                        <input type="hidden" value="{{ client.id }}" name="client_id">
                         <input type="submit" class="link" title="Открыть анкету" value="Анкета знакомства">
                     </form>
                     заполнена
@@ -33,7 +33,7 @@
                 {% if health_questionary_filled %}
                     &#10004;
                     <form method="get" action="{% url 'client_health_questionary' %}" class="d-inline">
-                        <input type="hidden" value="{{ client_id }}" name="client_id">
+                        <input type="hidden" value="{{ client.id }}" name="client_id">
                         <input type="submit" class="link" title="Открыть анкету" value="Анкета здоровья">
                     </form>
                     заполнена

@@ -1,7 +1,7 @@
 {% extends 'layouts/expertpage_layout.html' %}
 {% load static %}
 
-{% block title %}{{ clientname }}: измерения{% endblock %}
+{% block title %}{{ client.username }}: измерения{% endblock %}
 
 {% block content %}
 
@@ -227,7 +227,7 @@
             </div>
             <!-- Выбор дней статистики -->
             <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-center mb-4">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ client.id }}" name="client_id">
                 <div class="d-flex align-items-center mb-2 mb-md-0">
                     <h5 class="m-0">Статистика за</h5>
                     <input type="number" class="form-control text-center mx-3" name="selectperiod" min="1" id="input_period">
@@ -239,7 +239,7 @@
     </div>
     
     <!-- ссылка на антропометрию -->
-    <a href="{% url 'client_anthropometry' %}?client_id={{ client_id }}" type="button" class="btn btn-primary mt-auto mx-auto ms-md-0 mb-2">
+    <a href="{% url 'client_anthropometry' %}?client_id={{ client.id }}" type="button" class="btn btn-primary mt-auto mx-auto ms-md-0 mb-2">
         Антропометрия
     </a>
 
@@ -247,7 +247,7 @@
         <!-- сборная форма настроек цвета -->
         <form method="POST" action="{% url 'save_color_settings' %}" class="hidden_element" id="color_settings_form">
             {% csrf_token %}
-            <input type="hidden" value="{{ client_id }}" name="client_id" id="client_id">
+            <input type="hidden" value="{{ client.id }}" name="client_id" id="client_id">
         
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-md-6 py-3 px-1">

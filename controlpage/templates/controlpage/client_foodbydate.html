@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{{ clientname }}: питание{% endblock %}
+{% block title %}{{ client.username }}: питание{% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-center align-items-center">
         <!-- кнопка предыдущее число -->
         <form method = "get">
-            <input type="hidden" value="{{ client_id }}" name="client_id">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
             <input type="hidden" name="date" value="{{ prev_date }}">
             <input type="image" name="submit" class="hover_brigh me-3" src="{% static 'common/img/arrow_prev_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="предыдущий день" style="width: 20px;">
         </form>
@@ -21,7 +21,7 @@
         <h3 class="text-center p-2">{{ briefdate|date:"l " }}<br class="d-sm-none">{{ briefdate|date:"j E Y" }}</h3>
         <!-- кнопка следующее число -->
         <form method = "get">
-            <input type="hidden" value="{{ client_id }}" name="client_id">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
             <input type="hidden" name="date" value="{{ next_date }}">
             <input type="image" name="submit" class="hover_brigh ms-3" src="{% static 'common/img/arrow_next_royalblue.svg' %}" alt="Submit" data-bs-toggle="modal" data-bs-target="#load_cat" title="следующий день" style="width: 20px;">
         </form>
@@ -217,7 +217,7 @@
                 <hr class="my-2">
                 <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
                     {% csrf_token %}
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ client.id }}" name="client_id">
                     <div class="d-flex">
                         <div class="d-flex flex-column my-2 me-3">
                             <label for="id_calories" class="">Калории:</label>
@@ -251,14 +251,14 @@
             <div class="mb-3 mb-sm-0" id="select_date_section">
                 <h5 class="text-center">Сводка за другое число</h5>
                 <form action="" method = "get" class="d-flex justify-content-between">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ client.id }}" name="client_id">
                     <input type="date" class="form-control text-center me-3" name="date" id="input_briefdate" value="{{ prev_date }}">
                     <button type="submit" class="btn btn-primary d-inline" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
                 </form>
             </div>
         </div>
         <!-- Кнопка возврата -->
-        <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="align-self-sm-end order-sm-1">
+        <a href="{% url 'client_mealjournal' %}?client_id={{ client.id }}" class="align-self-sm-end order-sm-1">
             <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" title="К дневнику питания" height="38">
         </a>
     </div>

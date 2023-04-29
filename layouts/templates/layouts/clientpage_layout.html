@@ -18,6 +18,7 @@
 </head>
 
 <body>
+  <param data-is-expert="false" data-client-id="{{ client.id }}" id="page-param">
   
   <header class="border-bottom">
     <div class="container">
@@ -32,7 +33,7 @@
           <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
           <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
           <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal">питание</a></li>
-          <li><a href="{% url 'training' %}" class="nav_link" id="link_workout">тренировки</a></li>
+          <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout">тренировки</a></li>
         </ul>
         <!-- навигация выпадающим меню -->
         <div class="d-flex align-items-center justify-content-center col-6 mt-2" id="nav_dropdown">
@@ -44,7 +45,7 @@
               <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
               <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements_drop">измерения</a></li>
               <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal_drop">питание</a></li>
-              <li><a href="{% url 'training' %}" class="nav_link" id="link_workout_drop">тренировки</a></li>
+              <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout_drop">тренировки</a></li>
               <hr class="my-2 mx-auto d-md-none">
               <li><a href="{% url 'client_settings' %}" class="nav_link d-md-none" id="link_settings_drop">настройки</a></li>
             </ul>

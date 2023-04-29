@@ -1,14 +1,14 @@
 {% extends 'layouts/expertpage_layout.html' %}
 {% load static %}
 
-{% block title %}{{ clientname }}: анкета знакомства{% endblock %}
+{% block title %}{{ client.username }}: анкета знакомства{% endblock %}
 
 {% block content %}
 
 <div class="container pt-5">
     <div class="container questionary_container mt-2" id="meet_questionary_container">
 
-        <h2 class="clientname text-center mb-4">{{ clientname }}</h2>
+        <h2 class="clientname text-center mb-4">{{ client.username }}</h2>
         
         <form method="" action="" class="" id="meet_questionary_form">
 

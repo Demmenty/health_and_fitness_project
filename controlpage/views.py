@@ -56,8 +56,7 @@ def client_mainpage(request):
     today_measure = get_daily_measure(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "health_questionary_filled": health_questionary_filled,
         "meet_questionary_filled": meet_questionary_filled,
         "fs_connected": fs_connected,
@@ -95,8 +94,7 @@ def client_health_questionary(request):
     )
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "health_questionary": health_questionary,
         "health_questionary_form": health_questionary_form,
         "client_contacts": client_contacts,
@@ -128,8 +126,7 @@ def client_meet_questionary(request):
     readiness_choices = MeetQuestionary.READINESS_CHOICES
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "meet_questionary": meet_questionary,
         "meet_questionary_form": meet_questionary_form,
         "readiness_choices": readiness_choices,
@@ -170,8 +167,7 @@ def client_measurements(request):
     today_measure = get_daily_measure(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "client_contacts": client_contacts,
         "client_remark": client_remark,
         "today_measure": today_measure,
@@ -241,8 +237,7 @@ def client_anthropometry(request):
     photoaccess_allowed = is_photoaccess_allowed(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "client_contacts": client_contacts,
         "client_remark": client_remark,
         "entries": entries,
@@ -272,8 +267,7 @@ def client_mealjournal(request):
     client_remark = get_remark_forms(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "client_contacts": client_contacts,
         "client_remark": client_remark,
     }
@@ -352,8 +346,7 @@ def client_foodbydate(request):
     recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "client_contacts": client_contacts,
         "client_remark": client_remark,
         "briefdate": briefdate,
@@ -400,8 +393,7 @@ def client_foodbymonth(request):
     recommend_nutrition_form = get_nutrition_recommend_form(client)
 
     data = {
-        "clientname": client.username,
-        "client_id": client_id,
+        "client": client,
         "client_contacts": client_contacts,
         "client_remark": client_remark,
         "briefmonth": month_datetime,

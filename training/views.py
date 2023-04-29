@@ -19,11 +19,8 @@ def training(request):
         client_contacts = ClientInfoManager.get_contacts(client)
         client_remark = get_remark_forms(client)
 
-        # TODO поменять layout, чтобы передавать только client
         data = {
             "client": client,
-            "client_id": client.id,
-            "clientname": client.username,
             "client_contacts": client_contacts,
             "client_remark": client_remark,
             "for_expert": True,
@@ -38,7 +35,6 @@ def training(request):
 
         data = {
             "client": client,
-            "client_id": client.id,
             "clientmemo_form": clientmemo_form,
             "today_commentary": today_commentary,
         }

@@ -28,29 +28,29 @@ def personalpage(request):
     if request.user.is_expert:
         return redirect("expertpage")
 
-    clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
+    client = request.user
 
+    clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
     health_questionary_filled = ClientInfoManager.is_health_questionary_filled(
-        request.user
+        client
     )
     meet_questionary_filled = ClientInfoManager.is_meet_questionary_filled(
-        request.user
+        client
     )
-
-    # контакты клиента
-    contacts_filled = ClientInfoManager.is_contacts_filled(request.user)
-    contacts_form = ClientInfoManager.get_contacts_form(request.user)
+    contacts_filled = ClientInfoManager.is_contacts_filled(client)
+    contacts_form = ClientInfoManager.get_contacts_form(client)
 
     # измерения за сегодня
-    if services.fs.is_connected(request.user):
-        renew_measure_nutrition(request.user, datetime.now())
+    if services.fs.is_connected(client):
+        renew_measure_nutrition(client, datetime.now())
 
-    today_measure = get_daily_measure(request.user)
+    today_measure = get_daily_measure(client)
 
     # комментарий за сегодня от эксперта
-    today_commentary = get_today_commentary(request.user)
+    today_commentary = get_today_commentary(client)
 
     data = {
+        "client": client,
         "clientmemo_form": clientmemo_form,
         "today_measure": today_measure,
         "health_questionary_filled": health_questionary_filled,
@@ -68,9 +68,12 @@ def client_settings(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
+    client = request.user
+
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     data = {
+        "client": client,
         "clientmemo_form": clientmemo_form,
     }
 
@@ -82,6 +85,8 @@ def meet_questionary(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
+
+    client = request.user
 
     # открываем анкету
     if request.method == "GET":
@@ -96,6 +101,7 @@ def meet_questionary(request):
         today_commentary = get_today_commentary(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "meet_questionary": meet_questionary,
             "meet_questionary_form": meet_questionary_form,
@@ -137,6 +143,7 @@ def meet_questionary(request):
             today_commentary = get_today_commentary(request.user)
 
             data = {
+                "client": client,
                 "clientmemo_form": clientmemo_form,
                 "meet_questionary": meet_questionary,
                 "meet_questionary_form": meet_questionary_form,
@@ -154,6 +161,8 @@ def health_questionary(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
+    client = request.user
+
     # открываем анкету
     if request.method == "GET":
         clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
@@ -168,6 +177,7 @@ def health_questionary(request):
         today_commentary = get_today_commentary(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "health_questionary": health_questionary,
             "health_questionary_form": health_questionary_form,
@@ -205,6 +215,7 @@ def health_questionary(request):
             today_commentary = get_today_commentary(request.user)
 
             data = {
+                "client": client,
                 "clientmemo_form": clientmemo_form,
                 "health_questionary": health_questionary,
                 "health_questionary_form": health_questionary_form,
@@ -225,6 +236,8 @@ def measurements(request):
     if request.user.is_expert:
         return redirect("expertpage")
 
+    client = request.user
+
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     today_commentary = get_today_commentary(request.user)
@@ -235,6 +248,7 @@ def measurements(request):
     today_measure = get_daily_measure(request.user)
 
     data = {
+        "client": client,
         "clientmemo_form": clientmemo_form,
         "today_measure": today_measure,
         "today_commentary": today_commentary,
@@ -279,6 +293,8 @@ def addmeasure(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
+    client = request.user
+
     if request.method == "GET":
         clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
@@ -292,6 +308,7 @@ def addmeasure(request):
         today_commentary = get_today_commentary(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "fatsecret_connected": fatsecret_connected,
             "weekly_measure_forms": weekly_measure_forms,
@@ -335,6 +352,7 @@ def addmeasure(request):
         today_commentary = get_today_commentary(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "addmeasure_error": addmeasure_error,
             "fatsecret_connected": fatsecret_connected,
@@ -350,6 +368,8 @@ def anthropometry(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
+
+    client = request.user
 
     if request.method == "GET":
         clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
@@ -371,6 +391,7 @@ def anthropometry(request):
         today_commentary = get_today_commentary(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "entries": entries,
             "show_all_entries": show_all_entries,
@@ -417,6 +438,7 @@ def anthropometry(request):
             today_commentary = get_today_commentary(request.user)
 
             data = {
+                "client": client,
                 "clientmemo_form": clientmemo_form,
                 "add_anthropo_error": add_anthropo_error,
                 "entries": entries,
@@ -436,6 +458,8 @@ def mealjournal(request):
     if request.user.is_anonymous:
         return redirect("loginuser")
 
+    client = request.user
+
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
     # комментарий за сегодня от эксперта
@@ -445,6 +469,7 @@ def mealjournal(request):
     if services.fs.is_connected(request.user) is False:
         # показываем предложение подключить
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "today_commentary": today_commentary,
             "user_not_connected": True,
@@ -469,6 +494,7 @@ def mealjournal(request):
         recommend_nutrition = get_nutrition_recommend(request.user)
 
         data = {
+            "client": client,
             "clientmemo_form": clientmemo_form,
             "today_commentary": today_commentary,
             "daily_food": daily_food,
@@ -487,6 +513,8 @@ def foodbydate(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
+
+    client = request.user
 
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
@@ -511,6 +539,7 @@ def foodbydate(request):
     recommend_nutrition = get_nutrition_recommend(request.user)
 
     data = {
+        "client": client,
         "clientmemo_form": clientmemo_form,
         "briefdate": briefdate,
         "prev_date": prev_date,
@@ -530,6 +559,8 @@ def foodbymonth(request):
 
     if request.user.is_anonymous:
         return redirect("loginuser")
+
+    client = request.user
 
     clientmemo_form = ClientInfoManager.get_clientmemo_form(request.user)
 
@@ -556,6 +587,7 @@ def foodbymonth(request):
     today_commentary = get_today_commentary(request.user)
 
     data = {
+        "client": client,
         "clientmemo_form": clientmemo_form,
         "briefmonth": month_datetime,
         "prev_month": prev_month,

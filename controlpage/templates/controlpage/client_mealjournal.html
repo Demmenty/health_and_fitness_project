@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{{ clientname }}: питание{% endblock %}
+{% block title %}{{ client.username }}: питание{% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -30,7 +30,7 @@
             <hr class="my-2">
             <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
                 {% csrf_token %}
-                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ client.id }}" name="client_id">
                 <div class="d-flex">
                     <div class="d-flex flex-column my-2 me-3">
                         <label for="id_calories" class="">Калории:</label>
@@ -169,7 +169,7 @@
             <div class="mx-auto ms-am-auto me-sm-0" id="select_date_section_mealjournal">
                 <h5 class="text-center fw-normal">Cводка за другое <b class="fw-bold">число</b></h5>
                 <form action = "{% url 'client_foodbydate' %}" method = "get" class="d-flex justify-content-between">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ client.id }}" name="client_id">
                     <input type="date" class="form-control text-center me-3" name="date" id="input_briefdate" value="{% now 'Y-m-d' %}">
                     <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
                 </form>
@@ -292,7 +292,7 @@
                 <h6 class="text-center text-muted"><i>нужно немножечко подождать...</i></h6>
             </div>
             <form action="{% url 'get_monthly_top' %}" method="get" class="" id="get_top_form">
-                <input type="hidden" value="{{ client_id }}" name="client_id">
+                <input type="hidden" value="{{ client.id }}" name="client_id">
                 <input type="hidden" value="{% now 'Y-m' %}" name="month">
                 <button type="submit" class="btn btn-primary d-block mx-auto ms-sm-0 my-4 mb-sm-0" id="calc_top_btn">
                     ТОП-10
@@ -309,7 +309,7 @@
             <div class="mx-auto ms-am-auto me-sm-0" id="select_date_section_mealjournal">
                 <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
                 <form action = "{% url 'client_foodbymonth' %}" method = "get" class="d-flex justify-content-between">
-                    <input type="hidden" value="{{ client_id }}" name="client_id">
+                    <input type="hidden" value="{{ client.id }}" name="client_id">
                     <input type="month" class="form-control text-center me-3" name="month" id="input_briefmonth" value="{{ previous_month }}">
                     <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
                 </form>

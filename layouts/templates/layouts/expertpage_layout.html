@@ -18,6 +18,7 @@
 </head>
 
 <body>
+  <param data-is-expert="true" data-client-id="{{ client.id }}" id="page-param">
 
   <header class="border-bottom">
     <div class="container">
@@ -29,7 +30,7 @@
             <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
           </a>
           <!-- имя клиента -->
-          <a href="{% url 'expertpage' %}" class="d-none d-sm-block clientname text-center">{{ clientname }}</a>
+          <a href="{% url 'expertpage' %}" class="d-none d-sm-block clientname text-center">{{ client.username }}</a>
         </div>
 
         <!-- навигация выпадающим меню -->
@@ -41,22 +42,22 @@
             </a>
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
               <li>
-                <a href="{% url 'client_mainpage' %}?client_id={{ client_id }}" class="nav_link" id="navlink_main_drop">
+                <a href="{% url 'client_mainpage' %}?client_id={{ client.id }}" class="nav_link" id="navlink_main_drop">
                   главная
                 </a>
               </li>
               <li>
-                <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="nav_link" id="navlink_measurements_drop">
+                <a href="{% url 'client_measurements' %}?client_id={{ client.id }}" class="nav_link" id="navlink_measurements_drop">
                   измерения
                 </a>
               </li>
               <li>
-                <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="nav_link" id="navlink_meal_drop">
+                <a href="{% url 'client_mealjournal' %}?client_id={{ client.id }}" class="nav_link" id="navlink_meal_drop">
                   питание
                 </a>
               </li>
               <li>
-                <a href="{% url 'training' %}?client_id={{ client_id }}" class="nav_link" id="navlink_workout_drop">
+                <a href="{% url 'trainingpage' %}?client_id={{ client.id }}" class="nav_link" id="navlink_workout_drop">
                   тренировки
                 </a>
               </li>
@@ -67,22 +68,22 @@
         <!-- навигация строкой -->
         <ul class="d-none d-md-flex nav flex-nowrap mt-1" id="nav_string">
           <li>
-            <a href="{% url 'client_mainpage' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_main">
+            <a href="{% url 'client_mainpage' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_main">
               главная
             </a>
           </li>
           <li>
-            <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_measurements">
+            <a href="{% url 'client_measurements' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_measurements">
               измерения
             </a>
           </li>
           <li>
-            <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_meal">
+            <a href="{% url 'client_mealjournal' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_meal">
               питание
             </a>
           </li>
           <li>
-            <a href="{% url 'training' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_workout">
+            <a href="{% url 'trainingpage' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_workout">
               тренировки
             </a>
           </li>
@@ -106,7 +107,7 @@
     <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="client_comment_form_container">
       <form method="post" id="client_comment_form" action="{% url 'save_commentary_form' %}" data-action-get="{% url 'get_commentary_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
 
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
           <div class="d-flex justify-content-start w-10 w-sm-30">
@@ -155,7 +156,7 @@
     <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="clientnote_container">
       <form method="post" id="clientnote_form" action="{% url 'save_clientnote_form' %}" data-action-get="{% url 'get_clientnote_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
 
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
           <div class="d-flex justify-content-start w-10 w-sm-30">
@@ -211,7 +212,7 @@
     <div class="d-flex flex-column rounded border-blueshadow hidden_element px-2 px-sm-3 py-2 w-95 w-sm-auto" id="full_clientnote_container">
       <form method="post" id="full_clientnote_form" action="{% url 'save_full_clientnote_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
           <span class="clientname text-white">{{ clientname|truncatechars:15 }}</span>
           <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>

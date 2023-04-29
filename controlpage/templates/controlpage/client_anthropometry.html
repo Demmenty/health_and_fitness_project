@@ -1,7 +1,7 @@
 {% extends 'layouts/expertpage_layout.html' %}
 {% load static %}
 
-{% block title %}{{ clientname }}: антропометрия{% endblock %}
+{% block title %}{{ client.username }}: антропометрия{% endblock %}
 
 {% block content %}
 
@@ -271,7 +271,7 @@
                     {% if entries.all.count > 3 %}
                         <!-- кнопка для открытия всех измерений -->
                         <form method="get" class="text-center">
-                            <input type="hidden" value="{{ client_id }}" name="client_id">
+                            <input type="hidden" value="{{ client.id }}" name="client_id">
                             <input type="hidden" name="show_all_entries" value="True">
                             <input type="image" name="submit" id="btn_show_all" src="{% static 'personalpage/img/arrow_down_tab.svg' %}" style="width: 125px;" title="Все записи">
                         </form>
@@ -284,7 +284,7 @@
     <br>
 
     <!-- переход к ежедневным показателям -->
-    <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="w-fit mt-auto mb-3">
+    <a href="{% url 'client_measurements' %}?client_id={{ client.id }}" class="w-fit mt-auto mb-3">
         <img src="{% static 'common/img/arrow_back_royalblue.svg' %}" class="hover_brigh" height="38" title="К измерениям">
     </a>
 
