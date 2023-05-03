@@ -32,7 +32,7 @@ $(document).ready(function () {
               resultField.textContent = "Доступ разрешен";
 
               if (response.is_expert) {
-                redirect = "/expert_overview_page/"
+                redirect = "/expert_overview/"
               }
               else {
                 redirect = "/client_overview/"
