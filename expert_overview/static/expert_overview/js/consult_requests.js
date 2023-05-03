@@ -27,7 +27,7 @@ function openForm(event) {
             var request = $.ajax({
                 data: { 'id': id, 'purpose': 'make_readed' },
                 type: "GET",
-                url: '/expert_overview_page/consult_requests_page/',
+                url: '/expert_overview/consult_requests_page/',
             });
             request.done(function() {
                 row.classList.remove('unread');
