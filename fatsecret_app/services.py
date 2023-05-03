@@ -135,13 +135,16 @@ class FatsecretManager:
 
         # если сегодня 6 число или меньше, добавить и предыдущий месяц
         if date.today().day < 7:
-            previous_month_nutrition = session.food_entries_get_month(
-                date=datetime.today() - timedelta(weeks=4)
-            )
-            if type(previous_month_nutrition) is dict:
-                week_nutrition_list += [previous_month_nutrition]
-            else:
-                week_nutrition_list += previous_month_nutrition
+            try:
+                previous_month_nutrition = session.food_entries_get_month(
+                    date=datetime.today() - timedelta(weeks=4)
+                )
+                if type(previous_month_nutrition) is dict:
+                    week_nutrition_list += [previous_month_nutrition]
+                else:
+                    week_nutrition_list += previous_month_nutrition
+            except KeyError:
+                ...
 
         # фильтруем новейшие 7 записей
         week_nutrition_list = sorted(
