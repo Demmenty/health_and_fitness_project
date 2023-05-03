@@ -31,8 +31,8 @@ def draw_overview_content(client: User, for_expert: bool = False) -> dict:
     meet_questionary_filled = ClientInfoManager.is_meet_questionary_filled(
         client
     )
+    contacts_filled = ClientInfoManager.is_contacts_filled(client)
     today_trainings = Training.objects.filter(client=client, date=date.today())
-
     today_training_types = [
         TRAINING_TYPES[training.training_type] for training in today_trainings
     ]
@@ -44,6 +44,7 @@ def draw_overview_content(client: User, for_expert: bool = False) -> dict:
         "fs_connected": fs_connected,
         "health_questionary_filled": health_questionary_filled,
         "meet_questionary_filled": meet_questionary_filled,
+        "contacts_filled": contacts_filled,
         "today_training_types": today_training_types,
     }
 
@@ -59,11 +60,9 @@ def draw_overview_content(client: User, for_expert: bool = False) -> dict:
         })
     else:
         contacts_form = ClientInfoManager.get_contacts_form(client)
-        contacts_filled = ClientInfoManager.is_contacts_filled(client)
 
         data.update({
             "contacts_form": contacts_form,
-            "contacts_filled": contacts_filled,
         })
 
     return data
