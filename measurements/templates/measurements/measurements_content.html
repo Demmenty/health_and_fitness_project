@@ -278,6 +278,7 @@
         <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-end">
             <div class="d-flex align-items-center mb-2 mb-md-0">
                 <h5 class="m-0">Статистика за</h5>
+                <input type="hidden" name="client_id" value="{{ client.id }}">
                 <input type="number" class="form-control text-center mx-2" name="selectperiod" min="1" id="input_period">
                 <h5 class="m-0">дней</h5>
             </div>
