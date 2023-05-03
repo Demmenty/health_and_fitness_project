@@ -37,9 +37,8 @@ def get_commentary_form(request):
 
 
 def save_commentary_form(request):
-    """Сохранение формы коммента для клиента через аякс-скрипт
-    Используется в controlpage/layout.html
-    """
+    """Сохранение формы коммента для клиента через аякс-скрипт"""
+    
     if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)

@@ -1,71 +1,173 @@
-from itertools import zip_longest
-
+from datetime import datetime
+from expert_remarks.services import get_today_commentary
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from measurements.utils import *
+from django.views.decorators.http import require_http_methods
+from client_overview.manager import ClientInfoManager
+from expert_recommendations.services import *
+from expert_remarks.services import get_remark_forms
+from fatsecret_app.services import *
+from measurements.services import *
 
-from .forms import MeasurementCommentForm
-from .models import Measurement
-from .services import *
 
 
-def save_measure_comment(request):
-    """Сохранение коммента к измерениям показателей через ajax"""
-    # получаем форму из запроса
-    form = MeasurementCommentForm(request.POST)
-    # проверяем на корректность
-    if form.is_valid():
-        # получаем дату из формы
-        comment_date = form.cleaned_data["date"]
-        # получаем запись из БД с этим числом
-        measure = Measurement.objects.get(date=comment_date, user=request.user)
-        # перезаписываем
-        form = MeasurementCommentForm(request.POST, instance=measure)
-        form.save()
-        new_comment = form.cleaned_data["comment"]
+@login_required
+@require_http_methods(["GET"])
+def measurementspage(request):
+    """Страница отслеживания физических измерений"""
+
+    if request.user.is_expert:
+        template = "measurements/expert_measurements_page.html"
+
+        client = User.objects.get(id=request.GET["client_id"])
+        client_contacts = ClientInfoManager.get_contacts(client)
+        client_remark = get_remark_forms(client)
+
         data = {
-            "new_comment": new_comment,
+            "client": client,
+            "client_contacts": client_contacts,
+            "client_remark": client_remark,
+            "for_expert": True,
         }
-        return JsonResponse(data, status=200)
-
-
-def get_color_settings(request):
-    """Получение текущих настроек цветов показателей через ajax-запрос"""
-
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    if request.GET.get("client_id"):
-        # если запрос от эксперта о клиенте
-        client_id = request.GET.get("client_id")
-        client = User.objects.get(id=client_id)
-    else:
-        # если запрос от самого клиента
-        client = request.user
-
-    colorsettings = get_measurecolor_settings(client)
-
-    return JsonResponse(colorsettings, status=200)
-
-
-def save_color_settings(request):
-    """Сохранение настроек цветов для показателей клиента через ajax"""
 
     if not request.user.is_expert:
-        return JsonResponse({}, status=403)
+        template = "measurements/client_measurements_page.html"
 
+        client = request.user
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
+        today_commentary = get_today_commentary(client)
+
+        data = {
+            "client": client,
+            "clientmemo_form": clientmemo_form,
+            "today_commentary": today_commentary,
+        }
+
+    renew_measure_nutrition(client, datetime.now())
+    renew_weekly_measures_nutrition(client)
+
+    return render(request, template, data)
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def addmeasurepage(request):
+    """Страница редактирования физических измерений клентом"""
+
+    client = request.user
+
+    if request.method == "GET":
+        template = "measurements/client_addmeasure_page.html"
+
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
+        weekly_measure_forms = create_weekly_measure_forms(client)
+        fatsecret_connected = services.fs.is_connected(client)
+        if fatsecret_connected:
+            renew_weekly_measures_nutrition(client)
+
+        last_seven_dates = _create_list_of_dates(7)
+        today_commentary = get_today_commentary(client)
+
+        data = {
+            "client": client,
+            "clientmemo_form": clientmemo_form,
+            "fatsecret_connected": fatsecret_connected,
+            "weekly_measure_forms": weekly_measure_forms,
+            "last_seven_dates": last_seven_dates,
+            "today_commentary": today_commentary,
+        }
+        return render(request, template, data)
+    
+    # TODO переделать в ajax
     if request.method == "POST":
-        # определение клиента
-        client_id = request.POST.get("client_id")
-        client = User.objects.get(id=client_id)
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
 
-        # параметры цветовых настроек
-        indices = request.POST.getlist("index")
-        colors = request.POST.getlist("color")
-        low_limits = request.POST.getlist("low_limit")
-        up_limits = request.POST.getlist("upper_limit")
-        # кулёк из параметров цветовых настроек
-        colorset_values = zip_longest(indices, colors, low_limits, up_limits)
+        fatsecret_connected = services.fs.is_connected(client)
+        form = MeasurementForm(request.POST)
 
-        save_measeurecolor_settings(client, colorset_values)
+        if form.is_valid():
+            measure_date = form.cleaned_data["date"]
+            measure_weight = form.cleaned_data["weight"]
 
-        return JsonResponse({}, status=200)
+            if fatsecret_connected and measure_weight:
+                services.fs.send_weight(
+                    client, measure_weight, measure_date
+                )
+
+            instance = get_daily_measure(client, measure_date)
+            if instance:
+                form = MeasurementForm(request.POST, instance=instance)
+                form.save()
+                return redirect("measurementspage")
+            else:
+                addmeasure_error = (
+                    "Случилось что-то непонятное, либо вы читерите :("
+                )
+        else:
+            addmeasure_error = (
+                "Данные введены некорректно. Попробуйте еще раз."
+            )
+
+        weekly_measure_forms = create_weekly_measure_forms(request.user)
+        last_seven_dates = _create_list_of_dates(7)
+        today_commentary = get_today_commentary(request.user)
+        template = "measurements/client_addmeasure_page.html"
+
+        data = {
+            "client": client,
+            "clientmemo_form": clientmemo_form,
+            "addmeasure_error": addmeasure_error,
+            "fatsecret_connected": fatsecret_connected,
+            "weekly_measure_forms": weekly_measure_forms,
+            "last_seven_dates": last_seven_dates,
+            "today_commentary": today_commentary,
+        }
+        return render(request, template, data)
+
+
+@login_required
+@require_http_methods(["GET"])
+def anthropometrypage(request):
+    """Страница антропометрических измерений"""
+
+    if request.user.is_expert:
+        template = "measurements/expert_anthropometry_page.html"
+
+        client = User.objects.get(id=request.GET["client_id"])
+        client_contacts = ClientInfoManager.get_contacts(client)
+        client_remark = get_remark_forms(client)
+
+        data = {
+            "client": client,
+            "client_contacts": client_contacts,
+            "client_remark": client_remark,
+            "for_expert": True,
+        }
+    
+    if not request.user.is_expert:
+        template = "measurements/client_anthropometry_page.html"
+
+        client = request.user
+        clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
+        today_commentary = get_today_commentary(client)
+
+        data = {
+            "client": client,
+            "clientmemo_form": clientmemo_form,
+            "today_commentary": today_commentary,
+        }
+    
+    return render(request, template, data)
+
+
+def _create_list_of_dates(days: int) -> list:
+
+    list_of_dates = []
+
+    for i in range(days):
+        selected_date = date.today() - timedelta(days=(6 - i))
+        list_of_dates.append(selected_date)
+
+    return list_of_dates

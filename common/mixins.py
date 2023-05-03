@@ -3,7 +3,11 @@ from django.http import HttpResponseBadRequest, HttpResponseForbidden
 
 
 class ClientOrExpertRequiredMixin(AccessMixin):
-    """Запрос разрешен от лица самого клиента либо эксперта"""
+    """
+    Миксин для AJAX запросов.
+    Запрос разрешен от лица самого клиента либо эксперта.
+    Требует передачу client_id в параметрах запроса.
+    """
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

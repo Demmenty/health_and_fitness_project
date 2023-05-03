@@ -4,49 +4,49 @@ console.log("params", params);
 // применение настроек в зависимости от открытой страницы
 $(document).ready(function() {
     pagePath = document.location.pathname;
-    if ((pagePath == '/controlpage/main/') ||
-        (pagePath == '/controlpage/health_questionary/') ||
-        (pagePath == '/controlpage/meet_questionary/')) {
+    if ((pagePath == '/client_overview/') ||
+        (pagePath == '/client_overview/health_questionary/') ||
+        (pagePath == '/client_overview/meet_questionary/')) {
         // открытие соотв.текста и вкладки комментария
-        $("#id_general_comment").removeClass('hidden_element');
+        $("#id_general_comment").removeClass('hidden');
         $("#id_general_label").removeClass('closed');
         // открытие соотв.текста и вкладки заметки о клиенте
-        $("#id_general_note").removeClass('hidden_element');
+        $("#id_general_note").removeClass('hidden');
         $("#id_general_note_label").removeClass('closed');
         // окрашивание навигации
         $('#navlink_main').addClass('text-royalblue');
-        $('#navlink_main_drop').addClass('hidden_element');
+        $('#navlink_main_drop').addClass('hidden');
         // название открытой вкладки если меню dropdown
         $('#open_label_drop').text('главная');
     }
-    else if ((pagePath == '/controlpage/mealjournal/') ||
-            (pagePath == '/controlpage/foodbymonth/') ||
-            (pagePath == '/controlpage/foodbydate/')) {
-        $("#id_nutrition_comment").removeClass('hidden_element');
+    else if ((pagePath == '/mealjournal/') ||
+            (pagePath == '/mealjournal/foodbymonth/') ||
+            (pagePath == '/mealjournal/foodbydate/')) {
+        $("#id_nutrition_comment").removeClass('hidden');
         $("#id_nutrition_label").removeClass('closed');
-        $("#id_nutrition_note").removeClass('hidden_element');
+        $("#id_nutrition_note").removeClass('hidden');
         $("#id_nutrition_note_label").removeClass('closed');
         $('#navlink_meal').addClass('text-royalblue');
-        $('#navlink_meal_drop').addClass('hidden_element');
+        $('#navlink_meal_drop').addClass('hidden');
         $('#open_label_drop').text('питание');
     }
-    else if ((pagePath == '/controlpage/measurements/') ||
-            (pagePath == '/controlpage/anthropometry/')) {
-        $("#id_measurements_comment").removeClass('hidden_element');
+    else if ((pagePath == '/measurements/') ||
+            (pagePath == '/measurements/anthropometry/')) {
+        $("#id_measurements_comment").removeClass('hidden');
         $("#id_measurements_label").removeClass('closed');
-        $("#id_measurements_note").removeClass('hidden_element');
+        $("#id_measurements_note").removeClass('hidden');
         $("#id_measurements_note_label").removeClass('closed');
         $('#navlink_measurements').addClass('text-royalblue');
-        $('#navlink_measurements_drop').addClass('hidden_element');
+        $('#navlink_measurements_drop').addClass('hidden');
         $('#open_label_drop').text('измерения');
     }
     else if (pagePath == '/training/') {
-        $("#id_workout_comment").removeClass('hidden_element');
+        $("#id_workout_comment").removeClass('hidden');
         $("#id_workout_label").removeClass('closed');
-        $("#id_workout_note").removeClass('hidden_element');
+        $("#id_workout_note").removeClass('hidden');
         $("#id_workout_note_label").removeClass('closed');
         $('#navlink_workout').addClass('text-royalblue');
-        $('#navlink_workout_drop').addClass('hidden_element');
+        $('#navlink_workout_drop').addClass('hidden');
         $('#open_label_drop').text('тренировки');
     }
 })
@@ -61,10 +61,10 @@ const commentaryStatusMsg = $('#commentary_status_msg', commentaryContainer);
 
 // откр/закр окошка комментария
 function closeCommentary() {
-    commentaryContainer.addClass('hidden_element');
+    commentaryContainer.addClass('hidden');
 }
 function openCommentary() {
-    commentaryContainer.toggleClass('hidden_element');
+    commentaryContainer.toggleClass('hidden');
     getUp(commentaryContainer);
 }
 
@@ -203,11 +203,11 @@ const commentTextareas = $('textarea', commentaryContainer);
 function changeCommentCategory(event) {
     // закрываем все вкладки и текстовые поля
     commentLabels.addClass('closed');
-    commentTextareas.addClass('hidden_element');
+    commentTextareas.addClass('hidden');
     // открываем нажатую, ее текстовое поле и окрашиваем
     $(event.target).removeClass('closed');
     eventTextarea = $('#' + event.target.id.slice(0, -6) + '_comment')
-    eventTextarea.removeClass('hidden_element');
+    eventTextarea.removeClass('hidden');
 }
 commentLabels.bind('click', changeCommentCategory); 
 
@@ -222,10 +222,10 @@ const clientNoteStatusMsg = $('#clientnote_status_msg', clientNoteContainer);
 
 // откр/закр окошка заметки
 function closeClientNote() {
-    clientNoteContainer.addClass('hidden_element');
+    clientNoteContainer.addClass('hidden');
 }
 function openClientNote() {
-    clientNoteContainer.toggleClass('hidden_element');
+    clientNoteContainer.toggleClass('hidden');
     getUp(clientNoteContainer);
 }
 
@@ -377,11 +377,11 @@ const clientNotetTextareas = $('textarea', clientNoteContainer);
 function changeClientNoteCategory(event) {
     // закрываем все вкладки и текстовые поля
     clientNoteLabels.addClass('closed');
-    clientNotetTextareas.addClass('hidden_element');
+    clientNotetTextareas.addClass('hidden');
     // открываем нажатую, ее текстовое поле и окрашиваем
     $(event.target).removeClass('closed');
     eventTextarea = $('#' + event.target.id.slice(0, -6))
-    eventTextarea.removeClass('hidden_element');
+    eventTextarea.removeClass('hidden');
 }
 clientNoteLabels.bind('click', changeClientNoteCategory); 
 
@@ -394,10 +394,10 @@ const fullClientNoteStatusMsg = $('#full_clientnote_status_msg', fullClientNoteC
 
 // откр/закр окошка заметки
 function closeFullClientNote() {
-    fullClientNoteContainer.addClass('hidden_element');
+    fullClientNoteContainer.addClass('hidden');
 }
 function openFullClientNote() {
-    fullClientNoteContainer.toggleClass('hidden_element');
+    fullClientNoteContainer.toggleClass('hidden');
     fullClientNoteContainer.css('z-index', maxZ);
 }
 

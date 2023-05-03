@@ -6,9 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'layouts/img/logo_title.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'personalpage/css/personalpage_style.css' %}">
     <link rel="stylesheet" href="{% static 'layouts/css/clientpage_layout.css' %}">
     {% block stylesheet %}{% endblock %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,14 +24,14 @@
       <div class="d-flex align-items-center justify-content-between py-2">
         <!-- логотип -->
         <a href="/" class="navbar-brand col-3 col-md-2">
-          <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+          <img src="{% static 'layouts/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
         </a>
 
         <!-- навигация просто строкой -->
         <ul class="nav justify-content-center mb-md-0 col-md-8" id="nav_string">
-          <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main">главная</a></li>
-          <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements">измерения</a></li>
-          <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal">питание</a></li>
+          <li><a href="{% url 'overviewpage' %}" class="nav_link" id="link_main">главная</a></li>
+          <li><a href="{% url 'measurementspage' %}?client_id={{ client.id }}" class="nav_link" id="link_measurements">измерения</a></li>
+          <li><a href="{% url 'mealjournal_page' %}" class="nav_link" id="link_meal">питание</a></li>
           <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout">тренировки</a></li>
         </ul>
         <!-- навигация выпадающим меню -->
@@ -42,12 +41,12 @@
               <span class="me-2" id="open_label_drop"></span>
             </a>
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-              <li><a href="{% url 'personalpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
-              <li><a href="{% url 'measurements' %}" class="nav_link" id="link_measurements_drop">измерения</a></li>
-              <li><a href="{% url 'mealjournal' %}" class="nav_link" id="link_meal_drop">питание</a></li>
+              <li><a href="{% url 'overviewpage' %}" class="nav_link" id="link_main_drop">главная</a></li>
+              <li><a href="{% url 'measurementspage' %}?client_id={{ client.id }}" class="nav_link" id="link_measurements_drop">измерения</a></li>
+              <li><a href="{% url 'mealjournal_page' %}" class="nav_link" id="link_meal_drop">питание</a></li>
               <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout_drop">тренировки</a></li>
               <hr class="my-2 mx-auto d-md-none">
-              <li><a href="{% url 'client_settings' %}" class="nav_link d-md-none" id="link_settings_drop">настройки</a></li>
+              <li><a href="{% url 'settings_page' %}" class="nav_link d-md-none" id="link_settings_drop">настройки</a></li>
             </ul>
           </div>
         </div>
@@ -55,15 +54,15 @@
         <!-- кнопки -->
         <div class="col-3 d-flex justify-content-end align-items-center col-md-2">
           <!-- записки клиента -->
-          <img src="{% static 'personalpage/img/file-earmark-text.svg' %}" id="clientmemo_icon" height="28" title="Мои заметки" class="svg-icon ch-pointer">
+          <img src="{% static 'layouts/img/file-earmark-text.svg' %}" id="clientmemo_icon" height="28" title="Мои заметки" class="svg-icon ch-pointer">
           <!-- настроки клиента -->
-          <a href="{% url 'client_settings' %}" class="d-none d-md-block ms-3" id="link_settings">
-            <img src="{% static 'personalpage/img/gear.svg' %}" height="28" title="Настройки" class="svg-icon">
+          <a href="{% url 'settings_page' %}" class="d-none d-md-block ms-3" id="link_settings">
+            <img src="{% static 'layouts/img/gear.svg' %}" height="28" title="Настройки" class="svg-icon">
           </a>
           <!-- выход -->
           <form method="POST" action="{% url 'logoutuser' %}" id="logout_btn" class="ms-3">
             {% csrf_token %}
-            <input type="image" alt="Submit" src="{% static 'common/img/exit_fat.svg' %}" id="exit_pic" class="align-middle svg-icon" height="28" title="Выход">
+            <input type="image" alt="Submit" src="{% static 'layouts/img/exit.svg' %}" id="exit_pic" class="align-middle svg-icon" height="28" title="Выход">
           </form>
         </div>
 
@@ -72,9 +71,8 @@
   </header>
 
   <main>
-    <br><br>
     <!-- личная заметка клиента -->
-    <div class="d-flex flex-column rounded border-blueshadow hidden_element p-2" id="clientmemo_container">
+    <div class="d-flex flex-column rounded border-blueshadow hidden p-2" id="clientmemo_container">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="text-white text-center moving_part cursor-move mb-0 w-fill">Мои заметки</h4>
         <button class="btn-close" type="button" aria-label="Close"></button>
@@ -108,13 +106,15 @@
 
     </div>
 
-    {% block content %}
-    {% endblock %}
+    <div class="container main_container">
+      {% block content %}
+      {% endblock %}
+    </div>
 
     <!-- уведомления -->
     <div class="alert success-alert" role="alert" id="success-alert">
       <div class="alert-content">
-        <img class="icon-check" src="{% static 'common/img/check-circle.svg' %}">
+        <img class="icon-check" src="{% static 'layouts/img/check-circle.svg' %}">
         <div class="alert-message">
           <b>Успех</b>
           <span class="text text-secondary"></span>
@@ -125,7 +125,7 @@
 
     <div class="alert danger-alert" role="alert" id="danger-alert">
       <div class="alert-content">
-        <img class="icon-check" src="{% static 'common/img/exclamation-circle.svg' %}">
+        <img class="icon-check" src="{% static 'layouts/img/exclamation-circle.svg' %}">
         <div class="alert-message">
           <b>Ошибка</b>
           <span class="text text-secondary"></span>
@@ -140,25 +140,25 @@
     <div class="container px-0">
 
       <!-- аватар эксперта -->
-      <img id="expert_pic" src="{% static 'personalpage/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80">
+      <img id="expert_pic" src="{% static 'layouts/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80">
       <!-- отметка о непрочитанных комментариях -->
       <div class="rounded-circle text-center align-middle" id="count_of_unread" data-action-count="{% url 'count_unread_comments' %}"></div>
 
       <!-- окно комментария эксперта -->
-      <div class="d-flex flex-column flex-sm-row hidden_element" id="commentary_container">
+      <div class="d-flex flex-column flex-sm-row hidden" id="commentary_container">
         <div class="d-flex flex-column border rounded border-blueshadow p-2 p-sm-3 bg-white">
           <!-- информация коммента -->
           <form id="commentary_form" class="" action="{% url 'get_commentary' %}" data-action-mark-readed="{% url 'mark_comment_readed' %}">
 
             <div class="d-flex justify-content-between align-items-center mb-2">
               <!-- скопировать в заметку -->
-              <img src="{% static 'personalpage/img/file-earmark-plus.svg' %}" id="copy2memo_icon" height="24" title="Копировать в заметку" class="ch-pointer">
-              <img src="{% static 'personalpage/img/file-earmark-check.svg' %}" id="copy2memo_done_icon" height="24" title="Скопировано в заметку" class="hidden_element">
+              <img src="{% static 'layouts/img/file-earmark-plus.svg' %}" id="copy2memo_icon" height="24" title="Копировать в заметку" class="ch-pointer">
+              <img src="{% static 'layouts/img/file-earmark-check.svg' %}" id="copy2memo_done_icon" height="24" title="Скопировано в заметку" class="hidden">
               <!-- дата -->
               <div class="d-flex">
-                <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" id="comment_prev_date" class="mx-2 arrow_btn" width="20">
+                <img src="{% static 'layouts/img/arrow_prev_royalblue.svg' %}" id="comment_prev_date" class="mx-2 arrow_btn" width="20">
                 <input type="date" name="date" value="" class="form-control text-center p-1 transition_common" id="id_date">
-                <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" id="comment_next_date" class="mx-2 arrow_btn" width="20">
+                <img src="{% static 'layouts/img/arrow_next_royalblue.svg' %}" id="comment_next_date" class="mx-2 arrow_btn" width="20">
               </div>
               <!-- закрыть -->
               <button type="button" class="btn-close" id="close_commentary_btn" aria-label="Close"></button>
@@ -175,20 +175,20 @@
               </tr>
             </table>
             
-            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_general">{{ today_commentary.general }}</div>
-            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_measurements">{{ today_commentary.measurements }}</div>
-            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_nutrition">{{ today_commentary.nutrition }}</div>
-            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden_element" id="id_workout">{{ today_commentary.workout }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden" id="id_general">{{ today_commentary.general }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden" id="id_measurements">{{ today_commentary.measurements }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden" id="id_nutrition">{{ today_commentary.nutrition }}</div>
+            <div class="commentary_textfield p-2 p-sm-3 pb-2 hidden" id="id_workout">{{ today_commentary.workout }}</div>
 
-            <span class="hidden_element" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
-            <span class="hidden_element" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
-            <span class="hidden_element" id="id_nutrition_read">{{ today_commentary.nutrition_read|lower }}</span>
-            <span class="hidden_element" id="id_workout_read">{{ today_commentary.workout_read|lower }}</span>
+            <span class="hidden" id="id_general_read">{{ today_commentary.general_read|lower }}</span>
+            <span class="hidden" id="id_measurements_read">{{ today_commentary.measurements_read|lower }}</span>
+            <span class="hidden" id="id_nutrition_read">{{ today_commentary.nutrition_read|lower }}</span>
+            <span class="hidden" id="id_workout_read">{{ today_commentary.workout_read|lower }}</span>
             
           </form>
         </div>
         <!-- уголок диалогового окна -->
-        <img src="{% static 'personalpage/img/dialog_part.svg' %}" class="align-self-end" id="dialog_part_svg" width="30">
+        <img src="{% static 'layouts/img/dialog_corner.svg' %}" class="align-self-end" id="dialog_part_svg" width="30">
       </div>
 
       <!-- контейнер с контактами -->
@@ -204,32 +204,32 @@
           <div class="d-flex align-items-center">
             <div class="p-2 d-flex justify-content-end">
               <a href="https://t.me/parrrabollla" target="_blank">
-                <img src="{% static 'common/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                <img src="{% static 'layouts/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://wa.me/79603280691" target="_blank">
-                <img src="{% static 'common/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                <img src="{% static 'layouts/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://discord.gg/CDrXhVA" target="_blank">
-                <img src="{% static 'common/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                <img src="{% static 'layouts/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank">
-                <img src="{% static 'common/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
+                <img src="{% static 'layouts/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
               </a>
             </div>
             <div class="p-2 d-flex justify-content-end">
               <a href="https://vk.com/id37037617" target="_blank">
-                <img src="{% static 'common/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                <img src="{% static 'layouts/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
               </a>
             </div>
             <!-- <div class="p-2 d-flex justify-content-end">
               <a href="" target="_blank">
-                <img src="{% static 'common/img/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                <img src="{% static 'layouts/img/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
               </a>
             </div> -->
           </div>
@@ -248,10 +248,10 @@
           </div>
           <div class="d-flex align-items-center">
             <div class="p-2 d-flex justify-content-end">
-              <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'common/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'layouts/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
             </div>
             <div class="p-2 d-flex justify-content-end">
-              <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'common/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+              <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'layouts/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="{% static 'common/js/drag_container.js' %}"></script>
+<script src="{% static 'layouts/js/drag_container.js' %}"></script>
 <script src="{% static 'layouts/js/clientpage_layout.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 {% block script %}{% endblock %}

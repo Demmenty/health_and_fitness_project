@@ -1,0 +1,50 @@
+/* блок-сводка */
+#overview_block .block-header span {
+    word-break: break-all;
+}
+@media (min-width: 768px) {
+    #overview_block {
+        width: 45%;
+        max-width: 450px;
+    }
+}
+
+/* блок физ.измерений */
+#today_measure_block .block-content {
+    justify-content: space-between;
+}
+#today_measure_block .tablerow_name {
+    text-align: left;
+    width: 150px;
+}
+@media (min-width: 768px) {
+    #today_measure_block {
+        width: 45%;
+        max-width: 450px;
+    }
+}
+
+/* кот */
+.cat-pic {
+    margin-top: auto;
+    margin-right: auto;
+    margin-left: auto;
+}
+.cat-pic img {
+    width: 100%;
+    max-width: 22rem;
+}
+
+/* окно контактов */
+.contacts_help img {
+    width: -webkit-fill-available;
+    border-radius: 10px;
+    border: 1px solid #5271ff;
+}
+#contacts_form svg.open {
+    -webkit-filter: drop-shadow(0px 0px 3px #5271ff);
+    filter: drop-shadow(0px 0px 3px #5271ff);
+    background-color: #5271ff;
+    border-radius: 10px;
+    fill: white;
+}

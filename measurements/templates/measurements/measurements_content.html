@@ -1,0 +1,562 @@
+{% load static %}
+
+<!-- меню дополнительных функций -->
+<div class="extra-menu">
+    <div class="extra-menu-date">
+      <span class="text-center">{% now "j E" %}</span>
+    </div>
+    <div class="extra-menu-btns">
+        {% if for_expert %}
+            <div class="extra-menu-item not-implemented" title="Только для клиента">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                <span>Измерение</span>
+            </div>
+        {% else %}
+            <a class="extra-menu-item" title="Добавить измерения" href="{% url 'addmeasurepage' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                <span>Измерение</span>
+            </a>
+        {% endif %}
+        <div class="extra-menu-item" id="apply_colors_btn" title="Окрашивание измерений" data-action="{% url 'get_color_settings' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-palette" viewBox="0 0 16 16">
+                <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                <path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8zm-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7z"/>
+            </svg>
+            <span>Окрашивание</span>
+        </div>
+        <div class="extra-menu-item" id="nutrition-btn" title="Рекомендации по питанию">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-ruled" viewBox="0 0 16 16">
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v4h10V2a1 1 0 0 0-1-1H4zm9 6H6v2h7V7zm0 3H6v2h7v-2zm0 3H6v2h6a1 1 0 0 0 1-1v-1zm-8 2v-2H3v1a1 1 0 0 0 1 1h1zm-2-3h2v-2H3v2zm0-3h2V7H3v2z"/>
+            </svg>
+            <span>кбжу</span>
+        </div>
+        <a class="extra-menu-item" title="Страница антропометрии" href="{% url 'anthropometrypage' %}?client_id={{ client.id }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+            </svg>
+            <span>Антропометрия</span>
+        </a>
+    </div>
+</div>
+
+<!-- табличка за сегодня -->
+<div class="block-container" id="today_measurements">
+    <div class="block-header">
+        <span>Сегодня</span>
+    </div>
+    <div class="block-content">
+        {% if not today_measure %}
+            <p class="text-center mt-2">Измерений не сделано</p>
+        {% else %}
+            <!-- таблицы для большого экрана -->
+            <table class="table table-bordered align-middle text-center mb-0 d-none d-md-table mb-3">
+                <thead>
+                    <tr class="table-light align-middle">
+                        <th>Самочувствие</th>
+                        <th>Вес</th>
+                        <th>Процент жира</th>
+                        <th>Пульс</th>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                            <th>Давление</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
+                        <td >{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td>
+                        <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td>
+                        <td>{{ today_measure.pulse|default_if_none:"-" }}</td>
+                        {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                            <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered align-middle text-center mb-0 d-none d-md-table">
+                <thead>
+                    <tr class="table-light align-middle">
+                        <th>Калории</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- таблица для маленького экрана -->
+            <table class="table table-bordered align-middle text-center mb-0 d-md-none">
+                <tbody>
+                    <tr>
+                        <th class="table-light">Самочувствие</th>
+                        <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Вес</th>
+                        <td>{% if today_measure.weight %}{{ today_measure.weight }} кг{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Процент жира</th>
+                        <td>{% if today_measure.fat %}{{ today_measure.fat }} %{% else %}-{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Пульс в покое</th>
+                        <td>{% if today_measure.pulse %}{{ today_measure.pulse }} уд/мин{% else %}-{% endif %}</td>
+                    </tr>
+                    {% if today_measure.pressure_upper and today_measure.pressure_lower %}
+                        <tr>
+                            <th class="table-light">Давление</th>
+                            <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th class="table-light">Калории</th>
+                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Белки</th>
+                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Жиры</th>
+                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Углеводы</th>
+                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                    </tr>
+                </tbody>                
+            </table>
+            {% if today_measure.comment %}
+                <div class="d-flex align-items-start mt-3" id="today_comment_container">
+                    <div class="text-center mt-2 ms-2 me-3">
+                        <img src="{% static 'measurements/img/comment_pic.png' %}" class="comment_pic_royalblue" title="комментарий">
+                    </div>
+                    <div class="border border-grey rounded w-100 p-2 px-3" id="today_comment">
+                        {{ today_measure.comment }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="d-flex align-items-start mt-3 hidden" id="today_comment_container">
+                    <div class="text-center mt-2 ms-2 me-3">
+                        <img src="{% static 'measurements/img/comment_pic.png' %}" class="comment_pic_royalblue" title="комментарий">
+                    </div>
+                    <div class="border border-grey rounded w-100 p-2 px-3" id="today_comment">
+                        {{ today_measure.comment }}
+                    </div>
+                </div>
+            {% endif %}
+        
+        {% endif %}
+    </div>
+</div>
+
+<!-- табличка за период -->
+{% if period_measures %}
+    <div  class="block-container" id="period_measurements">
+        <div class="block-header">
+            <span>Показатели за {{ period_as_string }}</span>
+        </div>
+        <div class="block-content">
+        <table class="table table-bordered align-middle text-center d-block d-lg-table overflow-auto w-100" id="measure_table_period">
+            <thead class="table-light align-middle">
+                <tr> 
+                    <th>Дата</th>
+                    <th>
+                        <span class="d-xl-none">Само-<br>чувствие</span>
+                        <span class="d-none d-xl-inline">Самочувствие</span>
+                    </th>
+                    <th>Вес</th>
+                    <th class="">Процент жира</th>
+                    <th>Пульс</th>
+                    {% if need_to_show_pressure %}
+                        <th>Давление</th>
+                    {% endif%}
+                    <th>Калории</th>
+                    <th>Белки</th>
+                    <th>Жиры</th>
+                    <th>Углеводы</th>
+                    <td class="borderless">&nbsp</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in period_measures|dictsort:"date" %}
+                <tr class="my-hover">
+                    <td>{{ day.date|date:"j b" }}</td>
+                    <td class="td_feel" value="{{ day.feel }}">{% if day.feel %}{{ day.feel }}/10{% endif %}</td>
+                    <td class="td_weight text-nowrap" value="{{ day.weight }}">{% if day.weight %}{{ day.weight }} кг{% endif %}</td>
+                    <td class="td_fat" value="{{ day.fat }}">{% if day.fat %}{{ day.fat }} %{% endif %}</td>
+                    <td class="td_pulse" value="{{ day.pulse }}">{{ day.pulse|default_if_none:"" }}</td>
+                    {% if need_to_show_pressure %}
+                        <td class="td_pressure" value="{{ day.pressure_upper }}, {{ day.pressure_lower }}">
+                            {% if day.pressure_upper is not None and day.pressure_lower is not None %}
+                                {{ day.pressure_upper }}/{{ day.pressure_lower }}
+                            {% endif %}</td>
+                    {% endif%}
+                    <td class="td_calories" value="{{ day.calories }}">{{ day.calories|default_if_none:"" }}</td>
+                    <td class="td_protein" value="{{ day.protein }}">{{ day.protein|default_if_none:"" }}</td>
+                    <td class="td_fats" value="{{ day.fats }}">{{ day.fats|default_if_none:"" }}</td>
+                    <td class="td_carbohydrates" value="{{ day.carbohydrates }}">{{ day.carbohydrates|default_if_none:"" }}</td>
+                    <td class="borderless">
+                        {% if day.comment %}
+                            <img src="{% static 'measurements/img/comment_pic.png' %}" class="comment_btn noluminosity" 
+                                title="показать комментарий" value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                        {% else %}
+                            <img src="{% static 'measurements/img/comment_pic.png' %}" class="comment_btn luminosity" 
+                                title="комментария нет" value="{{ day.date }}" id="comment_btn{{ forloop.counter }}">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot class="table-light">
+                <tr>
+                    <th class="text-nowrap">Среднее:</th>
+                    <th>{{ period_measures_avg.feel }}</th>
+                    <th class="text-nowrap">{{ period_measures_avg.weight }}</th>
+                    <th>{{ period_measures_avg.fat }}</th>
+                    <th>{{ period_measures_avg.pulse }}</th>
+                    {% if need_to_show_pressure %}
+                        <th>{{ period_measures_avg.pressure }}</th>
+                    {% endif%}
+                    <th>{{ period_measures_avg.calories }}</th>
+                    <th>{{ period_measures_avg.protein }}</th>
+                    <th>{{ period_measures_avg.fats }}</th>
+                    <th>{{ period_measures_avg.carbohydrates }}</th>
+                    <td class="borderless">&nbsp</td>
+                </tr>
+            </tfoot>
+        </table>
+        <!-- всплывающие комменты -->
+        {% if for_expert %}
+            {% for comment in period_measure_comment_forms %}
+                <div class="container_commentform hidden" id="comment{{ forloop.counter }}">
+                    <div class="d-flex justify-content-between align-items-center commentbtn_container mb-1">
+                        <div id="comment{{ forloop.counter }}header" class="comment_header moving_part w-fill">&nbsp;</div>
+                        <button class="btn btn-outline-primary close-btn" type="button" 
+                        id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}">
+                            &#10006
+                        </button>
+                    </div>
+                    {{ comment.date }}
+                    {{ comment.comment }}
+                </div>
+            {% endfor %}
+        {% else %}
+            {% for comment in period_measure_comment_forms %}
+                <div class="container_commentform hidden" id="comment{{ forloop.counter }}">
+                    <form method="post" class="d-flex flex-column commentForm" id="commentForm{{ forloop.counter }}">
+                        {% csrf_token %}
+                        {{ comment.date }}
+                        {{ comment.comment }}
+                        <div class="d-flex justify-content-between align-items-center commentbtn_container">
+                            <button class="btn btn-outline-primary close-btn" type="button" 
+                            id="close_comment_btn{{ forloop.counter }}" value="{{ comment.date.value }}">
+                                &#10006
+                            </button>
+                            <div id="comment{{ forloop.counter }}header" class="comment_header moving_part text-center">сохранено</div>
+                            <button class="btn btn-primary" type="submit">&#10003</button>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!-- выбор дней статистики -->
+        <form action="" method="get" class="d-flex flex-wrap flex-md-nowrap text-nowrap justify-content-end">
+            <div class="d-flex align-items-center mb-2 mb-md-0">
+                <h5 class="m-0">Статистика за</h5>
+                <input type="number" class="form-control text-center mx-2" name="selectperiod" min="1" id="input_period">
+                <h5 class="m-0">дней</h5>
+            </div>
+            <button type="submit" class="btn btn-primary d-inline mx-2 mb-2 mb-md-0 me-md-0" name="submit">Получить</button></h5>
+        </form>
+        </div>
+    </div>
+{% endif %}
+
+<!-- форма настроек цвета -->
+{% if for_expert %}
+    <div class="block-container" id="color_settings">
+        <div class="block-header">
+            <span>Настройки окрашивания</span>
+        </div>
+        <div class="block-content">
+            <form method="POST" action="{% url 'save_color_settings' %}" id="color_settings_form">
+                {% csrf_token %}
+                <input type="hidden" value="{{ client.id }}" name="client_id" id="client_id">
+
+                <div class="d-flex flex-wrap">
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Самочувствие</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:":5" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Вес</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"5:10" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Процент жира</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"10:15" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Пульс</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"15:20" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center m-0">
+                        <h5>Давление верхнее</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"20:25" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <p class="ms-3 mt-2">
+                        Нормальное давление по анкете: <span>{{ normal_pressure }}</span>
+                    </p>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center m-0">
+                        <h5>Давление нижнее</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"25:30" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Калории</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"30:35" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Белки</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"35:40" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Жиры</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"40:45" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+
+                    <div class="col-12 col-md-6 px-1">
+                    <table class="table table-borderless caption-top align-middle text-center">
+                        <h5>Углеводы</h5>
+                        <hr>
+                        {% for form in colorset_forms|slice:"45:50" %}
+                        <tr>
+                            {{ form.index }}
+                            {{ form.color }}
+                            <td>{{ form.low_limit }}</td>
+                            <td class="fs-4">&#8804;</td>
+                            <th class="text-transparent" id="color{{ forloop.counter }}">пример</td>
+                            <td class="fs-4">&#8804;</td>
+                            <td>{{ form.upper_limit }}</td>
+                        </tr>
+                        {% endfor %}           
+                    </table>
+                    </div>
+                </div>
+
+                <!-- блок кнопок -->
+                <div class="d-flex justify-content-between align-items-center" style="margin-left: 12px; margin-right: 12px;">
+                    <button class="btn btn-outline-primary close-btn" type="button">Закрыть</button>
+                    <button class="btn btn-primary" type="submit">Сохранить</button>
+                </div>
+
+                <!-- пояснение алгоритма-->
+                <div class="mt-4 mx-3" id="explanation">
+                    <h5>Алгоритм выбора цвета</h5>
+                    <hr>
+                    <p>Вначале берется зеленый цвет, означающий идеальные значения,
+                        и проверяется соответствие показателя на заданное условие:
+                    </p>
+                    <p class="mb-0"><span class="text-royalblue">&#10004;</span> 
+                        если условие выполняется, происходит окраска.
+                    </p>
+                    <p><span class="text-royalblue">&#10006;</span> 
+                        если условие не выполняется, берется нижеследующий цвет и проверяется его условие.
+                    </p>
+                    <p>Если ни одно условие не выполнено, цвет остается прозрачным.</p>
+                    <p>
+                        Давление проверяется по двум числам отдельно и окрашивается по худшему результату.
+                        Если одно из чисел давления не выполнило ни одного условия, ячейка не окрашивается.
+                    </p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+<!-- рекомендованные КБЖУ -->
+<div class="block-container moving" id="recommend_nutrition">
+    <div class="block-header moving_part">
+        <span class="col-1">&nbsp;</span>
+        <span class="col-9">Рекомендации</span>
+        <button type="button" class="btn-close col-1"></button>
+    </div>
+    <div class="block-content">
+        {% if not recommend_nutrition.calories.value and not for_expert %}
+            <p class="text-center mt-2">Рекомендации пока не установлены</p>
+        {% else %}
+            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
+                {% csrf_token %}
+                <input type="hidden" value="{{ client.id }}" name="client_id">
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                        <label for="id_calories" class="w-50">Калории:</label>
+                        {{ recommend_nutrition.calories }}
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <label for="id_fats" class="w-50">Жиры:</label>
+                        {{ recommend_nutrition.fats }} 
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <label for="id_protein" class="w-50">Белки:</label>
+                        {{ recommend_nutrition.protein }}
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <label for="id_carbohydrates" class="w-50">Углеводы:</label>
+                        {{ recommend_nutrition.carbohydrates }}
+                    </div>
+                </div>
+                {% if for_expert %}
+                    <br>
+                    <label for="id_note" class="">Заметка:</label>
+                    {{ recommend_nutrition.note }}
+                    <button type="submit" class="btn btn-lilac mt-3 float-end">сохранить</button>
+                {% else %}
+                    {% if recommend_nutrition.note.value %}
+                        <br>{{ recommend_nutrition.note }}
+                    {% endif %}
+                {% endif %}
+            </form>
+        {% endif %}
+    </div>
+</div>

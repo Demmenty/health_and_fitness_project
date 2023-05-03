@@ -291,12 +291,19 @@ def renew_measure_nutrition(user, measure_date: datetime) -> None:
     """обновление кбжу в записи Measurements на данные из FS
     за выбранный день, если изменились калории"""
 
+    if not services.fs.is_connected(user):
+        return
+
     measure = Measurement.objects.filter(
         user=user, date=measure_date.date()
     ).first()
 
     if measure:
-        fs_nutrition = services.fs.daily_nutrition(user, measure_date)
+        try:
+            fs_nutrition = services.fs.daily_nutrition(user, measure_date)
+        except KeyError:
+            return
+        
         if fs_nutrition:
             if fs_nutrition["calories"] != measure.calories:
                 measure.calories = fs_nutrition["calories"]
@@ -310,6 +317,9 @@ def renew_measure_nutrition(user, measure_date: datetime) -> None:
 def renew_weekly_measures_nutrition(user) -> None:
     """обновление кбжу в записях Measurements за последние 7 дней
     на данные из FS, но если изменились калории"""
+
+    if not services.fs.is_connected(user):
+        return
 
     weekly_nutrition_fs = services.fs.weekly_nutrition(user)
 

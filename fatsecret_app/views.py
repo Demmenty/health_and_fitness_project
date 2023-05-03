@@ -32,7 +32,7 @@ def fatsecretauth(request):
             # тут иногда возникает ошибка - не смогла понять причину
             session_token = services.fs.session.authenticate(verifier_pin)
             services.fs.save_token(session_token, request.user)
-            return redirect("mealjournal")
+            return redirect("mealjournal_page")
 
         except KeyError as error:
             print("загадочная ошибка, пробуем снова", error)

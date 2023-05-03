@@ -414,7 +414,7 @@ function fillTrainingLikeLast() {
 
                 // обработчики кнопок
                 report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
-                if (params.isExpert) {
+                if (params.isExpert == 'true') {
                     report_form.find("#id_is_done").attr("disabled", true);
                 }
                 else {
@@ -557,15 +557,12 @@ function deleteTraining() {
 
 function toggleNoTrainingsSign() {
     // проверяет наличие тренировок в карточке дня
-    // если нет - показывает картинку-уведомление
-
-    let trainings_amount = $("#trainings-container").find(".training").length;
-
-    if (trainings_amount == 0) {
-        $("#lazy-cat").show('slow');
+    // если нет трень - показывает картинку-уведомление
+    if ($("#trainings-container").is(':empty')) {
+        $("#cat-pic").show('slow');
     }
     else {
-        $("#lazy-cat").hide('slow');
+        $("#cat-pic").hide('slow');
     }
 }
 
@@ -859,7 +856,7 @@ function addExerciseToSelection(exercise_id) {
 
         // вставить и показать
         $("#exercises-list").append(item);
-        item.removeClass("blank");
+        item.removeClass("hidden");
 
         filterExercisesByTrainingType();
         $("#no-exercises-notice").remove();
@@ -1011,7 +1008,7 @@ function createExerciseInfo(data) {
         info.find(".areas").remove();
     }
 
-    info.removeClass("blank");
+    info.removeClass("hidden");
 
     return info;
 }
@@ -1650,7 +1647,7 @@ function saveExerciseReport() {
 function disableFieldsForExpert() {
     // деактивирует чекбокс выполнения упражнений для эксперта
 
-    if (params.isExpert) {
+    if (params.isExpert == 'true') {
         $("input[name='is_done']").attr("disabled", true);
     }
 }
@@ -1715,7 +1712,7 @@ const exercise_report_forms = {
 }
 
 // заготовка упражнения в списке выбора
-const exercise_item = $(".exercise-item.blank").clone();
+const exercise_item = $(".exercise-item.hidden").clone();
 
 // словарь соответствия типа тренировки типу упражнения
 const training_type_to_exercise_type = {

@@ -50,13 +50,11 @@ INSTALLED_APPS = [
     "homepage",
     "layouts",
     "consultation_signup",
-    "client_info",
-    "personalpage",
-    "controlpage",
+    "client_overview",
+    "mealjournal",
     "measurements",
-    "anthropometry",
     "fatsecret_app",
-    "expertpage",
+    "expert_overview",
     "expert_remarks",
     "expert_recommendations",
     "training",
@@ -147,10 +145,10 @@ MEDIA_URL = "media/"
 
 STATICFILES_DIRS = [
     (BASE_DIR / "common" / "static"),
-    (BASE_DIR / "controlpage" / "static"),
-    (BASE_DIR / "expertpage" / "static"),
+    (BASE_DIR / "client_overview" / "static"),
+    (BASE_DIR / "measurements" / "static"),
+    (BASE_DIR / "expert_overview" / "static"),
     (BASE_DIR / "homepage" / "static"),
-    (BASE_DIR / "personalpage" / "static"),
     (BASE_DIR / "training" / "static"),
 ]
 

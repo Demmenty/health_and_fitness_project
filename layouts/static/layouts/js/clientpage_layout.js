@@ -36,57 +36,57 @@ window.onload = function () {
     // применение настроек в зависимости от открытой страницы
     setSettingsDependPath();
     function setSettingsDependPath() {
-        if ((pagePath == '/personalpage/measurements/') ||
-            (pagePath == '/personalpage/anthropometry/') ||
-            (pagePath == '/personalpage/addmeasure/')) {
+        if ((pagePath == '/measurements/') ||
+            (pagePath == '/measurements/anthropometry/') ||
+            (pagePath == '/measurements/addmeasure/')) {
             // открытие соотв.текста комментария
-            commentMeasurements.classList.remove('hidden_element');
+            commentMeasurements.classList.remove('hidden');
             // открытие соотв.вкладки комментария
             commentMeasurementsLabel.classList.remove('closed');
             // окрашивание соотв.вкладки навигации в синий
             navLinkMeasurements.classList.add('text-royalblue');
-            navLinkMeasurementsDrop.classList.add('hidden_element');
+            navLinkMeasurementsDrop.classList.add('hidden');
             // название открытой вкладки если меню dropdown
             navLinkOpenDrop.textContent = 'измерения';
             // определение имени открытой вкладки
             openLabelName = 'measurements';
             openLabel = commentMeasurementsLabel;
         }
-        else if ((pagePath == '/personalpage/mealjournal/') ||
-                 (pagePath == '/personalpage/foodbymonth/') ||
-                 (pagePath == '/personalpage/foodbydate/')) {
-            commentNutrition.classList.remove('hidden_element');
+        else if ((pagePath == '/mealjournal/') ||
+                 (pagePath == '/mealjournal/foodbymonth/') ||
+                 (pagePath == '/mealjournal/foodbydate/')) {
+            commentNutrition.classList.remove('hidden');
             commentNutritionLabel.classList.remove('closed');
             navLinkMeal.classList.add('text-royalblue');
-            navLinkMealDrop.classList.add('hidden_element');
+            navLinkMealDrop.classList.add('hidden');
             navLinkOpenDrop.textContent = 'питание';
             openLabelName = 'nutrition';
             openLabel = commentNutritionLabel;
         }
         else if (pagePath == '/training/') {
-            commentWorkout.classList.remove('hidden_element');
+            commentWorkout.classList.remove('hidden');
             commentWorkoutLabel.classList.remove('closed');
             navLinkWorkout.classList.add('text-royalblue');
-            navLinkWorkoutDrop.classList.add('hidden_element');
+            navLinkWorkoutDrop.classList.add('hidden');
             navLinkOpenDrop.textContent = 'тренировки';
             openLabelName = 'workout';
             openLabel = commentWorkoutLabel;
         }
-        else if (pagePath == '/personalpage/settings') {
-            commentGeneral.classList.remove('hidden_element');
+        else if (pagePath == '/client_overview/settings/') {
+            commentGeneral.classList.remove('hidden');
             commentGeneralLabel.classList.remove('closed');
             navLinkSettings.classList.add('svg-royalblue');
-            document.querySelector(".dropdown-menu hr").classList.add("hidden_element");
-            navLinkSettingsDrop.classList.add('hidden_element');
+            document.querySelector(".dropdown-menu hr").classList.add("hidden");
+            navLinkSettingsDrop.classList.add('hidden');
             navLinkOpenDrop.textContent = 'настройки';
             openLabelName = 'general';
             openLabel = commentGeneralLabel;
         }
         else {
-            commentGeneral.classList.remove('hidden_element');
+            commentGeneral.classList.remove('hidden');
             commentGeneralLabel.classList.remove('closed');
             navLinkMain.classList.add('text-royalblue');
-            navLinkMainDrop.classList.add('hidden_element');
+            navLinkMainDrop.classList.add('hidden');
             navLinkOpenDrop.textContent = 'главная';
             openLabelName = 'general';
             openLabel = commentGeneralLabel;
@@ -122,7 +122,7 @@ window.onload = function () {
             label.classList.add('closed');
         })
         commentTextareas.forEach (area => {
-            area.classList.add('hidden_element');
+            area.classList.add('hidden');
         })
     
         // фиксируем текущую открытую вкладку
@@ -132,7 +132,7 @@ window.onload = function () {
         // открываем нажатую, ее текстовое поле и окрашиваем
         openLabel.classList.remove('closed');
         eventTextarea = document.getElementById(openLabel.id.slice(0, -6));
-        eventTextarea.classList.remove('hidden_element');
+        eventTextarea.classList.remove('hidden');
     
         // переопределяем цвета вкладок
         setCommentCategoryColors();
@@ -350,12 +350,13 @@ window.onload = function () {
     const commentaryContainer = document.getElementById('commentary_container');
     // откр/закр окошка коммента для клиента
     function openCommentary() {
-        if (commentaryContainer.classList.contains('hidden_element')) {
-            commentaryContainer.classList.remove('hidden_element');
+        if (commentaryContainer.classList.contains('hidden')) {
+            commentaryContainer.classList.remove('hidden');
             controlLabelReaded(openLabelName);
+            getUp($("#commentary_container"));
         }
         else {
-            commentaryContainer.classList.add('hidden_element'); 
+            commentaryContainer.classList.add('hidden'); 
         }
     }
     expertPic = document.getElementById('expert_pic');
@@ -378,11 +379,11 @@ window.onload = function () {
                     let response = JSON.parse(this.responseText);
                     // если количество = 0, убираем значок
                     if (response.count_of_unread == '0') {
-                        countUnread.classList.add('hidden_element');
+                        countUnread.classList.add('hidden');
                     }
                     // иначе, меняем значение на странцие
                     else {
-                        countUnread.classList.remove('hidden_element');
+                        countUnread.classList.remove('hidden');
                         countUnread.textContent = response.count_of_unread;
                     }
                 }
@@ -395,7 +396,7 @@ window.onload = function () {
     const closeCommentBtn = document.getElementById("close_commentary_btn");
     closeCommentBtn.addEventListener('click', closeCommentary, false);
     function closeCommentary() {
-        commentaryContainer.classList.add("hidden_element");
+        commentaryContainer.classList.add("hidden");
     }
 
     // копирование текста комментария в личную заметку
@@ -406,7 +407,7 @@ window.onload = function () {
     copy2MemoBtn.addEventListener('click', copyToMemo, false);
     function copyToMemo() {
 
-        let commentArea = document.querySelector("#commentary_form .commentary_textfield:not(.hidden_element)");
+        let commentArea = document.querySelector("#commentary_form .commentary_textfield:not(.hidden)");
         let commentSectionName = commentArea.getAttribute("id").slice(3);
         let commentText = commentArea.innerHTML;
         
@@ -422,14 +423,14 @@ window.onload = function () {
         
         clientMemoSaveBtn.click();
 
-        copy2MemoBtn.classList.add("hidden_element");
-        copyied2MemoImg.classList.remove("hidden_element");
+        copy2MemoBtn.classList.add("hidden");
+        copyied2MemoImg.classList.remove("hidden");
     }
 
     // вернуть кнопку копировать в заметку обратно
     function returnCopy2MemoBtn() {
-        copy2MemoBtn.classList.remove("hidden_element");
-        copyied2MemoImg.classList.add("hidden_element");
+        copy2MemoBtn.classList.remove("hidden");
+        copyied2MemoImg.classList.add("hidden");
     }
 
 } 
@@ -439,26 +440,26 @@ $(document).ready(function() {
     // настройки в зависимости от страницы
     pagePath = document.location.pathname;
     // открытие соответствующей секции заметки
-    if ((pagePath == '/personalpage/measurements/') ||
-        (pagePath == '/personalpage/anthropometry/') ||
-        (pagePath == '/personalpage/addmeasure/')) {
+    if ((pagePath == '/measurements/') ||
+        (pagePath == '/measurements/anthropometry/') ||
+        (pagePath == '/measurements/addmeasure/')) {
 
-        $('#memo_measurements_textarea').removeClass('hidden_element');
+        $('#memo_measurements_textarea').removeClass('hidden');
         $('#memo_measurements_label').removeClass('closed');
     }
-    else if ((pagePath == '/personalpage/mealjournal/') ||
-            (pagePath == '/personalpage/foodbymonth/') ||
-            (pagePath == '/personalpage/foodbydate/')) {
+    else if ((pagePath == '/mealjournal/') ||
+            (pagePath == '/mealjournal/foodbymonth/') ||
+            (pagePath == '/mealjournal/foodbydate/')) {
         
-        $('#memo_nutrition_textarea').removeClass('hidden_element');
+        $('#memo_nutrition_textarea').removeClass('hidden');
         $('#memo_nutrition_label').removeClass('closed');
     }
     else if (pagePath == '/training/') {
-        $('#memo_workout_textarea').removeClass('hidden_element');
+        $('#memo_workout_textarea').removeClass('hidden');
         $('#memo_workout_label').removeClass('closed');
     }
     else {
-        $('#memo_general_textarea').removeClass('hidden_element');
+        $('#memo_general_textarea').removeClass('hidden');
         $('#memo_general_label').removeClass('closed');
     }
 })
@@ -468,20 +469,24 @@ $('#clientmemo_icon').on('click', toggleClientMemo);
 $("#clientmemo_container .btn-close").on('click', toggleClientMemo);
 
 function toggleClientMemo() {
-    $('#clientmemo_container').toggleClass("hidden_element");
+    if ($('#clientmemo_container').hasClass("hidden")) {
+        getUp($('#clientmemo_container'));
+    }
+
+    $('#clientmemo_container').toggleClass("hidden");
     $('#clientmemo_icon').toggleClass('svg-royalblue');
 }
 
 // // управление вкладками личной заметки
 $(".memo_label").on('click', function() {
     $(".memo_label").addClass('closed');
-    $("#clientmemo_form textarea").addClass('hidden_element');
+    $("#clientmemo_form textarea").addClass('hidden');
 
     section = $(this).attr("id").slice(0, -6);
     textarea = $("#" + section + "_textarea");
 
     $(this).removeClass('closed');
-    textarea.removeClass('hidden_element');
+    textarea.removeClass('hidden');
 })
 
 // перетаскивание
@@ -554,4 +559,17 @@ function showDangerAlert(msg) {
 function hideAlert() {
     success_alert.removeClass("active");
     danger_alert.removeClass("active");
+}
+
+// поднятие наверх перемещаемых контейнеров при клике
+var maxZ = 10;
+function getUp(element) {
+    let elementZ = parseInt(element.css('z-index'));
+
+    if (elementZ > maxZ) {
+        maxZ = elementZ;
+    }
+    else {
+        element.css('z-index', ++maxZ);
+    }
 }

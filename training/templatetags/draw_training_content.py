@@ -1,7 +1,7 @@
 from django import template
 from django.contrib.auth.models import User
 
-from client_info.manager import ClientInfoManager
+from client_overview.manager import ClientInfoManager
 from training.forms import (
     EnduranceExerciseReportForm,
     EnduranceTrainingForm,

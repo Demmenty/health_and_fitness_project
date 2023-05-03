@@ -1,0 +1,18 @@
+{% extends 'layouts/expertpage_layout.html' %}
+
+{% load draw_foodbydate_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'mealjournal/css/foodbydate.css' %}">
+{% endblock %}
+
+{% block title %}{{ client.username }}: питание{% endblock %}
+
+{% block content %}
+    {% draw_foodbydate_content client for_expert %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'mealjournal/js/foodbydate.js' %}"></script>
+{% endblock %}
