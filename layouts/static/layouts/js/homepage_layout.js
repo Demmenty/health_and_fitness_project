@@ -54,7 +54,7 @@ $(document).ready(function () {
         return false;
     });
 
-    // отслеживаем событие отправки формы
+    // отправка формы регистрации
     $('#registration_form').submit(function () {
         resultField = document.getElementById("registration_form_result");
 
