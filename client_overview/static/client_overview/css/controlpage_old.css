@@ -376,7 +376,7 @@ input[type="radio"]:hover {
 }
 
 .closed_measurements_header:hover {
-    color: #5271ff;
+    color: #657ff7;
     
     background: white;
 
@@ -393,13 +393,13 @@ input[type="radio"]:hover {
 
 /* meet_questionary */
 input[type='range']::-webkit-slider-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 input[type='range']::-moz-range-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 input[type='range']::-ms-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 
 @media screen and (min-width: 576px) {

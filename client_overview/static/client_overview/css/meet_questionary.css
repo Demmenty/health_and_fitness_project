@@ -1,11 +1,11 @@
 input[type='range']::-webkit-slider-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 input[type='range']::-moz-range-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 input[type='range']::-ms-thumb {
-    background: #5271ff;
+    background: #657ff7;
 }
 
 #meet_questionary_form .title {

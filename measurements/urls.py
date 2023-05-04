@@ -5,7 +5,6 @@ from measurements import ajax, views
 
 urlpatterns = [
     path("", views.measurementspage, name="measurementspage"),
-    path("addmeasure/", views.addmeasurepage, name="addmeasurepage"),
     path("anthropometry/", views.anthropometrypage, name="anthropometrypage"),
     path(
         "ajax/get_measure/",

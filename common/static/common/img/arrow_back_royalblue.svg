@@ -48,12 +48,12 @@
      transform="matrix(0.94759825,0,0,0.94759825,-21.320961,-21.320961)"
      style="stroke-width:1.0553">
     <path
-       fill="#5271ff"
+       fill="#657ff7"
        d="M 36.691301,31.004083 V 24.357742 L 23.398617,37.650425 36.691301,50.943108 v -6.646341 h 9.311004 V 31.004083 Z"
        fill-opacity="1"
        fill-rule="nonzero"
        id="path431"
-       style="fill:none;stroke:#5271ff;stroke-width:1.58295;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       style="fill:none;stroke:#657ff7;stroke-width:1.58295;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
        sodipodi:nodetypes="cccccccc" />
   </g>
 </svg>
