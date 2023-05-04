@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "common",
     "homepage",
     "layouts",
-    "consultation_signup",
     "client_overview",
     "mealjournal",
     "measurements",

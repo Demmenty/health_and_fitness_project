@@ -135,27 +135,26 @@ $(document).ready(function () {
             
             success: function (response) {
                 consultationError.classList.add('text-royalblue');
-                if (response.result == 'Заявка получена') {
-                    // сообщение об успехе
-                    consultationError.textContent = response.result;
-                    // заменяем имя на указанное
-                    let applicantNameInput = document.getElementById('id_name');
-                    applicantNameShow.textContent = applicantNameInput.value;
-                    // показываем модальное окно
-                    consultationModal.show();
-                }
-                else {
-                    // показ возникших ошибок формы
-                    for (var key in response.result) {
-                        consultationError.textContent = response.result[key];  
-                    }
-                }
+                // сообщение об успехе
+                consultationError.textContent = 'Заявка получена';
+                // заменяем имя на указанное
+                let applicantNameInput = document.getElementById('id_name');
+                applicantNameShow.textContent = applicantNameInput.value;
+                // показываем модальное окно
+                consultationModal.show();
             },
             error: function (response) {
-                // показ возникших ошибок при отправке
-                consultationError.textContent = ("возникла ошибка " +
-                                                "( status " + response.status +
-                                                " " + response.statusText + " )");
+                if (response.status == 400) {
+                    for (var key in response.responseJSON) {
+                        consultationError.textContent = response.responseJSON[key];  
+                    }
+                }
+                else {
+                    consultationError.textContent = (
+                        "возникла ошибка " + "( status " + 
+                        response.status + " " + response.statusText + " )"
+                    );
+                }
                 consultationError.classList.add('text-royalblue');
             }
         });

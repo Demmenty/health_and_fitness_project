@@ -2,14 +2,13 @@ from itertools import zip_longest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from measurements.forms import AnthropometryPhotoAccessForm, MeasurementCommentForm, AnthropometryForm, MeasurementForm
-from measurements.models import AnthropometryPhotoAccess, Measurement, Anthropometry
+from measurements.models import AnthropometryPhotoAccess, Measurement
 from .services import *
 from measurements.utils import *
-from django.shortcuts import render, redirect
 from django.core.serializers import serialize
-from datetime import date, datetime
+from datetime import date
 
 
 @login_required
