@@ -39,12 +39,12 @@
 .contacts_help img {
     width: -webkit-fill-available;
     border-radius: 10px;
-    border: 1px solid #5271ff;
+    border: 1px solid #657ff7;
 }
 #contacts_form svg.open {
-    -webkit-filter: drop-shadow(0px 0px 3px #5271ff);
-    filter: drop-shadow(0px 0px 3px #5271ff);
-    background-color: #5271ff;
+    -webkit-filter: drop-shadow(0px 0px 3px #657ff7);
+    filter: drop-shadow(0px 0px 3px #657ff7);
+    background-color: #657ff7;
     border-radius: 10px;
     fill: white;
 }

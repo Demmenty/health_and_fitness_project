@@ -15,10 +15,10 @@ body {
     color: #ffffff00;
 }
 .text-royalblue {
-    color: #5271ff !important;
+    color: #657ff7 !important;
 }
 .text-error {
-    color: #f02767 !important;
+    color: #e36183 !important;
 }
 .text-success {
     color: #00c0f0 !important;
@@ -39,44 +39,44 @@ body {
 }
 .btn-primary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #5271ff;
-    --bs-btn-border-color: #5271ff;
+    --bs-btn-bg: #657ff7;
+    --bs-btn-border-color: #657ff7;
     --bs-btn-hover-color: #f6f6f6;
     --bs-btn-hover-bg: #3f54b2;
     --bs-btn-hover-border-color: #3f54b2;
     --bs-btn-focus-shadow-rgb: 49,132,253;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #5271ff;
-    --bs-btn-active-border-color: #5271ff;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #657ff7;
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #5271ff;
-    --bs-btn-disabled-border-color: #5271ff;
+    --bs-btn-disabled-bg: #657ff7;
+    --bs-btn-disabled-border-color: #657ff7;
 }
 .btn-outline-primary {
-    --bs-btn-color: #5271ff;
-    --bs-btn-border-color: #5271ff;
+    --bs-btn-color: #657ff7;
+    --bs-btn-border-color: #657ff7;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #5271ff;
-    --bs-btn-hover-border-color: #5271ff;
+    --bs-btn-hover-bg: #657ff7;
+    --bs-btn-hover-border-color: #657ff7;
     --bs-btn-focus-shadow-rgb: 13,110,253;
     --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #5271ff;
-    --bs-btn-active-border-color: #5271ff;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #657ff7;
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: #5271ff;
+    --bs-btn-disabled-color: #657ff7;
     --bs-btn-disabled-bg: transparent;
-    --bs-btn-disabled-border-color: #5271ff;
+    --bs-btn-disabled-border-color: #657ff7;
     --bs-gradient: none;
 }
 .btn-danger {
-    --bs-btn-bg: #f02767;
-    --bs-btn-border-color: #f02767;
+    --bs-btn-bg: #e36183;
+    --bs-btn-border-color: #e36183;
     --bs-btn-hover-bg: #bb2d55;
     --bs-btn-hover-border-color: #bb2d55;
     --bs-btn-active-bg: #bb2d55;
     --bs-btn-active-border-color: #bb2d55;
-    --bs-btn-disabled-border-color: #f02767;
+    --bs-btn-disabled-border-color: #e36183;
 }
 
 @media (min-width: 768px) {
@@ -128,7 +128,7 @@ header {
     background: none;
 }
 .nav_link:hover {
-    color: #5271ff;
+    color: #657ff7;
 }
 #exit_pic {
     filter: grayscale(1) brightness(0.9);
@@ -145,9 +145,9 @@ header {
     }
 }
 #new_consult_signup_amount {
-    background-color: #5271ff;
+    background-color: #657ff7;
     color: white;
-    border: 1px solid #5271ff;
+    border: 1px solid #657ff7;
     padding: 4px;
     display: inline-flex;
     align-items: center;

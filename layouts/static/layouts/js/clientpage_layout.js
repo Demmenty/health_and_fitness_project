@@ -171,7 +171,7 @@ window.onload = function () {
         else {
             commentWorkoutLabel.style.color = 'dimgray';
         }
-        openLabel.style.color = '#5271ff';
+        openLabel.style.color = '#657ff7';
     }
     
     // функции изменения даты комментария
