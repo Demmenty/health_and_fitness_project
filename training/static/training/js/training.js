@@ -375,7 +375,7 @@ function fillTrainingLikeLast() {
     // заполняет форму тренировки аналогично последней с таким типом
     console.log("fillTrainingLikeLast");
 
-    let training_div = $(this).closest(".training-content");
+    let training_div = $(this).closest(".block-content");
     let training_form = training_div.find(".training_form");
     let training_type = training_form.find("#id_training_type").val();
 
