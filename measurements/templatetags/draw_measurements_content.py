@@ -7,6 +7,7 @@ from expert_recommendations.services import *
 from fatsecret_app.services import *
 from measurements.services import *
 from client_overview.manager import ClientInfoManager
+from datetime import date
 
 
 register = template.Library()
@@ -18,7 +19,7 @@ def draw_measurements_content(context, client: User, for_expert: bool = False) -
 
     # TODO переделать все это позорище
     colorsettings_exist = user_has_measeurecolor_settings(client)
-    today_measure = get_daily_measure(client)
+    today_measure = Measurement.objects.filter(date__exact=date.today(), user=client).first()
 
     period_chosen = context.request.GET.get("selectperiod")
     if not period_chosen:
@@ -62,6 +63,13 @@ def draw_measurements_content(context, client: User, for_expert: bool = False) -
         data.update({
             "colorset_forms": colorset_forms,
             "normal_pressure": normal_pressure,
+        })
+    else:
+        measure_form = MeasurementForm(instance=today_measure)
+        fatsecret_connected = services.fs.is_connected(client)
+        data.update({
+            "measure_form": measure_form,
+            "fatsecret_connected": fatsecret_connected,
         })
 
     return data

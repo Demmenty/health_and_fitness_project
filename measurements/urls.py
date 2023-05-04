@@ -8,6 +8,16 @@ urlpatterns = [
     path("addmeasure/", views.addmeasurepage, name="addmeasurepage"),
     path("anthropometry/", views.anthropometrypage, name="anthropometrypage"),
     path(
+        "ajax/get_measure/",
+        ajax.get_measure,
+        name="get_measure",
+    ),
+    path(
+        "ajax/save_measure/",
+        ajax.save_measure,
+        name="save_measure",
+    ),
+    path(
         "ajax/save_measure_comment/",
         ajax.save_measure_comment,
         name="save_measure_comment",

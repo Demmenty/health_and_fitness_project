@@ -2,11 +2,57 @@ from itertools import zip_longest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
-from measurements.forms import AnthropometryPhotoAccessForm, MeasurementCommentForm, AnthropometryForm
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound
+from measurements.forms import AnthropometryPhotoAccessForm, MeasurementCommentForm, AnthropometryForm, MeasurementForm
 from measurements.models import AnthropometryPhotoAccess, Measurement, Anthropometry
 from .services import *
 from measurements.utils import *
+from django.shortcuts import render, redirect
+from django.core.serializers import serialize
+from datetime import date, datetime
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_measure(request):
+    """Получение данных измерения клиента по дате"""
+
+    client_id = request.GET.get("client")
+    measure_date = request.GET.get("date")
+
+    if not (measure_date and client_id):
+        return HttpResponseBadRequest("Необходимы поля date и client_id")
+    
+    measure = Measurement.objects.filter(user=client_id, date=measure_date)
+    data = serialize("json", measure)
+
+    return HttpResponse(data, content_type="application/json")
+
+
+@login_required
+@require_http_methods(["POST"])
+def save_measure(request):
+    """Сохранение измерения дневных показателей"""
+
+    client = request.user
+    form = MeasurementForm(request.POST)
+
+    if form.is_valid():
+        measure_date = form.cleaned_data["date"]
+        if measure_date > date.today():
+            return HttpResponseBadRequest("Нет, так нельзя 😠")
+    
+        instance = Measurement.objects.filter(user=client, date=measure_date).first()
+        if instance:
+            form = MeasurementForm(request.POST, instance=instance)
+            form.save()
+        else:
+            form = form.save(commit=False)
+            form.user = client
+            form.save()
+        return HttpResponse("Измерения сохранены")
+    
+    return HttpResponseBadRequest("Данные некорректны")
 
 
 @login_required
@@ -111,6 +157,6 @@ def save_anthropometry(request):
             form = form.save(commit=False)
             form.user = request.user
             form.save()
-        return HttpResponse("Измерения созранены")
+        return HttpResponse("Измерения сохранены")
     
     return HttpResponseBadRequest("Данные некорректны")

@@ -15,6 +15,7 @@ class MeasurementForm(ModelForm):
     class Meta:
         model = Measurement
         fields = [
+            "date",
             "feel",
             "weight",
             "fat",
@@ -29,82 +30,82 @@ class MeasurementForm(ModelForm):
             "carbohydrates",
         ]
         widgets = {
+            "date": DateInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "type": "date",
+                }
+            ),
             "feel": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
                 }
             ),
             "weight": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "300",
                 }
             ),
             "fat": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "100",
                 }
             ),
             "pulse": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "300",
                 }
             ),
             "pressure_upper": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control d-inline text-center",
                     "min": "0",
                     "max": "300",
                 }
             ),
             "pressure_lower": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control d-inline text-center",
                     "min": "0",
                     "max": "200",
+                }
+            ),
+            "calories": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "placeholder": "нет данных",
+                }
+            ),
+            "protein": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "placeholder": "нет данных",
+                }
+            ),
+            "fats": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "placeholder": "нет данных",
+                }
+            ),
+            "carbohydrates": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "placeholder": "нет данных",
                 }
             ),
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": "5",
-                }
-            ),
-            "date": DateInput(
-                attrs={
-                    "class": "form-control-plaintext",
-                    "readonly": True,
-                }
-            ),
-            "calories": NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "нет данных",
-                }
-            ),
-            "protein": NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "нет данных",
-                }
-            ),
-            "fats": NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "нет данных",
-                }
-            ),
-            "carbohydrates": NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "нет данных",
                 }
             ),
         }
