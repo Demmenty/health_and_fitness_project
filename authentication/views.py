@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import redirect
 
 
@@ -9,27 +10,22 @@ def registration(request):
     """Обработка запроса регистрации пользователя"""
 
     if request.method == "POST":
-        # проверка соответствия требованиям
+        
         form = UserCreationForm(request.POST)
+
         if form.is_valid():
             user = User.objects.create_user(
                 request.POST["username"], password=request.POST["password1"]
             )
             user.save()
             login(request, user)
-            result = "успешный успех"
+            return HttpResponse()
+        
         else:
-            result = form.errors
-
-        data = {
-            "result": result,
-        }
-        return JsonResponse(data, status=200)
-
-    else:
-        return redirect("homepage")
+            return JsonResponse(form.errors, status=400)
 
 
+# TODO сделать LoginView
 def loginuser(request):
     """Обработка запроса входа пользователя"""
 
@@ -40,27 +36,20 @@ def loginuser(request):
             password=request.POST["password"],
         )
         if user is None:
-            result = "Пароль или логин введены неверно"
-            data = {
-                "result": result,
-            }
-            return JsonResponse(data, status=200)
-        else:
-            login(request, user)
-            result = "доступ разрешен"
-            data = {
-                "result": result,
-            }
-            return JsonResponse(data, status=200)
-    else:
-        return redirect("homepage")
+            return HttpResponseForbidden("Пароль или логин введены неверно")
+        
+        login(request, user)
+
+        data = {
+            "is_expert": user.is_expert,
+        }
+        return JsonResponse(data, status=200)
 
 
+
+@login_required
 def logoutuser(request):
     """Обработка запроса выхода пользователя"""
-
-    if request.user.is_anonymous:
-        return redirect("homepage")
 
     if request.method == "POST":
         logout(request)

@@ -1,0 +1,34 @@
+.my-hover-gray:hover {
+    background-color: #ececec;
+    outline-color: #8f8f8f !important;
+    outline-style: auto !important;
+    outline-width: 1px !important;
+}
+form .helptext {
+    display: none;
+}
+.unread {
+    color: #5271ff;
+}
+#cat_reading_requests {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    padding: 15px;
+    width: 320px;
+}
+@media (min-width: 576px) {
+    #cat_reading_requests {
+        width: 460px;
+        left: 2rem;
+    }
+}
+@media (min-width: 992px) {
+    #cat_reading_requests {
+        left: auto;
+    }
+}
+p[name='result_msg'] {
+    margin-top: -8px;
+}

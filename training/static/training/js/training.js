@@ -24,7 +24,7 @@ $(document).ready(function(){
     $(".active-date").trigger("click");
 
     // обработчик кнопки добавления тренировки
-    $(".training-type-select .dropdown-item:not(.disabled)").click(addNewTraining);
+    $(".training-type-select .dropdown-item").click(addNewTraining);
 
     // обработчик кнопки создания нового упражнения
     $("#exercise-create-btn").click(openExerciseCreation);
@@ -35,13 +35,13 @@ $(document).ready(function(){
     $("#exercise-selection").find(".effect-area-pic").click(selectAreaInSelection);
 
     // обработчики закрытия окошек
-    $("#exercise-creation").find(".btn-close").click(closeExerciseCreation);
     $("#exercise-selection-close-btn").click(closeExerciseSelection);
-    $("#exercise-editing").find(".btn-close").click(closeExerciseEditing);
-
+    $("#exercise-creation-close-btn").click(closeExerciseCreation);
+    $("#exercise-help-close-btn").click(closeExerciseHelp);
+    
     // обработчики сохранения упражнения
-    $(".exercise-creation-form").on("submit", saveExercise);
-    $(".exercise-editing-form").on("submit", updateExercise);
+    $("#exercise-creation-form").on("submit", saveExercise);
+    $("#exercise-editing-form").on("submit", updateExercise);
     // обработчик кнопки удаления упражнения
     $("#delete-exercise-btn").on("click", deleteExercise);
 
@@ -60,9 +60,7 @@ $(document).ready(function(){
     $(".btn-exercise-edit").click(openExerciseEditing);
 });
 
-// TODO убирать из списка неподходящие упражнения
-// TODO кнопка автозаполнения как в прошлый раз
-// TODO уведомление-картинка при отсутствии тренировок
+// TODO добавить иконки упражнениям
 
 // КАЛЕНДАРЬ
 function toggleCalendar() {
@@ -76,7 +74,7 @@ function toggleCalendar() {
     }
 
     $(this).toggleClass("active");
-    $(".calendar-container").toggle();
+    $(".calendar-container").toggle(400);
 }
 
 function init_calendar(date) {
@@ -120,6 +118,41 @@ function init_calendar(date) {
     }
     calendar_days.append(row);
     $(".year").text(year);
+
+    colorCalendarDays(month+1, year);
+}
+
+function colorCalendarDays(month, year) {
+    // окрашивает открытый месяц календаря по тренировкам
+    console.log("colorCalendarDays month, year", month, year);
+
+    let request = getMonthTrainingTypes(month, year);
+
+    request.done(function(month_training_types) {
+        let table_dates = $("#calendar .table-date");
+        
+        // убрать предыдущие пометки
+        table_dates.removeClass("power");
+        table_dates.removeClass("endurance");
+
+        // добавить новые в соответствии с полученными данными
+        table_dates.each(function() {
+            let day = $(this).text();
+
+            if (month_training_types.hasOwnProperty(day)) {
+                let training_type = month_training_types[day];
+
+                if (training_type.includes("P") || 
+                    training_type.includes("R")) {
+                    $(this).addClass("power");
+                }
+                if (training_type.includes("E") || 
+                    training_type.includes("I")) {
+                    $(this).addClass("endurance");
+                }
+            }
+        }) 
+    });
 }
 
 function is_chosen_date(year, month, day) {
@@ -177,12 +210,13 @@ function date_click(event) {
     $(".trainings-container").empty();
 
     // получение данных о тренировках за этот день
-    let request = getTrainings(event.data);
+    let request = getDayTrainings(event.data);
 
     request.done(function(trainings_data) {
         if(trainings_data.length > 0) {
             addSavedTrainings(trainings_data);
         }
+        toggleNoTrainingsSign()
         controlTrainingTypeSelect();
     });
 };
@@ -209,18 +243,53 @@ function prev_year(event) {
 
 
 // ТРЕНИРОВКИ
-function getTrainings(date) {
+function getDayTrainings(date) {
     // получение тренировок за выбранную дату
 
-    client = $("#id_client").val();
     date_formatted = (date.year +"-"+
                      ("0"+date.month).slice(-2) +"-"+ 
                      ("0"+date.day).slice(-2));
 
     return $.ajax({
-        data: {date: date_formatted, client: client},
+        data: {date: date_formatted, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_trainings/",
+        url: "/training/ajax/trainings.get_by_date/",
+
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },             
+    });
+}
+
+function getLastTraining(training_type) {
+    // получение последней тренировки с сервера с нужным типом
+
+    return $.ajax({
+        data: {training_type: training_type, client: params.clientId},
+        method: "get",
+        url: "/training/ajax/trainings.get_last/",
+
+        success: function () {},
+        error: function (response) {
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") 
+            }
+            else showDangerAlert(response.responseText)
+        },             
+    });
+}
+
+function getMonthTrainingTypes(month, year) {
+    // получение типов тренировок за выбранный месяц с сервера
+
+    return $.ajax({
+        data: {month: month, year: year, client: params.clientId},
+        method: "get",
+        url: "/training/ajax/trainings.get_month_types/",
 
         success: function () {},
         error: function (response) {
@@ -254,32 +323,29 @@ function addSavedTrainings(trainings_data) {
         let request = getExerciseReports(data.pk);
         // вставляем их формы в тренировку
         request.done(function(exercise_reports_data) {
-            if(exercise_reports_data.length > 0) {
-                addSavedExerciseReports(exercise_reports_data)
-            }
+            addSavedExerciseReports(exercise_reports_data)
         });
 
         // отображаем тренировку в карточке
         div.appendTo(".trainings-container");
         div.show();
 
-        // обработчик клика на выбор упражнений
-        div.find(".add-exercise-btn").on("click", openExerciseSelection);
-        
-        // обработчик клика на кнопку сохранения
+        // обработчики кнопок
+        div.find("#add-exercise-btn").on("click", openExerciseSelection);
         div.find(".training_form").on("submit", saveTraining);
-        // обработчик клика на кнопку удаления
         div.find(".delete-training-btn").on("click", deleteTraining);
+        div.find("#fill-like-last-btn").remove();
     }
 }
 
 function addNewTraining() {
     // добавление новой тренировки
+    console.log("addNewTraining");
 
-    let type = $(this).attr("type");
+    let training_type = $(this).attr("type");
 
     // получаем форму тренировки выбранного типа
-    let div = trainings_div[type].clone()
+    let div = trainings_div[training_type].clone()
 
     // заполняем выбранную дату в ней (YYYY-MM-DD)
     date = $("#chosen-date").data();
@@ -290,18 +356,78 @@ function addNewTraining() {
 
     // отображаем тренировку в карточке
     div.appendTo(".trainings-container");
-    div.show();
+    div.show(400);
 
-    // обработчик клика на выбор упражнений
-    div.find(".add-exercise-btn").on("click", openExerciseSelection);
-
-    // обработчик клика на кнопку сохранения
+    // обработчики кликов на кнопки
+    div.find("#add-exercise-btn").on("click", openExerciseSelection);
+    div.find("#fill-like-last-btn").on("click", fillTrainingLikeLast);
     div.find(".training_form").on("submit", saveTraining);
-    // обработчик клика на кнопку удаления
     div.find(".delete-training-btn").on("click", deleteTraining);
 
     // деактивация выбора тренировки такого же типа
-    $(".training-type-select li[type='" + type + "']").addClass("disabled");
+    $(".training-type-select li[type='" + training_type + "']")
+        .addClass("disabled");
+    
+    toggleNoTrainingsSign()
+}
+
+function fillTrainingLikeLast() {
+    // заполняет форму тренировки аналогично последней с таким типом
+    console.log("fillTrainingLikeLast");
+
+    let training_div = $(this).closest(".training-content");
+    let training_form = training_div.find(".training_form");
+    let training_type = training_form.find("#id_training_type").val();
+
+    // получаем последнюю треню с сервера
+    let request = getLastTraining(training_type);
+    request.done(function(training_data) {
+        let data = training_data[0];
+
+        // заполняем поля тренировки (предварительные)
+        training_form.find("#id_tiredness_due").val(data.fields.tiredness_due);
+        training_form.find("#id_comment").val(data.fields.comment);
+
+        // получаем записи упражнений этой тренировки
+        let request = getExerciseReports(data.pk);
+        request.done(function(exercise_reports_data) {
+
+            for (let i in exercise_reports_data) {
+                let report = exercise_reports_data[i];
+                let report_form = exercise_report_forms[training_type].clone();
+                
+                // заполняем название
+                let exercise_name = $("#exercise-item-" + report.fields.exercise)
+                    .find(".exercise-row").text();
+                report_form.find(".exercise-name").text(exercise_name);
+
+                // заполняем поля отчета об упражнении (предварительные)
+                report_form.find("#id_exercise").val(report.fields.exercise);
+                report_form.find("#id_minutes").val(report.fields.minutes);
+                report_form.find("#id_weight").val(report.fields.weight);
+                report_form.find("#id_approaches_due").val(report.fields.approaches_due);
+                report_form.find("#id_repeats_due").val(report.fields.repeats_due);
+                report_form.find("#id_load_due").val(report.fields.load_due);
+                report_form.find("#id_high_load_time").val(report.fields.high_load_time);
+                report_form.find("#id_low_load_time").val(report.fields.low_load_time);
+                report_form.find("#id_cycles").val(report.fields.cycles);
+
+                // обработчики кнопок
+                report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+                if (params.isExpert == 'true') {
+                    report_form.find("#id_is_done").attr("disabled", true);
+                }
+                else {
+                    report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+                }
+                // вставка формы в тренировку и показ
+                report_form.insertBefore(training_div.find(".training-additional-btns"));
+                report_form.show();
+            }
+        });
+    });
+    // убираем кнопку, она больше не нужна
+    $(this).remove();
 }
 
 function controlTrainingTypeSelect() {
@@ -320,7 +446,7 @@ function controlTrainingTypeSelect() {
 }
 
 function saveTraining() {
-    // сохранение тренировки
+    // сохранение тренировки на сервере
     console.log("saveTraining");
 
     let form = $(this);
@@ -333,7 +459,11 @@ function saveTraining() {
         processData: false,
         contentType: false,
 
-        success: function () {},
+        success: function () {
+            let month = $(".active-month").attr("value");
+            let year = $("#calendar .year").text();
+            colorCalendarDays(month, year);
+        },
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
@@ -374,8 +504,12 @@ function deleteTraining() {
 
     if(!training_id) {
         // если нет id, значит треня не сохранена на сервере
-        div.remove();
-        controlTrainingTypeSelect();
+        div.hide(400);
+        setTimeout(() => {
+            div.remove();
+            toggleNoTrainingsSign();
+            controlTrainingTypeSelect();
+        }, 400);
         return
     }
 
@@ -383,19 +517,25 @@ function deleteTraining() {
     let token = form.find("input[name='csrfmiddlewaretoken']").val();
 
     let formData = new FormData();
+    formData.set("client", params.clientId);
     formData.set("training_id", training_id);
     formData.set("csrfmiddlewaretoken", token);
+    console.log(formData);
 
     request = $.ajax({
         data: formData,
         type: "post",
-        url: "ajax/delete_training/",
+        url: "ajax/trainings.delete/",
         cache: false,
         contentType: false,
         processData: false,
     
         success: function () {
-            showSuccessAlert("Тренировка удалена")
+            let month = $(".active-month").attr("value");
+            let year = $("#calendar .year").text();
+
+            colorCalendarDays(month, year);
+            showSuccessAlert("Тренировка удалена");
         },
         error: function (response) {
             if(response.status == 0) {
@@ -406,9 +546,24 @@ function deleteTraining() {
     });
 
     request.done(function() {
-        div.remove();
-        controlTrainingTypeSelect();
+        div.hide(400);
+        setTimeout(() => {
+            div.remove();
+            toggleNoTrainingsSign();
+            controlTrainingTypeSelect();
+        }, 400);
     })
+}
+
+function toggleNoTrainingsSign() {
+    // проверяет наличие тренировок в карточке дня
+    // если нет трень - показывает картинку-уведомление
+    if ($("#trainings-container").is(':empty')) {
+        $("#cat-pic").show('slow');
+    }
+    else {
+        $("#cat-pic").hide('slow');
+    }
 }
 
 
@@ -418,9 +573,9 @@ function getExercise(exercise_id) {
     console.log("getExercise");
 
     return $.ajax({
-        data: {exercise_id: exercise_id},
+        data: {exercise_id: exercise_id, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_exercise/",
+        url: "/training/ajax/exercises.get_by_id/",
 
         success: function () {},
         error: function (response) {
@@ -437,7 +592,7 @@ function saveExercise() {
     console.log("saveExercise");
 
     let formData = new FormData(this);
-    // внести зоны воздействия
+    formData.set("client", params.clientId);
     formData.set("effect_areas", Array.from(selected_areas));
 
     request = $.ajax({
@@ -454,9 +609,6 @@ function saveExercise() {
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
-            }
-            else if (response.status == 400) {
-                showDangerAlert("Неверно заполнена форма")
             }
             else showDangerAlert(response.responseText)
         },
@@ -477,7 +629,7 @@ function updateExercise() {
     console.log("updateExercise");
 
     let formData = new FormData(this);
-    // внести зоны воздействия
+    formData.set("client", params.clientId);
     formData.set("effect_areas", Array.from(selected_areas));
 
     request = $.ajax({
@@ -494,9 +646,6 @@ function updateExercise() {
         error: function (response) {
             if(response.status == 0) {
                 showDangerAlert("Нет соединения с сервером") 
-            }
-            else if (response.status == 400) {
-                showDangerAlert("Неверно заполнена форма")
             }
             else showDangerAlert(response.responseText)
         },
@@ -516,19 +665,21 @@ function updateExercise() {
 
 function deleteExercise() {
     // удаление упражнения
+    console.log("deleteExercise");
 
     let form = $(this).closest("form");
     let id = form.find("#id_exercise_id").val();
     let token = form.find("input[name='csrfmiddlewaretoken']").val();
 
     let formData = new FormData();
+    formData.set("client", params.clientId);
     formData.set("exercise_id", id);
     formData.set("csrfmiddlewaretoken", token);
 
     request = $.ajax({
         data: formData,
         type: "post",
-        url: "ajax/delete_exercise/",
+        url: "ajax/exercises.delete/",
         cache: false,
         contentType: false,
         processData: false,
@@ -556,35 +707,29 @@ function openExerciseSelection() {
     // открытие окна выбора упражнений для тренировки
     console.log("openExerciseSelection");
 
+    let training = $(this).closest(".training");
+    let training_type = training.find("#id_training_type").val();
+    let exercise_type = training_type_to_exercise_type[training_type];
+
     // затемнение сзади
     $("main").append($("<div class='backdrop lvl1'></div>"));
     $(".backdrop.lvl1").on("click", closeExerciseSelection);
 
-    // скрыть все открытые описания
-    $(".exercise-info").hide();
-
-    let training = $(this).closest(".training");
-    
-    // установить активную тренировку
+    // пометить активную тренировку
     $(".training.current").removeClass("current");
     training.addClass("current");
 
-    // очистить окно выбора упражнений
     clearExerciseSelection();
-
-    // отметить уже добавленные упражнения
+    filterExercisesByTrainingType();
     markAddedExercises();
-
+    
+    // показать окно
+    $("#exercise-selection").show();
     // прокрутить наверх
     $("body, html").animate({scrollTop: 0}, 1);
 
-    // показать окно
-    $("#exercise-selection").show();
-
     // предустановка типа упражнения при создании нового
-    let training_type = training.find("#id_training_type").val();
-    let exercise_type = training_type_to_exercise_type[training_type];
-    $(".exercise-creation-form")
+    $("#exercise-creation-form")
         .find("#id_exercise_type option[value='" + exercise_type + "']")
         .prop('selected', true);
 }
@@ -613,50 +758,65 @@ function clearExerciseSelection() {
     div.find(".btn-exercise-add").show();
 
     // сворачиваем инфу
+    div.find(".exercise-info").hide();
     div.find(".exercise-info-detail").hide();
     div.find(".caret").removeClass("inverted");
+}
+
+function filterExercisesByTrainingType() {
+    // показывает в списке выбора только те упражнения,
+    // тип которых соответствует текущей тренировке
+    console.log("filterExercisesByType");
+
+    let exercises_list = $("#exercises-list");
+    let curr_training_type = $(".training.current").find("#id_training_type").val();
+    let target_exercise_type = training_type_to_exercise_type[curr_training_type];
+
+    exercises_list.find(".exercise-item").hide();
+    exercises_list.find(".exercise-type-" + target_exercise_type).show();
 }
 
 function selectExercise() {
     // обработчик клика на упражнение из списка
     console.log("selectExercise");
 
-    let div = $("#exercise-selection");
-    let row = $(this).closest(".exercise-row");
-    let was_selected = row.hasClass("selected");
-
+    let exercise_item = $(this).closest(".exercise-item");
+    let exercise_row = exercise_item.find(".exercise-row");
+    let was_selected = exercise_row.hasClass("selected");
+    
     // показать\скрыть подробности
-    row.next(".exercise-info").slideToggle();
-
+    exercise_item.find(".exercise-info").slideToggle();
+    
+    if (was_selected) return;
+    
+    let selection_div = $("#exercise-selection");
+    let exercise_id = exercise_item.data("exercise-id");
+    
     // удалить все отметки и подсветки
-    div.find(".selected").removeClass("selected");
-    div.find(".colored").removeClass("colored");
-    div.find(".high-colored").removeClass("high-colored");
+    selection_div.find(".selected").removeClass("selected");
+    selection_div.find(".colored").removeClass("colored");
+    selection_div.find(".high-colored").removeClass("high-colored");
     // отметить добавленные упражнения заново
     markAddedExercises();
 
-    if (was_selected) return;
-
-    let exercise_id = row.data("exercise-id");
-    let info = $("#exercise-info-" + exercise_id);
-
     // выделить строку выбранного упражнения
-    row.addClass("selected");
-    if(row.hasClass("colored")) {
-        row.addClass("high-colored");
+    exercise_row.addClass("selected");
+    if(exercise_row.hasClass("colored")) {
+        exercise_row.addClass("high-colored");
     }
-    else row.addClass("colored");
+    else exercise_row.addClass("colored");
 
     // встроить видео с ютуба в инфо
     embedVideo(exercise_id);
 
     // выделить зоны выбранного упражнения
-    let areas = $.trim(info.find(".exercise-info-areas").text()).split(',');
+    let areas = $.trim(
+        exercise_item.find(".exercise-info-areas").text()).split(',');
 
     for (let i in areas) {
         if (!areas[i]) return;
 
-        let pic = $("#exercise-selection").find("." + areas[i]);
+        let pic = selection_div.find("." + areas[i]);
 
         pic.addClass("selected");
         if(pic.hasClass("colored")) {
@@ -667,35 +827,39 @@ function selectExercise() {
 }
 
 function addExerciseToSelection(exercise_id) {
-    // добавление упражнения в список для выбора
+    // добавление нового упражнения в список для выбора
+    console.log("addExerciseToSelection");
+
     let request = getExercise(exercise_id);
 
     request.done(function(response) {
         let data = response[0];
 
-        // заполнение строки упражнения в списке
-        let row = exercise_row.clone();
-
-        row.attr("id", "exercise-row-" + data.pk);
-        row.attr("data-exercise-id", data.pk);
-        row.find(".exercise-name").text(data.fields.name);
-        row.find(".btn-exercise-remove").hide();
-
-        // заполнение подробной инфы упражнения
-        let info = createExerciseInfo(data);
+        let item = exercise_item.clone();
+        let new_info = createExerciseInfo(data);
+        
+        // заполнение данных упражнения
+        item.attr("data-exercise-id", data.pk);
+        item.attr("id", "exercise-item-" + data.pk);
+        item.addClass("exercise-type-" + data.fields.exercise_type);
+        item.find(".exercise-name").text(data.fields.name);
+        item.find(".btn-exercise-remove").hide();
+        item.find(".exercise-info").remove();
+        item.append(new_info);
 
         // навешивание обработчиков
-        row.find(".exercise-name").on("click", selectExercise);
-        row.find(".btn-exercise-add").on("click", addExerciseToTraining);
-        row.find(".btn-exercise-remove").on("click", removeExerciseFromTraining);
-        row.find(".btn-exercise-edit").click(openExerciseEditing);
-        info.find('.exercise-info-toggle').on("click", toggleInfoRow);
+        item.find(".exercise-name").on("click", selectExercise);
+        item.find(".btn-exercise-add").on("click", addExerciseToTraining);
+        item.find(".btn-exercise-remove").on("click", removeExerciseFromTraining);
+        item.find(".btn-exercise-edit").click(openExerciseEditing);
+        item.find('.exercise-info-toggle').on("click", toggleInfoRow);
 
         // вставить и показать
-        row.insertBefore($("#exercise-create-btn"));
-        info.insertBefore($("#exercise-create-btn"));
-        row.removeClass("blank");
-        info.removeClass("blank");
+        $("#exercises-list").append(item);
+        item.removeClass("hidden");
+
+        filterExercisesByTrainingType();
+        $("#no-exercises-notice").remove();
     });
 }
 
@@ -717,44 +881,41 @@ function selectAreaInSelection() {
 
     if (was_selected) return;
 
-    // определить зоны с таким же классом, как у нажатой
-    let pics = div.find("."+ pic.attr('class').split(' ').join('.'));
+    let selected_area = pic.attr('class').split(' ')[1];
+    let target_pics = div.find("."+ pic.attr('class').split(' ').join('.'));
 
-    // пометить и окрасить зоны
-    pics.addClass("selected");
-    if(pics.hasClass("colored")) {
-        pics.addClass("high-colored");
+    // пометить и окрасить зоны с таким же классом, как у нажатой
+    target_pics.addClass("selected");
+    if (target_pics.hasClass("colored")) {
+        target_pics.addClass("high-colored");
     }
-    else pics.addClass("colored");
+    else target_pics.addClass("colored");
 
     // пометить и окрасить строки упражнений с такой зоной
-    let selected_area = pic.attr('class').split(' ')[1];
-
     div.find(".exercise-info-areas").each(function() {
         let info_areas = $.trim($(this).text()).split(',');
 
-        if(info_areas.indexOf(selected_area) > -1) {
-            let exercise_id = $(this).closest(".exercise-info").data("exercise-id");
-            let row = $("#exercise-row-" + exercise_id);
+        if (info_areas.indexOf(selected_area) > -1) {
+            let target_row = $(this).closest(".exercise-item").find(".exercise-row");
 
-            row.addClass("selected");
-            if(row.hasClass("colored")) {
-                row.addClass("high-colored")
+            target_row.addClass("selected");
+            if(target_row.hasClass("colored")) {
+                target_row.addClass("high-colored")
             }
-            else row.addClass("colored");
+            else target_row.addClass("colored");
         }
     })
 }
 
 function markAddedExercises() {
-    // выделить добавленные в текущую тренировку упражнения 
-    console.log("markAddedExercises")
+    // выделить все упражнения в списке, добавленные в текущую тренировку 
+    console.log("markAddedExercises");
 
     let training = $(".training.current");
 
     training.find("input[name='exercise']").each(function() {
-        let id = $(this).val();
-        markExerciseAsAdded(id);
+        let exercise_id = $(this).val();
+        markExerciseAsAdded(exercise_id);
     })
 }
 
@@ -762,8 +923,10 @@ function markExerciseAsAdded(exercise_id) {
     // выделить упражнение в окне выбора как добавленное по его id
     console.log("markExerciseAsAdded");
 
-    let row = $('#exercise-row-' + exercise_id);
-    let info = $("#exercise-info-" + exercise_id);
+    let item = $('#exercise-item-' + exercise_id);
+    let row = item.find(".exercise-row");
+    let areas = $.trim(item.find(".exercise-info-areas").text()).split(',');
+    let dummy = $("#exercise-selection").find(".dummy-container");
 
     // пометка и окрашивание строки
     row.addClass("added");
@@ -773,48 +936,37 @@ function markExerciseAsAdded(exercise_id) {
     else row.addClass("colored");
 
     // изменение кнопки
-    $('#exercise-row-' + exercise_id).find(".btn-exercise-add").hide();
-    $('#exercise-row-' + exercise_id).find(".btn-exercise-remove").show();
+    row.find(".btn-exercise-add").hide();
+    row.find(".btn-exercise-remove").show();
 
     // пометка и окрашивание зон воздействия
-    let areas = $.trim(info.find(".exercise-info-areas").text()).split(',');
-
-    for(let i in areas) {
+    for (let i in areas) {
         area = areas[i];
         if(!area) return;
 
-        let pic = $("#exercise-selection").find(".effect-area-pic." + area);
-        pic.addClass("added");
+        let target_pic = dummy.find(".effect-area-pic." + area);
 
-        if(pic.hasClass("colored")) {
-            pic.addClass("high-colored");
+        target_pic.addClass("added");
+        if(target_pic.hasClass("colored")) {
+            target_pic.addClass("high-colored");
         }
-        else pic.addClass("colored");
+        else target_pic.addClass("colored");
     }
 }
 
 function deleteExerciseFromSelection(exercise_id) {
     // удаление упражнения из списка для выбора
+    console.log("deleteExerciseFromSelection");
 
-    $("#exercise-row-" + exercise_id).remove();
-    $("#exercise-info-" + exercise_id).remove();
+    $("#exercise-item-" + exercise_id).remove();
 }
 
 // инфо упражнения
 function createExerciseInfo(data) {
     // возвращает созданный по данным из бд элемент информации по упражнению
 
-    let info = exercise_info.clone();
+    let info = exercise_item.find(".exercise-info").clone();
 
-    info.attr("id", "exercise-info-" + data.pk);
-    info.attr("data-exercise-id", data.pk);
-    info.find(".exercise-info-header h4").text(data.fields.name);
-    if(data.fields.icon) {
-        info.find(".exercise-icon").attr("src", "/media/" + data.fields.icon)
-    }
-    else {
-        info.find(".exercise-icon").remove()
-    }
     info.find(".description p").text(data.fields.description);
     if(data.fields.target_muscles) {
         info.find(".target-muscles p").text(data.fields.target_muscles);
@@ -828,11 +980,15 @@ function createExerciseInfo(data) {
     else {
         info.find(".mistakes").remove();
     }
-    if(data.fields.photo_init_pose && data.fields.photo_work_pose) {
-        info.find(".exercise-photo.init")
-            .attr("src", "/media/" + data.fields.photo_init_pose);
-        info.find(".exercise-photo.work")
-            .attr("src", "/media/" + data.fields.photo_work_pose);
+    if(data.fields.photo_1 || data.fields.photo_2) {
+        if (data.fields.photo_1) {
+            info.find(".exercise-photo.photo_1")
+                .attr("src", "/media/" + data.fields.photo_1);
+        }
+        if (data.fields.photo_2) {
+            info.find(".exercise-photo.photo_2")
+                .attr("src", "/media/" + data.fields.photo_2);
+        }
     }
     else {
         info.find(".photo").remove();
@@ -852,6 +1008,8 @@ function createExerciseInfo(data) {
         info.find(".areas").remove();
     }
 
+    info.removeClass("hidden");
+
     return info;
 }
 
@@ -859,7 +1017,7 @@ function embedVideo(exercise_id) {
     // встроить видео с ютуба вместо ссылки в инфо упражнения
     console.log("embedVideo");
 
-    let video_ref = $("#exercise-info-" + exercise_id).find(".video-ref");
+    let video_ref = $("#exercise-item-" + exercise_id).find(".video-ref");
 
     if (video_ref.text().startsWith("https://youtu.be/")) {
         let video_id = video_ref.text().slice(17);
@@ -868,17 +1026,21 @@ function embedVideo(exercise_id) {
     }
 
     function getYoutubeFrame(video_id) {
-        return $('<div class="video-frame-container">' + 
-            '<iframe src="https://www.youtube.com/embed/' + 
-            video_id + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write;' + 
-            ' encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' + 
-            '</div>')
+        return $(
+            '<div class="video-frame-container">' + 
+            '<iframe src="https://www.youtube.com/embed/' + video_id + '" ' + 
+            'frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; ' + 
+            'gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' + 
+            '</div>'
+        )
     }
 }
 
 function translateExerciseAreas() {
     // перевести инфо о зонах упражнения
-    let info = $("<p class='exercise-info-areas-ru'></p>");
+    // (this = p .exercise-info-areas)
+
+    let info_ru = $("<p class='exercise-info-areas-ru'></p>");
     let areas_eng = $.trim($(this).text()).split(',');
     let areas_ru = new Array();
 
@@ -886,8 +1048,8 @@ function translateExerciseAreas() {
         areas_ru.push(effect_areas[areas_eng[i]])
     }
 
-    info.append(areas_ru.join(', '));
-    info.insertAfter($(this));
+    info_ru.append(areas_ru.join(', '));
+    info_ru.insertAfter($(this));
 }
 
 function toggleInfoRow() {
@@ -918,6 +1080,7 @@ function closeExerciseCreation() {
     clearExerciseCreation();
     $(".backdrop.lvl2").remove();
     $("#exercise-creation").hide();
+    $("body, html").animate({scrollTop: 0}, 1);
 }
 
 function clearExerciseCreation() {
@@ -926,7 +1089,7 @@ function clearExerciseCreation() {
 
     let div = $("#exercise-creation");
 
-    div.find(".exercise-creation-form").trigger("reset");
+    div.find("#exercise-creation-form").trigger("reset");
     div.find(".colored").removeClass("colored");
     div.find(".effect-area-row").remove();
 
@@ -938,17 +1101,15 @@ function selectAreaInCreation() {
     console.log("selectAreaInCreation");
 
     let div = $("#exercise-creation");
-    let pic = $(this);
+    let target_pic = $(this);
+    let target_pics = div.find(
+        "." + target_pic.attr('class').split(' ').join('.'));
+    let selected_area = target_pic.attr('class').split(' ')[1];
 
-    // определить зоны с таким же классом, как у нажатой
-    let pics = div.find("." + pic.attr('class').split(' ').join('.'));
-
-    // добавить\убрать подсветку зонам
-    pics.toggleClass("colored");
+    // добавить\убрать подсветку зонам с таким же классом
+    target_pics.toggleClass("colored");
 
     // контроль выбранных зон
-    let selected_area = pic.attr('class').split(' ')[1];
-
     if(selected_areas.has(selected_area)) {
         // убрать из сета
         selected_areas.delete(selected_area);
@@ -962,7 +1123,7 @@ function selectAreaInCreation() {
         let area_name = effect_areas[selected_area];
         $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(div.find(".effect-areas-list"));
+            .appendTo(div.find(".areas-list"));
     }
 }
 
@@ -976,7 +1137,7 @@ function openExerciseEditing() {
     $(".backdrop.lvl2").on("click", closeExerciseEditing);
 
     // получение инфы об упражнении
-    let exercise_id = $(this).closest(".exercise-row").data("exercise-id");
+    let exercise_id = $(this).closest(".exercise-item").data("exercise-id");
     let request = getExercise(exercise_id);
 
     request.done(function(response) {
@@ -995,6 +1156,7 @@ function closeExerciseEditing() {
     clearExerciseEditing();
     $(".backdrop.lvl2").remove();
     $("#exercise-editing").hide();
+    $("body, html").animate({scrollTop: 0}, 1);
 }
 
 function clearExerciseEditing() {
@@ -1003,7 +1165,7 @@ function clearExerciseEditing() {
 
     let div = $("#exercise-editing");
 
-    div.find(".exercise-editing-form").trigger("reset");
+    div.find("#exercise-editing-form").trigger("reset");
     div.find(".colored").removeClass("colored");
     div.find(".effect-area-row").remove();
     div.find(".exercise-icon").remove();
@@ -1014,10 +1176,10 @@ function clearExerciseEditing() {
 }
 
 function fillExerciseForm(data) {
-    // заполнение формы упражнения данными из бд
+    // заполнение формы редактирования упражнения данными из бд
     console.log("fillExerciseForm");
 
-    let form = $(".exercise-editing-form");
+    let form = $("#exercise-editing-form");
 
     // обычные поля
     form.find("#id_name").val(data.fields.name);
@@ -1030,20 +1192,38 @@ function fillExerciseForm(data) {
     form.find("#id_video").val(data.fields.video);
     form.find("#id_exercise_id").val(data.pk);
 
-    // картинки
+    // иконки
+    form.find(".icon-container").remove();
     if(data.fields.icon) {
-        let icon = $("<img src='/media/" + data.fields.icon + "' class='exercise-icon'>");
-        icon.insertBefore(form.find("#id_icon"));
+        let icon_container = $(
+            "<div class='icon-container'>" + 
+            "<label>Текущая иконка:</label>" + 
+            "<img src='/media/" + data.fields.icon + "'>" + 
+            "</div>"
+        );
+        icon_container.insertAfter(form.find("#id_icon").closest("div"));
     }
-    if(data.fields.photo_init_pose) {
-        let photo_init = $("<img src='/media/" + data.fields.photo_init_pose + 
-                           "' class='exercise-photo'>");
-        photo_init.insertBefore(form.find("#id_photo_init_pose"));
-    }
-    if(data.fields.photo_work_pose) {
-        let photo_work = $("<img src='/media/" + data.fields.photo_work_pose + 
-                        "' class='exercise-photo'>");
-        photo_work.insertBefore(form.find("#id_photo_work_pose"));
+    // фото
+    form.find(".photo-container").remove();
+    if(data.fields.photo_1 || data.fields.photo_2) {
+        let photo_container = $(
+            "<div class='photo-container'>" + 
+            "<label>Текущие фото:</label>" + 
+            "</div>"
+        );
+        let photo_div = $("<div></div>");
+        if(data.fields.photo_1) {
+            photo_div.append(
+                $("<img src='/media/" + data.fields.photo_1 + "'>")
+            )
+        }
+        if(data.fields.photo_2) {
+            photo_div.append(
+                $("<img src='/media/" + data.fields.photo_2 + "'>")
+            )
+        }
+        photo_container.append(photo_div);
+        photo_container.insertAfter(form.find("#id_photo_2").closest("div"));
     }
 
     // зоны воздействия
@@ -1060,7 +1240,7 @@ function fillExerciseForm(data) {
         let area_name = effect_areas[area];
         $("<li class='effect-area-row' id='"+ area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(form.find(".effect-areas-list"));
+            .appendTo(form.find(".areas-list"));
     }
 }
 
@@ -1069,17 +1249,15 @@ function selectAreaInEditing() {
     console.log("selectAreaInEditing");
 
     let div = $("#exercise-editing");
-    let pic = $(this);
-
-    // определить зоны с таким же классом, как у нажатой
-    let pics = div.find("." + pic.attr('class').split(' ').join('.'));
+    let target_pic = $(this);
+    let target_pics = div.find(
+        "." + target_pic.attr('class').split(' ').join('.'));
+    let selected_area = target_pic.attr('class').split(' ')[1];
 
     // добавить\убрать подсветку зонам
-    pics.toggleClass("colored");
+    target_pics.toggleClass("colored");
 
     // контроль выбранных зон
-    let selected_area = pic.attr('class').split(' ')[1];
-
     if(selected_areas.has(selected_area)) {
         // убрать из сета
         selected_areas.delete(selected_area);
@@ -1093,41 +1271,93 @@ function selectAreaInEditing() {
         let area_name = effect_areas[selected_area];
         $("<li class='effect-area-row' id='"+ selected_area + "-row"+"'></li>")
             .append(area_name)
-            .appendTo(div.find(".effect-areas-list"));
+            .appendTo(div.find(".areas-list"));
     }
 }
 
 function changeExerciseInSelection(exercise_id) {
     // изменение упражнения в списке для выбора
+    console.log("changeExerciseInSelection");
+
     let request = getExercise(exercise_id);
 
     request.done(function(response) {
         let data = response[0];
 
-        // изменение строки упражнения
-        let row = $("#exercise-row-" + data.pk);
-        row.find(".exercise-name").text(data.fields.name);
+        let item = $("#exercise-item-" + data.pk);
+        let new_info = createExerciseInfo(data);
 
-        // изменение инфы упражнения
-        $("#exercise-info-" + data.pk).remove();
-        let info = createExerciseInfo(data);
-        info.find('.exercise-info-toggle').on("click", toggleInfoRow);
-        $("#exercises-info").prepend(info);
+        // изменение данных
+        item.find(".exercise-name").text(data.fields.name);
+        item.find(".exercise-info").remove();
+        item.removeClass("exercise-type-P").removeClass("exercise-type-E");
+        item.addClass("exercise-type-" + data.fields.exercise_type);
+        item.append(new_info);
+
+        // обработчик клика
+        new_info.find('.exercise-info-toggle').on("click", toggleInfoRow);
+
+        filterExercisesByTrainingType();
     });
 }
 
-function changeExerciseNameInTraining(id, name) {
+function changeExerciseNameInTraining(exercise_id, name) {
     // изменение названия упражнения в тренировках в случае редактирования
-    let row = $("#exercise-row-" + id);
+    let row = $("#exercise-item-" + exercise_id).find(".exercise-row");
 
     if(row.hasClass("added")) {
         $(".training input[name='exercise']").each(function() {
-            if($(this).val() == id) {
+            if($(this).val() == exercise_id) {
                 $(this).closest(".exercise-report-form")
-                    .find(".exercise-name").text(name)
+                    .find(".exercise-name").text(name);
             }
         })
     }
+}
+
+function openExerciseHelp() {
+    // показывает окно помощи по упражнению в тренировке
+    console.log("showExerciseHelp");
+
+    let div = $("#exercise-help");
+    let exercise_id = $(this).closest("form").find("#id_exercise").val();
+    let exercise_name = $(this).prev(".exercise-name").text();
+
+    embedVideo(exercise_id);
+    let exercise_info = $("#exercise-item-" + exercise_id + " .exercise-info").clone();
+
+    // затемнение сзади
+    $("main").append($("<div class='backdrop lvl1'></div>"));
+    $(".backdrop.lvl1").on("click", closeExerciseHelp);
+
+    // наполнить окно данными (из инфы в окне выбора)
+    div.find(".exercise-container-header span").text(exercise_name);
+
+    exercise_info.find(".list-group-item").each(function() {
+        if ($(this).hasClass("target-muscles")) return;
+        if ($(this).hasClass("areas")) return;
+
+        let header = $(this).find(".exercise-info-toggle div").text();
+        let content = $(this).find(".exercise-info-detail");
+        
+        div.find(".info").append(header);
+        div.find(".info").append(content);
+        content.show();
+    })
+
+    // показать окно
+    $("#exercise-help").show();
+    $("body, html").animate({scrollTop: 0}, 1);
+}
+
+function closeExerciseHelp() {
+    // закрывает окно помощи по упражнению
+
+    let div = $("#exercise-help");
+
+    $(".backdrop").remove();
+    div.hide();
+    div.find(".info").empty();
 }
 
 
@@ -1137,9 +1367,9 @@ function getExerciseReports(training_id) {
     console.log("getExerciseReport");
 
     return $.ajax({
-        data: {training_id: training_id},
+        data: {training_id: training_id, client: params.clientId},
         method: "get",
-        url: "/training/ajax/get_exercise_reports/",
+        url: "/training/ajax/exercise_reports.get_by_training/",
 
         success: function () {},
         error: function (response) {
@@ -1156,37 +1386,36 @@ function addSavedExerciseReports(reports_data) {
     console.log("addSavedExerciseReports", reports_data)
 
     for (let i in reports_data) {
-        let exercise_report = reports_data[i]
+        let exercise_report = reports_data[i];
 
-        // определяем тренировку, к которой относится запись
-        let training_div = $("#training-" + exercise_report.fields.training);
-
-        // определяем тип тренировки
-        let type = training_div.find("#id_training_type").val();
-
-        // берем соответствующую типу форму для записи
-        let form = exercise_report_forms[type].clone();
+        let training = $("#training-" + exercise_report.fields.training);
+        let training_type = training.find("#id_training_type").val();
+        let report_form = exercise_report_forms[training_type].clone();
+        let exercise_item = $("#exercise-item-" + exercise_report.fields.exercise);
+        let exercise_name = exercise_item.find(".exercise-row").text();
 
         // заполняем название и поля ввода
-        exercise_name = $("#exercise-row-" + exercise_report.fields.exercise).text();
-        form.find(".exercise-name").text(exercise_name);
+        report_form.find(".exercise-name").text(exercise_name);
 
         for (let field in exercise_report.fields) {
             if (field == "is_done") {
                 if (exercise_report.fields.is_done == true) {
-                    form.find("#id_is_done").prop("checked", true)
+                    report_form.find("#id_is_done").prop("checked", true);
                 }
                 continue
             }
-            form.find("#id_" + field).val(exercise_report.fields[field]);
+            report_form.find("#id_" + field).val(exercise_report.fields[field]);
         }
 
-        // автозаполнение полей тренировки при выполнении
-        form.find("#id_is_done").on("change", autoFillExerciseReport);
+        // навешиваем обработчики
+        report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+        report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
 
         // вставка формы в тренировку и показ
-        form.insertBefore(training_div.find(".add-exercise-btn"));
-        form.show();
+        report_form.insertBefore(training.find(".training-additional-btns"));
+        report_form.show();
+
+        disableFieldsForExpert();
     }
 }
 
@@ -1194,11 +1423,13 @@ function addExerciseToTraining() {
     // добавление новой записи упражнения в тренировку
     console.log("addExerciseToTraining");
 
-    let exercise_id = $(this).closest(".exercise-row").data("exercise-id");
+    let exercise_item = $(this).closest(".exercise-item");
+    let exercise_id = exercise_item.data("exercise-id");
+    let exercise_name = exercise_item.find(".exercise-name").text();
     let training = $(".training.current");
-    let type = training.find("#id_training_type").val();
-    let form = exercise_report_forms[type].clone();
-
+    let training_type = training.find("#id_training_type").val();
+    let report_form = exercise_report_forms[training_type].clone();
+    
     // убрать фокус с упражнения
     if($(this).closest(".exercise-row").hasClass("selected")) {
         let div = $("#exercise-selection");
@@ -1213,27 +1444,30 @@ function addExerciseToTraining() {
     // выделить упражнение как добавленное
     markExerciseAsAdded(exercise_id);
 
-    // добавить в форму id
-    form.find("#id_exercise").val(exercise_id);
+    // добавить в форму id и название
+    report_form.find("#id_exercise").val(exercise_id);
+    report_form.find(".exercise-name").text(exercise_name);
 
-    // добавить в форму название
-    exercise_name = $("#exercise-row-" + exercise_id).find(".exercise-name").text();
-    form.find(".exercise-name").text(exercise_name);
-
-    // автозаполнение полей тренировки при выполнении
-    form.find("#id_is_done").on("change", autoFillExerciseReport);
+    // обработка кнопок
+    report_form.find("#id_is_done").on("change", autoFillExerciseReport);
+    report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+    training.find("#fill-like-last-btn").remove();
 
     // вставка формы в тренировку
-    form.insertBefore(training.find(".add-exercise-btn"));
-    form.show();
+    report_form.insertBefore(training.find(".training-additional-btns"));
+    report_form.show();
+
+    disableFieldsForExpert();
 }
 
 function removeExerciseFromTraining() {
     // убрать упражнение из тренировки
     console.log("removeExerciseFromTraining");
     
-    let exercise_id = $(this).closest(".exercise-row").data("exercise-id");
     let training = $(".training.current");
+    let exercise_item = $(this).closest(".exercise-item");
+    let exercise_id = exercise_item.data("exercise-id");
+    let selection_div = $("#exercise-selection");
 
     // удалить форму упражнения из тренировки
     training.find(".exercise-report-form").each(function() {
@@ -1245,16 +1479,16 @@ function removeExerciseFromTraining() {
     })
 
     // убрать всю подсветку и пометки
-    $(".added").removeClass("added");
-    $(".colored").removeClass("colored");
-    $(".high-colored").removeClass("high-colored");
+    selection_div.find(".added").removeClass("added");
+    selection_div.find(".colored").removeClass("colored");
+    selection_div.find(".high-colored").removeClass("high-colored");
 
     // отметить заново добавленные упражнения
     markAddedExercises();
 
     // изменение кнопки
-    $('#exercise-row-' + exercise_id).find(".btn-exercise-add").show();
-    $('#exercise-row-' + exercise_id).find(".btn-exercise-remove").hide();
+    exercise_item.find(".btn-exercise-add").show();
+    exercise_item.find(".btn-exercise-remove").hide();
 }
 
 function deleteExerciseReport(exercise_id) {
@@ -1262,7 +1496,7 @@ function deleteExerciseReport(exercise_id) {
 
     $(".training .exercise-report-form").each(function() {
         if($(this).find("#id_exercise").val() == exercise_id) {
-            $(this).remove()
+            $(this).remove();
         }
     })
 }
@@ -1299,7 +1533,6 @@ function autoFillExerciseReport() {
         let pulse_count = 0;
 
         report_forms.each(function() {
-
             if ($(this).find("#id_is_done").is(':checked')) {
 
                 let time = parseInt($(this).find("#id_minutes").val());
@@ -1329,7 +1562,6 @@ function autoFillExerciseReport() {
         else {
             training.find(".training_form #id_pulse_avg").val("");
         }
-
         return
     }
 
@@ -1343,7 +1575,6 @@ function autoFillExerciseReport() {
         let max_pulse = 0;
 
         report_forms.each(function() {
-
             if ($(this).find("#id_is_done").is(':checked')) {
 
                 let time_high = parseInt($(this).find("#id_high_load_time").val());
@@ -1380,7 +1611,6 @@ function autoFillExerciseReport() {
         else {
             training.find("#id_pulse_max").val("");
         }
-
         return
     }
 }
@@ -1390,6 +1620,7 @@ function saveExerciseReport() {
     console.log("saveExerciseReport");
 
     let formData = new FormData(this);
+    formData.set("client", params.clientId);
 
     $.ajax({
         data: formData,
@@ -1411,6 +1642,14 @@ function saveExerciseReport() {
             }
         },
     });
+}
+
+function disableFieldsForExpert() {
+    // деактивирует чекбокс выполнения упражнений для эксперта
+
+    if (params.isExpert == 'true') {
+        $("input[name='is_done']").attr("disabled", true);
+    }
 }
 
 
@@ -1472,9 +1711,8 @@ const exercise_report_forms = {
     "I": interval_exercise_report,
 }
 
-// заготовки упражнения в окне выбора
-const exercise_row = $(".exercise-row.blank").clone();
-const exercise_info = $(".exercise-info.blank").clone();
+// заготовка упражнения в списке выбора
+const exercise_item = $(".exercise-item.hidden").clone();
 
 // словарь соответствия типа тренировки типу упражнения
 const training_type_to_exercise_type = {

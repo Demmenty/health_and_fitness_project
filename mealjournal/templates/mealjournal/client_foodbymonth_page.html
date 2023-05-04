@@ -1,0 +1,18 @@
+{% extends 'layouts/clientpage_layout.html' %}
+
+{% load draw_foodbymonth_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'mealjournal/css/foodbymonth.css' %}">
+{% endblock %}
+
+{% block title %}Дневник питания{% endblock %}
+
+{% block content %}
+    {% draw_foodbymonth_content client %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'mealjournal/js/foodbymonth.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'layouts/clientpage_layout.html' %}
+
+{% load draw_measurements_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'measurements/css/measurements.css' %}">
+{% endblock %}
+
+{% block title %}Измерения{% endblock %}
+
+{% block content %}
+  {% draw_measurements_content client %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'measurements/js/measurements.js' %}"></script>
+{% endblock %}

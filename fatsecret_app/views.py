@@ -2,7 +2,7 @@ from time import sleep
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect
 
 from common.cache_manager import cache
@@ -32,7 +32,7 @@ def fatsecretauth(request):
             # тут иногда возникает ошибка - не смогла понять причину
             session_token = services.fs.session.authenticate(verifier_pin)
             services.fs.save_token(session_token, request.user)
-            return redirect("mealjournal")
+            return redirect("mealjournal_page")
 
         except KeyError as error:
             print("загадочная ошибка, пробуем снова", error)
@@ -46,7 +46,7 @@ def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
 
     if request.user.is_anonymous:
-        return redirect("loginuser")
+        return HttpResponseForbidden
 
     prods_without_info = dict(request.POST)
     del prods_without_info["csrfmiddlewaretoken"]

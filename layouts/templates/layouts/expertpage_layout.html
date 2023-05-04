@@ -6,9 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'common/img/logo_title.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'layouts/img/logo_title.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'controlpage/css/controlpage.css' %}">
     <link rel="stylesheet" href="{% static 'layouts/css/expertpage_layout.css' %}">
     {% block stylesheet %}{% endblock %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +17,7 @@
 </head>
 
 <body>
+  <param data-is-expert="true" data-client-id="{{ client.id }}" id="page-param">
 
   <header class="border-bottom">
     <div class="container">
@@ -26,37 +26,37 @@
         <div class="d-flex flex-nowrap align-items-center overflow-hidden me-3">
           <!-- логотип -->
           <a href="/" class="navbar-brand me-3">
-            <img src="{% static 'common/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+            <img src="{% static 'layouts/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
           </a>
           <!-- имя клиента -->
-          <a href="{% url 'expertpage' %}" class="d-none d-sm-block clientname text-center">{{ clientname }}</a>
+          <a href="{% url 'expert_overview_page' %}" class="d-none d-sm-block clientname text-center">{{ client.username }}</a>
         </div>
 
         <!-- навигация выпадающим меню -->
         <div class="d-flex d-md-none flex-column align-items-center" id="nav_dropdown">
-          <a href="{% url 'expertpage' %}" class="d-sm-none clientname text-center">{{ clientname|truncatechars:13 }}</a>
+          <a href="{% url 'expert_overview_page' %}" class="d-sm-none clientname text-center">{{ client.username|truncatechars:13 }}</a>
           <div class="dropdown mt-1">
             <a href="#" class="d-flex align-items-center col-lg-4 me-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="me-2" id="open_label_drop"></span>
             </a>
             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
               <li>
-                <a href="{% url 'client_mainpage' %}?client_id={{ client_id }}" class="nav_link" id="navlink_main_drop">
+                <a href="{% url 'overviewpage' %}?client_id={{ client.id }}" class="nav_link" id="navlink_main_drop">
                   главная
                 </a>
               </li>
               <li>
-                <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="nav_link" id="navlink_measurements_drop">
+                <a href="{% url 'measurementspage' %}?client_id={{ client.id }}" class="nav_link" id="navlink_measurements_drop">
                   измерения
                 </a>
               </li>
               <li>
-                <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="nav_link" id="navlink_meal_drop">
+                <a href="{% url 'mealjournal_page' %}?client_id={{ client.id }}" class="nav_link" id="navlink_meal_drop">
                   питание
                 </a>
               </li>
               <li>
-                <a href="{% url 'training' %}?client_id={{ client_id }}" class="nav_link" id="navlink_workout_drop">
+                <a href="{% url 'trainingpage' %}?client_id={{ client.id }}" class="nav_link" id="navlink_workout_drop">
                   тренировки
                 </a>
               </li>
@@ -67,22 +67,22 @@
         <!-- навигация строкой -->
         <ul class="d-none d-md-flex nav flex-nowrap mt-1" id="nav_string">
           <li>
-            <a href="{% url 'client_mainpage' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_main">
+            <a href="{% url 'overviewpage' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_main">
               главная
             </a>
           </li>
           <li>
-            <a href="{% url 'client_measurements' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_measurements">
+            <a href="{% url 'measurementspage' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_measurements">
               измерения
             </a>
           </li>
           <li>
-            <a href="{% url 'client_mealjournal' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_meal">
+            <a href="{% url 'mealjournal_page' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_meal">
               питание
             </a>
           </li>
           <li>
-            <a href="{% url 'training' %}?client_id={{ client_id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_workout">
+            <a href="{% url 'trainingpage' %}?client_id={{ client.id }}" class="nav_link mx-2 mx-lg-3 mx-xl-4" id="navlink_workout">
               тренировки
             </a>
           </li>
@@ -91,22 +91,23 @@
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" class="ms-3">
           {% csrf_token %}
-          <input type="image" alt="Submit" src="{% static 'common/img/exit.svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
+          <input type="image" alt="Submit" src="{% static 'layouts/img/exit.svg' %}" id="exit_pic" class="align-middle" width="30" title="Выйти">
         </form>
       </div>
     </div>       
   </header>
 
   <main>
-    <br><br>
-    {% block content %}
-    {% endblock %}
+    <div class="container main_container">
+      {% block content %}
+      {% endblock %}
+    </div>
 
     <!-- комментарий для клиента -->
-    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="client_comment_form_container">
+    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden w-95 w-sm-auto" id="client_comment_form_container">
       <form method="post" id="client_comment_form" action="{% url 'save_commentary_form' %}" data-action-get="{% url 'get_commentary_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
 
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
           <div class="d-flex justify-content-start w-10 w-sm-30">
@@ -114,9 +115,9 @@
           </div>
           
           <div class="d-flex justify-content-center">
-            <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
+            <img src="{% static 'layouts/img/arrow_prev_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="prevDate()" width="20">
             {{ client_remark.comment_form.date }}
-            <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
+            <img src="{% static 'layouts/img/arrow_next_royalblue.svg' %}" class="mx-2 arrow_btn" onclick="nextDate()" width="20">
           </div>
 
           <div class="d-flex justify-content-end w-10 w-sm-30" style="height: 36px;">
@@ -152,10 +153,10 @@
     </div>
 
     <!-- заметка о клиенте -->
-    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden_element w-95 w-sm-auto" id="clientnote_container">
+    <div class="d-flex flex-column rounded border-blueshadow px-2 px-sm-3 py-2 hidden w-95 w-sm-auto" id="clientnote_container">
       <form method="post" id="clientnote_form" action="{% url 'save_clientnote_form' %}" data-action-get="{% url 'get_clientnote_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
 
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
           <div class="d-flex justify-content-start w-10 w-sm-30">
@@ -170,9 +171,9 @@
           </div>
 
           <div class="d-flex justify-content-center">
-            <img src="{% static 'common/img/arrow_prev_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
+            <img src="{% static 'layouts/img/arrow_prev_royalblue.svg' %}" class="me-2 arrow_btn" onclick="prevMonth()" width="20">
             {{ client_remark.monthnote_form.date }}
-            <img src="{% static 'common/img/arrow_next_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
+            <img src="{% static 'layouts/img/arrow_next_royalblue.svg' %}" class="ms-2 arrow_btn" onclick="nextMonth()" width="20">
           </div>
 
           <div class="d-flex justify-content-end w-10 w-sm-30" style="height: 36px;">
@@ -208,12 +209,12 @@
     </div>
     
     <!-- заметка о клиенте совокупная -->
-    <div class="d-flex flex-column rounded border-blueshadow hidden_element px-2 px-sm-3 py-2 w-95 w-sm-auto" id="full_clientnote_container">
+    <div class="d-flex flex-column rounded border-blueshadow hidden px-2 px-sm-3 py-2 w-95 w-sm-auto" id="full_clientnote_container">
       <form method="post" id="full_clientnote_form" action="{% url 'save_full_clientnote_form' %}" class="w-100">
         {% csrf_token %}
-        <input type="hidden" name="client" id="id_client" value="{{ client_id }}">
+        <input type="hidden" name="client" id="id_client" value="{{ client.id }}">
         <div class="d-flex justify-content-between align-items-center pb-3 pt-2">
-          <span class="clientname text-white">{{ clientname|truncatechars:15 }}</span>
+          <span class="clientname text-white">{{ client.username|truncatechars:15 }}</span>
           <div class="moving_part cursor-move d-none d-sm-block w-fill">&nbsp;</div>
           <button class="btn-close" type="button" aria-label="Close" onclick="closeFullClientNote()"></button>
         </div>
@@ -228,7 +229,7 @@
     <!-- уведомления -->
     <div class="alert success-alert" role="alert" id="success-alert">
       <div class="alert-content">
-        <img class="icon-check" src="{% static 'common/img/check-circle.svg' %}">
+        <img class="icon-check" src="{% static 'layouts/img/check-circle.svg' %}">
         <div class="alert-message">
           <b>Успех</b>
           <span class="text text-secondary"></span>
@@ -239,7 +240,7 @@
 
     <div class="alert danger-alert" role="alert" id="danger-alert">
       <div class="alert-content">
-        <img class="icon-check" src="{% static 'common/img/exclamation-circle.svg' %}">
+        <img class="icon-check" src="{% static 'layouts/img/exclamation-circle.svg' %}">
         <div class="alert-message">
           <b>Ошибка</b>
           <span class="text text-secondary"></span>
@@ -255,18 +256,18 @@
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start py-3">
 
         <button type="button" class="btn btn-primary" onclick="openClientNote()">
-          <img src="{% static 'controlpage/img/note_ico.svg' %}" width="38" title="Заметка о клиенте">
+          <img src="{% static 'layouts/img/note_ico.svg' %}" width="38" title="Заметка о клиенте">
           <span class="ms-2">Заметка о клиенте</span>
         </button>
 
         <button type="button" class="btn btn-primary" onclick="openCommentary()">
-          <img src="{% static 'controlpage/img/comment_ico.svg' %}" width="38" title="Заметка для клиента">
+          <img src="{% static 'layouts/img/comment_ico.svg' %}" width="38" title="Заметка для клиента">
           <span class="ms-2">Комментарий для клиента</span>
         </button>
         
         <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
           <button type="button" class="btn btn-primary" onclick="showContacts()">
-            <img src="{% static 'controlpage/img/contacts_ico.svg' %}" width="38" title="Контакты, оставленные клиентом">
+            <img src="{% static 'layouts/img/contacts_ico.svg' %}" width="38" title="Контакты, оставленные клиентом">
             <span class="ms-2">Контакты клиента</pspan>
           </button>
 
@@ -281,7 +282,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.telegram }}" target="_blank">
-                        <img src="{% static 'common/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                        <img src="{% static 'layouts/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
                       </a>
                     </div>
                 {% endif %}
@@ -293,7 +294,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.whatsapp }}" target="_blank">
-                        <img src="{% static 'common/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                        <img src="{% static 'layouts/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
                       </a>
                     </div>
                 {% endif %}
@@ -305,7 +306,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.discord }}" target="_blank">
-                        <img src="{% static 'common/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                        <img src="{% static 'layouts/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
                       </a>
                     </div>
                 {% endif %}
@@ -317,7 +318,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.skype }}" target="_blank">
-                        <img src="{% static 'common/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
+                        <img src="{% static 'layouts/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
                       </a>
                     </div>
                 {% endif %}
@@ -329,7 +330,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.vkontakte }}" target="_blank">
-                        <img src="{% static 'common/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                        <img src="{% static 'layouts/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
                       </a>
                     </div>
                 {% endif %}
@@ -341,7 +342,7 @@
                     <div class="p-2 order-2">
                   {% endif %}
                       <a href="{{ client_contacts.facebook }}" target="_blank">
-                        <img src="{% static 'common/img/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                        <img src="{% static 'layouts/img/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
                         </a>
                     </div>
                 {% endif %}      
@@ -359,7 +360,7 @@
 </body>
         
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="{% static 'common/js/drag_container.js' %}"></script>
+<script src="{% static 'layouts/js/drag_container.js' %}"></script>
 <script src="{% static 'layouts/js/expertpage_layout.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 {% block script %}{% endblock %}

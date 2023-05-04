@@ -154,7 +154,7 @@ footer {
 /* footer */
 
 /* layout */
-.hidden_element {
+.hidden {
     display: none !important;
 }
 .form-control {

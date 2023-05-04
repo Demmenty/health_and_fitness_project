@@ -38,7 +38,7 @@ class ExerciseForm(ModelForm):
             "description": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "6",
+                    "rows": "5",
                 }
             ),
             "target_muscles": Textarea(
@@ -54,12 +54,12 @@ class ExerciseForm(ModelForm):
                 }
             ),
             "effect_areas": HiddenInput(),
-            "photo_init_pose": ClearableFileInput(
+            "photo_1": ClearableFileInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "photo_work_pose": ClearableFileInput(
+            "photo_2": ClearableFileInput(
                 attrs={
                     "class": "form-control",
                 }
@@ -67,7 +67,7 @@ class ExerciseForm(ModelForm):
             "video": TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "прямая ссылка (желательно ютуб)",
+                    "placeholder": "прямая ссылка (ютуб, желательно)",
                 }
             ),
         }
@@ -104,7 +104,7 @@ class PowerTrainingForm(ModelForm):
             ),
             "tiredness_due": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
                     "placeholder": "план",
@@ -112,7 +112,7 @@ class PowerTrainingForm(ModelForm):
             ),
             "tiredness_get": NumberInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "10",
                     "placeholder": "факт",
@@ -121,7 +121,7 @@ class PowerTrainingForm(ModelForm):
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "6",
+                    "rows": "5",
                 }
             ),
         }
@@ -183,7 +183,7 @@ class RoundTrainingForm(ModelForm):
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "6",
+                    "rows": "5",
                 }
             ),
         }
@@ -245,7 +245,7 @@ class EnduranceTrainingForm(ModelForm):
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "6",
+                    "rows": "5",
                 }
             ),
         }
@@ -307,7 +307,7 @@ class IntervalTrainingForm(ModelForm):
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "6",
+                    "rows": "5",
                 }
             ),
         }

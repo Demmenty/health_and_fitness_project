@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="{% static 'layouts/img/logo_title.png' %}" type="image/x-icon">
+      <link rel="stylesheet" href="{% static 'homepage/homepage_style.css' %}">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500&display=swap" rel="stylesheet">
+      <title>{% block title %}{% endblock %}</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <header class="border-bottom">
+      <div class="container">
+        <nav class="navbar navbar-expand-md navbar-light bg-white flex-nowrap">
+          <div class="container-fluid px-0">
+            <!-- логотип -->
+            <a href="/" class="navbar-brand p-0 me-0 me-sm-2">
+                <img src="{% static 'layouts/img/logo.svg' %}" type="image/svg+xml" width="90" id="logo">
+                <img src="{% static 'layouts/img/logo_mini.svg' %}" type="image/svg+xml" width="90" id="logo_mini">
+            </a>
+            <!-- список ссылок -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+              <ul class="navbar-nav text-center mb-0">
+                <li class="nav-item">
+                  <a href="#why_section" class="nav_link">о проекте</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#what_section" class="nav_link">услуги</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#consultation_section" class="nav_link">консультация</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#trainer_contacts" class="nav_link">о специалисте</a>
+                </li>
+              </ul>
+              <div class="d-flex flex-column d-sm-none text-center">
+                <hr class="my-2 mx-auto" style="width: 110px;">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'overviewpage' %}" id="profile_p" class="nav_link">профиль</a>
+                    <form method="POST" action="{% url 'logoutuser' %}" class="form-inline">
+                      {% csrf_token %}
+                      <input type="Submit" id="exit_p" class="nav_link" title="Выйти" value="выйти">
+                    </form>
+                {% else %}
+                  <p class="nav_link" id="login_p" data-bs-toggle="modal" data-bs-target="#login_form_container">вход</button>
+                  <p class="nav_link" id="registration_p" data-bs-toggle="modal" data-bs-target="#registration_form_container">регистрация</p>
+                {% endif %}
+              </div>
+            </div>
+            <!-- кнопка-гамбургер -->
+            <button class="navbar-toggler ms-2 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+          {% if user.is_authenticated %}
+          <!-- кнопки входа/выхода -->
+          <div class="d-none d-sm-flex text-end justify-content-end">
+            {% if user.is_expert %}
+              <a href="{% url 'expert_overview_page' %}" id="profile_btn">
+                <button type="button" class="btn btn-primary ms-3">Кабинет</button>
+              </a>
+            {% else %}
+              <a href="{% url 'overviewpage' %}" id="profile_btn">
+                <button type="button" class="btn btn-primary ms-3">Профиль</button>
+              </a>
+            {% endif %}
+            <form method="POST" action="{% url 'logoutuser' %}" class="form-inline ms-3">
+              {% csrf_token %}
+              <input type="image" alt="Submit" src="{% static 'layouts/img/exit.svg' %}" id="exit_pic" class="align-middle" title="Выйти">
+            </form>
+          </div>
+          {% else %}
+          <!-- кнопки входа/регистрации -->
+          <div class="d-none d-sm-flex text-end justify-content-end">
+            <button type="button" class="btn btn-primary ms-2" id="login_btn" data-bs-toggle="modal" data-bs-target="#login_form_container">Вход</button>
+            <button type="button" class="btn btn-outline-primary ms-2 d-none d-sm-flex" id="registration_btn" data-bs-toggle="modal" data-bs-target="#registration_form_container">Регистрация</button>
+          </div>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <!-- форма входа -->
+    <div class="modal fade" id="login_form_container" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <h4 class="modal-title text-center">АВТОРИЗАЦИЯ</h4><br>
+          <form method="POST" action="{% url 'loginuser' %}" id="login_form">
+            {% csrf_token %}
+            <div class="pad-notop-4">
+              <label>Логин</label>
+              <p>{{ login_form.username }}</p>
+              <label>Пароль</label>
+              <p>{{ login_form.password }}</p>
+              <span id="login_form_result" class="error">&nbsp;</span>
+              <button type="submit" class="btn btn-primary">ВХОД</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- форма регистрации  -->
+    <div class="modal fade" id="registration_form_container" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <h4 class="modal-title text-center">РЕГИСТРАЦИЯ</h4><br>
+          <form method="POST" action="{% url 'registration' %}" id="registration_form">
+            {% csrf_token %}
+            <div class="pad-notop-4">
+              <label>Логин</label>
+              <p>
+                {{ registration_form.username }}
+                <span class="helptext" id="username_error">&nbsp;</span>
+              </p>
+              <label>Пароль</label>
+              <p>
+                {{ registration_form.password1 }}
+              </p>
+              <label>Подтверждение пароля</label>
+              <p>
+                {{ registration_form.password2 }}
+                <span class="helptext" id="password2_error">&nbsp;</span>
+              </p>
+
+              <span id="registration_form_result" class="error">&nbsp;</span>
+              <button type="submit" class="btn btn-primary">СОЗДАТЬ АККАУНТ</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <!--  -->
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer>
+        <!-- контейнер с контактами -->
+        <div class="container px-0 py-2 d-flex justify-content-between align-items-start align-items-md-center flex-column flex-sm-row flex-sm-wrap">
+          <!-- контакты эксперта -->
+          <div class="d-flex flex-column mb-5 mb-md-2 order-1 order-sm-2 order-md-3" id="footer_expert_contacts">
+            <div class="p-2 d-flex align-items-center">
+              <span class="me-2 text-white">Контакты эксперта</span>
+            </div>
+            <div class="px-2 d-flex">
+              <a href="mailto:parrabolla@mail.ru" target="_blank" class="mail_ref">Parrabolla@mail.ru</a>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://t.me/parrrabollla" target="_blank">
+                  <img src="{% static 'layouts/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://wa.me/79603280691" target="_blank">
+                  <img src="{% static 'layouts/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                </a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://discord.gg/CDrXhVA" target="_blank">
+                  <img src="{% static 'layouts/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                </a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank">
+                  <img src="{% static 'layouts/img/skype.svg' %}"  class="contact_ico" alt="skype" title="skype">
+                </a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://vk.com/id37037617" target="_blank">
+                  <img src="{% static 'layouts/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                </a>
+              </div>
+              <!-- <div class="p-2 d-flex justify-content-end">
+                <a href="" target="_blank">
+                  <img src="{% static 'layouts/img/facebook.svg' %}" class="contact_ico" alt="facebook" title="facebook">
+                </a>
+              </div> -->
+            </div>
+          </div>
+          <!-- лицензия -->
+          <div class="d-flex align-items-center mb-5 mx-sm-auto mb-sm-2 order-2 order-sm-3 order-md-2" id="footer_license">
+            <span class="mb-0 ms-2 text-white">© 2023 ИП Рябов Р.А.</span>
+          </div>
+          <!-- контакты эксперта -->
+          <div class="d-flex flex-column mb-1 me-sm-4 me-md-0 mb-md-2 order-3 order-sm-1 order-md-1" id="footer_support_contacts">
+            <div class="p-2 d-flex align-items-center">
+              <span class="me-2 text-white">Поддержка сервиса</span>
+            </div>
+            <div class="px-2 d-flex">
+              <a href="mailto:demmenty@gmail.com" target="_blank" class="mail_ref">Demmenty@gmail.com</a>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://t.me/demmenty" target="_blank"><img src="{% static 'layouts/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram"></a>
+              </div>
+              <div class="p-2 d-flex justify-content-end">
+                <a href="https://vk.com/id93683216" target="_blank"><img src="{% static 'layouts/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte"></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </footer>
+      
+  </body>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="{% static 'layouts/js/homepage_layout.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  {% block script %}{% endblock %}
+</html>

@@ -1,0 +1,18 @@
+{% extends 'layouts/clientpage_layout.html' %}
+
+{% load draw_anthropometry_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'measurements/css/anthropometry.css' %}">
+{% endblock %}
+
+{% block title %}Антропометрия{% endblock %}
+
+{% block content %}
+  {% draw_anthropometry_content client %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'measurements/js/anthropometry.js' %}"></script>
+{% endblock %}

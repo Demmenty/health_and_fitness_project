@@ -1,0 +1,872 @@
+{% load static %}
+
+<!-- меню дополнительных функций -->
+<div class="extra-menu">
+
+  <div class="extra-menu-date">
+    <span class="text-center" id="chosen-date" data-year="" data-month="" data-day=""></span>
+  </div>
+
+  <div class="extra-menu-btns">
+    <div class="extra-menu-item" id="calendar-btn" title="Показать календарь">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
+        <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+        <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+      </svg>
+      <span>Календарь</span>
+    </div>
+
+    <div class="extra-menu-item dropdown-toggle" id="add-training-btn" title="Добавить тренировку" data-bs-toggle="dropdown" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+      <span>Тренировка</span>
+    </div>
+
+    <ul class="dropdown-menu training-type-select" aria-labelledby="add-training-btn">
+      <li class="dropdown-item" type="P">Силовая</li>
+      <li class="dropdown-item" type="R">Круговая</li>
+      <li class="dropdown-item" type="E">Выносливость</li>
+      <li class="dropdown-item" type="I">Интервальная</li>
+    </ul>
+
+    <div class="extra-menu-item not-implemented" id="periodization-btn" title="Пока не сделано :(">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
+      </svg>
+      <span>Периодизация</span>
+    </div>
+    <div class="extra-menu-item not-implemented" id="statistics-btn" title="Пока не сделано :(">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-ruled" viewBox="0 0 16 16">
+        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v4h10V2a1 1 0 0 0-1-1H4zm9 6H6v2h7V7zm0 3H6v2h7v-2zm0 3H6v2h6a1 1 0 0 0 1-1v-1zm-8 2v-2H3v1a1 1 0 0 0 1 1h1zm-2-3h2v-2H3v2zm0-3h2V7H3v2z"/>
+      </svg>
+      <span>Статистика</span>
+    </div>
+</div>
+
+</div>
+
+<!-- календарь -->
+<div class="calendar-container">
+  <div class="calendar" id="calendar">
+
+    <div class="year-header"> 
+      <span class="left-button" id="prev"> &lang; </span> 
+      <span class="year" id="label"></span> 
+      <span class="right-button" id="next"> &rang; </span>
+    </div> 
+
+    <div class="calendar-content">
+        <table class="months-table mb-2"> 
+          <tbody>
+            <tr class="months-row">
+              <td class="month" value="1">Янв</td> 
+              <td class="month" value="2">Фев</td> 
+              <td class="month" value="3">Мар</td> 
+              <td class="month" value="4">Апр</td> 
+              <td class="month" value="5">Май</td> 
+              <td class="month" value="6">Июн</td> 
+              <td class="month" value="7">Июл</td>
+              <td class="month" value="8">Авг</td> 
+              <td class="month" value="9">Сен</td> 
+              <td class="month" value="10">Окт</td>          
+              <td class="month" value="11">Ноя</td>
+              <td class="month" value="12">Дек</td>
+            </tr>
+          </tbody>
+        </table> 
+        
+        <table class="days-table"> 
+          <td class="day">ВС</td> 
+          <td class="day">ПН</td> 
+          <td class="day">ВТ</td> 
+          <td class="day">СР</td> 
+          <td class="day">ЧТ</td> 
+          <td class="day">ПТ</td> 
+          <td class="day">СБ</td>
+        </table> 
+
+        <div class="frame"> 
+          <table class="dates-table"> 
+              <tbody class="tbody">             
+              </tbody> 
+          </table>
+        </div> 
+    </div>
+
+  </div>
+</div>
+
+<!-- тренировки -->
+<div class="trainings-container" id="trainings-container">
+</div>
+
+<!-- картинка при отсутствии тренировок -->
+<div class="cat-pic" id="cat-pic">
+  <img src="{% static 'training/img/cat_playing_yarn.svg' %}">
+</div>
+
+<!-- окно выбора упражнений -->
+<div class="exercise-selection" id="exercise-selection" data-training="">
+  <div class="exercise-selection-header">
+    <span>Выбор упражнений</span>
+  </div>
+  <div class="exercise-selection-content">
+    <!-- список доступных упражнений -->
+    <div class="exercise-selection-list" id="exercises-list">
+      {% if not exercises %}
+        <p class="text-center" id="no-exercises-notice">Упражнения отсутствуют</p>
+      {% endif %}
+      {% for exercise in exercises %}
+      <li class="exercise-item exercise-type-{{ exercise.exercise_type }} list-group-item" 
+      id="exercise-item-{{ exercise.id }}" data-exercise-id="{{ exercise.id }}">
+        <!-- название -->
+        <div class="exercise-row">
+          <p class="exercise-name mb-0 col-10">{{ exercise.name }}</p>
+          <div class="exercise-btn-group col-2">
+            {% if for_expert or exercise.author == client %}
+              <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+            {% endif %}
+            <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
+            <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+          </div>
+        </div>
+        <!-- описание -->
+        <div class="exercise-info">
+          <ul class="list-group">
+            <li class="list-group-item description">
+              <div class="exercise-info-toggle">
+                <div class="col-11">Описание</div>
+                <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+              </div>
+              <div class="exercise-info-detail">
+                <hr>
+                <p>{{ exercise.description }}</p>
+              </div>
+            </li>
+            {% if exercise.target_muscles %}
+              <li class="list-group-item target-muscles">
+                <div class="exercise-info-toggle">
+                  <div class="col-11">Целевые мышцы</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail">
+                  <hr>
+                  <p>{{ exercise.target_muscles }}</p>
+                </div>
+              </li>
+            {% endif %}
+            {% if exercise.mistakes %}
+              <li class="list-group-item mistakes">
+                <div class="exercise-info-toggle">
+                  <div class="col-11">Частые ошибки</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail">
+                  <hr>
+                  <p>{{ exercise.mistakes }}</p>
+                </div>
+              </li>
+            {% endif %}
+            {% if exercise.photo_1 or exercise.photo_2 %}
+              <li class="list-group-item photo">
+                <div class="exercise-info-toggle">
+                  <div class="col-11">Фото</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail">
+                  <hr>
+                  <div class="exercise-photo-container">
+                    {% if exercise.photo_1 %}
+                      <img src="{{ exercise.photo_1.url }}" class="exercise-photo photo_1">
+                    {% endif %}
+                    {% if exercise.photo_2 %}
+                      <img src="{{ exercise.photo_2.url }}" class="exercise-photo photo_2">
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endif %}
+            {% if exercise.video %}
+              <li class="list-group-item video">
+                <div class="exercise-info-toggle">
+                  <div class="col-11">Видео</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail">
+                  <hr>
+                  <a href="{{ exercise.video }}" class="video-ref">{{ exercise.video }}</a>
+                </div>
+              </li>
+            {% endif %}
+            {% if exercise.effect_areas %}
+              <li class="list-group-item areas">
+                <div class="exercise-info-toggle">
+                  <div class="col-11">Зоны воздействия</div>
+                  <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+                </div>
+                <div class="exercise-info-detail">
+                  <hr>
+                  <p class="exercise-info-areas d-none">
+                    {{ exercise.effect_areas }}
+                  </p>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </div>
+    <div class="dummy-and-btns-container">
+      <!-- кукла -->
+      <div class="dummy-container">
+        {% if client_sex == "F" %}
+          <div class="dummy-front">
+            <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_front_left.png' %}" x="120" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/female_area/shoulders_front_rigth.png' %}" x="315" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>  
+                <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
+                <image xlink:href="{% static 'training/img/female_area/press_front.png' %}" x="215" y="274" height="196" width="67" class="effect-area-pic area-press"/> 
+                <image xlink:href="{% static 'training/img/female_area/sides_front_left.png' %}" x="169" y="281" height="166" width="51" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/female_area/sides_front_rigth.png' %}" x="276" y="281" height="166" width="51" class="effect-area-pic area-sides"/>     
+                <image xlink:href="{% static 'training/img/female_area/hips_front.png' %}" x="153" y="398" height="290" width="192" class="effect-area-pic area-hips-front"/> 
+            </svg>
+          </div>
+          <div class="dummy-back">
+            <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500"/>
+              <image xlink:href="{% static 'training/img/female_area/upperspine_left.png' %}" x="149" y="154" height="127" width="99" class="effect-area-pic area-upperspine"/> 
+              <image xlink:href="{% static 'training/img/female_area/upperspine_rigth.png' %}" x="265" y="154" height="126" width="100" class="effect-area-pic area-upperspine"/>  
+              <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+              <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+              <image xlink:href="{% static 'training/img/female_area/shoulders_back_left.png' %}" x="131" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/> 
+              <image xlink:href="{% static 'training/img/female_area/shoulders_back_rigth.png' %}" x="326" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/>
+              <image xlink:href="{% static 'training/img/female_area/spine.png' %}" x="247" y="114" height="320" width="20" class="effect-area-pic area-spine"/>
+              <image xlink:href="{% static 'training/img/female_area/lowerspine_left.png' %}" x="183" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+              <image xlink:href="{% static 'training/img/female_area/lowerspine_rigth.png' %}" x="266" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+              <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
+              <image xlink:href="{% static 'training/img/female_area/hips_back.png' %}" x="157" y="476" height="220" width="198" class="effect-area-pic area-hips-back"/> 
+              <image xlink:href="{% static 'training/img/female_area/shins_back.png' %}" x="184" y="687" height="229" width="143" class="effect-area-pic area-shins"/> 
+            </svg>
+          </div>
+        {% else %}
+          <div class="dummy-front">
+            <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+              <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+              <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+              <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+              <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+              <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+              <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+              <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+              <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
+              <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+            </svg>
+          </div>
+          <div class="dummy-back">
+            <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+              <image xlink:href="{% static 'training/img/male_area/upperspine_left.png' %}" x="148" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+              <image xlink:href="{% static 'training/img/male_area/upperspine_rigth.png' %}" x="263" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+              <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+              <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+              <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+              <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
+              <image xlink:href="{% static 'training/img/male_area/spine.png' %}" x="230" y="125" height="343" width="40" class="effect-area-pic area-spine"/>
+              <image xlink:href="{% static 'training/img/male_area/lowerspine_left.png' %}" x="159" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+              <image xlink:href="{% static 'training/img/male_area/lowerspine_rigth.png' %}" x="265" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+              <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+              <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+              <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+      <!-- кнопки -->
+      <div class="exercise-selection-btns">
+        <button type="button" class="btn btn-outline-primary" id="exercise-create-btn" title="Создать упражнение">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg>
+          Упражнение
+        </button>
+        <button type="button" class="btn btn-primary" id="exercise-selection-close-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+          </svg>
+          Готово
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- окно создания упражнения -->
+<div class="exercise-container" id="exercise-creation">
+  <div class="exercise-container-header">
+    <span>Создание упражнения</span>
+  </div>
+  <div class="exercise-content">
+    <form method="post" action="{% url 'exercises' 'save' %}" class="exercise-form" 
+    id="exercise-creation-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ exercise_form.as_div }}
+      <span>Зоны воздействия:</span>
+      <div class="areas-container">
+        <ul class="areas-list">
+        </ul>
+        <div class="dummy-container">
+          {% if client_sex == "F" %}
+            <div class="dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_left.png' %}" x="120" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_rigth.png' %}" x="315" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>  
+                  <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
+                  <image xlink:href="{% static 'training/img/female_area/press_front.png' %}" x="215" y="274" height="196" width="67" class="effect-area-pic area-press"/> 
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_left.png' %}" x="169" y="281" height="166" width="51" class="effect-area-pic area-sides"/>
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_rigth.png' %}" x="276" y="281" height="166" width="51" class="effect-area-pic area-sides"/>     
+                  <image xlink:href="{% static 'training/img/female_area/hips_front.png' %}" x="153" y="398" height="290" width="192" class="effect-area-pic area-hips-front"/> 
+              </svg>
+            </div>
+            <div class="dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/female_area/upperspine_left.png' %}" x="149" y="154" height="127" width="99" class="effect-area-pic area-upperspine"/> 
+                <image xlink:href="{% static 'training/img/female_area/upperspine_rigth.png' %}" x="265" y="154" height="126" width="100" class="effect-area-pic area-upperspine"/>  
+                <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_left.png' %}" x="131" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_rigth.png' %}" x="326" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/female_area/spine.png' %}" x="247" y="114" height="320" width="20" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/female_area/lowerspine_left.png' %}" x="183" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/female_area/lowerspine_rigth.png' %}" x="266" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
+                <image xlink:href="{% static 'training/img/female_area/hips_back.png' %}" x="157" y="476" height="220" width="198" class="effect-area-pic area-hips-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shins_back.png' %}" x="184" y="687" height="229" width="143" class="effect-area-pic area-shins"/> 
+              </svg>
+            </div>
+          {% else %}
+            <div class="dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+                <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
+                <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+              </svg>
+            </div>
+            <div class="dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+                <image xlink:href="{% static 'training/img/male_area/upperspine_left.png' %}" x="148" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/upperspine_rigth.png' %}" x="263" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
+                <image xlink:href="{% static 'training/img/male_area/spine.png' %}" x="230" y="125" height="343" width="40" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_left.png' %}" x="159" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_rigth.png' %}" x="265" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+                <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="btns-container">
+        <button type="button" class="btn btn-outline-primary" id="exercise-creation-close-btn">Отмена</button>
+        <button type="submit" class="btn btn-primary float-end" id="save-exercise-btn">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- окно редактирования упражнения -->
+<div class="exercise-container" id="exercise-editing">
+  <div class="exercise-container-header">
+    <span>Редактирование упражнения</span>
+  </div>
+  <div class="exercise-content">
+    <form method="post" action="{% url 'exercises' 'update' %}" class="exercise-form" 
+    id="exercise-editing-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ exercise_form.as_div }}
+      <input type='hidden' name='exercise_id' id="id_exercise_id" value=""></input>
+      <span>Зоны воздействия:</span>
+      <div class="areas-container">
+        <ul class="areas-list">
+        </ul>
+        <div class="dummy-container">
+          {% if client_sex == "F" %}
+            <div class="dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <image xlink:href="{% static 'training/img/dummy_female_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="70" class="effect-area-pic area-delts-front"/> 
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_left.png' %}" x="120" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>
+                  <image xlink:href="{% static 'training/img/female_area/shoulders_front_rigth.png' %}" x="315" y="229" height="127" width="61" class="effect-area-pic area-shoulders-front"/>  
+                  <image xlink:href="{% static 'training/img/female_area/chest_front.png' %}" x="171" y="153" height="133" width="154" class="effect-area-pic area-chest"/>
+                  <image xlink:href="{% static 'training/img/female_area/press_front.png' %}" x="215" y="274" height="196" width="67" class="effect-area-pic area-press"/> 
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_left.png' %}" x="169" y="281" height="166" width="51" class="effect-area-pic area-sides"/>
+                  <image xlink:href="{% static 'training/img/female_area/sides_front_rigth.png' %}" x="276" y="281" height="166" width="51" class="effect-area-pic area-sides"/>     
+                  <image xlink:href="{% static 'training/img/female_area/hips_front.png' %}" x="153" y="398" height="290" width="192" class="effect-area-pic area-hips-front"/> 
+              </svg>
+            </div>
+            <div class="dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_female_back.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/female_area/upperspine_left.png' %}" x="149" y="154" height="127" width="99" class="effect-area-pic area-upperspine"/> 
+                <image xlink:href="{% static 'training/img/female_area/upperspine_rigth.png' %}" x="265" y="154" height="126" width="100" class="effect-area-pic area-upperspine"/>  
+                <image xlink:href="{% static 'training/img/female_area/delts_left.png' %}" x="137" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/delts_rigth.png' %}" x="289" y="160" height="57" width="85" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_left.png' %}" x="131" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shoulders_back_rigth.png' %}" x="326" y="214" height="138" width="55" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/female_area/spine.png' %}" x="247" y="114" height="320" width="20" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/female_area/lowerspine_left.png' %}" x="183" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/female_area/lowerspine_rigth.png' %}" x="266" y="282" height="134" width="64" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/female_area/butt_back.png' %}" x="157" y="386" height="120" width="198" class="effect-area-pic area-butt"/>
+                <image xlink:href="{% static 'training/img/female_area/hips_back.png' %}" x="157" y="476" height="220" width="198" class="effect-area-pic area-hips-back"/> 
+                <image xlink:href="{% static 'training/img/female_area/shins_back.png' %}" x="184" y="687" height="229" width="143" class="effect-area-pic area-shins"/> 
+              </svg>
+            </div>
+          {% else %}
+            <div class="dummy-front">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_front.png' %}" x="0" y="0" height="1000" width="500"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="112" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="320" y="173" height="92" width="72" class="effect-area-pic area-delts-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_left.png' %}" x="102" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_front_rigth.png' %}" x="347" y="240" height="125" width="55" class="effect-area-pic area-shoulders-front"/>
+                <image xlink:href="{% static 'training/img/male_area/chest_front.png' %}" x="147" y="170" height="148" width="210" class="effect-area-pic area-chest"/>  
+                <image xlink:href="{% static 'training/img/male_area/press_front.png' %}" x="212" y="306" height="202" width="80" class="effect-area-pic area-press"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_left.png' %}" x="157" y="312" height="169" width="58" class="effect-area-pic area-sides"/>
+                <image xlink:href="{% static 'training/img/male_area/sides_front_rigth.png' %}" x="289" y="312" height="169" width="58" class="effect-area-pic area-sides"/>     
+                <image xlink:href="{% static 'training/img/male_area/hips_front.png' %}" x="158" y="422" height="306" width="188" class="effect-area-pic area-hips-front"/>
+              </svg>
+            </div>
+            <div class="dummy-back">
+              <svg width="100%" viewBox="0 0 500 1000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="{% static 'training/img/dummy_male_back.png' %}" x="0" y="0" height="1000" width="500"/> 
+                <image xlink:href="{% static 'training/img/male_area/upperspine_left.png' %}" x="148" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/upperspine_rigth.png' %}" x="263" y="155" height="154" width="89" class="effect-area-pic area-upperspine"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_left.png' %}" x="115" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/delts_rigth.png' %}" x="313" y="175" height="92" width="72" class="effect-area-pic area-delts-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_left.png' %}" x="100" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shoulders_back_rigth.png' %}" x="343" y="254" height="117" width="57" class="effect-area-pic area-shoulders-back"/>   
+                <image xlink:href="{% static 'training/img/male_area/spine.png' %}" x="230" y="125" height="343" width="40" class="effect-area-pic area-spine"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_left.png' %}" x="159" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/male_area/lowerspine_rigth.png' %}" x="265" y="310" height="142" width="76" class="effect-area-pic area-lowerspine"/>
+                <image xlink:href="{% static 'training/img/male_area/butt_back.png' %}" x="163" y="414" height="117" width="176" class="effect-area-pic area-butt"/> 
+                <image xlink:href="{% static 'training/img/male_area/hips_back.png' %}" x="163" y="506" height="198" width="173" class="effect-area-pic area-hips-back"/>
+                <image xlink:href="{% static 'training/img/male_area/shins_back.png' %}" x="177" y="692" height="222" width="146" class="effect-area-pic area-shins"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="btns-container">
+        <button type="button" class="btn btn-danger" id="delete-exercise-btn">Удалить</button>
+        <button type="submit" class="btn btn-primary float-end" id="update-exercise-btn">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- окно помощи по упражнению -->
+<div class="exercise-container" id="exercise-help">
+  <div class="exercise-container-header">
+    <span></span>
+  </div>
+  <div class="exercise-content">
+    <div class="info">
+    </div>
+    <button type="button" class="btn btn-outline-primary" id="exercise-help-close-btn">Закрыть</button>
+  </div>
+</div>
+
+<!-- ЗАГОТОВКИ -->
+<!-- формы тренировок -->
+<div class="training power-training" id="">
+  <div class="training-header">
+    <span>Силовая тренировка</span>
+  </div>
+  <div class="training-content">
+    <div class="training-additional-btns">
+      <div class="training-btn" id="fill-like-last-btn" title="Заполнить как прошлую тренировку">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+          <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+          <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+        </svg>
+        <span>Заполнить как прошлую</span>
+      </div>
+      <div class="training-btn" id="add-exercise-btn" title="Добавить упражнение">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+        <span>Упражнения</span>
+      </div>
+    </div>
+    <hr>
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form power_training_form">
+        {% csrf_token %}
+        {{ training_forms.power.date }}
+        {{ training_forms.power.client }}
+        {{ training_forms.power.training_type }}
+        <div class="training-field">
+          <span class="col-4">Утомление</span>
+          {{ training_forms.power.tiredness_due }}
+          {{ training_forms.power.tiredness_get }}
+        </div>
+        <div class="training-comment">
+          <span>Комментарий</span>
+          {{ training_forms.power.comment }}
+        </div>
+        <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+        <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<div class="training round-training" id="">
+  <div class="training-header">
+    <span>Круговая тренировка</span>
+  </div>
+  <div class="training-content">
+    <div class="training-additional-btns">
+      <div class="training-btn" id="fill-like-last-btn" title="Заполнить как прошлую тренировку">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+          <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+          <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+        </svg>
+        <span>Заполнить как прошлую</span>
+      </div>
+      <div class="training-btn" id="add-exercise-btn" title="Добавить упражнение">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+        <span>Упражнения</span>
+      </div>
+    </div>
+    <hr>
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form round_training_form">
+      {% csrf_token %}
+      {{ training_forms.round.date }}
+      {{ training_forms.round.client }}
+      {{ training_forms.round.training_type }}
+      <div class="training-field">
+        <span class="col-4">Утомление</span>
+        {{ training_forms.round.tiredness_due }}
+        {{ training_forms.round.tiredness_get }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Время</span>
+        {{ training_forms.round.minutes }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Пульс</span>
+        {{ training_forms.round.pulse_avg }}
+      </div>
+      <div class="training-comment">
+        <span>Комментарий</span>
+        {{ training_forms.round.comment }}
+      </div>
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<div class="training endurance-training" id="">
+  <div class="training-header">
+    <span>Тренировка выносливости</span>
+  </div>
+  <div class="training-content">
+    <div class="training-additional-btns">
+      <div class="training-btn" id="fill-like-last-btn" title="Заполнить как прошлую тренировку">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+          <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+          <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+        </svg>
+        <span>Заполнить как прошлую</span>
+      </div>
+      <div class="training-btn" id="add-exercise-btn" title="Добавить упражнение">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+        <span>Упражнения</span>
+      </div>
+    </div>
+    <hr>
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form endurance_training_form">
+      {% csrf_token %}
+      {{ training_forms.endurance.date }}
+      {{ training_forms.endurance.client }}
+      {{ training_forms.endurance.training_type }}
+      <div class="training-field">
+        <span class="col-4">Утомление</span>
+        {{ training_forms.endurance.tiredness_due }}
+        {{ training_forms.endurance.tiredness_get }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Время</span>
+        {{ training_forms.endurance.minutes }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Пульс</span>
+        {{ training_forms.endurance.pulse_avg }}
+      </div>
+      <div class="training-comment">
+        <span>Комментарий</span>
+        {{ training_forms.endurance.comment }}
+      </div>
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<div class="training interval-training" id="">
+  <div class="training-header">
+    <span>Тренировка интервальная</span>
+  </div>
+  <div class="training-content">
+    <div class="training-additional-btns">
+      <div class="training-btn" id="fill-like-last-btn" title="Заполнить как прошлую тренировку">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+          <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+          <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+        </svg>
+        <span>Заполнить как прошлую</span>
+      </div>
+      <div class="training-btn" id="add-exercise-btn" title="Добавить упражнение">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+        <span>Упражнения</span>
+      </div>
+    </div>
+    <hr>
+    <form method="post" action="{% url 'trainings' 'save' %}" class="training_form interval_training_form">
+      {% csrf_token %}
+      {{ training_forms.interval.date }}
+      {{ training_forms.interval.client }}
+      {{ training_forms.interval.training_type }}
+      <div class="training-field">
+        <span class="col-4">Утомление</span>
+        {{ training_forms.interval.tiredness_due }}
+        {{ training_forms.interval.tiredness_get }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Время</span>
+        {{ training_forms.interval.minutes }}
+      </div>
+      <div class="training-field">
+        <span class="col-4">Пульс</span>
+        {{ training_forms.interval.pulse_max }}
+      </div>
+      <div class="training-comment">
+        <span>Комментарий</span>
+        {{ training_forms.interval.comment }}
+      </div>
+      <button type="button" class="btn btn-danger delete-training-btn">Удалить</button>
+      <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<!-- формы отчетов об упражнениях -->
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
+class="exercise-report-form power-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.power.exercise }}
+  {{ exercise_report_forms.power.training }}
+  <div class="exercise-report-header">
+    <span class="exercise-name"></span>
+    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+    </svg>
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Вес</span>
+    {{ exercise_report_forms.power.weight }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Подходы</span>
+    {{ exercise_report_forms.power.approaches_due }}
+    {{ exercise_report_forms.power.approaches_made }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Повторы</span>
+    {{ exercise_report_forms.power.repeats_due }}
+    {{ exercise_report_forms.power.repeats_made }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Нагрузка</span>
+    {{ exercise_report_forms.power.load_due }}
+    {{ exercise_report_forms.power.load_get }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Выполнено</span>
+    {{ exercise_report_forms.power.is_done }}
+  </div>
+</form>
+
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
+class="exercise-report-form endurance-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.endurance.exercise }}
+  {{ exercise_report_forms.endurance.training }}
+  <div class="exercise-report-header">
+    <span class="exercise-name"></span>
+    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+    </svg>
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Время</span>
+    {{ exercise_report_forms.endurance.minutes }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Пульс</span>
+    {{ exercise_report_forms.endurance.pulse_avg }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Выполнено</span>
+    {{ exercise_report_forms.endurance.is_done }}
+  </div>
+</form>
+
+<form method="post" action="{% url 'exercise_reports' 'save' %}" 
+class="exercise-report-form interval-exercise-report">
+  {% csrf_token %}
+  {{ exercise_report_forms.interval.exercise }}
+  {{ exercise_report_forms.interval.training }}
+  <div class="exercise-report-header">
+    <span class="exercise-name"></span>
+    <svg class="exercise-help-btn" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle float-end ch-pointer" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+    </svg>
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Макс нагрузка</span>
+    {{ exercise_report_forms.interval.high_load_time }}
+    {{ exercise_report_forms.interval.high_load_pulse }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Мин нагрузка</span>
+    {{ exercise_report_forms.interval.low_load_time }}
+    {{ exercise_report_forms.interval.low_load_pulse }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Повторы цикла</span>
+    {{ exercise_report_forms.interval.cycles }}
+  </div>
+  <div class="exercise-report-field">
+    <span class="col-4">Выполнено</span>
+    {{ exercise_report_forms.interval.is_done }}
+  </div>
+</form>
+
+<!-- упражнение в списке выбора -->
+<li class="exercise-item list-group-item hidden" id="" data-exercise-id="">
+  <div class="exercise-row">
+    <p class="exercise-name mb-0 col-10"></p>
+    <div class="col-2 text-end exercise-btn-group">
+      <img src="{% static 'common/img/pencil-square.svg' %}" class="btn-exercise-edit" title="Редактировать упражнение">
+      <img src="{% static 'common/img/plus-square.svg' %}" class="btn-exercise-add" title="Добавить в тренировку">
+      <img src="{% static 'common/img/dash-square.svg' %}" class="btn-exercise-remove" title="Удалить из тренировки">
+    </div>
+  </div>
+  <div class="exercise-info">
+    <ul class="list-group">
+      <li class="list-group-item description">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Описание</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <p></p>
+        </div>
+      </li>
+      <li class="list-group-item target-muscles">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Целевые мышцы</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <p></p>
+        </div>
+      </li>
+      <li class="list-group-item mistakes">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Частые ошибки</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <p></p>
+        </div>
+      </li>
+      <li class="list-group-item photo">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Фото</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <div class="exercise-photo-container">
+            <img src="" class="exercise-photo photo_1">
+            <img src="" class="exercise-photo photo_2">
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item video">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Видео</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <a href="" class="video-ref"></a>
+        </div>
+      </li>
+      <li class="list-group-item areas">
+        <div class="exercise-info-toggle">
+          <div class="col-11">Зоны воздействия</div>
+          <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
+        </div>
+        <div class="exercise-info-detail">
+          <hr>
+          <p class="exercise-info-areas d-none">
+          </p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</li>

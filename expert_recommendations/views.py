@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 
 from .forms import NutritionRecommendationForm
 from .models import NutritionRecommendation
@@ -9,7 +9,7 @@ def save_nutrition_recommendation(request):
     """Сохранение рекомендуемых КБЖУ от эксперта через ajax"""
 
     if not request.user.is_expert:
-        return JsonResponse({}, status=403)
+        return HttpResponseForbidden("Вы не эксперт!")
 
     # получаем форму из запроса
     form = NutritionRecommendationForm(request.POST)
@@ -26,8 +26,6 @@ def save_nutrition_recommendation(request):
         form = NutritionRecommendationForm(request.POST, instance=instance)
         form.save()
 
-        data = {"result": "сохранено"}
-        return JsonResponse(data, status=200)
+        return HttpResponse("Рекомендации сохранены")
     else:
-        data = {"result": "Информация некорректна. Попробуйте ещё раз."}
-        return JsonResponse(data, status=200)
+        return HttpResponseBadRequest("Информация некорректна")

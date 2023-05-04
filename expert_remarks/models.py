@@ -25,6 +25,8 @@ class Commentary(models.Model):
 
     class Meta:
         ordering = ["-date"]
+        verbose_name = "Комментарий от эксперта"
+        verbose_name_plural = "Комментарии от эксперта"
 
 
 class Clientnote(models.Model):
@@ -45,6 +47,8 @@ class Clientnote(models.Model):
 
     class Meta:
         ordering = ["-date"]
+        verbose_name = "Заметка о клиенте помесячная"
+        verbose_name_plural = "Заметки о клиентах помесячные"
 
 
 class FullClientnote(models.Model):
@@ -55,3 +59,7 @@ class FullClientnote(models.Model):
 
     def __str__(self):
         return f"Заметка о клиенте {self.client}"
+
+    class Meta:
+        verbose_name = "Заметка о клиенте"
+        verbose_name_plural = "Заметки о клиентах"

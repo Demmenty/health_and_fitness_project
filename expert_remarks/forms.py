@@ -28,25 +28,25 @@ class CommentaryForm(ModelForm):
             "client": HiddenInput(),
             "general": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_general_comment",
                 }
             ),
             "measurements": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_measurements_comment",
                 }
             ),
             "nutrition": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_nutrition_comment",
                 }
             ),
             "workout": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_workout_comment",
                 }
             ),
@@ -78,25 +78,25 @@ class ClientnoteForm(ModelForm):
             "client": HiddenInput(),
             "general": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_general_note",
                 }
             ),
             "measurements": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_measurements_note",
                 }
             ),
             "nutrition": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_nutrition_note",
                 }
             ),
             "workout": Textarea(
                 attrs={
-                    "class": "form-control hidden_element mb-2",
+                    "class": "form-control hidden mb-2",
                     "id": "id_workout_note",
                 }
             ),

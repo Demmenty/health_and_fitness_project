@@ -1,0 +1,15 @@
+{% extends 'layouts/expert_overview_layout.html' %}
+{% load static %}
+
+{% block title %}Тотальный фитнес-контроль{% endblock %}
+
+{% block content %}
+<div class="container pt-5 mt-5">
+    {% for client in clients %}
+        <form method="get" action="{% url 'overviewpage' %}">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
+            <button type="submit" class="btn btn-outline-primary rounded-pill">{{ client.username }}</button>
+        </form><br>
+    {% endfor %}
+</div>
+{% endblock %}

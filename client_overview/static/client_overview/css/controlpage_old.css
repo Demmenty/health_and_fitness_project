@@ -1,0 +1,440 @@
+/* health_questionary */
+@media screen and (min-width: 576px) {
+    .health_questionary_container {
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 8px 1px #9fbfc5;
+    } 
+}
+.fullname_question, .birthdate_question  {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+#fullname_label, #birthdate_label {
+    padding-right: 20px;
+    width: 20%;
+}
+@media screen and (max-width: 991px) {
+    #fullname_label, #birthdate_label {
+        width: 35%;
+    }
+}
+input[type="radio"]:hover {
+    cursor: default;
+}
+.boolquestion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+.openquestion {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+.openquestion_line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.boolanswers {
+    display: flex;
+    flex-direction: row;
+    min-width: 7em;
+    justify-content: space-between;
+    font-size: 20px;
+}
+@media screen and (max-width: 500px) {
+    .boolanswers {
+        flex-direction: column;
+        align-items: flex-end;
+        min-width: 3em;
+        margin-right: 5px;
+    }
+}
+.boolanswers p {
+    margin-right: 5px;
+    margin-bottom: 3px;
+}
+.exp_question {
+    margin-right: 3rem;
+    margin-bottom: unset;
+    white-space: nowrap;
+}
+.question {
+    margin-right: 2rem;
+    margin-bottom: unset;
+}
+.radioanswers {
+    display: flex;
+    flex-direction: column;
+}
+.radioanswer {
+    display: flex;
+    padding: 1px;
+}
+.label_for_radio {
+    margin-left: 10px;
+}
+.radioanswer_line {
+    display: flex;
+    margin: 10px 15px;
+}
+.radioanswer_line input[type="radio"] {
+    margin-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+/* health_questionary */
+
+/* measurements */
+#measure_table_period {
+    max-height: 81vh;
+}
+.comment_container {
+    background-color: white;
+    border: 1px solid #cfd6e1;
+    border-radius: 7px;
+    padding: 5px;
+    cursor: default;
+}
+.container_commentform {
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    box-shadow: 0 0 8px 1px #00000052;
+    width: 352px;
+    max-width: 95vw;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+.period_select {
+    display: flex;
+    max-width: 380px;
+    align-items: baseline;
+    justify-content: space-between;
+    white-space: nowrap;
+    flex-flow: wrap;
+}
+#input_period {
+    max-width: 70px;
+}
+.comment_pic_royalblue {
+    filter: hue-rotate(36deg);
+}
+.comment_header {
+    width: 280px;
+    cursor: move;
+    transition: all 1s ease;
+    color: #0065fd00;
+    margin-right: auto;
+    margin-left: auto;
+}
+.comment_btn.shadow {
+    box-shadow: 0 -1px 5px 0.3rem rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+}
+.comment_btn.luminosity {
+    cursor: default; 
+    mix-blend-mode: luminosity;
+}
+.comment_btn.noluminosity {
+    cursor: pointer;
+    mix-blend-mode: none;
+    filter: hue-rotate(36deg);
+}
+.luminosity {
+    mix-blend-mode: luminosity;
+}
+.noluminosity {
+    mix-blend-mode: none;
+    filter: hue-rotate(36deg);
+}
+.tablerow_name {
+    text-align: left;
+    width: 150px;
+}
+#today_measure_block {
+    min-width: 290px;
+}
+
+@media (min-width: 768px) {
+    #today_measure_block {
+        max-width: 50%;
+    }
+}
+
+
+/* measurements */
+
+/* mealjournal */
+#container_recommend_nutrition_form {
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    position: fixed;
+    width: 18rem;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+@media (min-width: 576px) {
+    #container_recommend_nutrition_form {
+        right: 30%;
+    }
+}
+
+#select_date_section_mealjournal {
+    max-width: 310px;
+}
+#back_btn_mealjournal {
+    margin-top: -18px;
+}
+.without_info_row input[type="number"] {
+    text-align: center;
+    display: inline;
+}
+.without_info_row select {
+    display: inline;
+    width: unset;
+}
+
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+.top_table {
+    box-shadow: 0 0 1px 1px #dee2e6;
+}
+.top_table_ol {
+    padding-right: 109px;
+    padding-left: 109px;
+}
+
+@media screen and (max-width: 991px) {
+    .top_table_ol {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+.add_metric_container {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+#foodmetricsave_status {
+    transition: all 1s ease;
+    color: #0065fd00;
+}
+/* mealjournal */
+
+/* foodbymonth */
+#cat_with_coffee {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+
+#select_month_section {
+    max-width: 310px;
+}
+/* foodbymonth */
+
+/* foodbydate */
+#select_date_section {
+    max-width: 310px;
+}
+/* foodbydate */
+
+
+/* anthropometry */
+.anthropometry_form {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px 1px #9fbfc5;
+}
+.td_photo_btns {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.show_photo_btn.shadow {
+    box-shadow: 0 1px 4px 4px rgb(13 110 253 / 20%) !important;
+    background-color: rgb(13 110 253 / 20%);
+    border-radius: 3px;
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5)) hue-rotate(36deg);
+    -webkit-filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5)) hue-rotate(36deg);
+}
+.show_photo_btn {
+    cursor: pointer;
+    filter: hue-rotate(36deg);
+}
+.show_photo_btn.luminosity {
+    cursor: default;
+    mix-blend-mode: luminosity;
+}
+.container_photo {
+    border-radius: 10px;
+    padding: 5px;
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    box-shadow: 0 0 8px 1px #00000052;
+    z-index: 2;
+    position: fixed;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+    width: 50vw;
+    min-width: 300px;
+    max-height: 80vh;
+}
+.container_photo img {
+    border-radius: 10px;
+    width: 100%;
+}
+.container_photo p {
+    margin-bottom: 4px;
+    cursor: move;
+}
+.close_photo_btn {
+    float: right;
+}
+
+#btn_show_all:hover {
+    filter: contrast(0.9);
+    cursor: pointer;
+}
+/* anthropometry */
+
+/* measurements */
+.border-grey {
+    border-color: #ced4da !important;
+}
+
+#color1 {
+    background-color: #27de27;
+}
+#color2 {
+    background-color: #96e332;
+}
+#color3 {
+    background-color: #e3e332;
+}
+#color4 {
+    background-color: #f1b937;
+}
+#color5 {
+    background-color: #ff8063 ;
+}
+
+.text-transparent {
+    color: #ffffff00;
+}
+.transition_common {
+    transition: all 1s ease;
+}
+
+.form_saved {
+    color: #00c0f0 !important;
+    transition: all 1s ease !important;
+}
+.form_not_saved {
+    color: #ff1943 !important;
+    transition: all 1s ease !important;
+}
+
+#save_status {
+    transition: all 1s ease;
+}
+
+#colorsettings_ref:hover img {
+    filter: brightness(0) invert(1); 
+}
+
+.closed_measurements_header:hover {
+    color: #5271ff;
+    
+    background: white;
+
+}
+
+.closed_measurements_header {
+    color: #8b8b8b;
+    background: white;
+
+    border: none;
+}
+
+
+
+/* meet_questionary */
+input[type='range']::-webkit-slider-thumb {
+    background: #5271ff;
+}
+input[type='range']::-moz-range-thumb {
+    background: #5271ff;
+}
+input[type='range']::-ms-thumb {
+    background: #5271ff;
+}
+
+@media screen and (min-width: 576px) {
+    .questionary_container {
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 8px 1px #9fbfc5;
+    } 
+}
+
+#meet_questionary_form .title {
+	text-transform: uppercase;
+	line-height: 1.5;
+	text-align: center;
+	position: relative;
+}
+#meet_questionary_form .title span {
+	background: #fff;
+	display: inline-block;
+	padding: 0 10px;
+	position: relative;
+}
+#meet_questionary_form .title:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;        
+	width: 100%;
+	height: 2px;
+	background: #d9dfff;
+}
+
+#meet_questionary_container {
+    max-width: 936px;
+} 
+
+/* meet_questionary */
