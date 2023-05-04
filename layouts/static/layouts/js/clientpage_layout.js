@@ -37,8 +37,7 @@ window.onload = function () {
     setSettingsDependPath();
     function setSettingsDependPath() {
         if ((pagePath == '/measurements/') ||
-            (pagePath == '/measurements/anthropometry/') ||
-            (pagePath == '/measurements/addmeasure/')) {
+            (pagePath == '/measurements/anthropometry/')) {
             // открытие соотв.текста комментария
             commentMeasurements.classList.remove('hidden');
             // открытие соотв.вкладки комментария
@@ -441,8 +440,7 @@ $(document).ready(function() {
     pagePath = document.location.pathname;
     // открытие соответствующей секции заметки
     if ((pagePath == '/measurements/') ||
-        (pagePath == '/measurements/anthropometry/') ||
-        (pagePath == '/measurements/addmeasure/')) {
+        (pagePath == '/measurements/anthropometry/')) {
 
         $('#memo_measurements_textarea').removeClass('hidden');
         $('#memo_measurements_label').removeClass('closed');
