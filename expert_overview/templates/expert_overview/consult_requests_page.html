@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container pt-5 mt-5">
         {% if consult_signup_entries.count == 0 %}
-            <p class="text-center bg-white rounded-pill px-2 mt-3">Заявки на бесплатную консультацию отсутствуют</p>
+            <p class="text-center px-2 mt-3">Заявки на бесплатную консультацию отсутствуют</p>
             <img class="" id="cat_reading_requests" src="{% static 'expert_overview/img/cat_reading_requests.svg' %}">
         {% else %}
             <div class="d-flex flex-column flex-md-row">

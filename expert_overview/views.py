@@ -3,9 +3,8 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
-from consultation_signup.models import ConsultationSignup
-
-from .forms import ConsultationBrowseForm
+from expert_overview.models import ConsultationSignup
+from expert_overview.forms import ConsultationBrowseForm, ConsultationsignupForm
 
 
 @login_required

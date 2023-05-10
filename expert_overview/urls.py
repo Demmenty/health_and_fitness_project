@@ -1,5 +1,5 @@
 from django.urls import path
-from expert_overview import views
+from expert_overview import views, ajax
 
 
 urlpatterns = [
@@ -8,5 +8,10 @@ urlpatterns = [
         "consult_requests_page/",
         views.consult_requests_page,
         name="consult_requests_page",
+    ),
+    path(
+        "ajax/save_consultation_signup/",
+        ajax.save_consultation_signup,
+        name="save_consultation_signup",
     ),
 ]

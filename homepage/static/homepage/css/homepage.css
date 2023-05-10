@@ -1,250 +1,12 @@
-*, ::after, ::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
-}
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-footer {
-    margin-top: auto;
-}
-
-.transition_common {
-    transition: all 1s ease;
-}
-.text-transparent {
-    color: #ffffff00;
-}
-.text-whiteshadow {
-    color: white;
-    text-shadow: 0px 0px 10px #2a356a;
-}
-.text-royalblue {
-    color: #657ff7 !important;
-}
-.w-100px {
-    width: 100px;
-}
-.border-blueshadow {
-    border: 1px solid #ced4da;
-    border-radius: 10px;
-    box-shadow: 0 0 8px 1px #9fbfc5;
-}
-.h-fill {
-    height: -webkit-fill-available;
-}
-
-
-
-/* скролл */
-::-webkit-scrollbar {
-    max-width: 9px;
-    max-height: 9px;
-    background-color: #f8f8f8;
-}
-::-webkit-scrollbar-thumb {
-    background-color: #bdcbf3;
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background-color: #92a7e0;
-}
-::-webkit-scrollbar-track {
-    background-color: #eeeef570;
-}
-
-
-/* header */
-header {
-    background-color: #ffffff;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100;
-}
-
-.navbar-toggler {
-   border-color: #7a7a7a !important; 
-   padding-top: 3px !important;
-   padding-bottom: 3px !important;
-
-}
-.navbar-toggler:hover {
-    border-color: #657ff7 !important; 
-}
-.navbar-toggler:focus {
-    box-shadow: 0 0 5px 1px #6285e2 !important;
-}
-
-.nav_link {
-    color: #545454;
-    text-decoration: none;
-    margin-right: 1rem;
-    margin-left: 1rem;
-    margin-bottom: 0;
-    font-weight: 500;
-    white-space: nowrap;
-    background: unset;
-    border: unset;
-}
-@media (min-width: 768px) {
-    .nav_link {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-    }
-}
-@media (min-width: 992px) {
-    .nav_link {
-        margin-right: 1rem;
-        margin-left: 1rem;
-    }
-}
-.nav_link:hover {
-    color: #657ff7;
-    cursor: pointer;
-}
-#logo {
-    display: none;
-    pointer-events: none;
-}
-#logo_mini {
-    pointer-events: none;
-}
-@media (min-width: 992px) {
-    #logo {
-        display: unset;
-    }
-    #logo_mini {
-        display: none;
-    }
-}
-#exit_pic {
-    filter: grayscale(1) brightness(0.9);
-}
-#exit_pic:hover {
-    filter: unset;
-}
-/* header */
-
-/* footer */
-footer {
-    background-color: #657ff7;
-    border-top-color: #b9b9b9;
-    border-top-style: solid;
-    border-top-width: 3px;
-}
-.mail_ref {
-    color: #b9b9b9;
-    text-decoration: none;
-}
-.mail_ref:hover {
-    color: black;
-}
-.contact_ico {
-    height: 25px;
-    filter: invert(1);
-}
-.contact_ico:hover {
-    filter: brightness();
-}
-/* footer */
-
-/* layout */
-.hidden {
-    display: none !important;
-}
-.form-control {
-    font-size: 1.3rem !important;
-}
-.modal-content {
-    box-shadow: 0 0 10px 4px #85e8ff;
-    margin-top: 132px;
-    margin-bottom: 0;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.modal-content label {
-    margin-left: 13px;
-}
-
-.modal-title {
-    background-color: #ffffff;;
-    color: rgb(0, 0, 0);
-    padding-top: 13px;
-    padding-bottom: 13px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-top: 20px;
-    border-radius: var(--bs-modal-border-radius);
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.modal-content button[type="submit"] {
-    width: 100%;
-    height: 47px;
-    margin-top: 23px;
-}
-
-.modal-content ul {
-    color: #3383d1;
-}
-
-.pad-notop-4 {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-bottom: 1.5rem;
-}
-
-.helptext {
-    margin-left: 14px;
-    color: #00000000;
-    display: block;
-    white-space: pre-wrap;
-    transition: all 1s ease;
-}
-
-.error {
-    transition: all 1s ease;
-    color: #00000000;
-    display: block;
-    text-align: center;
-}
-/* layout */
-
-/* стиль кнопок */
-.btn-primary {
-    --bs-btn-bg: #657ff7 !important;
-    --bs-btn-border-color: #657ff7 !important;
-    --bs-btn-hover-color: #f6f6f6 !important;
-    --bs-btn-hover-bg: #3f54b2 !important;
-    --bs-btn-hover-border-color: #3f54b2 !important;
-    --bs-btn-active-bg: #657ff7 !important;
-    --bs-btn-active-border-color: #657ff7 !important;
-    --bs-btn-disabled-bg: #657ff7 !important;
-    --bs-btn-disabled-border-color: #657ff7 !important;
-}
-.btn-outline-primary {
-    --bs-btn-color: #657ff7 !important;
-    --bs-btn-border-color: #657ff7 !important;
-    --bs-btn-hover-bg: #657ff7 !important;
-    --bs-btn-hover-border-color: #657ff7 !important;
-    --bs-btn-active-bg: #657ff7 !important;
-    --bs-btn-active-border-color: #657ff7 !important;
-    --bs-btn-disabled-color: #657ff7 !important;
-    --bs-btn-disabled-border-color: #657ff7 !important;
-}
-/* стиль кнопок */
-
-/* main */
 main {
     color: #3e3e3e;
 }
+.logo-title {
+    color: white;
+    text-shadow: 0px 0px 10px #2a356a;
+    white-space: nowrap;
+}
+
 /* welcome_section */
 #welcome_section {
     height: 100vh;
@@ -254,6 +16,12 @@ main {
     background-position-x: center;
     background-position-y: center, center;
     background-repeat: no-repeat, no-repeat;
+}
+#welcome_section .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: -webkit-fill-available;
 }
 #welcome_section_text {
     padding: 20px 20px;
@@ -290,7 +58,6 @@ main {
         font-size: 1.5rem;
     } 
 }
-
 [name='logo_title'] {
     letter-spacing: 5px;
 }
@@ -299,7 +66,6 @@ main {
         letter-spacing: 8px;
     }
 }
-
 #welcome_section [name='logo_title'] {
     visibility: hidden;
 }
@@ -1006,6 +772,11 @@ main {
 }}
 
 /* hero_section1 */
+.hero_section .hero-text {
+    text-align: center;
+    color: white;
+    text-shadow: 0px 0px 10px #2a356a;
+}
 #hero_section1 {
     background-image: url(/static/homepage/img/health_invest_background.png);
     background-color: #5876fe;
@@ -1014,7 +785,6 @@ main {
     background-position-x: right;
     background-repeat: no-repeat;
 }
-
 #hero_section1 .gradient_blue {
     background: linear-gradient(90deg, #657ff7 1%, #ffffff00 100%);
 }
@@ -1972,8 +1742,16 @@ main {
     } 
 }
 #consultation_form .helptext {
+    margin-left: 14px;
+    color: #00000000;
+    display: block;
+    white-space: pre-wrap;
+    transition: all 1s ease;
     text-align: end;
     font-size: smaller;
+}
+#consultation_form .form-control {
+    font-size: 1.3rem !important;
 }
 #consultation_form .form-control:focus + .helptext {
     color: grey;
@@ -1981,4 +1759,11 @@ main {
 #consultation_form p {
     margin-bottom: 0.5rem;
 }
-/* main */
+#consultation_error {
+    transition: all 1s ease;
+    color: #ffffff00;
+    text-align: center;
+}
+#consultation_confirm button {
+    width: 100px;
+}

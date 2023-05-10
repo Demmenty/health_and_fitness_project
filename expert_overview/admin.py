@@ -1,3 +1,5 @@
 from django.contrib import admin
+from expert_overview.models import ConsultationSignup
 
-# Register your models here.
+
+admin.site.register(ConsultationSignup)
