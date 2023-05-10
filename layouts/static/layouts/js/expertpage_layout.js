@@ -171,26 +171,17 @@ commentaryForm.submit(function () {
 
         success: function (response) {
             if (response.result == 'комментарий сохранен') {
-                commentaryStatusMsg.text(response.result);
-                commentaryStatusMsg.addClass('form_saved');
-                setTimeout(() => {
-                commentaryStatusMsg.removeClass('form_saved');
-                }, 1500);
+                showSuccessAlert("Комментарий для клиента сохранен");
             }
             else {
-                commentaryStatusMsg.text(response.result);
-                commentaryStatusMsg.addClass('form_not_saved');
-                setTimeout(() => {
-                    commentaryStatusMsg.removeClass('form_not_saved');
-                }, 1500);
+                showDangerAlert(response.responseText);
             }
             },
         error: function (response) {
-            commentaryStatusMsg.text('не сохранено! возникла ошибка!');
-            commentaryStatusMsg.addClass('form_not_saved');
-            setTimeout(() => {
-                commentaryStatusMsg.removeClass('form_not_saved');
-            }, 1500);
+            if(response.status == 0) {
+                showDangerAlert("Нет соединения с сервером") ;
+            }
+            else showDangerAlert(response.responseText);
         },             
     });
     return false;
