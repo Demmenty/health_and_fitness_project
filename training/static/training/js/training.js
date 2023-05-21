@@ -1007,7 +1007,7 @@ function createExerciseInfo(data) {
     else {
         info.find(".areas").remove();
     }
-
+    info.find(".exercise-info-detail").hide();
     info.removeClass("hidden");
 
     return info;
