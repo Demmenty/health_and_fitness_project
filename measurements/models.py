@@ -184,21 +184,21 @@ class Anthropometry(models.Model):
         "Голень", max_digits=4, decimal_places=1, null=True, blank=True
     )
     photo_1 = models.ImageField(
-        "Фото №1",
+        "Фото спереди",
         upload_to="anthropometry/img/clients/%Y/%d.%m",
         max_length=255,
         null=True,
         blank=True,
     )
     photo_2 = models.ImageField(
-        "Фото №2",
+        "Фото сзади",
         upload_to="anthropometry/img/clients/%Y/%d.%m",
         max_length=255,
         null=True,
         blank=True,
     )
     photo_3 = models.ImageField(
-        "Фото №3",
+        "Фото сбоку",
         upload_to="anthropometry/img/clients/%Y/%d.%m",
         max_length=255,
         null=True,

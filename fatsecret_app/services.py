@@ -312,36 +312,51 @@ class FatsecretManager:
 
         session = self.client_session(user)
 
-        monthly_avg = {"protein": 0, "fat": 0, "carbo": 0, "calories": 0}
-
         try:
             monthly_entries = session.food_entries_get_month(date=request_date)
         except KeyError:
             return {}
-
+        
         if not monthly_entries:
             return {}
-
-        # если за месяц одна запись - у fs будет просто словарь
+        
         if type(monthly_entries) is dict:
-            monthly_entries = [monthly_entries]
+            days_count = 1
+            entry_date = date_int_to_date(monthly_entries["date_int"])
+            monthly_entries["date_datetime"] = entry_date
+
+            if entry_date == date.today():
+                monthly_avg = {"protein": "-", "fat": "-", "carbo": "-", "calories": "-"}
+            else:
+                monthly_avg = {
+                    "protein": monthly_entries["protein"], 
+                    "fat": monthly_entries["fat"], 
+                    "carbo": monthly_entries["carbohydrate"], 
+                    "calories": monthly_entries["calories"],
+                }
+            return {
+                "entries": [monthly_entries],
+                "monthly_avg": monthly_avg,
+            }
 
         days_count = len(monthly_entries)
+        monthly_avg = {"protein": 0, "fat": 0, "carbo": 0, "calories": 0}
 
         for day in monthly_entries:
-            day["date_datetime"] = date(1970, 1, 1) + timedelta(
-                days=int(day["date_int"])
-            )
+            day["date_datetime"] = date_int_to_date(day["date_int"])
+            if day["date_datetime"] == date.today():
+                days_count -= 1
+                break
+
             monthly_avg["protein"] += float(day["protein"])
             monthly_avg["fat"] += float(day["fat"])
             monthly_avg["carbo"] += float(day["carbohydrate"])
             monthly_avg["calories"] += float(day["calories"])
+
         monthly_avg["protein"] = round(monthly_avg["protein"] / days_count, 2)
         monthly_avg["fat"] = round(monthly_avg["fat"] / days_count, 2)
         monthly_avg["carbo"] = round(monthly_avg["carbo"] / days_count, 2)
-        monthly_avg["calories"] = round(
-            monthly_avg["calories"] / days_count, 2
-        )
+        monthly_avg["calories"] = round(monthly_avg["calories"] / days_count, 2)
 
         return {
             "entries": monthly_entries,
@@ -557,3 +572,10 @@ class FatsecretManager:
         )
 
         return monthly_top
+
+
+def date_int_to_date(date_int:int) -> datetime.date:
+    """Возвращает время в формате date YYYY-MM-DD"""
+
+    result = date(1970, 1, 1) + timedelta(days=int(date_int))
+    return result
