@@ -21,7 +21,7 @@ class Exercise(models.Model):
     description = models.TextField("Описание")
     target_muscles = models.TextField("Целевые мышцы", null=True, blank=True)
     mistakes = models.TextField(
-        "Возможные ошибки выполнения", null=True, blank=True
+        "Основные ошибки выполнения", null=True, blank=True
     )
     icon = models.ImageField(
         "Иконка",
