@@ -391,53 +391,61 @@
                     <form method="post" action="{% url 'save_anthropometry' %}" id="add_anthropo_form" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.date.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.date.label }}:</label>
                             <div class="col-sm-9">
                                 <input type="date" name="date" value="{% now 'Y-m-d' %}" class="form-control" required="" id="id_date">
                             </div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.shoulder.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.shoulder.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.shoulder }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.chest.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.chest.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.chest }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.waist.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.waist.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.waist }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.belly.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.belly.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.belly }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.buttocks.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.buttocks.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.buttocks }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.hip.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.hip.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.hip }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-3 col-form-label">{{ new_entry_form.shin.label }}</label>
+                            <label class="col-sm-3 col-form-label">{{ new_entry_form.shin.label }}:</label>
                             <div class="col-sm-9">{{ new_entry_form.shin }}</div>
                         </div>
                         <br>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_1.label }}</label>
+                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_1.label }}:</label>
                             <div class="col-sm-12">{{ new_entry_form.photo_1 }}</div>
                         </div>
                         <div class="form-group row mb-2">
-                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_2.label }}</label>
+                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_2.label }}:</label>
                             <div class="col-sm-12">{{ new_entry_form.photo_2 }}</div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_3.label }}</label>
+                            <label class="col-sm-12 form-label">{{ new_entry_form.photo_3.label }}:</label>
                             <div class="col-sm-12">{{ new_entry_form.photo_3 }}</div>
                         </div>
-                        <br>
+                        <p class="mt-2 mb-4 text-muted">
+                            <a href="https://youtu.be/aMCsYWVZYVg" target="_blank" class="link me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="royalblue" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"></path>
+                                </svg>
+                            </a>
+                            как делать измерения
+                        </p>
                         <button type="submit" class="btn btn-primary float-end">Сохранить</button>
                         <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Отмена</button>
                     </form>
