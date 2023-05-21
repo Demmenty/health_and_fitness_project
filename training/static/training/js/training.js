@@ -782,15 +782,16 @@ function selectExercise() {
 
     let exercise_item = $(this).closest(".exercise-item");
     let exercise_row = exercise_item.find(".exercise-row");
-    let was_selected = exercise_row.hasClass("selected");
+    let selection_div = $("#exercise-selection");
+    let exercise_id = exercise_item.data("exercise-id");
     
     // показать\скрыть подробности
     exercise_item.find(".exercise-info").slideToggle();
     
-    if (was_selected) return;
-    
-    let selection_div = $("#exercise-selection");
-    let exercise_id = exercise_item.data("exercise-id");
+    if (!exercise_row.hasClass("selected")) {
+        // встроить видео с ютуба в инфо
+        embedVideo(exercise_id);
+    }
     
     // удалить все отметки и подсветки
     selection_div.find(".selected").removeClass("selected");
@@ -806,9 +807,6 @@ function selectExercise() {
     }
     else exercise_row.addClass("colored");
 
-    // встроить видео с ютуба в инфо
-    embedVideo(exercise_id);
-
     // выделить зоны выбранного упражнения
     let areas = $.trim(
         exercise_item.find(".exercise-info-areas").text()).split(',');
@@ -817,7 +815,7 @@ function selectExercise() {
         if (!areas[i]) return;
 
         let pic = selection_div.find("." + areas[i]);
-
+        
         pic.addClass("selected");
         if(pic.hasClass("colored")) {
             pic.addClass("high-colored");
