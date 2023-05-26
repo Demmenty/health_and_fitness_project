@@ -171,27 +171,24 @@ class FatsecretManager:
         session = self.client_session(user)
 
         daily_entries = session.food_entries_get(date=request_date)
-
         if not daily_entries:
             return {}
-
-        # продукты, для которых нет инфо о граммовке порции
-        without_info = {}
-
-        # категории для таблички
-        count_by_category = {
-            "Breakfast": 0,
-            "Lunch": 0,
-            "Dinner": 0,
-            "Other": 0,
-        }
-        # итоговые кбжу дня
-        nutrition = {
-            "amount": 0,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbohydrate": 0,
+        
+        result = {
+            "Breakfast": [],
+            "Lunch": [],
+            "Dinner": [],
+            "Other": [],
+            "without_info": {},
+            "total": {
+                "amount": 0,
+                "nutrition": {
+                    "calories": 0,
+                    "protein": 0,
+                    "fat": 0,
+                    "carbohydrate": 0,
+                }
+            }
         }
 
         # складываем одинаковую еду в этот словарик (для топов)
@@ -201,10 +198,7 @@ class FatsecretManager:
 
         # обработка каждой записи о продукте
         for food in daily_entries:
-            # подсчет количеств блюд для каждой категории для таблички
-            count_by_category[food["meal"]] += 1
             # поиск подробностей о продукте для подсчета порции
-            cache.fs.get_foodinfo
             food_info = cache.fs.get_foodinfo(food["food_id"])
             food_info_found = True
             if not food_info:
@@ -233,14 +227,14 @@ class FatsecretManager:
                     or food["serving"]["measurement_description"] == "ml"
                 ):
                     food["norm_amount"] = int(float(food["number_of_units"]))
-                    nutrition["amount"] += food["norm_amount"]
+                    result["total"]["amount"] += food["norm_amount"]
                 else:
                     # если измерение в порциях - сначала проверяем, есть ли граммовка порции
                     if food["serving"].get("metric_serving_amount") is None:
                         # если в инфе не оказалось граммовки порции
                         # добавляем эту еду в спец.словарь и не считаем amount
                         daily_total_is_good = False
-                        without_info[food["food_id"]] = {
+                        result["without_info"][food["food_id"]] = {
                             "food_entry_name": food["food_entry_name"],
                             "serving_description": food["serving"].get(
                                 "serving_description", "порция"
@@ -258,13 +252,22 @@ class FatsecretManager:
                             * float(food["serving"]["metric_serving_amount"])
                             * float(food["serving"]["number_of_units"])
                         )
-                        nutrition["amount"] += food["norm_amount"]
+                        result["total"]["amount"] += food["norm_amount"]
 
+            # отфильтровать ненужное и добавить в результат
+            food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
+            del food["serving"]
+            del food["date_int"]
+            del food["food_entry_description"]
+            del food["food_entry_id"]
+            del food["serving_id"]
+            del food["food_id"]
+            result[food["meal"]].append(food)
             # подсчет итоговой суммы кбжу
-            nutrition["calories"] += int(food["calories"])
-            nutrition["protein"] += float(food["protein"])
-            nutrition["fat"] += float(food["fat"])
-            nutrition["carbohydrate"] += float(food["carbohydrate"])
+            result["total"]["nutrition"]["calories"] += int(food["calories"])
+            result["total"]["nutrition"]["protein"] += float(food["protein"])
+            result["total"]["nutrition"]["fat"] += float(food["fat"])
+            result["total"]["nutrition"]["carbohydrate"] += float(food["carbohydrate"])
 
             # заодно готовим daily_total
             # меняем наименование на то, что в инфе, оно более общее
@@ -283,26 +286,18 @@ class FatsecretManager:
             # (если нет - то продукт в списке without_info, либо не имеет такого ключа)
             if food.get("norm_amount"):
                 daily_total[food["food_name"]]["amount"] += food["norm_amount"]
-                daily_total[food["food_name"]]["metric"] = food["serving"][
-                    "metric_serving_unit"
-                ]
+                daily_total[food["food_name"]]["metric"] = food["metric_serving_unit"]
 
         # округляем результаты в получившемся итоге по кбжу
-        for key, value in nutrition.items():
-            nutrition[key] = round(value, 2)
+        for key, value in result["total"]["nutrition"].items():
+            result["total"]["nutrition"][key] = round(value, 2)
 
         # сохраняем daily_total в кеше на будущее для топов
         if daily_total_is_good:
             cache.fs.save_daily_total(user, request_date, daily_total)
 
-        # добавить очистку от ненужных значений??
-
-        return {
-            "entries": daily_entries,
-            "nutrition": nutrition,
-            "count_by_category": count_by_category,
-            "without_info": without_info,
-        }
+        return result
+    
 
     def monthly_food(self, user, request_date) -> dict:
         """Подсчитывает данные о съеденных продуктах за месяц

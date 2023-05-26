@@ -216,13 +216,19 @@ class FatsecretCacheManager:
         with open(self.daily_total_cache, "rb") as file:
             cache = pickle.load(file)
 
-        if cache.get(user.id):
-            if cache[user.id].get(entry_date):
+        # TODO исправить функции тут, чтобы передавалось только Id
+        if isinstance(user, int):
+            user_id = user
+        else:
+            user_id = user.id
+
+        if cache.get(user_id):
+            if cache[user_id].get(entry_date):
                 return
             else:
-                cache[user.id].update({entry_date: daily_total})
+                cache[user_id].update({entry_date: daily_total})
         else:
-            cache.update({user.id: {entry_date: daily_total}})
+            cache.update({user_id: {entry_date: daily_total}})
 
         with open(self.daily_total_cache, "wb") as file:
             pickle.dump(cache, file)
