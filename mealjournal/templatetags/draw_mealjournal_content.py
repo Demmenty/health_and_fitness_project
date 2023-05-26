@@ -20,12 +20,9 @@ def draw_mealjournal_content(client: User, for_expert: bool = False) -> dict:
         }
         return data
     
-    daily_food = services.fs.daily_food(client, datetime.today())
     monthly_food = services.fs.monthly_food(client, datetime.today())
 
     prods_without_info = {}
-    if daily_food.get("without_info"):
-        prods_without_info.update(daily_food["without_info"])
     if monthly_food.get("without_info"):
         prods_without_info.update(monthly_food["without_info"])
 
@@ -35,7 +32,6 @@ def draw_mealjournal_content(client: User, for_expert: bool = False) -> dict:
 
     data = {
         "client": client,
-        "daily_food": daily_food,
         "monthly_food": monthly_food,
         "prods_without_info": prods_without_info,
         "previous_month": previous_month,

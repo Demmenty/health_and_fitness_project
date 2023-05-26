@@ -14,6 +14,46 @@
     }
 }
 
+/* заголовок */
+.prev-button, .next-button { 
+    cursor: pointer;
+    width:28px; 
+    text-align:center;
+} 
+.prev-button { 
+    -webkit-border-top-left-radius: 5px; 
+    -moz-border-radius-topleft: 5px; 
+    border-top-left-radius: 5px; 
+} 
+.next-button { 
+    -webkit-border-top-right-radius: 5px; 
+    -moz-border-radius-topright: 5px; 
+    border-top-right-radius: 5px; 
+} 
+.prev-button:hover,
+.next-button:hover {
+    background: #3FADFF;
+}
+
+/* общее */
+.no-data-msg {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+@media (min-width: 992px) {
+    .d-lg-table-row-group {
+        display: table-row-group !important;
+    }
+}
+
+/* сводка за сегодня */
+#briefdate-table td,
+#briefdate-table th {
+    text-align: center;
+}
+
+
 #select_date_section_mealjournal {
     max-width: 310px;
 }

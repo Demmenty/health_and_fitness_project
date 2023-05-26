@@ -233,3 +233,212 @@ $(document).ready(function(){
         dragContainer(document.getElementById('container_recommend_nutrition_form'));
     }
 })
+
+$(document).ready(function () {
+    showTodayBrief();
+    $("#prev-briefdate").on("click", showPrevDateBrief);
+    $("#next-briefdate").on("click", showNextDateBrief);
+})
+
+// СВОДКА ЗА ДЕНЬ
+function showTodayBrief() {
+    // получение и отображение сводки питания за сегодня
+    console.log("showTodayBrief");
+
+    let current_date = $("#label-briefdate").attr("value");
+    let request = getBriefbydateRequest(current_date);
+
+    request.done(function(response) {
+        fillBriefbydate(response.daily_food);
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function showPrevDateBrief() {
+    // получение и отображение сводки питания за прошлый день
+    console.log("showPrevDateBrief");
+
+    let current_date = $("#label-briefdate").attr("value");
+    let prev_date = addDays(current_date, -1);
+    let request = getBriefbydateRequest(prev_date.toLocaleDateString('en-CA'));
+
+    request.done(function(response) {
+        $("#label-briefdate").attr("value", prev_date);
+        $("#label-briefdate").text(
+            prev_date.toLocaleString('default', {day: "numeric", month: 'long'}));
+        fillBriefbydate(response.daily_food);
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function showNextDateBrief() {
+    // получение и отображение сводки питания за следующий день
+    console.log("showNextDateBrief");
+
+    let current_date = $("#label-briefdate").attr("value");
+    let next_date = addDays(current_date, 1);
+    let request = getBriefbydateRequest(next_date.toLocaleDateString('en-CA'));
+
+    request.done(function(response) {
+        $("#label-briefdate").attr("value", next_date);
+        $("#label-briefdate").text(
+            next_date.toLocaleString('default', {day: "numeric", month: 'long'}));
+        fillBriefbydate(response.daily_food);
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function fillBriefbydate(daily_food) {
+    // отображение сводки питания за день
+    console.log("fillBriefbydate");
+
+    let brief_block = $("#briefdate-container");
+
+    if ($.isEmptyObject(daily_food)) {
+        brief_block.find(".no-data-msg").removeClass("hidden");
+        brief_block.find("#briefdate-table").addClass("hidden");
+        return;
+    }
+
+    let tbody_bg = brief_block.find("#briefdate-tbody-big");
+    let tbody_sm = brief_block.find("#briefdate-tbody-small");
+
+    tbody_bg.empty();
+    tbody_sm.empty();
+
+    if (daily_food.Breakfast.length > 0) {
+        let category_length = daily_food.Breakfast.length;
+        for (let i=0; i<category_length; i++) {
+            let food = daily_food.Breakfast[i];
+            addFoodToBigBody(food, (i == 0), category_length, "Завтрак");
+            addFoodToSmallTbody(food, (i == 0), "Завтрак");
+        }
+    }
+    if (daily_food.Lunch.length > 0) {
+        let category_length = daily_food.Lunch.length;
+        for (let i=0; i<category_length; i++) {
+            let food = daily_food.Lunch[i];
+            addFoodToBigBody(food, (i == 0), category_length, "Обед");
+            addFoodToSmallTbody(food, (i == 0), "Обед");
+        }
+    }
+    if (daily_food.Dinner.length > 0) {
+        let category_length = daily_food.Dinner.length;
+        for (let i=0; i<category_length; i++) {
+            let food = daily_food.Dinner[i];
+            addFoodToBigBody(food, (i == 0), category_length, "Ужин");
+            addFoodToSmallTbody(food, (i == 0), "Ужин");
+        }
+    }
+    if (daily_food.Other.length > 0) {
+        let category_length = daily_food.Other.length;
+        for (let i=0; i<category_length; i++) {
+            let food = daily_food.Other[i];
+            addFoodToBigBody(food, (i == 0), category_length, "Другое");
+            addFoodToSmallTbody(food, (i == 0), "Другое");
+        }
+    }
+
+    addTotalToTfoot(daily_food.total);
+
+    brief_block.find(".no-data-msg").addClass("hidden");
+    brief_block.find("#briefdate-table").removeClass("hidden");
+
+    function addFoodToBigBody(food, add_category=false, category_length, category_name) {
+        let food_row = $("<tr></tr>"); 
+
+        if (add_category) {
+            let category_td = $("<td></td>");
+            category_td.attr("rowspan", category_length);
+            category_td.text(category_name);
+            food_row.append(category_td);
+        }
+
+        let name_td = $("<td class='text-start'></td>");
+        name_td.text(food.food_entry_name);
+        food_row.append(name_td);
+
+        if (food.norm_amount) {
+            let amount_td = $("<td class='text-nowrap'></td>");
+            amount_td.text(food.norm_amount + " " + food.metric_serving_unit);
+            food_row.append(amount_td);
+        }
+        else {
+            let amount_td = $("<td>?</td>");
+            food_row.append(amount_td);
+        }
+        food_row.append("<td>" + food.calories + "</td>");
+        food_row.append("<td>" + food.protein + "</td>");
+        food_row.append("<td>" + food.fat + "</td>");
+        food_row.append("<td>" + food.carbohydrate + "</td>");
+        tbody_bg.append(food_row);
+    }
+
+    function addFoodToSmallTbody(food, add_category=false, category_name) {
+        if (add_category) {
+            let category_row = $('<tr class="table-light"></tr>');
+            let category_th = $('<th colspan="4"></th>');
+            category_th.text(category_name);
+            category_row.append(category_th);
+            tbody_sm.append(category_row);
+        }
+
+        let name_row = $('<tr></tr>');
+        let name_td = $('<td colspan="4"></td>');
+        if (food.norm_amount) {
+            if (food.metric_serving_unit == "g") {
+                name_td.text(food.food_entry_name + " - " + food.norm_amount + " г");
+            }
+            else if (food.metric_serving_unit == "ml") {
+                name_td.text(food.food_entry_name + " - " + food.norm_amount + " мл");
+            }
+        }
+        else {
+            name_td.text(food.food_entry_name + " - ?");
+        }
+        name_row.append(name_td);
+        
+        let nutrition_row = $('<tr></tr>');
+        nutrition_row.append('<td title="калории">' + food.calories + '</td>');
+        nutrition_row.append('<td title="белки">' + food.protein + '</td>');
+        nutrition_row.append('<td title="жиры">' + food.fat + '</td>');
+        nutrition_row.append('<td title="углеводы">' + food.carbohydrate + '</td>');
+
+        tbody_sm.append(name_row);
+        tbody_sm.append(nutrition_row);
+    }
+
+    function addTotalToTfoot(total) {
+        let tfoot = brief_block.find("tfoot");
+        tfoot.find(".total-amount").text(total.amount + " г/мл");
+        tfoot.find(".total-calories").text(total.nutrition.calories);
+        tfoot.find(".total-protein").text(total.nutrition.protein);
+        tfoot.find(".total-fat").text(total.nutrition.fat);
+        tfoot.find(".total-carbohydrate").text(total.nutrition.carbohydrate);
+    }
+}
+
+// АЯКС ЗАПРОСЫ
+function getBriefbydateRequest(briefdate) {
+    return $.ajax({
+        data: {"briefdate": briefdate, "client_id": params.clientId},
+        type: "GET",
+        url: "/mealjournal/ajax/get_briefbydate",
+    });
+}
+
+// УТИЛИТЫ
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
