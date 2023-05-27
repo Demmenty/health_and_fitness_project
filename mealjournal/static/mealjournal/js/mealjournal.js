@@ -4,30 +4,10 @@ $(document).ready(function(){
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
-    // кнопка пересчета топ-10 после внесения метрикик
-    const recalcBtn = document.getElementById('recalculation_btn');
-    // поле для надписи о сохранении внесенной метрикик
-    const statusBtn = document.getElementById('foodmetricsave_status');
-    // модальное окно с предложением ввести недостающую метрику
-    const withoutInfoModal =
-        new bootstrap.Modal(document.getElementById('WithoutInfoModal'));
-    
-    // показ модального окна without_info, если уже что-то записано из view
-    if ($('.without_info_row').length > 0) {
-        withoutInfoModal.show();
-    }
-
     // получение топ-10 продуктов по кнопке
     $('#get_top_form').click(function () {
         createTopTen($(this));
         return false;
-    })
-
-    // пересчет топ-10 продуктов по кнопке
-    $('#recalculation_btn').click(function () {
-        withoutInfoModal.hide();
-        $('#top_section').addClass('hidden');
-        createTopTen($('#get_top_form'));
     })
 
     function createTopTen(form) {
@@ -50,8 +30,8 @@ $(document).ready(function(){
                                 response.top_calories);
                 $('#top_section').removeClass('hidden');
                 // если не посчиталось что-то - делаем спец. секцию
-                if (response.without_info) {
-                    createWithoutInfoSection(response.without_info);
+                if (response.without_metric) {
+                    fillWithoutMetricModal(response.without_metric);
                 }
             },
             error: function () {
@@ -102,49 +82,13 @@ $(document).ready(function(){
         });
     }
 
-    // наполнение модального окна without_info
-    function createWithoutInfoSection(without_info) {
-        // удаляем продукты, что там были
-        $('.without_info_row').remove();
-        // наполняем полученным списком
-        $.each(without_info, function(id, data) {
-            let newWithoutInfoRow =  $("<div class='without_info_row mt-5'>")
-                .append('<div class="d-flex">' + 
-                        "<span class='text-royalblue me-2'><b>Продукт:</b></span>" +
-                        data.food_entry_name + "</div>")
-                .append('<div class="d-flex align-items-center text-nowrap my-2">' + 
-                        data.serving_description + " = " +
-                        "<input type='hidden' value=" + id + " name='food_id'>" + 
-                        "<input type='hidden' value='" + data.serving_id + "' name='serving_id'>" +
-                        "<input type='number' class='form-control mx-2' min='0' name='metric_serving_amount' required>" +
-                        "<select class='form-select' name='metric_serving_unit'>" +
-                            "<option value='g'>г</option>" +
-                            "<option value='ml'>мл</option>" +
-                        "</select>" + "</div>")
-                .append("<p>Калорийность этой порции: " + data.calories_per_serving + " ккал</p>");
-
-            $('#without_info_list').append(newWithoutInfoRow);
-        });
-        // показываем модальное окно
-        withoutInfoModal.show();
-    }
-
     // обработка submit формы внесения метрики
     $('#add_metric_form').submit(function () {
-        // проверка на ноль
         if (amountIsZero()) {
-            // ошибка
-            statusBtn.textContent = "ноль? серьезно?";
-            statusBtn.style.color = "#0065fd00";
-            setTimeout(() => {
-                statusBtn.style.color = "#9d00ff";
-            }, 500);
+            showDangerAlert("ноль? серьезно?");
+            return false;
         }
-        else {
-            // отправка
-            sendFoodMetric($(this));
-        }
-        // предупреждение стандартного сценария
+        sendFoodMetric($(this));
         return false;
     });
     
@@ -169,29 +113,13 @@ $(document).ready(function(){
             
             success: function (response) {
                 if (response.status == "инфа сохранена, круто!") {
-                    // если топы не были запрошены
-                    if ($('#top_section').hasClass("hidden")) {
-                        // закрываем модалку
-                        setTimeout(() => {
-                            withoutInfoModal.hide();
-                        }, 1500);
-                        // перезагружаем страницу
-                        location.reload();
-                    }
-                    // если топы были запрошены
-                    else {
-                        // добавляем кнопку пересчета
-                        recalcBtn.classList.remove('hidden');
-                    }
-                    // показываем синий статус
-                    statusBtn.textContent = response.status;
-                    statusBtn.style.color = "#00c0f0";
-                    }
+                    showSuccessAlert(response.status);
+                    // пересчитать
+                    withoutMetricModal.hide();
+                }
                 },
             error: function () {
-                // показываем красный статус
-                statusBtn.textContent = 'произошла ошибка';
-                statusBtn.style.color = "#ff1943";
+                showDangerAlert("произошла ошибка");
                 }
         });
     }
@@ -236,16 +164,57 @@ $(document).ready(function(){
 
 $(document).ready(function () {
     showTodayBrief();
-    $("#prev-briefdate").on("click", showPrevDateBrief);
-    $("#next-briefdate").on("click", showNextDateBrief);
+    $("#prev-daybrief").on("click", showPrevDateBrief);
+    $("#next-daybrief").on("click", showNextDateBrief);
 })
 
+// ПРОДУКТЫ БЕЗ МЕТРИКИ
+const withoutMetricModal = new bootstrap.Modal(
+    document.getElementById('withoutMetricModal'));
+
+function fillWithoutMetricModal(food_without_metric) {
+    // наполнение модального окна продуктами без метрики 
+
+    let food_list = $("#without_metric_list");
+    food_list.empty();
+
+    $.each(food_without_metric, function(food_id, data) {
+        let food_row = $("<div class='without_metric_row'></div>");
+
+        let name_row = $('<div class="d-flex"></div>');
+        name_row.text(data.food_entry_name);
+        name_row.prepend('<span class="label">Продукт:</span>');
+        
+        let metric_row = $('<div class="input-metric-row"></div>');
+        metric_row.append(data.serving_description + " = ");
+        metric_row.append("<input type='hidden' value=" + food_id + " name='food_id'>");
+        metric_row.append("<input type='hidden' value='" + data.serving_id + "' name='serving_id'>");
+        let input_amount = $("<input type='number' min='0' name='metric_serving_amount' required>");
+        input_amount.addClass("form-control");
+        metric_row.append(input_amount);
+        let select_metric = $("<select class='form-select' name='metric_serving_unit'></select>");
+        select_metric.append("<option value='g'>г</option>");
+        select_metric.append("<option value='ml'>мл</option>");
+        metric_row.append(select_metric);
+
+        let info_row = ("<p>Калорийность этой порции: " + data.calories_per_serving + " ккал</p>");
+
+        food_row.append(name_row);
+        food_row.append(metric_row);
+        food_row.append(info_row);
+
+        food_list.append(food_row);
+    });
+}
+
 // СВОДКА ЗА ДЕНЬ
+const daybrief_block = $("#daybrief-container");
+
 function showTodayBrief() {
     // получение и отображение сводки питания за сегодня
     console.log("showTodayBrief");
 
-    let current_date = $("#label-briefdate").attr("value");
+    let current_date = $("#label-daybrief").attr("value");
     let request = getBriefbydateRequest(current_date);
 
     request.done(function(response) {
@@ -261,13 +230,13 @@ function showPrevDateBrief() {
     // получение и отображение сводки питания за прошлый день
     console.log("showPrevDateBrief");
 
-    let current_date = $("#label-briefdate").attr("value");
+    let current_date = $("#label-daybrief").attr("value");
     let prev_date = addDays(current_date, -1);
     let request = getBriefbydateRequest(prev_date.toLocaleDateString('en-CA'));
 
     request.done(function(response) {
-        $("#label-briefdate").attr("value", prev_date);
-        $("#label-briefdate").text(
+        $("#label-daybrief").attr("value", prev_date);
+        $("#label-daybrief").text(
             prev_date.toLocaleString('default', {day: "numeric", month: 'long'}));
         fillBriefbydate(response.daily_food);
     });
@@ -281,13 +250,13 @@ function showNextDateBrief() {
     // получение и отображение сводки питания за следующий день
     console.log("showNextDateBrief");
 
-    let current_date = $("#label-briefdate").attr("value");
+    let current_date = $("#label-daybrief").attr("value");
     let next_date = addDays(current_date, 1);
     let request = getBriefbydateRequest(next_date.toLocaleDateString('en-CA'));
 
     request.done(function(response) {
-        $("#label-briefdate").attr("value", next_date);
-        $("#label-briefdate").text(
+        $("#label-daybrief").attr("value", next_date);
+        $("#label-daybrief").text(
             next_date.toLocaleString('default', {day: "numeric", month: 'long'}));
         fillBriefbydate(response.daily_food);
     });
@@ -301,17 +270,14 @@ function fillBriefbydate(daily_food) {
     // отображение сводки питания за день
     console.log("fillBriefbydate");
 
-    let brief_block = $("#briefdate-container");
-
     if ($.isEmptyObject(daily_food)) {
-        brief_block.find(".no-data-msg").removeClass("hidden");
-        brief_block.find("#briefdate-table").addClass("hidden");
+        daybrief_block.find(".no-data-msg").removeClass("hidden");
+        daybrief_block.find("#daybrief-table").addClass("hidden");
         return;
     }
 
-    let tbody_bg = brief_block.find("#briefdate-tbody-big");
-    let tbody_sm = brief_block.find("#briefdate-tbody-small");
-
+    let tbody_bg = daybrief_block.find("#daybrief-tbody-big");
+    let tbody_sm = daybrief_block.find("#daybrief-tbody-small");
     tbody_bg.empty();
     tbody_sm.empty();
 
@@ -347,11 +313,15 @@ function fillBriefbydate(daily_food) {
             addFoodToSmallTbody(food, (i == 0), "Другое");
         }
     }
-
     addTotalToTfoot(daily_food.total);
 
-    brief_block.find(".no-data-msg").addClass("hidden");
-    brief_block.find("#briefdate-table").removeClass("hidden");
+    daybrief_block.find(".no-data-msg").addClass("hidden");
+    daybrief_block.find("#daybrief-table").removeClass("hidden");
+
+    if (!$.isEmptyObject(daily_food.without_metric)) {
+        fillWithoutMetricModal(daily_food.without_metric);
+        withoutMetricModal.show();
+    }
 
     function addFoodToBigBody(food, add_category=false, category_length, category_name) {
         let food_row = $("<tr></tr>"); 
@@ -418,7 +388,7 @@ function fillBriefbydate(daily_food) {
     }
 
     function addTotalToTfoot(total) {
-        let tfoot = brief_block.find("tfoot");
+        let tfoot = daybrief_block.find("tfoot");
         tfoot.find(".total-amount").text(total.amount + " г/мл");
         tfoot.find(".total-calories").text(total.nutrition.calories);
         tfoot.find(".total-protein").text(total.nutrition.protein);

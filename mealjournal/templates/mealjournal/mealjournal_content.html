@@ -58,14 +58,14 @@
     {% else %}
 
         <!-- Сводка за сегодня -->
-        <div class="block-container" id="briefdate-container">
+        <div class="block-container" id="daybrief-container">
             <div class="block-header justify-content-between">
-                <span class="prev-button" id="prev-briefdate"> &lang; </span> 
-                <span class="briefdate" id="label-briefdate" value="{% now 'Y-m-d' %}">{% now "j E" %}</span>
-                <span class="next-button" id="next-briefdate"> &rang; </span>
+                <span class="prev-button" id="prev-daybrief"> &lang; </span> 
+                <span class="daybrief" id="label-daybrief" value="{% now 'Y-m-d' %}">{% now "j E" %}</span>
+                <span class="next-button" id="next-daybrief"> &rang; </span>
             </div>
             <div class="block-content">
-                <table class="table table-bordered m-0 hidden" id="briefdate-table">
+                <table class="table table-bordered m-0 hidden" id="daybrief-table">
                     <thead class="table-light d-none d-lg-table-row-group">
                         <tr>
                             <th>Категория</th>
@@ -76,9 +76,9 @@
                             <th>Углеводы</th>
                         </tr>
                     </thead>
-                    <tbody class="d-none d-lg-table-row-group" id="briefdate-tbody-big">
+                    <tbody class="d-none d-lg-table-row-group" id="daybrief-tbody-big">
                     </tbody>
-                    <tbody class="d-lg-none" id="briefdate-tbody-small">
+                    <tbody class="d-lg-none" id="daybrief-tbody-small">
                     </tbody>
                     <tfoot>
                         <tr class="table-light d-lg-none">
@@ -359,44 +359,19 @@
 </div>
 
 <!-- модальное окно для обработки продуктов без метрики -->
-<div class="modal" id="WithoutInfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal" id="withoutMetricModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-blueshadow">
-            <div class="modal-header align-items-baseline">
-                <h4 class="text-center modal-title">Некоторые продукты не удалось посчитать :(</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        <div class="modal-content">
+            <div class="block-header">
+                <span>Некоторые продукты не удалось посчитать</span>
             </div>
-            <div class="modal-body">
-                <h5 class="text-center">Укажите их массу, пожалуйста</h5>
+            <div class="block-content">
+                <p class="text-center">Укажите их массу или объем, пожалуйста</p>
+                <br>
                 <form method="POST" action="{% url 'foodmetricsave' %}" id="add_metric_form">
                     {% csrf_token %}
-                    <div id="without_info_list">
-                        {% if prods_without_info %}
-                            {% for id, info in prods_without_info.items %}
-                                <div class="without_info_row mt-4">
-                                    <div class="d-flex">
-                                        <span class="text-royalblue me-2"><b>Продукт:</b></span>
-                                        {{ info.food_entry_name }}
-                                    </div>
-                                    <div class="d-flex align-items-center text-nowrap my-2">
-                                        {{ info.serving_description }} = 
-                                        <input type="hidden" value="{{ id }}" name="food_id">
-                                        <input type="hidden" value="{{ info.serving_id }}" name="serving_id">
-                                        <input type="number" class="form-control mx-2" min="0" name="metric_serving_amount" required>
-                                        <select class="form-select" name="metric_serving_unit">
-                                            <option value="g">г</option>
-                                            <option value="ml">мл</option>
-                                        </select>
-                                    </div>
-                                    <p>Калорийность этой порции: 
-                                        <span class="text-nowrap">{{ info.calories_per_serving }} ккал</span>
-                                    </p>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                    <div id="without_metric_list">
                     </div>
-                    <p class="text-center" id="foodmetricsave_status">&nbsp;</p>
-                    <button type="button" class="btn btn-primary hidden" id="recalculation_btn">Пересчитать</button>
                     <button type="submit" class="btn btn-primary float-end">Сохранить</button>
                 </form>
             </div>
