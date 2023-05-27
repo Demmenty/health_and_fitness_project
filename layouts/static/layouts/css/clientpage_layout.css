@@ -66,11 +66,32 @@ body {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+.block-header .prev-button,
+.block-header .next-button { 
+    cursor: pointer;
+    width:28px; 
+    text-align:center;
+} 
+.block-header .prev-button { 
+    -webkit-border-top-left-radius: 5px; 
+    -moz-border-radius-topleft: 5px; 
+    border-top-left-radius: 5px; 
+} 
+.block-header .next-button { 
+    -webkit-border-top-right-radius: 5px; 
+    -moz-border-radius-topright: 5px; 
+    border-top-right-radius: 5px; 
+} 
+.block-header .prev-button:hover,
+.block-header .next-button:hover {
+    background: #3FADFF;
+}
 @media (min-width: 992px) {
     .block-content {
         padding: 15px;
     }
 }
+
 /* стиль перетаксиваемых окошек */
 .block-container.moving {
     box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px 2px rgb(0 0 0 / 25%);

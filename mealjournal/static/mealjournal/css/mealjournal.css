@@ -14,27 +14,6 @@
     }
 }
 
-/* заголовок */
-.prev-button, .next-button { 
-    cursor: pointer;
-    width:28px; 
-    text-align:center;
-} 
-.prev-button { 
-    -webkit-border-top-left-radius: 5px; 
-    -moz-border-radius-topleft: 5px; 
-    border-top-left-radius: 5px; 
-} 
-.next-button { 
-    -webkit-border-top-right-radius: 5px; 
-    -moz-border-radius-topright: 5px; 
-    border-top-right-radius: 5px; 
-} 
-.prev-button:hover,
-.next-button:hover {
-    background: #3FADFF;
-}
-
 /* общее */
 .no-data-msg {
     text-align: center;
@@ -48,8 +27,8 @@
 }
 
 /* сводка за сегодня */
-#briefdate-table td,
-#briefdate-table th {
+#daybrief-table td,
+#daybrief-table th {
     text-align: center;
 }
 
@@ -60,13 +39,32 @@
 #back_btn_mealjournal {
     margin-top: -18px;
 }
-.without_info_row input[type="number"] {
+
+/* окно продуктов без метрики */
+#without_metric_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.without_metric_row input[type="number"] {
     text-align: center;
     display: inline;
 }
-.without_info_row select {
+.without_metric_row select {
     display: inline;
     width: unset;
+}
+#without_metric_list .label {
+    color: #657ff7;
+    font-weight: bolder;
+    margin-right: 0.75rem;
+}
+#without_metric_list .input-metric-row {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0.5rem 0rem;
+    gap: 10px;
 }
 
 .fatsecret_ref {
