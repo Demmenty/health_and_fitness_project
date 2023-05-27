@@ -48,10 +48,10 @@ def foodmetricsave(request):
     if request.user.is_anonymous:
         return HttpResponseForbidden
 
-    prods_without_info = dict(request.POST)
-    del prods_without_info["csrfmiddlewaretoken"]
+    prods_without_metric= dict(request.POST)
+    del prods_without_metric["csrfmiddlewaretoken"]
 
-    cache.fs.save_foodmetric(prods_without_info)
+    cache.fs.save_foodmetric(prods_without_metric)
 
     data = {"status": "инфа сохранена, круто!"}
     return JsonResponse(data, status=200)

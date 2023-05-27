@@ -127,7 +127,7 @@ class FatsecretCacheManager:
         with open(self.food_info_cache, "wb") as f:
             pickle.dump(cache, f)
 
-    def _remove_prods_without_info(self) -> None:
+    def _remove_prods_without_metric(self) -> None:
         """удаление записей о продуктах без метрики для тестов
         id '4652615' (184г) - твистер,  id '62258251' (135г) - картоха"""
 
@@ -144,22 +144,22 @@ class FatsecretCacheManager:
         with open(self.food_info_cache, "wb") as f:
             pickle.dump(cache, f)
 
-    def save_foodmetric(self, prods_without_info) -> None:
+    def save_foodmetric(self, prods_without_metric) -> None:
         """получает словарь с продуктами, которым добавили метрику
         вручную в дневнике питания, и сохраняет в food_info_cache"""
 
         with open(self.food_info_cache, "rb") as file:
             cache = pickle.load(file)
 
-        count_of_prods = len(prods_without_info.get("food_id"))
+        count_of_prods = len(prods_without_metric.get("food_id"))
 
         for i in range(count_of_prods):
-            food_id = prods_without_info["food_id"][i]
-            metric_serving_amount = prods_without_info[
+            food_id = prods_without_metric["food_id"][i]
+            metric_serving_amount = prods_without_metric[
                 "metric_serving_amount"
             ][i]
-            metric_serving_unit = prods_without_info["metric_serving_unit"][i]
-            serving_id = prods_without_info["serving_id"][i]
+            metric_serving_unit = prods_without_metric["metric_serving_unit"][i]
+            serving_id = prods_without_metric["serving_id"][i]
 
             if type(cache[food_id]["servings"]["serving"]) is dict:
                 cache[food_id]["servings"]["serving"][
@@ -204,8 +204,8 @@ class FatsecretCacheManager:
         записываются даты старше 2 дней и единожды
         """
 
-        # если есть without_info, не сохраняем
-        if daily_total.get("without_info"):
+        # если есть without_metric, не сохраняем
+        if daily_total.get("without_metric"):
             return
 
         # если прошло меньше 3 дней, не сохраняем
@@ -261,8 +261,8 @@ class FatsecretCacheManager:
         записываются даты старше 2 дней и единожды
         """
 
-        # если есть without_info, не сохраняем
-        if monthly_total.get("without_info"):
+        # если есть without_metric, не сохраняем
+        if monthly_total.get("without_metric"):
             return
 
         # если прошло меньше 3 дней, не сохраняем
@@ -292,3 +292,7 @@ class FatsecretCacheManager:
 
             with open(self.monthly_total_cache, "wb") as file:
                 pickle.dump(cache, file)
+
+
+fs = FatsecretCacheManager()
+fs._remove_prods_without_metric()

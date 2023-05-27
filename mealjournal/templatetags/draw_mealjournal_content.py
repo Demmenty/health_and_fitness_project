@@ -22,9 +22,9 @@ def draw_mealjournal_content(client: User, for_expert: bool = False) -> dict:
     
     monthly_food = services.fs.monthly_food(client, datetime.today())
 
-    prods_without_info = {}
-    if monthly_food.get("without_info"):
-        prods_without_info.update(monthly_food["without_info"])
+    prods_without_metric = {}
+    if monthly_food.get("without_metric"):
+        prods_without_metric.update(monthly_food["without_metric"])
 
     # для поля выбора (потом сделать через js)
     previous_month = date.today() + relativedelta(months=-1)
@@ -33,7 +33,7 @@ def draw_mealjournal_content(client: User, for_expert: bool = False) -> dict:
     data = {
         "client": client,
         "monthly_food": monthly_food,
-        "prods_without_info": prods_without_info,
+        "prods_without_metric": prods_without_metric,
         "previous_month": previous_month,
         "for_expert": for_expert,
     }

@@ -240,10 +240,10 @@
                 <h5 class="text-center">Укажите их массу, пожалуйста</h5>
                 <form method="POST" id="add_metric_form" action="{% url 'foodmetricsave' %}">
                     {% csrf_token %}
-                    <div id="without_info_list">
-                        {% if daily_food.without_info %}
-                            {% for id, info in daily_food.without_info.items %}
-                                <div class="without_info_row mt-4">
+                    <div id="without_metric_list">
+                        {% if daily_food.without_metric %}
+                            {% for id, info in daily_food.without_metric.items %}
+                                <div class="without_metric_row mt-4">
                                     <div class="d-flex">
                                         <span class="text-royalblue me-2"><b>Продукт:</b></span>
                                         {{ info.food_entry_name }}

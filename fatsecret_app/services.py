@@ -5,7 +5,6 @@ from typing import Union
 from django.conf import settings
 from fatsecret import (
     Fatsecret as FS,
-    GeneralError as FS_GeneralError,
     ParameterError as FS_ParameterError,
 )
 
@@ -165,7 +164,7 @@ class FatsecretManager:
         'entries' - список словарей с позициями еды, датой и кбжу
         'nutrition' - общее кбжу за день
         'count_by_category' - сколько в ужин, обед и тп
-        'without_info' - продукты без метрики
+        'without_metric' - продукты без метрики
         """
 
         session = self.client_session(user)
@@ -179,7 +178,7 @@ class FatsecretManager:
             "Lunch": [],
             "Dinner": [],
             "Other": [],
-            "without_info": {},
+            "without_metric": {},
             "total": {
                 "amount": 0,
                 "nutrition": {
@@ -234,7 +233,7 @@ class FatsecretManager:
                         # если в инфе не оказалось граммовки порции
                         # добавляем эту еду в спец.словарь и не считаем amount
                         daily_total_is_good = False
-                        result["without_info"][food["food_id"]] = {
+                        result["without_metric"][food["food_id"]] = {
                             "food_entry_name": food["food_entry_name"],
                             "serving_description": food["serving"].get(
                                 "serving_description", "порция"
@@ -255,7 +254,8 @@ class FatsecretManager:
                         result["total"]["amount"] += food["norm_amount"]
 
             # отфильтровать ненужное и добавить в результат
-            food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
+            if food["serving"].get("metric_serving_unit"):
+                food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
             del food["serving"]
             del food["date_int"]
             del food["food_entry_description"]
@@ -283,7 +283,7 @@ class FatsecretManager:
                 }
             daily_total[food["food_name"]]["calories"] += int(food["calories"])
             # если получилось высчитать нормально количество
-            # (если нет - то продукт в списке without_info, либо не имеет такого ключа)
+            # (если нет - то продукт в списке without_metric, либо не имеет такого ключа)
             if food.get("norm_amount"):
                 daily_total[food["food_name"]]["amount"] += food["norm_amount"]
                 daily_total[food["food_name"]]["metric"] = food["metric_serving_unit"]
@@ -365,7 +365,7 @@ class FatsecretManager:
         'food_name': {'calories': ..., 'amount': ... , 'metric': ...}}"""
 
         daily_total = {}
-        without_info = {}
+        without_metric= {}
         daily_total_is_good = True
 
         session = self.client_session(user)
@@ -406,7 +406,7 @@ class FatsecretManager:
                     if food["serving"].get("metric_serving_amount") is None:
                         # если в инфе не оказалось граммовки порции
                         # добавляем эту еду в спец.словарь и не считаем amount
-                        without_info[food["food_id"]] = {
+                        without_metric[food["food_id"]] = {
                             "food_entry_name": food["food_entry_name"],
                             "serving_description": food["serving"].get(
                                 "serving_description", "порция"
@@ -436,7 +436,7 @@ class FatsecretManager:
 
             daily_total[food["food_name"]]["calories"] += int(food["calories"])
 
-            # если не получилось высчитать нормально количество - то продукт в списке without_info
+            # если не получилось высчитать нормально количество - то продукт в списке without_metric
             if food.get("norm_amount"):
                 daily_total[food["food_name"]]["amount"] += food["norm_amount"]
                 daily_total[food["food_name"]]["metric"] = food["serving"][
@@ -446,8 +446,8 @@ class FatsecretManager:
         if daily_total_is_good:
             cache.fs.save_daily_total(user, entry_date, daily_total)
 
-        elif without_info:
-            daily_total["without_info"] = without_info
+        elif without_metric:
+            daily_total["without_metric"] = without_metric
 
         return daily_total
 
@@ -479,8 +479,8 @@ class FatsecretManager:
 
             # суммируем в месячную сводку
             for key in daily_total.keys():
-                if key == "without_info":
-                    monthly_total["without_info"] = daily_total[key]
+                if key == "without_metric":
+                    monthly_total["without_metric"] = daily_total[key]
                 elif monthly_total.get(key):
                     monthly_total[key]["calories"] += daily_total[key][
                         "calories"
@@ -505,9 +505,9 @@ class FatsecretManager:
 
         daily_top = {}
 
-        if daily_total.get("without_info"):
-            daily_top["without_info"] = daily_total["without_info"]
-            del daily_total["without_info"]
+        if daily_total.get("without_metric"):
+            daily_top["without_metric"] = daily_total["without_metric"]
+            del daily_total["without_metric"]
 
         top_calories = dict(
             sorted(
@@ -537,14 +537,14 @@ class FatsecretManager:
         if not monthly_total:
             monthly_total = self.monthly_total(user, month)
 
-            if monthly_total.get("without_info") is None:
+            if monthly_total.get("without_metric") is None:
                 cache.fs.save_monthly_total(user, month, monthly_total)
 
         monthly_top = {}
 
-        if monthly_total.get("without_info"):
-            monthly_top["without_info"] = monthly_total["without_info"]
-            del monthly_total["without_info"]
+        if monthly_total.get("without_metric"):
+            monthly_top["without_metric"] = monthly_total["without_metric"]
+            del monthly_total["without_metric"]
 
         top_calories = dict(
             sorted(

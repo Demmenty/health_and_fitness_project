@@ -41,8 +41,8 @@ $(document).ready(function(){
                                 response.top_calories);
                 $('#top_section').removeClass('hidden');
                 // если не посчиталось что-то - делаем спец. секцию
-                if (response.without_info) {
-                    createWithoutInfoSection(response.without_info);
+                if (response.without_metric) {
+                    createWithoutInfoSection(response.without_metric);
                 }
             },
             error: function () {
@@ -93,11 +93,11 @@ $(document).ready(function(){
         });
     }
 
-    // наполнение модального окна without_info
-    function createWithoutInfoSection(without_info) {
+    // наполнение модального окна without_metric
+    function createWithoutInfoSection(without_metric) {
         // наполняем полученным списком
-        $.each(without_info, function(id, data) {
-            let newWithoutInfoRow =  $("<div class='without_info_row mt-5'>")
+        $.each(without_metric, function(id, data) {
+            let newWithoutInfoRow =  $("<div class='without_metric_row mt-5'>")
                 .append('<div class="d-flex">' + 
                         "<span class='text-royalblue me-2'><b>Продукт:</b></span>" +
                         data.food_entry_name + "</div>")
@@ -112,7 +112,7 @@ $(document).ready(function(){
                         "</select>" + "</div>")
                 .append("<p>Калорийность этой порции: " + data.calories_per_serving + " ккал</p>");
 
-            $('#without_info_list').append(newWithoutInfoRow);
+            $('#without_metric_list').append(newWithoutInfoRow);
         });
         // показываем модальное окно
         withoutInfoModal.show();

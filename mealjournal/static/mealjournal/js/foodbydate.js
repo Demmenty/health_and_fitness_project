@@ -10,8 +10,8 @@ $(document).ready(function(){
     const withoutInfoModal =
         new bootstrap.Modal(document.getElementById('WithoutInfoModal'));
         
-    // показ модального окна without_info, если туда что-то записано из view
-    if ($('.without_info_row').length > 0) {
+    // показ модального окна without_metric, если туда что-то записано из view
+    if ($('.without_metric_row').length > 0) {
         withoutInfoModal.show();
     }
 
