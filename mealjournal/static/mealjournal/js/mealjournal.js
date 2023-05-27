@@ -82,48 +82,6 @@ $(document).ready(function(){
         });
     }
 
-    // обработка submit формы внесения метрики
-    $('#add_metric_form').submit(function () {
-        if (amountIsZero()) {
-            showDangerAlert("ноль? серьезно?");
-            return false;
-        }
-        sendFoodMetric($(this));
-        return false;
-    });
-    
-    function amountIsZero() {
-        // предикат внесения нулевой массы в метрике
-        result = false;
-
-        $('[name="metric_serving_amount"]').each(function() {
-            if ($(this).val() == "0") {
-                result = true;
-            }
-        });
-        return result
-    }
-
-    function sendFoodMetric(form) {
-        // отправка введенной метрики для сохранения
-        $.ajax({
-            data: form.serialize(), // получаем данные формы
-            type: form.attr('method'), // метод отправки запроса
-            url: form.attr('action'), // функция обработки
-            
-            success: function (response) {
-                if (response.status == "инфа сохранена, круто!") {
-                    showSuccessAlert(response.status);
-                    // пересчитать
-                    withoutMetricModal.hide();
-                }
-                },
-            error: function () {
-                showDangerAlert("произошла ошибка");
-                }
-        });
-    }
-
     // КБЖУ-рекомендаций форма
     if (document.getElementById('recommend_nutrition_btn')) {
         // показ окошка
@@ -166,11 +124,13 @@ $(document).ready(function () {
     showTodayBrief();
     $("#prev-daybrief").on("click", showPrevDateBrief);
     $("#next-daybrief").on("click", showNextDateBrief);
+    $('#add_metric_form').on("submit", sendFoodMetric);
 })
 
 // ПРОДУКТЫ БЕЗ МЕТРИКИ
 const withoutMetricModal = new bootstrap.Modal(
     document.getElementById('withoutMetricModal'));
+const metric_form = $('#add_metric_form');
 
 function fillWithoutMetricModal(food_without_metric) {
     // наполнение модального окна продуктами без метрики 
@@ -205,6 +165,43 @@ function fillWithoutMetricModal(food_without_metric) {
 
         food_list.append(food_row);
     });
+}
+
+function sendFoodMetric() {
+    // проверка и отправка введенной метрики продукта на сервер
+    console.log("sendFoodMetric");
+
+    if (metricIsZero()) {
+        showDangerAlert("ноль? серьезно?");
+        return false;
+    }
+
+    let request = sendFoodMetricRequest();
+
+    request.done(function(response) {
+        showSuccessAlert(response);
+        // TODO + сразу пересчитать
+        withoutMetricModal.hide();
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+
+    return false;
+
+    function metricIsZero() {
+        let metric_inputs = metric_form.find('[name="metric_serving_amount"]');
+
+        is_zero = false;
+        metric_inputs.each(function() {
+            if ($(this).val() == "0") {
+                is_zero = true;
+                return;
+            }
+        });
+        return is_zero;
+    }
 }
 
 // СВОДКА ЗА ДЕНЬ
@@ -404,6 +401,14 @@ function getBriefbydateRequest(briefdate) {
         type: "GET",
         url: "/mealjournal/ajax/get_briefbydate",
     });
+}
+
+function sendFoodMetricRequest() {
+    return $.ajax({
+        data: metric_form.serialize(),
+        type: metric_form.attr('method'),
+        url: metric_form.attr('action'),
+    })
 }
 
 // УТИЛИТЫ

@@ -1,8 +1,8 @@
-from time import sleep
-
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
 
 from common.cache_manager import cache
@@ -42,19 +42,17 @@ def fatsecretauth(request):
             return redirect(auth_url)
 
 
+@login_required
+@require_http_methods(["POST"])
 def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
-
-    if request.user.is_anonymous:
-        return HttpResponseForbidden
 
     prods_without_metric= dict(request.POST)
     del prods_without_metric["csrfmiddlewaretoken"]
 
     cache.fs.save_foodmetric(prods_without_metric)
 
-    data = {"status": "инфа сохранена, круто!"}
-    return JsonResponse(data, status=200)
+    return HttpResponse("метрика сохранена. круто!")
 
 
 def get_monthly_top(request):
