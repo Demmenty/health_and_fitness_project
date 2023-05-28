@@ -1,21 +1,9 @@
-#container_recommend_nutrition_form {
-    backface-visibility: hidden;
-    background-color: #ebefff;
-    position: fixed;
-    width: 18rem;
-    z-index: 10;
-    top: 50%;
-    right: 50%;
-    transform: translate(50%,-50%);
-}
-@media (min-width: 576px) {
-    #container_recommend_nutrition_form {
-        right: 30%;
-    }
-}
-
 /* общее */
 .no-data-msg {
+    text-align: center;
+    margin-top: 1rem;
+}
+.loader {
     text-align: center;
     margin-top: 1rem;
 }
@@ -27,17 +15,27 @@
 }
 
 /* сводка за сегодня */
+#daybrief-table {
+    margin: 0;
+}
 #daybrief-table td,
 #daybrief-table th {
     text-align: center;
 }
 
-
-#select_date_section_mealjournal {
-    max-width: 310px;
+/* сводка за месяц */
+#monthbrief-table {
+    margin: 0;
 }
-#back_btn_mealjournal {
-    margin-top: -18px;
+#label-monthbrief {
+    text-transform: capitalize;
+}
+#monthbrief-table td,
+#monthbrief-table th {
+    text-align: center;
+}
+#monthbrief-table tbody tr:hover {
+    cursor: pointer;
 }
 
 /* окно продуктов без метрики */
@@ -67,6 +65,7 @@
     gap: 10px;
 }
 
+/* fs connection offer */
 .fatsecret_ref {
     color: #36bd30;
     text-decoration: none;
@@ -75,13 +74,6 @@
 .fatsecret_ref:hover {
     color: #288023;
 }
-
-@media screen and (max-width: 341px) {
-    #fsapp_googleplay {
-        margin-top: 10px;
-    }
-}
-
 .container_fs_photo {
     justify-content: end;
 }
@@ -91,27 +83,9 @@
     margin-bottom: 0px;
     margin-top: 6px;
 }
-@media screen and (max-width: 1399px) {
-    .fs_photo {
-        width: 159px;
-    }
-}
-@media screen and (max-width: 1199px) {
-    #fs_photo3 {
-        display: none;
-    }
-}
-@media screen and (max-width: 991px) {
-    .fs_photo {
-        width: 133px;
-    }
-}
-@media screen and (max-width: 767.5px) {
-    #fs_photo2 {
-        display: none;
-    }
-    .fs_photo {
-        width: 187px;
+@media screen and (max-width: 341px) {
+    #fsapp_googleplay {
+        margin-top: 10px;
     }
 }
 @media screen and (max-width: 546px) {
@@ -132,6 +106,49 @@
         margin-bottom: 20px;
     }
 }
+@media screen and (max-width: 767.5px) {
+    #fs_photo2 {
+        display: none;
+    }
+    .fs_photo {
+        width: 187px;
+    }
+}
+@media screen and (max-width: 991px) {
+    .fs_photo {
+        width: 133px;
+    }
+}
+@media screen and (max-width: 1199px) {
+    #fs_photo3 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1399px) {
+    .fs_photo {
+        width: 159px;
+    }
+}
+
+/* кбжу рекомендации */
+#container_recommend_nutrition_form {
+    backface-visibility: hidden;
+    background-color: #ebefff;
+    position: fixed;
+    width: 18rem;
+    z-index: 10;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%,-50%);
+}
+@media (min-width: 576px) {
+    #container_recommend_nutrition_form {
+        right: 30%;
+    }
+}
+
+
+
 
 #cat_with_coffee {
     height: 122px;
