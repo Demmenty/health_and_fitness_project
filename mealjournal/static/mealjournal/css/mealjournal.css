@@ -131,9 +131,9 @@
 }
 
 /* кбжу рекомендации */
-#container_recommend_nutrition_form {
+#recommend_nutrition {
+    display: none;
     backface-visibility: hidden;
-    background-color: #ebefff;
     position: fixed;
     width: 18rem;
     z-index: 10;
@@ -142,7 +142,7 @@
     transform: translate(50%,-50%);
 }
 @media (min-width: 576px) {
-    #container_recommend_nutrition_form {
+    #recommend_nutrition {
         right: 30%;
     }
 }

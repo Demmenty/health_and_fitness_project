@@ -77,58 +77,27 @@ $(document).ready(function(){
             $('#table_top_calories tbody').append(newTableRow);
         });
     }
-
-    // КБЖУ-рекомендаций форма
-    if (document.getElementById('recommend_nutrition_btn')) {
-        // показ окошка
-        $('#recommend_nutrition_btn').click(function() {
-            $('#container_recommend_nutrition_form').toggleClass('hidden');
-            getUp($('#container_recommend_nutrition_form'));
-        })
-        // закрытие окошка
-        $('#container_recommend_nutrition_form .btn-close').click(function() {
-            $('#container_recommend_nutrition_form').addClass('hidden');
-        })
-        // отправка формы 
-        $('#recommend_nutrition_form').submit(function () {
-            $.ajax({
-                data: $(this).serialize(), // получаем данные формы
-                type: $(this).attr('method'), // метод отправки запроса
-                url: $(this).attr('action'), // функция обработки
-                
-                success: function () {
-                    showSuccessAlert("Рекомендации сохранены");
-                },
-                  error: function (response) {
-                    if(response.status == 0) {
-                      showDangerAlert("Нет соединения с сервером") ;
-                    }
-                    else showDangerAlert(response.responseText);
-                }
-            });
-            return false;
-        });
-        // перемещение окошка поверх при клике (задана в layout)
-        $('#container_recommend_nutrition_form').bind('click', function()
-        {getUp($('#container_recommend_nutrition_form'))});
-        // перетаскивание окошка кбжу
-        dragContainer(document.getElementById('container_recommend_nutrition_form'));
-    }
 })
 // TODO сделать приличный лоадер
 
 $(document).ready(function () {
     const fs_connected = $("#fs-param").data("fs-connected");
-    
-    if (fs_connected) {
-        showDayBrief();
-        showMonthBrief();
-    }
+    if (!fs_connected) return;
+
+    showDayBrief();
     $("#prev-daybrief").on("click", showPrevDayBrief);
     $("#next-daybrief").on("click", showNextDayBrief);
+
+    showMonthBrief();
     $("#prev-monthbrief").on("click", showPrevMonthBrief);
     $("#next-monthbrief").on("click", showNextMonthBrief);
-    $('#add_metric_form').on("submit", sendFoodMetric);
+
+    $('#add_metric_form').on("submit", saveFoodMetric);
+
+    $("#nutrition-btn").on("click", toggleNutrition);
+    $("#recommend_nutrition_form").on("submit", saveNutrition);
+    $("#recommend_nutrition .btn-close").on("click", toggleNutrition);
+    dragContainer(document.getElementById("recommend_nutrition"));
 })
 
 // ПРОДУКТЫ БЕЗ МЕТРИКИ
@@ -171,16 +140,16 @@ function fillWithoutMetricModal(food_without_metric) {
     });
 }
 
-function sendFoodMetric() {
+function saveFoodMetric() {
     // проверка и отправка введенной метрики продукта на сервер
-    console.log("sendFoodMetric");
+    console.log("saveFoodMetric");
 
     if (metricIsZero()) {
         showDangerAlert("ноль? серьезно?");
         return false;
     }
 
-    let request = sendFoodMetricRequest();
+    let request = saveFoodMetricRequest();
 
     request.done(function(response) {
         showSuccessAlert(response);
@@ -583,6 +552,32 @@ function showMonthBriefLoading() {
     monthbrief_table.addClass("hidden");
 }
 
+// КБЖУ РЕКОМЕНДАЦИИ
+const nutrition_block = $("#recommend_nutrition");
+const nutrition_form = $("#recommend_nutrition_form");
+const nutrition_btn = $("#nutrition-btn");
+
+function toggleNutrition() {
+    // показать/закрыть окно кбжу рекомендаций
+    nutrition_btn.toggleClass("active");
+    nutrition_block.toggle(400);
+}
+
+function saveNutrition() {
+    // отправка кбжу на сервер для сохранения
+    console.log("saveNutrition");
+
+    let request = saveNutritionRequest();
+
+    request.done(function(response) {
+        showSuccessAlert(response);
+    })
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    })
+    return false;
+}
+
 // АЯКС ЗАПРОСЫ
 function getBriefbydateRequest(briefdate) {
     return $.ajax({
@@ -600,11 +595,19 @@ function getBriefbymonthRequest(briefmonth) {
     });
 }
 
-function sendFoodMetricRequest() {
+function saveFoodMetricRequest() {
     return $.ajax({
         data: metric_form.serialize(),
         type: metric_form.attr('method'),
         url: metric_form.attr('action'),
+    })
+}
+
+function saveNutritionRequest() {
+    return $.ajax({
+        data: nutrition_form.serialize(), 
+        type: nutrition_form.attr('method'), 
+        url: nutrition_form.attr('action'), 
     })
 }
 
