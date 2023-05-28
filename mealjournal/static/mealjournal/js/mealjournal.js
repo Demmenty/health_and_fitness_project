@@ -118,14 +118,16 @@ $(document).ready(function(){
 // TODO сделать приличный лоадер
 
 $(document).ready(function () {
-    showDayBrief();
+    const fs_connected = $("#fs-param").data("fs-connected");
+    
+    if (fs_connected) {
+        showDayBrief();
+        showMonthBrief();
+    }
     $("#prev-daybrief").on("click", showPrevDayBrief);
     $("#next-daybrief").on("click", showNextDayBrief);
-
-    showMonthBrief();
     $("#prev-monthbrief").on("click", showPrevMonthBrief);
     $("#next-monthbrief").on("click", showNextMonthBrief);
-
     $('#add_metric_form').on("submit", sendFoodMetric);
 })
 

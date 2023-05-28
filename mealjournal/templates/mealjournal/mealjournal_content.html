@@ -1,340 +1,330 @@
 {% load static %}
-{% load i18n %}
 
-<div class="container pt-2">
-
-    {% if client_not_connected %}
-        {% if for_expert %}
-            <p class="text-center">FatSecret не подключен</p>
-        {% else %}
-            <!-- Предложение соединения с FS-->
-            <div class="block-container" id="fs_connection_offer">
-                <div class="block-header">
-                    <span class="header">Подключение FatSecret</span>
-                </div>
-                <div class="block-content">
-                    <div class="">
-                        <p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение 
-                            <a href="https://www.fatsecret.com" target="_blank" class="fatsecret_ref">FatSecret</a>.
-                        </p>
-                        <p>FatSecret бесплатен и прост в использовании.</p>
-                        <p>Вам нужно будет лишь вести дневник питания на своем смартфоне, а вся необходимая для анализа информация будет собираться нами автоматически.</p>
-                    </div>
-                    <div class="d-flex justify-content-between" id="container_fs_connection">
-                        <div class="d-flex">
-                            <ol>
-                                <li class="mb-2">Установите приложение:</li>
-                                <div>
-                                    <a target="blank" href="https://itunes.apple.com/ru/app/calorie-counter-by-fatsecret/id347184248?mt=8" style="text-decoration:none">
-                                        <img src="https://a.ftscrt.com/static/images/mobi/ios/Download_on_the_App_Store_Badge_RU_RGB_blk_100317.svg" id="fsapp_apple">
-                                    </a>
-                                    &nbsp;&nbsp;
-                                    <a target="blank" href="https://play.google.com/store/apps/details?id=com.fatsecret.android" style="text-decoration:none">
-                                        <img src="https://a.ftscrt.com/static/images/mobi/android/ru_get_2.svg" id="fsapp_googleplay">
-                                    </a>
-                                </div><br>
-                                <li>Войдите в свой аккаунт на сайте <a href="https://www.fatsecret.com/Auth.aspx?pa=s" target="_blank" class="fatsecret_ref">FatSecret</a>. Возможно, его потребуется подтвердить.</li><br>
-                                <li>Свяжите свои аккаунты в прочный союз с помощью этой кнопки:</li><br>
-                                <a href="{% url 'fatsecretauth' %}"><button class='btn btn-outline-primary'>Привязать FatSecret</button></a>
-                            </ol>
-                        </div>
-                        <div class="d-flex" id="container_fs_photo">
-                            <div class="" id="fs_photo1">
-                                <img src="{% static 'mealjournal/img/FS_apple.webp' %}" class="rounded fs_photo">
-                            </div>
-                            
-                            <div class="" id="fs_photo2">
-                                <img src="{% static 'mealjournal/img/FS_meal.webp' %}" class="rounded fs_photo">
-                            </div>
-    
-                            <div class="" id="fs_photo3">
-                                <img src="{% static 'mealjournal/img/FS_photo.webp' %}" class="rounded fs_photo">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
+{% if client_not_connected %}
+    {% if for_expert %}
+        <p class="text-center">FatSecret не подключен</p>
     {% else %}
-
-        <!-- Сводка за день -->
-        <div class="block-container" id="daybrief-container">
-            <div class="block-header with-arrows">
-                <span class="prev-button" id="prev-daybrief"> &lang; </span> 
-                <span class="header" id="label-daybrief" value="{% now 'Y-m-d' %}">Сегодня</span>
-                <span class="next-button" id="next-daybrief"> &rang; </span>
+        <!-- Предложение соединения с FS-->
+        <div class="block-container" id="fs_connection_offer">
+            <div class="block-header">
+                <span class="header">Подключение FatSecret</span>
             </div>
             <div class="block-content">
-                <p class="loader">...</p>
-                <table class="table table-bordered hidden" id="daybrief-table">
-                    <thead class="table-light d-none d-lg-table-row-group">
-                        <tr>
-                            <th>Категория</th>
-                            <th colspan="2">Продукт</th>
-                            <th>Калории</th>
-                            <th>Белки</th>
-                            <th>Жиры</th>
-                            <th>Углеводы</th>
-                        </tr>
-                    </thead>
-                    <tbody class="d-none d-lg-table-row-group" id="daybrief-tbody-big">
-                    </tbody>
-                    <tbody class="d-lg-none" id="daybrief-tbody-small">
-                    </tbody>
-                    <tfoot>
-                        <tr class="table-light d-lg-none">
-                            <th colspan="4">Всего</th>
-                        </tr>
-                        <tr class="table-light d-lg-none">
-                            <th>ккал</th>
-                            <th>белки</th>
-                            <th>жиры</th>
-                            <th>углев.</th>
-                        </tr>
-                        <tr class="table-light">
-                            <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
-                            <th class="total-amount text-nowrap d-none d-lg-table-cell"></th>
-                            <th class="total-calories"></th>
-                            <th class="total-protein"></th>
-                            <th class="total-fat"></th>
-                            <th class="total-carbohydrate"></th>
-                        </tr>
-                    </tfoot>
-                </table>
-                <p class="no-data-msg hidden">Данные отсутствуют</p>
+                <div class="">
+                    <p>Для эффективного и удобного подсчета калорий и нутриентов мы рекомендуем приложение 
+                        <a href="https://www.fatsecret.com" target="_blank" class="fatsecret_ref">FatSecret</a>.
+                    </p>
+                    <p>FatSecret бесплатен и прост в использовании.</p>
+                    <p>Вам нужно будет лишь вести дневник питания на своем смартфоне, а вся необходимая для анализа информация будет собираться нами автоматически.</p>
+                </div>
+                <div class="d-flex justify-content-between" id="container_fs_connection">
+                    <div class="d-flex">
+                        <ol>
+                            <li class="mb-2">Установите приложение:</li>
+                            <div>
+                                <a target="blank" href="https://itunes.apple.com/ru/app/calorie-counter-by-fatsecret/id347184248?mt=8" style="text-decoration:none">
+                                    <img src="https://a.ftscrt.com/static/images/mobi/ios/Download_on_the_App_Store_Badge_RU_RGB_blk_100317.svg" id="fsapp_apple">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a target="blank" href="https://play.google.com/store/apps/details?id=com.fatsecret.android" style="text-decoration:none">
+                                    <img src="https://a.ftscrt.com/static/images/mobi/android/ru_get_2.svg" id="fsapp_googleplay">
+                                </a>
+                            </div><br>
+                            <li>Войдите в свой аккаунт на сайте <a href="https://www.fatsecret.com/Auth.aspx?pa=s" target="_blank" class="fatsecret_ref">FatSecret</a>. Возможно, его потребуется подтвердить.</li><br>
+                            <li>Свяжите свои аккаунты в прочный союз с помощью этой кнопки:</li><br>
+                            <a href="{% url 'fatsecretauth' %}"><button class='btn btn-outline-primary'>Привязать FatSecret</button></a>
+                        </ol>
+                    </div>
+                    <div class="d-flex" id="container_fs_photo">
+                        <div class="" id="fs_photo1">
+                            <img src="{% static 'mealjournal/img/FS_apple.webp' %}" class="rounded fs_photo">
+                        </div>
+                        
+                        <div class="" id="fs_photo2">
+                            <img src="{% static 'mealjournal/img/FS_meal.webp' %}" class="rounded fs_photo">
+                        </div>
+
+                        <div class="" id="fs_photo3">
+                            <img src="{% static 'mealjournal/img/FS_photo.webp' %}" class="rounded fs_photo">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <br><br>
-
-        <!-- Сводка за месяц -->
-        <div class="block-container" id="monthbrief-container">
-            <div class="block-header with-arrows">
-                <span class="prev-button" id="prev-monthbrief"> &lang; </span> 
-                <span class="header" id="label-monthbrief" value="{% now 'Y-m-d' %}">{% now "F" %}</span>
-                <span class="next-button" id="next-monthbrief"> &rang; </span>
-            </div>
-            <div class="block-content">
-                <p class="loader">...</p>
-                <table class="table table-bordered table-hover hidden" id="monthbrief-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="d-none d-sm-table-cell">Дата</th>
-                            <th>
-                                <span class="d-sm-none">Ккал</span>
-                                <span class="d-none d-sm-inline">Калории</span>
-                            </th>
-                            <th>Белки</th>
-                            <th>Жиры</th>
-                            <th>
-                                <span class="d-sm-none">Углев.</span>
-                                <span class="d-none d-sm-inline">Углеводы</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot>
-                        <tr class="table-light">
-                            <th colspan="4" class="d-sm-none">В среднем</th>
-                        </tr>
-                        <tr class="table-light d-sm-none">
-                            <th class="text-center">ккал</th>
-                            <th class="text-center">белки</th>
-                            <th class="text-center">жиры</th>
-                            <th class="text-center">углев.</th>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="d-none d-sm-table-cell">В среднем</th>
-                            <th class="avg-calories" title="калории"></th>
-                            <th class="avg-protein" title="белки"></th>
-                            <th class="avg-fat" title="жиры"></th>
-                            <th class="avg-carbohydrate" title="углеводы"></th>
-                        </tr>
-                    </tfoot>
-                </table>
-                <p class="no-data-msg hidden">Данные отсутствуют</p>
-            </div>
-        </div>
-        
-        <br>
-
-        <!-- топ-10 продуктов за текущий месяц -->
-        <!-- заполняется данными от ajax запроса -->
-        <div class="d-flex flex-column flex-lg-row gap-3 hidden" id="top_section">
-
-            <div class="block-container">
-                <div class="block-header">
-                    <span class="header">Топ по количеству</span>
-                </div>
-                <div class="block-content">
-                    <ol class="top_table_ol p-0 m-0">
-                        <table class="table table-hover m-0 top_table" id="table_top_amount">
-                            <thead class="table-light align-middle">
-                                <tr>
-                                    <th></th>
-                                    <th>
-                                        <span class="d-sm-none">Продукт</span>
-                                        <span class="d-none d-sm-inline">Название продукта</span>
-                                    </th>
-                                    <th class="text-center">
-                                        <span class="d-sm-none text-nowrap">Кол-во</span>
-                                        <span class="d-none d-sm-inline">Съедено</span>
-                                    </th>
-                                    <th class="text-center">
-                                        <span class="d-sm-none">Ккал</span>
-                                        <span class="d-none d-sm-inline">Получено калорий</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </ol>
-                </div>
-            </div>
-
-            <div class="block-container">
-                <div class="block-header">
-                    <span class="header">Топ по калориям</span>
-                </div>
-                <div class="block-content">
-                    <ol class="top_table_ol p-0 m-0">
-                        <table class="table table-hover m-0 top_table" id="table_top_calories">
-                            <thead class="table-light align-middle">
-                                <tr>
-                                    <th></th>
-                                    <th>
-                                        <span class="d-sm-none">Продукт</span>
-                                        <span class="d-none d-sm-inline">Название продукта</span>
-                                    </th>
-                                    <th class="text-center">
-                                        <span class="d-sm-none text-nowrap">Кол-во</span>
-                                        <span class="d-none d-sm-inline">Съедено</span>
-                                    </th>
-                                    <th class="text-center">
-                                        <span class="d-sm-none">Ккал</span>
-                                        <span class="d-none d-sm-inline">Получено калорий</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </ol>
-                </div>
-            </div>
-
-        </div>
-        
-        <!-- запрос топ-10 за месяц -->
-        {% if monthly_food %}
-            <div id="waiting_cat" class="waiting_container hidden d-flex flex-column my-5">
-                <img src="{% static 'common/gif/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
-                <h6 class="text-center text-muted"><i>нужно немножечко подождать...</i></h6>
-            </div>
-            <form action="{% url 'get_monthly_top' %}" method="get" class="w-fit mx-auto ms-sm-0 my-4 mb-sm-0" id="get_top_form">
-                <input type="hidden" value="{% now 'Y-m' %}" name="month">
-                <input type="hidden" value="{{ client.id }}" name="client_id">
-                <button type="submit" class="btn btn-primary" id="calc_top_btn">
-                    ТОП-10
-                </button>
-            </form>
-            <span class="text-danger d-block text-center mb-2" id="top_error"></span>
-        {% endif %}
-
     {% endif %}
-    <!-- рекомендованные КБЖУ -->
-    {% if recommend_nutrition %}
-        <button type="button" class="btn btn-outline-primary float-end" id="recommend_nutrition_btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
-                <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
-                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
-                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
-            </svg>
-            КБЖУ
-        </button>
-        <div class="border-blueshadow hidden p-2" id="container_recommend_nutrition_form">
-            <div class="d-flex align-items-center">
-                <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
-                <button type="button" class="btn-close" aria-label="Close"></button>
+{% else %}
+    <param data-fs-connected="true" id="fs-param">
+
+    <!-- Сводка за день -->
+    <div class="block-container" id="daybrief-container">
+        <div class="block-header with-arrows">
+            <span class="prev-button" id="prev-daybrief"> &lang; </span> 
+            <span class="header" id="label-daybrief" value="{% now 'Y-m-d' %}">Сегодня</span>
+            <span class="next-button" id="next-daybrief"> &rang; </span>
+        </div>
+        <div class="block-content">
+            <p class="loader">...</p>
+            <table class="table table-bordered hidden" id="daybrief-table">
+                <thead class="table-light d-none d-lg-table-row-group">
+                    <tr>
+                        <th>Категория</th>
+                        <th colspan="2">Продукт</th>
+                        <th>Калории</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                    </tr>
+                </thead>
+                <tbody class="d-none d-lg-table-row-group" id="daybrief-tbody-big">
+                </tbody>
+                <tbody class="d-lg-none" id="daybrief-tbody-small">
+                </tbody>
+                <tfoot>
+                    <tr class="table-light d-lg-none">
+                        <th colspan="4">Всего</th>
+                    </tr>
+                    <tr class="table-light d-lg-none">
+                        <th>ккал</th>
+                        <th>белки</th>
+                        <th>жиры</th>
+                        <th>углев.</th>
+                    </tr>
+                    <tr class="table-light">
+                        <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
+                        <th class="total-amount text-nowrap d-none d-lg-table-cell"></th>
+                        <th class="total-calories"></th>
+                        <th class="total-protein"></th>
+                        <th class="total-fat"></th>
+                        <th class="total-carbohydrate"></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <p class="no-data-msg hidden">Данные отсутствуют</p>
+        </div>
+    </div>
+    <br><br>
+    <!-- Сводка за месяц -->
+    <div class="block-container" id="monthbrief-container">
+        <div class="block-header with-arrows">
+            <span class="prev-button" id="prev-monthbrief"> &lang; </span> 
+            <span class="header" id="label-monthbrief" value="{% now 'Y-m-d' %}">{% now "F" %}</span>
+            <span class="next-button" id="next-monthbrief"> &rang; </span>
+        </div>
+        <div class="block-content">
+            <p class="loader">...</p>
+            <table class="table table-bordered table-hover hidden" id="monthbrief-table">
+                <thead class="table-light">
+                    <tr>
+                        <th class="d-none d-sm-table-cell">Дата</th>
+                        <th>
+                            <span class="d-sm-none">Ккал</span>
+                            <span class="d-none d-sm-inline">Калории</span>
+                        </th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>
+                            <span class="d-sm-none">Углев.</span>
+                            <span class="d-none d-sm-inline">Углеводы</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="table-light">
+                        <th colspan="4" class="d-sm-none">В среднем</th>
+                    </tr>
+                    <tr class="table-light d-sm-none">
+                        <th class="text-center">ккал</th>
+                        <th class="text-center">белки</th>
+                        <th class="text-center">жиры</th>
+                        <th class="text-center">углев.</th>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="d-none d-sm-table-cell">В среднем</th>
+                        <th class="avg-calories" title="калории"></th>
+                        <th class="avg-protein" title="белки"></th>
+                        <th class="avg-fat" title="жиры"></th>
+                        <th class="avg-carbohydrate" title="углеводы"></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <p class="no-data-msg hidden">Данные отсутствуют</p>
+        </div>
+    </div>
+    <br>
+    <!-- топ-10 продуктов за текущий месяц -->
+    <!-- заполняется данными от ajax запроса -->
+    <div class="d-flex flex-column flex-lg-row gap-3 hidden" id="top_section">
+
+        <div class="block-container">
+            <div class="block-header">
+                <span class="header">Топ по количеству</span>
             </div>
-            <hr class="my-2">
+            <div class="block-content">
+                <ol class="top_table_ol p-0 m-0">
+                    <table class="table table-hover m-0 top_table" id="table_top_amount">
+                        <thead class="table-light align-middle">
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <span class="d-sm-none">Продукт</span>
+                                    <span class="d-none d-sm-inline">Название продукта</span>
+                                </th>
+                                <th class="text-center">
+                                    <span class="d-sm-none text-nowrap">Кол-во</span>
+                                    <span class="d-none d-sm-inline">Съедено</span>
+                                </th>
+                                <th class="text-center">
+                                    <span class="d-sm-none">Ккал</span>
+                                    <span class="d-none d-sm-inline">Получено калорий</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </ol>
+            </div>
+        </div>
+
+        <div class="block-container">
+            <div class="block-header">
+                <span class="header">Топ по калориям</span>
+            </div>
+            <div class="block-content">
+                <ol class="top_table_ol p-0 m-0">
+                    <table class="table table-hover m-0 top_table" id="table_top_calories">
+                        <thead class="table-light align-middle">
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <span class="d-sm-none">Продукт</span>
+                                    <span class="d-none d-sm-inline">Название продукта</span>
+                                </th>
+                                <th class="text-center">
+                                    <span class="d-sm-none text-nowrap">Кол-во</span>
+                                    <span class="d-none d-sm-inline">Съедено</span>
+                                </th>
+                                <th class="text-center">
+                                    <span class="d-sm-none">Ккал</span>
+                                    <span class="d-none d-sm-inline">Получено калорий</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+    <!-- топ-10 -->
+    {% if monthly_food %}
+        <div id="waiting_cat" class="waiting_container hidden d-flex flex-column my-5">
+            <img src="{% static 'common/gif/cat_with_coffee.gif' %}" id="cat_with_coffee"><br>
+            <h6 class="text-center text-muted"><i>нужно немножечко подождать...</i></h6>
+        </div>
+        <form action="{% url 'get_monthly_top' %}" method="get" class="w-fit mx-auto ms-sm-0 my-4 mb-sm-0" id="get_top_form">
+            <input type="hidden" value="{% now 'Y-m' %}" name="month">
+            <input type="hidden" value="{{ client.id }}" name="client_id">
+            <button type="submit" class="btn btn-primary" id="calc_top_btn">
+                ТОП-10
+            </button>
+        </form>
+        <span class="text-danger d-block text-center mb-2" id="top_error"></span>
+    {% endif %}
+{% endif %}
+<!-- рекомендованные КБЖУ -->
+{% if recommend_nutrition %}
+    <button type="button" class="btn btn-outline-primary float-end" id="recommend_nutrition_btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
+            <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
+            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
+            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
+        </svg>
+        КБЖУ
+    </button>
+    <div class="border-blueshadow hidden p-2" id="container_recommend_nutrition_form">
+        <div class="d-flex align-items-center">
+            <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
+            <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <hr class="my-2">
+        <div class="d-flex">
+            <div class="d-flex flex-column my-2 me-3">
+                <label class="">Калории:</label>
+                <input type="number" name="calories" value="{{ recommend_nutrition.calories }}" class="form-control text-center bg-white" readonly>
+            </div>
+            <div class="d-flex flex-column my-2">
+                <label class="">Жиры:</label>
+                <input type="number" name="calories" value="{{ recommend_nutrition.fats }}" class="form-control text-center bg-white" readonly>
+            </div>
+        </div>
+        <div class="d-flex mb-3">
+            <div class="d-flex flex-column my-2 me-3">
+                <label class="">Белки:</label>
+                <input type="number" name="calories" value="{{ recommend_nutrition.protein }}" class="form-control text-center bg-white" readonly>
+            </div>
+            <div class="d-flex flex-column my-2">
+                <label class="">Углеводы:</label>
+                <input type="number" name="calories" value="{{ recommend_nutrition.carbohydrates }}" class="form-control text-center bg-white" readonly>
+            </div>
+        </div>
+        {% if recommend_nutrition.note %}
+            <label class="">Заметка:</label>
+            <textarea name="note" cols="40" rows="8" class="form-control" readonly>{{ recommend_nutrition.note }}</textarea>
+        {% endif %}
+    </div>
+{% endif %}
+{% if recommend_nutrition_form %}
+    <button type="button" class="btn btn-outline-primary float-end" id="recommend_nutrition_btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
+            <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
+            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
+            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
+        </svg>
+        КБЖУ
+    </button>
+    <div class="border-blueshadow hidden p-2" id="container_recommend_nutrition_form">
+        <div class="d-flex align-items-center">
+            <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
+            <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <hr class="my-2">
+        <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
+            {% csrf_token %}
+            <input type="hidden" value="{{ client.id }}" name="client_id">
             <div class="d-flex">
                 <div class="d-flex flex-column my-2 me-3">
-                    <label class="">Калории:</label>
-                    <input type="number" name="calories" value="{{ recommend_nutrition.calories }}" class="form-control text-center bg-white" readonly>
+                    <label for="id_calories" class="">Калории:</label>
+                    {{ recommend_nutrition_form.calories }}
                 </div>
                 <div class="d-flex flex-column my-2">
-                    <label class="">Жиры:</label>
-                    <input type="number" name="calories" value="{{ recommend_nutrition.fats }}" class="form-control text-center bg-white" readonly>
+                    <label for="id_fats" class="">Жиры:</label>
+                    {{ recommend_nutrition_form.fats }} 
                 </div>
             </div>
             <div class="d-flex mb-3">
                 <div class="d-flex flex-column my-2 me-3">
-                    <label class="">Белки:</label>
-                    <input type="number" name="calories" value="{{ recommend_nutrition.protein }}" class="form-control text-center bg-white" readonly>
+                    <label for="id_protein" class="">Белки:</label>
+                    {{ recommend_nutrition_form.protein }}
                 </div>
                 <div class="d-flex flex-column my-2">
-                    <label class="">Углеводы:</label>
-                    <input type="number" name="calories" value="{{ recommend_nutrition.carbohydrates }}" class="form-control text-center bg-white" readonly>
+                    <label for="id_carbohydrates" class="">Углеводы:</label>
+                    {{ recommend_nutrition_form.carbohydrates }}
                 </div>
             </div>
-            {% if recommend_nutrition.note %}
-                <label class="">Заметка:</label>
-                <textarea name="note" cols="40" rows="8" class="form-control" readonly>{{ recommend_nutrition.note }}</textarea>
-            {% endif %}
-        </div>
-    {% endif %}
-    {% if recommend_nutrition_form %}
-        <button type="button" class="btn btn-outline-primary float-end" id="recommend_nutrition_btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-data align-text-top" viewBox="0 0 16 16">
-                <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"></path>
-                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"></path>
-                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"></path>
-            </svg>
-            КБЖУ
-        </button>
-        <div class="border-blueshadow hidden p-2" id="container_recommend_nutrition_form">
-            <div class="d-flex align-items-center">
-                <h5 class="moving_part w-fill cursor-move mb-0">Рекомендации</h5>
-                <button type="button" class="btn-close" aria-label="Close"></button>
+            <label for="id_note" class="">Заметка:</label>
+            {{ recommend_nutrition_form.note }}
+            <div class="d-flex mt-2">
+                <div class="moving_part w-fill cursor-move">&nbsp;</div> 
+                <button type="submit" class="btn btn-primary ok_btn">✓</button>
             </div>
-            <hr class="my-2">
-            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
-                {% csrf_token %}
-                <input type="hidden" value="{{ client.id }}" name="client_id">
-                <div class="d-flex">
-                    <div class="d-flex flex-column my-2 me-3">
-                        <label for="id_calories" class="">Калории:</label>
-                        {{ recommend_nutrition_form.calories }}
-                    </div>
-                    <div class="d-flex flex-column my-2">
-                        <label for="id_fats" class="">Жиры:</label>
-                        {{ recommend_nutrition_form.fats }} 
-                    </div>
-                </div>
-                <div class="d-flex mb-3">
-                    <div class="d-flex flex-column my-2 me-3">
-                        <label for="id_protein" class="">Белки:</label>
-                        {{ recommend_nutrition_form.protein }}
-                    </div>
-                    <div class="d-flex flex-column my-2">
-                        <label for="id_carbohydrates" class="">Углеводы:</label>
-                        {{ recommend_nutrition_form.carbohydrates }}
-                    </div>
-                </div>
-                <label for="id_note" class="">Заметка:</label>
-                {{ recommend_nutrition_form.note }}
-                <div class="d-flex mt-2">
-                    <div class="moving_part w-fill cursor-move">&nbsp;</div> 
-                    <button type="submit" class="btn btn-primary ok_btn">✓</button>
-                </div>
-            </form>
-        </div>
-    {% endif %}
-    <br>
-</div>
+        </form>
+    </div>
+{% endif %}
 
 <!-- модальное окно для обработки продуктов без метрики -->
 <div class="modal" id="withoutMetricModal" tabindex="-1" aria-hidden="true">
