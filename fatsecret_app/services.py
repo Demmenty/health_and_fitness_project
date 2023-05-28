@@ -159,13 +159,7 @@ class FatsecretManager:
         return week_nutrition_dic
 
     def daily_food(self, user, request_date: datetime) -> dict:
-        """Подсчитывает данные о съеденных продуктах за день
-        вывод - словарь:
-        'entries' - список словарей с позициями еды, датой и кбжу
-        'nutrition' - общее кбжу за день
-        'count_by_category' - сколько в ужин, обед и тп
-        'without_metric' - продукты без метрики
-        """
+        """Подсчитывает данные о съеденных продуктах за день"""
 
         session = self.client_session(user)
 
@@ -300,10 +294,7 @@ class FatsecretManager:
     
 
     def monthly_food(self, user, request_date) -> dict:
-        """Подсчитывает данные о съеденных продуктах за месяц
-        возвращает словарь
-        'entries' - список словарей по дням с кбжу,
-        'monthly_avg' - словарь со средними кбжу"""
+        """Подсчитывает данные о съеденных продуктах за месяц"""
 
         session = self.client_session(user)
 
@@ -311,52 +302,63 @@ class FatsecretManager:
             monthly_entries = session.food_entries_get_month(date=request_date)
         except KeyError:
             return {}
-        
         if not monthly_entries:
             return {}
         
+        result = {
+            "days": [],
+            "avg": {},
+        }
+
         if type(monthly_entries) is dict:
             days_count = 1
-            entry_date = date_int_to_date(monthly_entries["date_int"])
-            monthly_entries["date_datetime"] = entry_date
+        else:
+            days_count = len(monthly_entries)
+        
+        if days_count == 1:
+            monthly_entries["date"] = date_int_to_date(monthly_entries["date_int"])
+            del monthly_entries["date_int"]
+            result["days"].append(monthly_entries)
 
-            if entry_date == date.today():
-                monthly_avg = {"protein": "-", "fat": "-", "carbo": "-", "calories": "-"}
+            if monthly_entries["date"] == date.today():
+                result["avg"] = {
+                    "protein": "-", 
+                    "fat": "-", 
+                    "carbohydrate": "-", 
+                    "calories": "-"
+                }
             else:
-                monthly_avg = {
+                result["avg"] = {
                     "protein": monthly_entries["protein"], 
                     "fat": monthly_entries["fat"], 
-                    "carbo": monthly_entries["carbohydrate"], 
+                    "carbohydrate": monthly_entries["carbohydrate"], 
                     "calories": monthly_entries["calories"],
                 }
-            return {
-                "entries": [monthly_entries],
-                "monthly_avg": monthly_avg,
-            }
+        
+        if days_count > 1:
+            result["avg"] = {"protein": 0, "fat": 0, "carbohydrate": 0, "calories": 0}
 
-        days_count = len(monthly_entries)
-        monthly_avg = {"protein": 0, "fat": 0, "carbo": 0, "calories": 0}
+            for day in monthly_entries:
+                day["date"] = date_int_to_date(day["date_int"])
+                del day["date_int"]
+                result["days"].append(day)
 
-        for day in monthly_entries:
-            day["date_datetime"] = date_int_to_date(day["date_int"])
-            if day["date_datetime"] == date.today():
-                days_count -= 1
-                break
+                if day["date"] == date.today():
+                    days_count -= 1
+                    break
 
-            monthly_avg["protein"] += float(day["protein"])
-            monthly_avg["fat"] += float(day["fat"])
-            monthly_avg["carbo"] += float(day["carbohydrate"])
-            monthly_avg["calories"] += float(day["calories"])
+                result["avg"]["protein"] += float(day["protein"])
+                result["avg"]["fat"] += float(day["fat"])
+                result["avg"]["carbohydrate"] += float(day["carbohydrate"])
+                result["avg"]["calories"] += float(day["calories"])
 
-        monthly_avg["protein"] = round(monthly_avg["protein"] / days_count, 2)
-        monthly_avg["fat"] = round(monthly_avg["fat"] / days_count, 2)
-        monthly_avg["carbo"] = round(monthly_avg["carbo"] / days_count, 2)
-        monthly_avg["calories"] = round(monthly_avg["calories"] / days_count, 2)
+            result["avg"]["protein"] = round(result["avg"]["protein"] / days_count, 2)
+            result["avg"]["fat"] = round(result["avg"]["fat"] / days_count, 2)
+            result["avg"]["carbohydrate"] = round(result["avg"]["carbohydrate"] / days_count, 2)
+            result["avg"]["calories"] = round(result["avg"]["calories"] / days_count, 2)
 
-        return {
-            "entries": monthly_entries,
-            "monthly_avg": monthly_avg,
-        }
+        return result
+    
 
     def daily_total(self, user, entry_date: datetime) -> dict:
         """возвращает словарь с суммарным количеством и калорийностью
