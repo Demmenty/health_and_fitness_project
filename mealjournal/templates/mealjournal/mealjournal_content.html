@@ -7,10 +7,10 @@
         {% if for_expert %}
             <p class="text-center">FatSecret не подключен</p>
         {% else %}
-            <!-- Предложение соединения с FS если не подключен -->
-            <div class="block-container">
+            <!-- Предложение соединения с FS-->
+            <div class="block-container" id="fs_connection_offer">
                 <div class="block-header">
-                    <span>Подключение FatSecret</span>
+                    <span class="header">Подключение FatSecret</span>
                 </div>
                 <div class="block-content">
                     <div class="">
@@ -57,15 +57,16 @@
         {% endif %}
     {% else %}
 
-        <!-- Сводка за сегодня -->
+        <!-- Сводка за день -->
         <div class="block-container" id="daybrief-container">
-            <div class="block-header justify-content-between">
+            <div class="block-header with-arrows">
                 <span class="prev-button" id="prev-daybrief"> &lang; </span> 
-                <span class="daybrief" id="label-daybrief" value="{% now 'Y-m-d' %}">{% now "j E" %}</span>
+                <span class="header" id="label-daybrief" value="{% now 'Y-m-d' %}">Сегодня</span>
                 <span class="next-button" id="next-daybrief"> &rang; </span>
             </div>
             <div class="block-content">
-                <table class="table table-bordered m-0 hidden" id="daybrief-table">
+                <p class="loader">...</p>
+                <table class="table table-bordered hidden" id="daybrief-table">
                     <thead class="table-light d-none d-lg-table-row-group">
                         <tr>
                             <th>Категория</th>
@@ -88,7 +89,7 @@
                             <th>ккал</th>
                             <th>белки</th>
                             <th>жиры</th>
-                            <th>углеводы</th>
+                            <th>углев.</th>
                         </tr>
                         <tr class="table-light">
                             <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
@@ -106,65 +107,56 @@
 
         <br><br>
 
-        <!-- Сводка за текущий месяц -->
-        <div class="block-container">
-            <div class="block-header">
-                <span>Текущий месяц</span>
+        <!-- Сводка за месяц -->
+        <div class="block-container" id="monthbrief-container">
+            <div class="block-header with-arrows">
+                <span class="prev-button" id="prev-monthbrief"> &lang; </span> 
+                <span class="header" id="label-monthbrief" value="{% now 'Y-m-d' %}">{% now "F" %}</span>
+                <span class="next-button" id="next-monthbrief"> &rang; </span>
             </div>
             <div class="block-content">
-                {% if monthly_food %}
-                    <table class="table m-0 table-bordered table-hover text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="d-none d-sm-table-cell">Дата</th>
-                                <th>
-                                    <span class="d-sm-none">Ккал</span>
-                                    <span class="d-none d-sm-inline">Калории</span>
-                                </th>
-                                <th>Белки</th>
-                                <th>Жиры</th>
-                                <th>
-                                    <span class="d-sm-none">Углев.</span>
-                                    <span class="d-none d-sm-inline">Углеводы</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for day in monthly_food.entries %}
-                            <tr class="d-sm-none">
-                                <td colspan="4">{{ day.date_datetime|date:"j E - D" }}</td>
-                            </tr> 
-                            <tr>
-                                <td class="d-none d-sm-table-cell">{{ day.date_datetime|date:"j E - D" }}</td>
-                                <td title="калории">{{ day.calories }}</td>
-                                <td title="белки">{{ day.protein }}</td>
-                                <td title="жиры">{{ day.fat }}</td>
-                                <td title="углеводы">{{ day.carbohydrate }}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr class="table-light">
-                                <th colspan="4" class="d-sm-none">В среднем</th>
-                            </tr>
-                            <tr class="table-light d-sm-none">
-                                <th class="text-center">ккал</th>
-                                <th class="text-center">белки</th>
-                                <th class="text-center">жиры</th>
-                                <th class="text-center">углев.</th>
-                            </tr>
-                            <tr class="table-light">
-                                <th class="d-none d-sm-table-cell">В среднем</th>
-                                <th title="калории">{{ monthly_food.monthly_avg.calories }}</th>
-                                <th title="белки">{{ monthly_food.monthly_avg.protein }}</th>
-                                <th title="жиры">{{ monthly_food.monthly_avg.fat }}</th>
-                                <th title="углеводы">{{ monthly_food.monthly_avg.carbo }}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p class="text-center mt-3">Данные отсутствуют</p>
-                {% endif %}
+                <p class="loader">...</p>
+                <table class="table table-bordered table-hover hidden" id="monthbrief-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="d-none d-sm-table-cell">Дата</th>
+                            <th>
+                                <span class="d-sm-none">Ккал</span>
+                                <span class="d-none d-sm-inline">Калории</span>
+                            </th>
+                            <th>Белки</th>
+                            <th>Жиры</th>
+                            <th>
+                                <span class="d-sm-none">Углев.</span>
+                                <span class="d-none d-sm-inline">Углеводы</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <th colspan="4" class="d-sm-none">В среднем</th>
+                        </tr>
+                        <tr class="table-light d-sm-none">
+                            <th class="text-center">ккал</th>
+                            <th class="text-center">белки</th>
+                            <th class="text-center">жиры</th>
+                            <th class="text-center">углев.</th>
+                        </tr>
+                        <tr class="table-light">
+                            <th class="d-none d-sm-table-cell">В среднем</th>
+                            <th class="avg-calories" title="калории"></th>
+                            <th class="avg-protein" title="белки"></th>
+                            <th class="avg-fat" title="жиры"></th>
+                            <th class="avg-carbohydrate" title="углеводы"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <p class="no-data-msg hidden">Данные отсутствуют</p>
             </div>
         </div>
+        
         <br>
 
         <!-- топ-10 продуктов за текущий месяц -->
@@ -173,7 +165,7 @@
 
             <div class="block-container">
                 <div class="block-header">
-                    <span>Топ по количеству</span>
+                    <span class="header">Топ по количеству</span>
                 </div>
                 <div class="block-content">
                     <ol class="top_table_ol p-0 m-0">
@@ -204,7 +196,7 @@
 
             <div class="block-container">
                 <div class="block-header">
-                    <span>Топ по калориям</span>
+                    <span class="header">Топ по калориям</span>
                 </div>
                 <div class="block-content">
                     <ol class="top_table_ol p-0 m-0">
@@ -251,20 +243,6 @@
             <span class="text-danger d-block text-center mb-2" id="top_error"></span>
         {% endif %}
 
-        <!-- Сводка (итоговая средняя) за последний полный месяц - сделать! -->
-
-        <!-- Выбор сводки за другой месяц-->
-        <div class="d-flex my-4 mt-sm-0">
-            <hr class="d-none d-sm-block w-fill" style="margin-top: 51px;">
-            <div class="mx-auto ms-am-auto me-sm-0" id="select_date_section_mealjournal">
-                <h5 class="text-center fw-normal">Сводка за другой <b class="fw-bold">месяц</b></h5>
-                <form action = "{% url 'foodbymonth_page' %}" method = "get" class="d-flex justify-content-between">
-                    <input type="month" class="form-control text-center me-3" name="month" id="input_briefmonth" value="{{ previous_month }}">
-                    <input type="hidden" name="client_id" value="{{ client.id }}">
-                    <button type="submit" class="btn btn-primary" name="submit" data-bs-toggle="modal" data-bs-target="#load_cat">Получить</button>
-                </form>
-            </div>
-        </div>
     {% endif %}
     <!-- рекомендованные КБЖУ -->
     {% if recommend_nutrition %}
@@ -363,7 +341,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="block-header">
-                <span>Некоторые продукты не удалось посчитать</span>
+                <span class="header">Некоторые продукты не удалось посчитать</span>
             </div>
             <div class="block-content">
                 <p class="text-center">Укажите их массу или объем, пожалуйста</p>

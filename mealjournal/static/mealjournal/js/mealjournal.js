@@ -1,9 +1,5 @@
 $(document).ready(function(){
 
-    // активация всплывающих подсказок
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-
     // получение топ-10 продуктов по кнопке
     $('#get_top_form').click(function () {
         createTopTen($(this));
@@ -119,11 +115,17 @@ $(document).ready(function(){
         dragContainer(document.getElementById('container_recommend_nutrition_form'));
     }
 })
+// TODO сделать приличный лоадер
 
 $(document).ready(function () {
-    showTodayBrief();
-    $("#prev-daybrief").on("click", showPrevDateBrief);
-    $("#next-daybrief").on("click", showNextDateBrief);
+    showDayBrief();
+    $("#prev-daybrief").on("click", showPrevDayBrief);
+    $("#next-daybrief").on("click", showNextDayBrief);
+
+    showMonthBrief();
+    $("#prev-monthbrief").on("click", showPrevMonthBrief);
+    $("#next-monthbrief").on("click", showNextMonthBrief);
+
     $('#add_metric_form').on("submit", sendFoodMetric);
 })
 
@@ -206,15 +208,32 @@ function sendFoodMetric() {
 
 // СВОДКА ЗА ДЕНЬ
 const daybrief_block = $("#daybrief-container");
+const daybrief_label = $("#label-daybrief");
+const daybrief_loader = daybrief_block.find(".loader");
+const daybrief_no_data = daybrief_block.find(".no-data-msg");
+const daybrief_table = daybrief_block.find("#daybrief-table");
 
-function showTodayBrief() {
+function showDayBrief(day=false) {
     // получение и отображение сводки питания за сегодня
-    console.log("showTodayBrief");
-
-    let current_date = $("#label-daybrief").attr("value");
-    let request = getBriefbydateRequest(current_date);
+    // по умолчанию - сегодня
+    console.log("showDayBrief");
+    let today = false;
+    
+    if (!day) {
+        today = true;
+        day = daybrief_label.attr("value");
+    }
+    let request = getBriefbydateRequest(day);
+    showDayBriefLoading();
 
     request.done(function(response) {
+        daybrief_loader.addClass("hidden");
+        if (!today) {
+            daybrief_label.attr("value", day);
+            let local_date = new Date(day).toLocaleString(
+                'default', {day: "numeric", month: 'long'});
+            daybrief_label.text(local_date);
+        }
         fillBriefbydate(response.daily_food);
     });
 
@@ -223,17 +242,19 @@ function showTodayBrief() {
     });
 }
 
-function showPrevDateBrief() {
+function showPrevDayBrief() {
     // получение и отображение сводки питания за прошлый день
-    console.log("showPrevDateBrief");
+    console.log("showPrevDayBrief");
 
-    let current_date = $("#label-daybrief").attr("value");
+    let current_date = daybrief_label.attr("value");
     let prev_date = addDays(current_date, -1);
     let request = getBriefbydateRequest(prev_date.toLocaleDateString('en-CA'));
+    showDayBriefLoading();
 
     request.done(function(response) {
-        $("#label-daybrief").attr("value", prev_date);
-        $("#label-daybrief").text(
+        daybrief_loader.addClass("hidden");
+        daybrief_label.attr("value", prev_date);
+        daybrief_label.text(
             prev_date.toLocaleString('default', {day: "numeric", month: 'long'}));
         fillBriefbydate(response.daily_food);
     });
@@ -243,17 +264,19 @@ function showPrevDateBrief() {
     });
 }
 
-function showNextDateBrief() {
+function showNextDayBrief() {
     // получение и отображение сводки питания за следующий день
-    console.log("showNextDateBrief");
+    console.log("showNextDayBrief");
 
-    let current_date = $("#label-daybrief").attr("value");
+    let current_date = daybrief_label.attr("value");
     let next_date = addDays(current_date, 1);
     let request = getBriefbydateRequest(next_date.toLocaleDateString('en-CA'));
+    showDayBriefLoading();
 
     request.done(function(response) {
-        $("#label-daybrief").attr("value", next_date);
-        $("#label-daybrief").text(
+        daybrief_loader.addClass("hidden");
+        daybrief_label.attr("value", next_date);
+        daybrief_label.text(
             next_date.toLocaleString('default', {day: "numeric", month: 'long'}));
         fillBriefbydate(response.daily_food);
     });
@@ -264,7 +287,7 @@ function showNextDateBrief() {
 }
 
 function fillBriefbydate(daily_food) {
-    // отображение сводки питания за день
+    // наполнение и отображение сводки питания за день
     console.log("fillBriefbydate");
 
     if ($.isEmptyObject(daily_food)) {
@@ -275,6 +298,7 @@ function fillBriefbydate(daily_food) {
 
     let tbody_bg = daybrief_block.find("#daybrief-tbody-big");
     let tbody_sm = daybrief_block.find("#daybrief-tbody-small");
+    let tfoot = daybrief_block.find("tfoot");
     tbody_bg.empty();
     tbody_sm.empty();
 
@@ -282,7 +306,7 @@ function fillBriefbydate(daily_food) {
         let category_length = daily_food.Breakfast.length;
         for (let i=0; i<category_length; i++) {
             let food = daily_food.Breakfast[i];
-            addFoodToBigBody(food, (i == 0), category_length, "Завтрак");
+            addFoodToBigTbody(food, (i == 0), category_length, "Завтрак");
             addFoodToSmallTbody(food, (i == 0), "Завтрак");
         }
     }
@@ -290,7 +314,7 @@ function fillBriefbydate(daily_food) {
         let category_length = daily_food.Lunch.length;
         for (let i=0; i<category_length; i++) {
             let food = daily_food.Lunch[i];
-            addFoodToBigBody(food, (i == 0), category_length, "Обед");
+            addFoodToBigTbody(food, (i == 0), category_length, "Обед");
             addFoodToSmallTbody(food, (i == 0), "Обед");
         }
     }
@@ -298,7 +322,7 @@ function fillBriefbydate(daily_food) {
         let category_length = daily_food.Dinner.length;
         for (let i=0; i<category_length; i++) {
             let food = daily_food.Dinner[i];
-            addFoodToBigBody(food, (i == 0), category_length, "Ужин");
+            addFoodToBigTbody(food, (i == 0), category_length, "Ужин");
             addFoodToSmallTbody(food, (i == 0), "Ужин");
         }
     }
@@ -306,7 +330,7 @@ function fillBriefbydate(daily_food) {
         let category_length = daily_food.Other.length;
         for (let i=0; i<category_length; i++) {
             let food = daily_food.Other[i];
-            addFoodToBigBody(food, (i == 0), category_length, "Другое");
+            addFoodToBigTbody(food, (i == 0), category_length, "Другое");
             addFoodToSmallTbody(food, (i == 0), "Другое");
         }
     }
@@ -320,7 +344,7 @@ function fillBriefbydate(daily_food) {
         withoutMetricModal.show();
     }
 
-    function addFoodToBigBody(food, add_category=false, category_length, category_name) {
+    function addFoodToBigTbody(food, add_category=false, category_length, category_name) {
         let food_row = $("<tr></tr>"); 
 
         if (add_category) {
@@ -385,7 +409,6 @@ function fillBriefbydate(daily_food) {
     }
 
     function addTotalToTfoot(total) {
-        let tfoot = daybrief_block.find("tfoot");
         tfoot.find(".total-amount").text(total.amount + " г/мл");
         tfoot.find(".total-calories").text(total.nutrition.calories);
         tfoot.find(".total-protein").text(total.nutrition.protein);
@@ -394,12 +417,184 @@ function fillBriefbydate(daily_food) {
     }
 }
 
+function showDayBriefLoading() {
+    daybrief_loader.removeClass("hidden");
+    daybrief_no_data.addClass("hidden");
+    daybrief_table.addClass("hidden");
+}
+
+// СВОДКА ЗА МЕСЯЦ
+const monthbrief_block = $("#monthbrief-container");
+const monthbrief_label = $("#label-monthbrief");
+const monthbrief_loader = monthbrief_block.find(".loader");
+const monthbrief_no_data = monthbrief_block.find(".no-data-msg");
+const monthbrief_table = monthbrief_block.find("#monthbrief-table");
+
+function showMonthBrief(month=false) {
+    // получение и отображение сводки питания за месяц
+    // по умолчанию - текущий месяц
+    console.log("showMonthBrief");
+
+    if (!month) {
+        month = monthbrief_label.attr("value");
+    }
+    let request = getBriefbymonthRequest(month);
+    showMonthBriefLoading();
+
+    request.done(function(response) {
+        monthbrief_loader.addClass("hidden");
+        fillBriefbymonth(response.monthly_food);
+        monthbrief_table.find("tbody tr").on("click", function() {
+            let date = $(this).find("td").first().attr("value");
+            showDayBrief(date);
+        });
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function showPrevMonthBrief() {
+    // получение и отображение сводки питания за прошлый месяц
+    console.log("showPrevMonthBrief");
+
+    let current_month = monthbrief_label.attr("value");
+    let prev_month = addMonths(current_month, -1);
+    let request = getBriefbymonthRequest(prev_month.toLocaleDateString('en-CA'));
+    showMonthBriefLoading();
+
+    request.done(function(response) {
+        monthbrief_loader.addClass("hidden");
+        monthbrief_label.attr("value", prev_month);
+        monthbrief_label.text(
+            prev_month.toLocaleString('default', {month: 'long'}));
+        fillBriefbymonth(response.monthly_food);
+        monthbrief_table.find("tbody tr").on("click", function() {
+            let date = $(this).find("td").first().attr("value");
+            showDayBrief(date);
+        });
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function showNextMonthBrief() {
+    // получение и отображение сводки питания за следующий месяц
+    console.log("showNextMonthBrief");
+
+    let current_month = monthbrief_label.attr("value");
+    let next_month = addMonths(current_month, 1);
+    let request = getBriefbymonthRequest(next_month.toLocaleDateString('en-CA'));
+    showMonthBriefLoading();
+
+    request.done(function(response) {
+        monthbrief_loader.addClass("hidden");
+        monthbrief_label.attr("value", next_month);
+        monthbrief_label.text(
+            next_month.toLocaleString('default', {month: 'long'}));
+        fillBriefbymonth(response.monthly_food);
+        monthbrief_table.find("tbody tr").on("click", function() {
+            let date = $(this).find("td").first().attr("value");
+            showDayBrief(date);
+        });
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function fillBriefbymonth(monthly_food) {
+    // наполнение и отображение сводки питания за месяц
+    console.log("fillBriefbymonth");
+
+    if ($.isEmptyObject(monthly_food)) {
+        monthbrief_block.find(".no-data-msg").removeClass("hidden");
+        monthbrief_block.find("#monthbrief-table").addClass("hidden");
+        return;
+    }
+
+    let tbody = monthbrief_block.find("tbody");
+    let tfoot = monthbrief_block.find("tfoot");
+    tbody.empty();
+
+    for (let i=0; i<monthly_food.days.length; i++) {
+        let day = monthly_food.days[i];
+        addDayToTbody(day);
+    }
+    addAvgToTfoot(monthly_food.avg);
+
+    monthbrief_block.find(".no-data-msg").addClass("hidden");
+    monthbrief_block.find("#monthbrief-table").removeClass("hidden");
+
+    function addDayToTbody(day) {
+        let local_date = toLocal(day.date);
+        let date_row = $('<tr class="d-sm-none"></tr>');
+        let date_td = $('<td colspan="4"></td>');
+        date_td.attr("value", day.date);
+        date_td.text(local_date);
+        date_row.append(date_td);
+        tbody.append(date_row);
+
+        let nutr_row = $('<tr></tr>');
+        let big_date_td = $('<td class="d-none d-sm-table-cell"></td>');
+        big_date_td.attr("value", day.date);
+        big_date_td.text(local_date);
+        nutr_row.append(big_date_td);
+        let cal_row = $('<td title="калории"></td>');
+        cal_row.text(day.calories);
+        nutr_row.append(cal_row);
+        let prot_row = $('<td title="белки"></td>');
+        prot_row.text(day.protein);
+        nutr_row.append(prot_row);
+        let fat_row = $('<td title="жиры"></td>');
+        fat_row.text(day.fat);
+        nutr_row.append(fat_row);
+        let carb_row = $('<td title="углеводы"></td>');
+        carb_row.text(day.carbohydrate);
+        nutr_row.append(carb_row);
+        tbody.append(nutr_row);
+
+        function toLocal(day_date) {
+            let date = new Date(day_date);
+            let weekday = date.toLocaleDateString('default', {weekday: 'short'});
+            let local_date = date.toLocaleDateString(
+                'default', {day: 'numeric', month: 'long'});
+            return (local_date + " - " + weekday)
+        }
+    }
+
+    function addAvgToTfoot(avg) {
+        tfoot.find(".avg-calories").text(avg.calories);
+        tfoot.find(".avg-protein").text(avg.protein);
+        tfoot.find(".avg-fat").text(avg.fat);
+        tfoot.find(".avg-carbohydrate").text(avg.carbohydrate);
+    }
+}
+
+function showMonthBriefLoading() {
+    monthbrief_loader.removeClass("hidden");
+    monthbrief_no_data.addClass("hidden");
+    monthbrief_table.addClass("hidden");
+}
+
 // АЯКС ЗАПРОСЫ
 function getBriefbydateRequest(briefdate) {
     return $.ajax({
         data: {"briefdate": briefdate, "client_id": params.clientId},
         type: "GET",
         url: "/mealjournal/ajax/get_briefbydate",
+    });
+}
+
+function getBriefbymonthRequest(briefmonth) {
+    return $.ajax({
+        data: {"briefmonth": briefmonth, "client_id": params.clientId},
+        type: "GET",
+        url: "/mealjournal/ajax/get_briefbymonth",
     });
 }
 
@@ -413,7 +608,13 @@ function sendFoodMetricRequest() {
 
 // УТИЛИТЫ
 function addDays(date, days) {
-    var result = new Date(date);
+    let result = new Date(date);
     result.setDate(result.getDate() + days);
+    return result;
+}
+
+function addMonths(date, months) {
+    let result = new Date(date);
+    result.setMonth(result.getMonth() + months);
     return result;
 }
