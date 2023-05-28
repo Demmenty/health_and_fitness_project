@@ -48,7 +48,7 @@
 <!-- табличка за сегодня -->
 <div class="block-container" id="today_measurements">
     <div class="block-header">
-        <span>Сегодня</span>
+        <span class="header">Сегодня</span>
     </div>
     <div class="block-content">
         {% if not today_measure %}
@@ -168,7 +168,7 @@
 {% if period_measures %}
     <div  class="block-container" id="period_measurements">
         <div class="block-header">
-            <span>Показатели за {{ period_as_string }}</span>
+            <span class="header">Показатели за {{ period_as_string }}</span>
         </div>
         <div class="block-content">
         <table class="table table-bordered align-middle text-center d-block d-lg-table overflow-auto w-100" id="measure_table_period">
@@ -292,7 +292,7 @@
 {% if for_expert %}
     <div class="block-container" id="color_settings">
         <div class="block-header">
-            <span>Настройки окрашивания</span>
+            <span class="header">Настройки окрашивания</span>
         </div>
         <div class="block-content">
             <form method="POST" action="{% url 'save_color_settings' %}" id="color_settings_form">
@@ -517,10 +517,9 @@
 
 <!-- рекомендованные КБЖУ -->
 <div class="block-container moving" id="recommend_nutrition">
-    <div class="block-header moving_part">
-        <span class="col-1">&nbsp;</span>
-        <span class="col-9">Рекомендации</span>
-        <button type="button" class="btn-close col-1"></button>
+    <div class="block-header with-cross moving_part">
+        <span class="header">Рекомендации</span>
+        <button type="button" class="btn-close"></button>
     </div>
     <div class="block-content">
         {% if not recommend_nutrition.calories.value and not for_expert %}
@@ -568,7 +567,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="block-header">
-                    <span>Внесение измерений</h3>
+                    <span class="header">Внесение измерений</h3>
                 </div>
                 <div class="block-content">
                     <form method="post" action="{% url 'save_measure' %}" id="add_measure_form">

@@ -13,7 +13,7 @@
                     <input type="image" name="submit" class="hover_brigh me-3 align-text-bottom" src="{% static 'mealjournal/img/arrow_prev.svg' %}" alt="Submit" title="предыдущий день" style="width: 20px;">
                 </form>
                 <!-- дата -->
-                <span>{{ briefdate|date:"l " }}<br class="d-sm-none">{{ briefdate|date:"j E Y" }}</span>
+                <span class="header">{{ briefdate|date:"l " }}<br class="d-sm-none">{{ briefdate|date:"j E Y" }}</span>
                 <!-- кнопка следующее число -->
                 <form method = "get">
                     <input type="hidden" value="{{ client.id }}" name="client_id">
