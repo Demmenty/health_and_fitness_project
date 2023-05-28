@@ -37,3 +37,34 @@ def get_briefbydate(request):
         "daily_food": daily_food,
     }
     return JsonResponse(data, status=200)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_briefbymonth(request):
+    """Возвращает сводку питания клиента за месяц"""
+
+    print("request.GET", request.GET)
+
+    briefmonth = request.GET.get("briefmonth")
+    if not briefmonth:
+        return HttpResponseBadRequest("Необходимо передать briefmonth")
+    
+    try:
+        briefmonth = datetime.strptime(briefmonth, "%Y-%m-%d")
+    except ValueError as error:
+        return HttpResponseBadRequest(error)
+    
+    if request.user.is_expert:
+        client_id = request.GET.get("client_id")
+        if not client_id:
+            return HttpResponseBadRequest("Необходимо передать client_id")
+    else:
+        client_id = request.user.id
+
+    monthly_food = services.fs.monthly_food(client_id, briefmonth)
+
+    data = {
+        "monthly_food": monthly_food,
+    }
+    return JsonResponse(data, status=200)
