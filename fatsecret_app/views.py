@@ -1,10 +1,9 @@
-from time import sleep
-
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import redirect
-
+from fatsecret import GeneralError
 from common.cache_manager import cache
 from common.services import services
 
@@ -42,38 +41,46 @@ def fatsecretauth(request):
             return redirect(auth_url)
 
 
+@login_required
+@require_http_methods(["POST"])
 def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
 
-    if request.user.is_anonymous:
-        return HttpResponseForbidden
+    prods_without_metric= dict(request.POST)
+    del prods_without_metric["csrfmiddlewaretoken"]
 
-    prods_without_info = dict(request.POST)
-    del prods_without_info["csrfmiddlewaretoken"]
+    cache.fs.save_foodmetric(prods_without_metric)
 
-    cache.fs.save_foodmetric(prods_without_info)
-
-    data = {"status": "инфа сохранена, круто!"}
-    return JsonResponse(data, status=200)
+    return HttpResponse("метрика сохранена. круто!")
 
 
+@login_required
+@require_http_methods(["GET"])
 def get_monthly_top(request):
     """выдает топ-10 продуктов месяца через ajax"""
 
-    if request.user.is_anonymous:
-        return JsonResponse({}, status=403)
-
-    if request.GET.get("client_id"):
-        # если запрос от эксперта о клиенте
+    month = request.GET.get("month")
+    if not month:
+        return HttpResponseBadRequest("Необходимо передать month")
+    
+    try:
+        month = datetime.strptime(month, "%Y-%m-%d")
+    except ValueError as error:
+        return HttpResponseBadRequest(error)
+    
+    if request.user.is_expert:
         client_id = request.GET.get("client_id")
-        client = User.objects.get(id=client_id)
+        if not client_id:
+            return HttpResponseBadRequest("Необходимо передать client_id")
     else:
-        # если запрос от самого клиента
-        client = request.user
+        client_id = request.user.id
 
-    month_str = request.GET.get("month")
-    month_datetime = datetime.strptime(month_str, "%Y-%m")
+    try:
+        monthly_top = services.fs.monthly_top(client_id, month)
+    except GeneralError as error:
+        return HttpResponseServerError(error)
 
-    monthly_top = services.fs.monthly_top(client, month_datetime)
-
-    return JsonResponse(monthly_top, status=200)
+    data = {
+        "monthly_top": monthly_top,
+    }
+    return JsonResponse(data, status=200)

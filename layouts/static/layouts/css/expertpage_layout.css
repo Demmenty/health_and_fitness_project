@@ -32,7 +32,7 @@ body {
     cursor: move;
 }
 
-/* стиль обычных окошек */
+/* стиль окошек */
 .block-container {
     display: flex;
     flex-direction: column;
@@ -42,6 +42,11 @@ body {
     -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
     -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
 }
+.block-container.moving {
+    box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px 2px rgb(0 0 0 / 25%);
+    -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px 2px rgb(0 0 0 / 25%);
+    -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px 2px rgb(0 0 0 / 25%);
+}
 .block-header {
     display: flex;
     justify-content: center;
@@ -49,16 +54,56 @@ body {
     color: white;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    padding: 7px 10px;
-    box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
+    line-height: 25px;
 }
-.block-header span {
+.block-container.moving .block-header {
+    background-color: #d8e0ff;
+    color: black;
+}
+.block-header.with-arrows {
+    justify-content: space-between;
+}
+.block-header.with-cross {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.block-header .header {
     display: inline-block;
     text-align: center;
+    padding: 7px;
     font-size: 20px;
-    line-height: 25px;
+}
+.block-header.with-cross .header {
+    margin-left: 22px;
+    width: -webkit-fill-available;
+}
+.block-header .btn-close {
+    font-size: 15px;
+    align-self: center;
+    margin-bottom: 1px;
+}
+.block-header .prev-button,
+.block-header .next-button { 
+    cursor: pointer;
+    width: 28px; 
+    text-align: center;
+    padding: 7px;
+    padding-top: 5px;
+    font-size: 20px;
+} 
+.block-header .prev-button { 
+    -webkit-border-top-left-radius: 5px; 
+    -moz-border-radius-topleft: 5px; 
+    border-top-left-radius: 5px; 
+} 
+.block-header .next-button { 
+    -webkit-border-top-right-radius: 5px; 
+    -moz-border-radius-topright: 5px; 
+    border-top-right-radius: 5px; 
+} 
+.block-header .prev-button:hover,
+.block-header .next-button:hover {
+    background: #3FADFF;
 }
 .block-content {
     display: flex;
@@ -73,21 +118,6 @@ body {
     .block-content {
         padding: 15px;
     }
-    .block-header {
-        padding: 7px 15px;
-    }
-}
-
-/* стиль перетаксиваемых окошек */
-.block-container.moving {
-    box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-}
-.block-container.moving .block-header {
-    justify-content: space-between;
-    background-color: #d8e0ff;
-    color: black;
 }
 
 /* стиль кнопок */

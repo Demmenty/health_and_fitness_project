@@ -5,9 +5,9 @@
     <div class="block-container" id="overview_block">
         <div class="block-header">
             {% if for_expert %}
-                <span>Общая информация</span>
+                <span class="header">Общая информация</span>
             {% else %}
-                <span>{{ client.username }}</span>
+                <span class="header">{{ client.username }}</span>
             {% endif %}
         </div>
         <div class="block-content">
@@ -109,7 +109,7 @@
     <!-- физические показатели сегодня  -->
     <div class="block-container" id="today_measure_block">
         <div class="block-header">
-            <span>{% now "j E Y" %}</span>
+            <span class="header">{% now "j E Y" %}</span>
         </div>
         <div class="block-content">
             {% if today_measure %}
@@ -200,7 +200,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="block-header">
-                    <span>Мои контакты</span>
+                    <span class="header">Мои контакты</span>
                 </div>
                 <div class="block-content">
                     <form method="post" action="{% url 'save_contacts' %}" id="contacts_form" class="w-100">
@@ -309,7 +309,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="block-header">
-                    <span>Внесение измерений</h3>
+                    <span class="header">Внесение измерений</span>
                 </div>
                 <div class="block-content">
                     <form method="post" action="{% url 'save_measure' %}" id="add_measure_form">

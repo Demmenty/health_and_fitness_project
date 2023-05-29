@@ -205,11 +205,11 @@ input[type="radio"]:hover {
 #back_btn_mealjournal {
     margin-top: -18px;
 }
-.without_info_row input[type="number"] {
+.without_metric_row input[type="number"] {
     text-align: center;
     display: inline;
 }
-.without_info_row select {
+.without_metric_row select {
     display: inline;
     width: unset;
 }

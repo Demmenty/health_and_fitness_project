@@ -142,7 +142,7 @@
       <!-- аватар эксперта -->
       <img id="expert_pic" src="{% static 'layouts/img/expert_pic.svg' %}" class="ch-pointer" title="Комментарии эксперта" width="80">
       <!-- отметка о непрочитанных комментариях -->
-      <div class="rounded-circle text-center align-middle" id="count_of_unread" data-action-count="{% url 'count_unread_comments' %}"></div>
+      <div class="rounded-circle text-center align-middle hidden" id="count_of_unread" data-action-count="{% url 'count_unread_comments' %}"></div>
 
       <!-- окно комментария эксперта -->
       <div class="d-flex flex-column flex-sm-row hidden" id="commentary_container">

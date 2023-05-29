@@ -5,7 +5,6 @@ from typing import Union
 from django.conf import settings
 from fatsecret import (
     Fatsecret as FS,
-    GeneralError as FS_GeneralError,
     ParameterError as FS_ParameterError,
 )
 
@@ -160,51 +159,39 @@ class FatsecretManager:
         return week_nutrition_dic
 
     def daily_food(self, user, request_date: datetime) -> dict:
-        """Подсчитывает данные о съеденных продуктах за день
-        вывод - словарь:
-        'entries' - список словарей с позициями еды, датой и кбжу
-        'nutrition' - общее кбжу за день
-        'count_by_category' - сколько в ужин, обед и тп
-        'without_info' - продукты без метрики
-        """
+        """Подсчитывает данные о съеденных продуктах за день"""
 
         session = self.client_session(user)
 
         daily_entries = session.food_entries_get(date=request_date)
-
         if not daily_entries:
             return {}
-
-        # продукты, для которых нет инфо о граммовке порции
-        without_info = {}
-
-        # категории для таблички
-        count_by_category = {
-            "Breakfast": 0,
-            "Lunch": 0,
-            "Dinner": 0,
-            "Other": 0,
-        }
-        # итоговые кбжу дня
-        nutrition = {
-            "amount": 0,
-            "calories": 0,
-            "protein": 0,
-            "fat": 0,
-            "carbohydrate": 0,
+        
+        result = {
+            "Breakfast": [],
+            "Lunch": [],
+            "Dinner": [],
+            "Other": [],
+            "without_metric": {},
+            "total": {
+                "amount": 0,
+                "nutrition": {
+                    "calories": 0,
+                    "protein": 0,
+                    "fat": 0,
+                    "carbohydrate": 0,
+                }
+            }
         }
 
         # складываем одинаковую еду в этот словарик (для топов)
         daily_total = {}
         # для понимания, можно сохранить итог, или нет
-        daily_total_is_good = True
+        daily_total_ok_for_save = True
 
         # обработка каждой записи о продукте
         for food in daily_entries:
-            # подсчет количеств блюд для каждой категории для таблички
-            count_by_category[food["meal"]] += 1
             # поиск подробностей о продукте для подсчета порции
-            cache.fs.get_foodinfo
             food_info = cache.fs.get_foodinfo(food["food_id"])
             food_info_found = True
             if not food_info:
@@ -214,7 +201,7 @@ class FatsecretManager:
                 except FS_ParameterError:
                     food_info_found = False
                     food["cant_get_id"] = True
-                    daily_total_is_good = False
+                    daily_total_ok_for_save = False
 
             if food_info_found:
                 # добавление инфы в food для соответствующего вида порции
@@ -233,14 +220,14 @@ class FatsecretManager:
                     or food["serving"]["measurement_description"] == "ml"
                 ):
                     food["norm_amount"] = int(float(food["number_of_units"]))
-                    nutrition["amount"] += food["norm_amount"]
+                    result["total"]["amount"] += food["norm_amount"]
                 else:
                     # если измерение в порциях - сначала проверяем, есть ли граммовка порции
                     if food["serving"].get("metric_serving_amount") is None:
                         # если в инфе не оказалось граммовки порции
                         # добавляем эту еду в спец.словарь и не считаем amount
-                        daily_total_is_good = False
-                        without_info[food["food_id"]] = {
+                        daily_total_ok_for_save = False
+                        result["without_metric"][food["food_id"]] = {
                             "food_entry_name": food["food_entry_name"],
                             "serving_description": food["serving"].get(
                                 "serving_description", "порция"
@@ -258,13 +245,23 @@ class FatsecretManager:
                             * float(food["serving"]["metric_serving_amount"])
                             * float(food["serving"]["number_of_units"])
                         )
-                        nutrition["amount"] += food["norm_amount"]
+                        result["total"]["amount"] += food["norm_amount"]
 
+            # отфильтровать ненужное и добавить в результат
+            if food["serving"].get("metric_serving_unit"):
+                food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
+            del food["serving"]
+            del food["date_int"]
+            del food["food_entry_description"]
+            del food["food_entry_id"]
+            del food["serving_id"]
+            del food["food_id"]
+            result[food["meal"]].append(food)
             # подсчет итоговой суммы кбжу
-            nutrition["calories"] += int(food["calories"])
-            nutrition["protein"] += float(food["protein"])
-            nutrition["fat"] += float(food["fat"])
-            nutrition["carbohydrate"] += float(food["carbohydrate"])
+            result["total"]["nutrition"]["calories"] += int(food["calories"])
+            result["total"]["nutrition"]["protein"] += float(food["protein"])
+            result["total"]["nutrition"]["fat"] += float(food["fat"])
+            result["total"]["nutrition"]["carbohydrate"] += float(food["carbohydrate"])
 
             # заодно готовим daily_total
             # меняем наименование на то, что в инфе, оно более общее
@@ -280,35 +277,24 @@ class FatsecretManager:
                 }
             daily_total[food["food_name"]]["calories"] += int(food["calories"])
             # если получилось высчитать нормально количество
-            # (если нет - то продукт в списке without_info, либо не имеет такого ключа)
+            # (если нет - то продукт в списке without_metric, либо не имеет такого ключа)
             if food.get("norm_amount"):
                 daily_total[food["food_name"]]["amount"] += food["norm_amount"]
-                daily_total[food["food_name"]]["metric"] = food["serving"][
-                    "metric_serving_unit"
-                ]
+                daily_total[food["food_name"]]["metric"] = food["metric_serving_unit"]
 
         # округляем результаты в получившемся итоге по кбжу
-        for key, value in nutrition.items():
-            nutrition[key] = round(value, 2)
+        for key, value in result["total"]["nutrition"].items():
+            result["total"]["nutrition"][key] = round(value, 2)
 
         # сохраняем daily_total в кеше на будущее для топов
-        if daily_total_is_good:
+        if daily_total_ok_for_save:
             cache.fs.save_daily_total(user, request_date, daily_total)
 
-        # добавить очистку от ненужных значений??
-
-        return {
-            "entries": daily_entries,
-            "nutrition": nutrition,
-            "count_by_category": count_by_category,
-            "without_info": without_info,
-        }
+        return result
+    
 
     def monthly_food(self, user, request_date) -> dict:
-        """Подсчитывает данные о съеденных продуктах за месяц
-        возвращает словарь
-        'entries' - список словарей по дням с кбжу,
-        'monthly_avg' - словарь со средними кбжу"""
+        """Подсчитывает данные о съеденных продуктах за месяц"""
 
         session = self.client_session(user)
 
@@ -316,52 +302,63 @@ class FatsecretManager:
             monthly_entries = session.food_entries_get_month(date=request_date)
         except KeyError:
             return {}
-        
         if not monthly_entries:
             return {}
         
+        result = {
+            "days": [],
+            "avg": {},
+        }
+
         if type(monthly_entries) is dict:
             days_count = 1
-            entry_date = date_int_to_date(monthly_entries["date_int"])
-            monthly_entries["date_datetime"] = entry_date
+        else:
+            days_count = len(monthly_entries)
+        
+        if days_count == 1:
+            monthly_entries["date"] = date_int_to_date(monthly_entries["date_int"])
+            del monthly_entries["date_int"]
+            result["days"].append(monthly_entries)
 
-            if entry_date == date.today():
-                monthly_avg = {"protein": "-", "fat": "-", "carbo": "-", "calories": "-"}
+            if monthly_entries["date"] == date.today():
+                result["avg"] = {
+                    "protein": "-", 
+                    "fat": "-", 
+                    "carbohydrate": "-", 
+                    "calories": "-"
+                }
             else:
-                monthly_avg = {
+                result["avg"] = {
                     "protein": monthly_entries["protein"], 
                     "fat": monthly_entries["fat"], 
-                    "carbo": monthly_entries["carbohydrate"], 
+                    "carbohydrate": monthly_entries["carbohydrate"], 
                     "calories": monthly_entries["calories"],
                 }
-            return {
-                "entries": [monthly_entries],
-                "monthly_avg": monthly_avg,
-            }
+        
+        if days_count > 1:
+            result["avg"] = {"protein": 0, "fat": 0, "carbohydrate": 0, "calories": 0}
 
-        days_count = len(monthly_entries)
-        monthly_avg = {"protein": 0, "fat": 0, "carbo": 0, "calories": 0}
+            for day in monthly_entries:
+                day["date"] = date_int_to_date(day["date_int"])
+                del day["date_int"]
+                result["days"].append(day)
 
-        for day in monthly_entries:
-            day["date_datetime"] = date_int_to_date(day["date_int"])
-            if day["date_datetime"] == date.today():
-                days_count -= 1
-                break
+                if day["date"] == date.today():
+                    days_count -= 1
+                    break
 
-            monthly_avg["protein"] += float(day["protein"])
-            monthly_avg["fat"] += float(day["fat"])
-            monthly_avg["carbo"] += float(day["carbohydrate"])
-            monthly_avg["calories"] += float(day["calories"])
+                result["avg"]["protein"] += float(day["protein"])
+                result["avg"]["fat"] += float(day["fat"])
+                result["avg"]["carbohydrate"] += float(day["carbohydrate"])
+                result["avg"]["calories"] += float(day["calories"])
 
-        monthly_avg["protein"] = round(monthly_avg["protein"] / days_count, 2)
-        monthly_avg["fat"] = round(monthly_avg["fat"] / days_count, 2)
-        monthly_avg["carbo"] = round(monthly_avg["carbo"] / days_count, 2)
-        monthly_avg["calories"] = round(monthly_avg["calories"] / days_count, 2)
+            result["avg"]["protein"] = round(result["avg"]["protein"] / days_count, 2)
+            result["avg"]["fat"] = round(result["avg"]["fat"] / days_count, 2)
+            result["avg"]["carbohydrate"] = round(result["avg"]["carbohydrate"] / days_count, 2)
+            result["avg"]["calories"] = round(result["avg"]["calories"] / days_count, 2)
 
-        return {
-            "entries": monthly_entries,
-            "monthly_avg": monthly_avg,
-        }
+        return result
+    
 
     def daily_total(self, user, entry_date: datetime) -> dict:
         """возвращает словарь с суммарным количеством и калорийностью
@@ -370,8 +367,8 @@ class FatsecretManager:
         'food_name': {'calories': ..., 'amount': ... , 'metric': ...}}"""
 
         daily_total = {}
-        without_info = {}
-        daily_total_is_good = True
+        without_metric= {}
+        daily_total_ok_for_save = True
 
         session = self.client_session(user)
         daily_entries = session.food_entries_get(date=entry_date)
@@ -387,7 +384,7 @@ class FatsecretManager:
                 except FS_ParameterError:
                     food_info_found = False
                     food["cant_get_id"] = True
-                    daily_total_is_good = False
+                    daily_total_ok_for_save = False
 
             if food_info_found:
                 # добавление инфы в food для соответствующего вида порции
@@ -409,9 +406,10 @@ class FatsecretManager:
                 else:
                     # если измерение в порциях - сначала проверяем, есть ли граммовка порции
                     if food["serving"].get("metric_serving_amount") is None:
+                        daily_total_ok_for_save = False
                         # если в инфе не оказалось граммовки порции
                         # добавляем эту еду в спец.словарь и не считаем amount
-                        without_info[food["food_id"]] = {
+                        without_metric[food["food_id"]] = {
                             "food_entry_name": food["food_entry_name"],
                             "serving_description": food["serving"].get(
                                 "serving_description", "порция"
@@ -441,18 +439,18 @@ class FatsecretManager:
 
             daily_total[food["food_name"]]["calories"] += int(food["calories"])
 
-            # если не получилось высчитать нормально количество - то продукт в списке without_info
+            # если не получилось высчитать нормально количество - то продукт в списке without_metric
             if food.get("norm_amount"):
                 daily_total[food["food_name"]]["amount"] += food["norm_amount"]
                 daily_total[food["food_name"]]["metric"] = food["serving"][
                     "metric_serving_unit"
                 ]
 
-        if daily_total_is_good:
+        if daily_total_ok_for_save:
             cache.fs.save_daily_total(user, entry_date, daily_total)
 
-        elif without_info:
-            daily_total["without_info"] = without_info
+        elif without_metric:
+            daily_total["without_metric"] = without_metric
 
         return daily_total
 
@@ -466,7 +464,11 @@ class FatsecretManager:
         monthly_total = {}
 
         session = self.client_session(user)
-        monthly_entries = session.food_entries_get_month(date=entry_month)
+
+        try:
+            monthly_entries = session.food_entries_get_month(date=entry_month)
+        except KeyError:
+            return {}
 
         # если словарь вместо списка, значит всего один день заполнен
         if type(monthly_entries) is dict:
@@ -484,8 +486,8 @@ class FatsecretManager:
 
             # суммируем в месячную сводку
             for key in daily_total.keys():
-                if key == "without_info":
-                    monthly_total["without_info"] = daily_total[key]
+                if key == "without_metric":
+                    monthly_total["without_metric"] = daily_total[key]
                 elif monthly_total.get(key):
                     monthly_total[key]["calories"] += daily_total[key][
                         "calories"
@@ -510,9 +512,9 @@ class FatsecretManager:
 
         daily_top = {}
 
-        if daily_total.get("without_info"):
-            daily_top["without_info"] = daily_total["without_info"]
-            del daily_total["without_info"]
+        if daily_total.get("without_metric"):
+            daily_top["without_metric"] = daily_total["without_metric"]
+            del daily_total["without_metric"]
 
         top_calories = dict(
             sorted(
@@ -534,44 +536,42 @@ class FatsecretManager:
 
         return daily_top
 
-    def monthly_top(self, user, month: datetime) -> dict:
+    def monthly_top(self, user_id, month: datetime) -> dict:
         """создание топ-10 продуктов за месяц, по весу и по калориям"""
 
-        monthly_total = cache.fs.get_monthly_total(user, month)
+        monthly_total = cache.fs.get_monthly_total(user_id, month)
 
         if not monthly_total:
-            monthly_total = self.monthly_total(user, month)
+            monthly_total = self.monthly_total(user_id, month)
 
-            if monthly_total.get("without_info") is None:
-                cache.fs.save_monthly_total(user, month, monthly_total)
+            if monthly_total.get("without_metric") is None:
+                cache.fs.save_monthly_total(user_id, month, monthly_total)
 
-        monthly_top = {}
+        result = {
+            "without_metric": [],
+            "calories": {},
+            "amount": {},
+        }
 
-        if monthly_total.get("without_info"):
-            monthly_top["without_info"] = monthly_total["without_info"]
-            del monthly_total["without_info"]
+        if monthly_total.get("without_metric"):
+            result["without_metric"] = monthly_total["without_metric"]
+            del monthly_total["without_metric"]
 
-        top_calories = dict(
+        result["calories"] = dict(
             sorted(
                 monthly_total.items(),
                 key=lambda x: x[1]["calories"],
                 reverse=True,
             )[:10]
         )
-
-        top_amount = dict(
+        result["amount"] = dict(
             sorted(
                 monthly_total.items(),
                 key=lambda x: x[1]["amount"],
                 reverse=True,
             )[:10]
         )
-
-        monthly_top.update(
-            {"top_calories": top_calories, "top_amount": top_amount}
-        )
-
-        return monthly_top
+        return result
 
 
 def date_int_to_date(date_int:int) -> datetime.date:

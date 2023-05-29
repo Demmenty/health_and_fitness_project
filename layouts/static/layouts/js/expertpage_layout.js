@@ -513,6 +513,9 @@ function showSuccessAlert(msg) {
 }
 
 function showDangerAlert(msg) {
+    if (msg === "0 undefined" || msg === "undefined") {
+        msg = "Нет соединения!"
+    }
     danger_alert.find(".text").text("");
     danger_alert.find(".text").text(msg);
 
