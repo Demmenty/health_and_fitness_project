@@ -178,7 +178,7 @@ class FatsecretCacheManager:
         with open(self.food_info_cache, "wb") as f:
             pickle.dump(cache, f)
 
-    def get_daily_total(self, user, entry_date: datetime) -> Union[dict, None]:
+    def get_daily_total(self, user_id, entry_date: datetime) -> Union[dict, None]:
         """добыча из кеша суммарного количества и калорий съеденной еды
         по названиям за один день в виде словаря:
         {'food_name': {'total_calories': ..., 'total_amount': ... , 'metric': ...}}
@@ -189,9 +189,9 @@ class FatsecretCacheManager:
         with open(self.daily_total_cache, "rb") as file:
             cache = pickle.load(file)
 
-        if cache.get(user.id):
-            if cache[user.id].get(entry_date):
-                daily_total = cache[user.id][entry_date]
+        if cache.get(user_id):
+            if cache[user_id].get(entry_date):
+                daily_total = cache[user_id][entry_date]
                 return daily_total
 
         return {}
@@ -234,7 +234,7 @@ class FatsecretCacheManager:
             pickle.dump(cache, file)
 
     def get_monthly_total(
-        self, user, entry_month: datetime
+        self, user_id, entry_month: datetime
     ) -> Union[dict, None]:
         """добыча из кеша суммарного количества и калорий съеденной еды
         по названиям за один месяц в виде словаря:
@@ -246,15 +246,15 @@ class FatsecretCacheManager:
         with open(self.monthly_total_cache, "rb") as file:
             cache = pickle.load(file)
 
-        if cache.get(user.id):
-            if cache[user.id].get(entry_month):
-                monthly_total = cache[user.id][entry_month]
+        if cache.get(user_id):
+            if cache[user_id].get(entry_month):
+                monthly_total = cache[user_id][entry_month]
                 return monthly_total
 
         return {}
 
     def save_monthly_total(
-        self, user, entry_month: datetime, monthly_total: dict
+        self, user_id, entry_month: datetime, monthly_total: dict
     ) -> None:
         """сохранение в кеше суммарного количества и калорий
         съеденной еды по названиям за один день для ускорения создания топов
@@ -280,19 +280,19 @@ class FatsecretCacheManager:
             cache = pickle.load(file)
 
         # если такого юзера еще не записано - сохраняем
-        if cache.get(user.id) is None:
-            cache.update({user.id: {entry_month: monthly_total}})
+        if cache.get(user_id) is None:
+            cache.update({user_id: {entry_month: monthly_total}})
 
             with open(self.monthly_total_cache, "wb") as file:
                 pickle.dump(cache, file)
 
         # если такой юзер записан, но нет такого месяца - сохраняем
-        if cache[user.id].get(entry_month) is None:
-            cache[user.id].update({entry_month: monthly_total})
+        if cache[user_id].get(entry_month) is None:
+            cache[user_id].update({entry_month: monthly_total})
 
             with open(self.monthly_total_cache, "wb") as file:
                 pickle.dump(cache, file)
 
-
-fs = FatsecretCacheManager()
-fs._remove_prods_without_metric()
+# fs = FatsecretCacheManager()
+# fs._remove_prods_without_metric()
+# fs._create_caches()
