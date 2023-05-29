@@ -1,83 +1,3 @@
-$(document).ready(function(){
-
-    // получение топ-10 продуктов по кнопке
-    $('#get_top_form').click(function () {
-        createTopTen($(this));
-        return false;
-    })
-
-    function createTopTen(form) {
-        // показываем кота, убираем кнопку и ошибку
-        $('#waiting_cat').removeClass('hidden');
-        $('#calc_top_btn').addClass('hidden');
-        $('#top_error').text('');
-        // получаем список продуктов с сервера
-        $.ajax({
-            type: 'get',
-            data: form.serialize(),
-            url: form.attr('action'),
-
-            success: function (response) {
-                console.log('данные для топов получены');
-                // убираем кота
-                $('#waiting_cat').addClass('hidden');
-                // делаем табличку топов
-                createTopSection(response.top_amount,
-                                response.top_calories);
-                $('#top_section').removeClass('hidden');
-                // если не посчиталось что-то - делаем спец. секцию
-                if (response.without_metric) {
-                    fillWithoutMetricModal(response.without_metric);
-                }
-            },
-            error: function () {
-                // убираем кота
-                $('#waiting_cat').addClass('hidden');
-                // печатаем ошибку
-                $('#top_error').html(
-                    'возникла ошибка :( <br>'+
-                    'попробуйте еще раз через минуту <br>' +
-                    'журналу питания надо передохнуть...');
-                // возвращаем кнопку
-                $('#calc_top_btn').removeClass('hidden');
-            },             
-        });
-    }
-
-    // раскладывание топ-10 в табличку
-    function createTopSection(top_amount, top_calories) {
-        // удаляем то, что там было уже
-        $('#top_section tbody tr').remove();
-        // топ-10 по количеству
-        $.each(top_amount, function(food, data) {
-            let newTableRow =  $("<tr></tr>")
-                .append("<td></td>")
-                .append("<td><li>" + food + "</li></td>")
-                .append("<td class='text-center'>"+ data.amount + 
-                        " " + data.metric + "</td>")
-                .append("<td class='text-center'>"+ data.calories + "</td>");
-
-            $('#table_top_amount tbody').append(newTableRow);
-        });
-        // топ-10 по калориям
-        $.each(top_calories, function(food, data) {
-            let amount
-            if (data.amount == 0) {
-                amount = "?"
-            }
-            else {
-                amount = data.amount + " " + data.metric
-            }
-            let newTableRow =  $("<tr></tr>")
-                .append("<td></td>")
-                .append("<td><li>" + food + "</li></td>")
-                .append("<td class='text-center'>"+ amount + "</td>")
-                .append("<td class='text-center'>"+ data.calories + "</td>");
-
-            $('#table_top_calories tbody').append(newTableRow);
-        });
-    }
-})
 // TODO сделать приличный лоадер
 
 $(document).ready(function () {
@@ -100,83 +20,6 @@ $(document).ready(function () {
     dragContainer(document.getElementById("recommend_nutrition"));
 })
 
-// ПРОДУКТЫ БЕЗ МЕТРИКИ
-const withoutMetricModal = new bootstrap.Modal(
-    document.getElementById('withoutMetricModal'));
-const metric_form = $('#add_metric_form');
-
-function fillWithoutMetricModal(food_without_metric) {
-    // наполнение модального окна продуктами без метрики 
-
-    let food_list = $("#without_metric_list");
-    food_list.empty();
-
-    $.each(food_without_metric, function(food_id, data) {
-        let food_row = $("<div class='without_metric_row'></div>");
-
-        let name_row = $('<div class="d-flex"></div>');
-        name_row.text(data.food_entry_name);
-        name_row.prepend('<span class="label">Продукт:</span>');
-        
-        let metric_row = $('<div class="input-metric-row"></div>');
-        metric_row.append(data.serving_description + " = ");
-        metric_row.append("<input type='hidden' value=" + food_id + " name='food_id'>");
-        metric_row.append("<input type='hidden' value='" + data.serving_id + "' name='serving_id'>");
-        let input_amount = $("<input type='number' min='0' name='metric_serving_amount' required>");
-        input_amount.addClass("form-control");
-        metric_row.append(input_amount);
-        let select_metric = $("<select class='form-select' name='metric_serving_unit'></select>");
-        select_metric.append("<option value='g'>г</option>");
-        select_metric.append("<option value='ml'>мл</option>");
-        metric_row.append(select_metric);
-
-        let info_row = ("<p>Калорийность этой порции: " + data.calories_per_serving + " ккал</p>");
-
-        food_row.append(name_row);
-        food_row.append(metric_row);
-        food_row.append(info_row);
-
-        food_list.append(food_row);
-    });
-}
-
-function saveFoodMetric() {
-    // проверка и отправка введенной метрики продукта на сервер
-    console.log("saveFoodMetric");
-
-    if (metricIsZero()) {
-        showDangerAlert("ноль? серьезно?");
-        return false;
-    }
-
-    let request = saveFoodMetricRequest();
-
-    request.done(function(response) {
-        showSuccessAlert(response);
-        // TODO + сразу пересчитать
-        withoutMetricModal.hide();
-    });
-
-    request.fail(function(response) {
-        showDangerAlert(response.status + " " + response.responseText);
-    });
-
-    return false;
-
-    function metricIsZero() {
-        let metric_inputs = metric_form.find('[name="metric_serving_amount"]');
-
-        is_zero = false;
-        metric_inputs.each(function() {
-            if ($(this).val() == "0") {
-                is_zero = true;
-                return;
-            }
-        });
-        return is_zero;
-    }
-}
-
 // СВОДКА ЗА ДЕНЬ
 const daybrief_block = $("#daybrief-container");
 const daybrief_label = $("#label-daybrief");
@@ -195,6 +38,7 @@ function showDayBrief(day=false) {
         day = daybrief_label.attr("value");
     }
     let request = getBriefbydateRequest(day);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     showDayBriefLoading();
 
     request.done(function(response) {
@@ -414,7 +258,17 @@ function showMonthBrief(month=false) {
 
     request.done(function(response) {
         monthbrief_loader.addClass("hidden");
+        monthtop_btn.addClass("not-implemented");
+        monthtop_btn.off('click');
+
+        if ($.isEmptyObject(response.monthly_food)) {
+            monthbrief_block.find(".no-data-msg").removeClass("hidden");
+            monthbrief_block.find("#monthbrief-table").addClass("hidden");
+            return;
+        }
         fillBriefbymonth(response.monthly_food);
+        monthtop_btn.removeClass("not-implemented");
+        monthtop_btn.on("click", toggleMonthTop);
         monthbrief_table.find("tbody tr").on("click", function() {
             let date = $(this).find("td").first().attr("value");
             showDayBrief(date);
@@ -437,10 +291,22 @@ function showPrevMonthBrief() {
 
     request.done(function(response) {
         monthbrief_loader.addClass("hidden");
+        monthtop_btn.removeClass("active");
+        top_section.addClass('hidden');
         monthbrief_label.attr("value", prev_month);
         monthbrief_label.text(
             prev_month.toLocaleString('default', {month: 'long'}));
+        monthtop_btn.addClass("not-implemented");
+        monthtop_btn.off('click');
+
+        if ($.isEmptyObject(response.monthly_food)) {
+            monthbrief_block.find(".no-data-msg").removeClass("hidden");
+            monthbrief_block.find("#monthbrief-table").addClass("hidden");
+            return;
+        }
         fillBriefbymonth(response.monthly_food);
+        monthtop_btn.removeClass("not-implemented");
+        monthtop_btn.on("click", toggleMonthTop);
         monthbrief_table.find("tbody tr").on("click", function() {
             let date = $(this).find("td").first().attr("value");
             showDayBrief(date);
@@ -463,10 +329,22 @@ function showNextMonthBrief() {
 
     request.done(function(response) {
         monthbrief_loader.addClass("hidden");
+        monthtop_btn.removeClass("active");
+        top_section.addClass('hidden');
         monthbrief_label.attr("value", next_month);
         monthbrief_label.text(
             next_month.toLocaleString('default', {month: 'long'}));
+        monthtop_btn.addClass("not-implemented");
+        monthtop_btn.off('click');
+
+        if ($.isEmptyObject(response.monthly_food)) {
+            monthbrief_block.find(".no-data-msg").removeClass("hidden");
+            monthbrief_block.find("#monthbrief-table").addClass("hidden");
+            return;
+        }
         fillBriefbymonth(response.monthly_food);
+        monthtop_btn.removeClass("not-implemented");
+        monthtop_btn.on("click", toggleMonthTop);
         monthbrief_table.find("tbody tr").on("click", function() {
             let date = $(this).find("td").first().attr("value");
             showDayBrief(date);
@@ -481,12 +359,6 @@ function showNextMonthBrief() {
 function fillBriefbymonth(monthly_food) {
     // наполнение и отображение сводки питания за месяц
     console.log("fillBriefbymonth");
-
-    if ($.isEmptyObject(monthly_food)) {
-        monthbrief_block.find(".no-data-msg").removeClass("hidden");
-        monthbrief_block.find("#monthbrief-table").addClass("hidden");
-        return;
-    }
 
     let tbody = monthbrief_block.find("tbody");
     let tfoot = monthbrief_block.find("tfoot");
@@ -552,6 +424,80 @@ function showMonthBriefLoading() {
     monthbrief_table.addClass("hidden");
 }
 
+// ПРОДУКТЫ БЕЗ МЕТРИКИ
+const withoutMetricModal = new bootstrap.Modal(
+    document.getElementById('withoutMetricModal'));
+const metric_form = $('#add_metric_form');
+
+function fillWithoutMetricModal(food_without_metric) {
+    // наполнение модального окна продуктами без метрики 
+
+    let food_list = $("#without_metric_list");
+    food_list.empty();
+
+    $.each(food_without_metric, function(food_id, data) {
+        let food_row = $("<div class='without_metric_row'></div>");
+
+        let name_row = $('<div class="d-flex"></div>');
+        name_row.text(data.food_entry_name);
+        name_row.prepend('<span class="label">Продукт:</span>');
+        
+        let metric_row = $('<div class="input-metric-row"></div>');
+        metric_row.append(data.serving_description + " = ");
+        metric_row.append("<input type='hidden' value=" + food_id + " name='food_id'>");
+        metric_row.append("<input type='hidden' value='" + data.serving_id + "' name='serving_id'>");
+        let input_amount = $("<input type='number' min='0' name='metric_serving_amount' required>");
+        input_amount.addClass("form-control");
+        metric_row.append(input_amount);
+        let select_metric = $("<select class='form-select' name='metric_serving_unit'></select>");
+        select_metric.append("<option value='g'>г</option>");
+        select_metric.append("<option value='ml'>мл</option>");
+        metric_row.append(select_metric);
+
+        let info_row = ("<p>Калорийность этой порции: " + data.calories_per_serving + " ккал</p>");
+
+        food_row.append(name_row);
+        food_row.append(metric_row);
+        food_row.append(info_row);
+
+        food_list.append(food_row);
+    });
+}
+
+function saveFoodMetric() {
+    // проверка и отправка введенной метрики продукта на сервер
+    console.log("saveFoodMetric");
+
+    if (metricIsZero()) {
+        showDangerAlert("ноль? серьезно?");
+        return false;
+    }
+    let request = saveFoodMetricRequest();
+
+    request.done(function(response) {
+        showSuccessAlert(response + " для пересчета перезагрузите страницу.");
+        withoutMetricModal.hide();
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+
+    return false;
+
+    function metricIsZero() {
+        let metric_inputs = metric_form.find('[name="metric_serving_amount"]');
+        let is_zero = false;
+        metric_inputs.each(function() {
+            if ($(this).val() == "0") {
+                is_zero = true;
+                return;
+            }
+        });
+        return is_zero;
+    }
+}
+
 // КБЖУ РЕКОМЕНДАЦИИ
 const nutrition_block = $("#recommend_nutrition");
 const nutrition_form = $("#recommend_nutrition_form");
@@ -576,6 +522,84 @@ function saveNutrition() {
         showDangerAlert(response.status + " " + response.responseText);
     })
     return false;
+}
+
+// ТОП-10
+const monthtop_btn = $("#monthtop-btn");
+const cat_loader = $("#cat-loader");
+const top_section = $("#top_section");
+const top_amount = $("#table_top_amount");
+const top_calories = $("#table_top_calories");
+
+function toggleMonthTop() {
+    // скрытие или отображение топ-10 за месяц
+    console.log("toggleMonthTop");
+
+    if (monthtop_btn.hasClass('active')) {
+        monthtop_btn.removeClass('active');
+        top_section.addClass('hidden');
+        return;
+    }
+    let request = getMonthTopRequest();
+    cat_loader.removeClass('hidden');
+    cat_loader.get(0).scrollIntoView({behavior: 'smooth'});
+
+    request.done(function(response) {
+        monthtop_btn.addClass("active");
+        cat_loader.addClass('hidden');
+
+        if ($.isEmptyObject(response.monthly_top.amount)) {
+            return;
+        }
+
+        fillMonthlyTop(response.monthly_top);
+        top_section.removeClass('hidden');
+
+        if (!$.isEmptyObject(response.monthly_top.without_metric)) {
+            fillWithoutMetricModal(response.monthly_top.without_metric);
+            withoutMetricModal.show();
+        }
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function fillMonthlyTop(monthly_top) {
+    // заполнение таблиц топ-10
+    console.log("fillMonthlyTop");
+
+    top_section.find("tbody").empty();
+
+    $.each(monthly_top.amount, function(food, data) {
+        let food_row = $("<tr></tr>")
+            .append("<td></td>")
+            .append("<td><li>" + food + "</li></td>")
+            .append("<td class='text-center'>"+ getAmount(data) + "</td>")
+            .append("<td class='text-center'>"+ data.calories + "</td>");
+        top_amount.find('tbody').append(food_row);
+    });
+
+    $.each(monthly_top.calories, function(food, data) {
+        let food_row = $("<tr></tr>")
+            .append("<td></td>")
+            .append("<td><li>" + food + "</li></td>")
+            .append("<td class='text-center'>"+ getAmount(data) + "</td>")
+            .append("<td class='text-center'>"+ data.calories + "</td>");
+        top_calories.find('tbody').append(food_row);
+    });
+
+    function getAmount(data) {
+        let result;
+        if (data.amount == 0) {
+            result = "?"
+        }
+        else {
+            result = data.amount + " " + data.metric
+        }
+        return result;
+    }
 }
 
 // АЯКС ЗАПРОСЫ
@@ -608,6 +632,17 @@ function saveNutritionRequest() {
         data: nutrition_form.serialize(), 
         type: nutrition_form.attr('method'), 
         url: nutrition_form.attr('action'), 
+    })
+}
+
+function getMonthTopRequest() {
+    let month = monthbrief_label.attr("value");
+    month = new Date(month).toLocaleDateString('en-CA');
+
+    return $.ajax({
+        data: {'month': month, 'client_id': params.clientId},
+        type: 'GET',
+        url: '/fatsecret_app/ajax/get_monthly_top/',
     })
 }
 
