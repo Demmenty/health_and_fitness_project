@@ -7,7 +7,9 @@ from datetime import datetime
 from django.http import (
     HttpResponseBadRequest,
     JsonResponse,
+    HttpResponseServerError,
 )
+from fatsecret import GeneralError
 
 
 @login_required
@@ -31,7 +33,10 @@ def get_briefbydate(request):
     else:
         client_id = request.user.id
 
-    daily_food = services.fs.daily_food(client_id, briefdate)
+    try:
+        daily_food = services.fs.daily_food(client_id, briefdate)
+    except GeneralError as error:
+        return HttpResponseServerError(error)
 
     data = {
         "daily_food": daily_food,
@@ -43,8 +48,6 @@ def get_briefbydate(request):
 @require_http_methods(["GET"])
 def get_briefbymonth(request):
     """Возвращает сводку питания клиента за месяц"""
-
-    print("request.GET", request.GET)
 
     briefmonth = request.GET.get("briefmonth")
     if not briefmonth:
@@ -62,7 +65,10 @@ def get_briefbymonth(request):
     else:
         client_id = request.user.id
 
-    monthly_food = services.fs.monthly_food(client_id, briefmonth)
+    try:
+        monthly_food = services.fs.monthly_food(client_id, briefmonth)
+    except GeneralError as error:
+        return HttpResponseServerError(error)
 
     data = {
         "monthly_food": monthly_food,
