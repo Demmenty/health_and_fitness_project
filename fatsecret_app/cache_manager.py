@@ -217,7 +217,7 @@ class FatsecretCacheManager:
             cache = pickle.load(file)
 
         # TODO исправить функции тут, чтобы передавалось только Id
-        if isinstance(user, int):
+        if isinstance(user, int) or isinstance(user, str):
             user_id = user
         else:
             user_id = user.id
