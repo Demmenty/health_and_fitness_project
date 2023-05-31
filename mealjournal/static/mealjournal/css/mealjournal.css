@@ -159,9 +159,9 @@
     position: fixed;
     width: 18rem;
     z-index: 10;
-    top: 50%;
+    top: 52%;
     right: 50%;
-    transform: translate(50%,-50%);
+    transform: translate(50%,-48%);
 }
 #recommend_nutrition_form {
     align-items: center;

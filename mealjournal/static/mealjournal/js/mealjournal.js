@@ -240,6 +240,7 @@ function fillBriefbydate(daily_food) {
     }
 
     function fillBars(total) {
+        daybrief_bars.removeClass("hidden");
         daybrief_total_calories.next(".bar").find(".bar-scale").css(
             {width: (total.nutrition.calories / calories_recommend * 100) + "%"});
         
@@ -538,14 +539,21 @@ const nutrition_block = $("#recommend_nutrition");
 const nutrition_form = $("#recommend_nutrition_form");
 const nutrition_btn = $("#nutrition-btn");
 
-const nutrition_is_set = (nutrition_form.length > 0);
-const calories_recommend = parseInt(nutrition_form.find("#id_calories").val());
-const protein_recommend = parseInt(nutrition_form.find("#id_protein").val());
-const fats_recommend = parseInt(nutrition_form.find("#id_fats").val());
-const carbohydrates_recommend = parseInt(nutrition_form.find("#id_carbohydrates").val());
+var nutrition_is_set = (nutrition_form.length > 0);
 
 if (nutrition_is_set) {
-    daybrief_bars.removeClass("hidden");
+    var calories_recommend;
+    var protein_recommend;
+    var fats_recommend;
+    var carbohydrates_recommend;
+    setNutritionRecommendations();
+}
+
+function setNutritionRecommendations() {
+    calories_recommend = parseInt(nutrition_form.find("#id_calories").val());
+    protein_recommend = parseInt(nutrition_form.find("#id_protein").val());
+    fats_recommend = parseInt(nutrition_form.find("#id_fats").val());
+    carbohydrates_recommend = parseInt(nutrition_form.find("#id_carbohydrates").val());
 }
 
 function toggleNutrition() {
@@ -562,6 +570,8 @@ function saveNutrition() {
 
     request.done(function(response) {
         showSuccessAlert(response);
+        setNutritionRecommendations();
+        showDayBrief();
     })
     request.fail(function(response) {
         showDangerAlert(response.status + " " + response.responseText);
