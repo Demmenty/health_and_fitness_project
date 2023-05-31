@@ -24,13 +24,25 @@
     }
 }
 
-/* сводка за сегодня */
+/* сводка за день */
 #daybrief-table {
     margin: 0;
 }
 #daybrief-table td,
 #daybrief-table th {
     text-align: center;
+}
+.bar{
+    width: 100%;
+    background: #e4e4e4;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.bar-scale {
+    background: #657ff7;
+    width: 0;
+    height: 7px;
+    border-radius: 5px;
 }
 
 /* сводка за месяц */
@@ -150,6 +162,9 @@
     top: 50%;
     right: 50%;
     transform: translate(50%,-50%);
+}
+#recommend_nutrition_form {
+    align-items: center;
 }
 @media (min-width: 576px) {
     #recommend_nutrition {

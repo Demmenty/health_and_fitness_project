@@ -117,10 +117,30 @@
                     <tr class="table-light">
                         <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
                         <th class="total-amount text-nowrap d-none d-lg-table-cell"></th>
-                        <th class="total-calories"></th>
-                        <th class="total-protein"></th>
-                        <th class="total-fat"></th>
-                        <th class="total-carbohydrate"></th>
+                        <th>
+                            <span class="total-calories"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-protein"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-fat"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-carbohydrate"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -258,7 +278,7 @@
         {% if not recommend_nutrition.calories.value and not for_expert %}
             <p class="text-center mt-2">Рекомендации пока не установлены</p>
         {% else %}
-            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
+            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form">
                 {% csrf_token %}
                 <input type="hidden" value="{{ client.id }}" name="client_id">
                 <div class="d-flex flex-column gap-2">

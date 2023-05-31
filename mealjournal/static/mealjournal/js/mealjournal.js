@@ -1,4 +1,4 @@
-// TODO сделать приличный лоадер
+// TODO сделать приличный лоадер вместо многоточия
 
 $(document).ready(function () {
     const fs_connected = $("#fs-param").data("fs-connected");
@@ -26,6 +26,12 @@ const daybrief_label = $("#label-daybrief");
 const daybrief_loader = daybrief_block.find(".loader");
 const daybrief_no_data = daybrief_block.find(".no-data-msg");
 const daybrief_table = daybrief_block.find("#daybrief-table");
+const daybrief_bars = daybrief_table.find(".bar");
+const daybrief_total_amount = daybrief_table.find(".total-amount");
+const daybrief_total_calories = daybrief_table.find(".total-calories");
+const daybrief_total_protein = daybrief_table.find(".total-protein");
+const daybrief_total_fats = daybrief_table.find(".total-fat");
+const daybrief_total_carbohydrate = daybrief_table.find(".total-carbohydrate");
 
 function showDayBrief(day=false) {
     // получение и отображение сводки питания за сегодня
@@ -111,9 +117,8 @@ function fillBriefbydate(daily_food) {
         return;
     }
 
-    let tbody_bg = daybrief_block.find("#daybrief-tbody-big");
-    let tbody_sm = daybrief_block.find("#daybrief-tbody-small");
-    let tfoot = daybrief_block.find("tfoot");
+    let tbody_bg = daybrief_table.find("#daybrief-tbody-big");
+    let tbody_sm = daybrief_table.find("#daybrief-tbody-small");
     tbody_bg.empty();
     tbody_sm.empty();
 
@@ -150,7 +155,10 @@ function fillBriefbydate(daily_food) {
         }
     }
     addTotalToTfoot(daily_food.total);
-
+    if (nutrition_is_set) {
+        fillBars(daily_food.total);
+    }
+    
     daybrief_block.find(".no-data-msg").addClass("hidden");
     daybrief_block.find("#daybrief-table").removeClass("hidden");
 
@@ -224,11 +232,38 @@ function fillBriefbydate(daily_food) {
     }
 
     function addTotalToTfoot(total) {
-        tfoot.find(".total-amount").text(total.amount + " г/мл");
-        tfoot.find(".total-calories").text(total.nutrition.calories);
-        tfoot.find(".total-protein").text(total.nutrition.protein);
-        tfoot.find(".total-fat").text(total.nutrition.fat);
-        tfoot.find(".total-carbohydrate").text(total.nutrition.carbohydrate);
+        daybrief_total_amount.text(total.amount + " г/мл");
+        daybrief_total_calories.text(total.nutrition.calories);
+        daybrief_total_protein.text(total.nutrition.protein);
+        daybrief_total_fats.text(total.nutrition.fat);
+        daybrief_total_carbohydrate.text(total.nutrition.carbohydrate);
+    }
+
+    function fillBars(total) {
+        daybrief_total_calories.next(".bar").find(".bar-scale").css(
+            {width: (total.nutrition.calories / calories_recommend * 100) + "%"});
+        
+        if (isNaN(protein_recommend)) {
+            daybrief_total_protein.next(".bar").addClass("hidden");
+        }
+        else {
+            daybrief_total_protein.next(".bar").find(".bar-scale").css(
+                {width: (total.nutrition.protein / protein_recommend * 100) + "%"}); 
+        }
+        if (isNaN(fats_recommend)) {
+            daybrief_total_fats.next(".bar").addClass("hidden");
+        }
+        else {
+            daybrief_total_fats.next(".bar").find(".bar-scale").css(
+                {width: (total.nutrition.fat / fats_recommend * 100) + "%"}); 
+        }
+        if (isNaN(carbohydrates_recommend)) {
+            daybrief_total_carbohydrate.next(".bar").addClass("hidden");
+        }
+        else {
+            daybrief_total_carbohydrate.next(".bar").find(".bar-scale").css(
+                {width: (total.nutrition.carbohydrate / carbohydrates_recommend * 100) + "%"}); 
+        }
     }
 }
 
@@ -502,6 +537,16 @@ function saveFoodMetric() {
 const nutrition_block = $("#recommend_nutrition");
 const nutrition_form = $("#recommend_nutrition_form");
 const nutrition_btn = $("#nutrition-btn");
+
+const nutrition_is_set = (nutrition_form.length > 0);
+const calories_recommend = parseInt(nutrition_form.find("#id_calories").val());
+const protein_recommend = parseInt(nutrition_form.find("#id_protein").val());
+const fats_recommend = parseInt(nutrition_form.find("#id_fats").val());
+const carbohydrates_recommend = parseInt(nutrition_form.find("#id_carbohydrates").val());
+
+if (nutrition_is_set) {
+    daybrief_bars.removeClass("hidden");
+}
 
 function toggleNutrition() {
     // показать/закрыть окно кбжу рекомендаций
