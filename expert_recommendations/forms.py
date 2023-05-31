@@ -17,27 +17,32 @@ class NutritionRecommendationForm(ModelForm):
             "calories": NumberInput(
                 attrs={
                     "class": "form-control text-center",
+                    "min": "1",
+                    "required": True,
                 }
             ),
             "protein": NumberInput(
                 attrs={
                     "class": "form-control text-center",
+                    "min": "1",
                 }
             ),
             "fats": NumberInput(
                 attrs={
                     "class": "form-control text-center",
+                    "min": "1",
                 }
             ),
             "carbohydrates": NumberInput(
                 attrs={
                     "class": "form-control text-center",
+                    "min": "1",
                 }
             ),
             "note": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "8",
+                    "rows": "7",
                 }
             ),
         }
