@@ -1,9 +1,39 @@
-from django.forms import HiddenInput, ModelForm, NumberInput, Textarea
+from django.forms import ModelForm, NumberInput, Textarea, IntegerField
 
 from .models import NutritionRecommendation
 
 
 class NutritionRecommendationForm(ModelForm):
+    calories = IntegerField(
+        min_value=1, max_value=10000,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control text-center",
+                "min": "1",
+                "required": True,
+            }))
+    protein = IntegerField(
+        min_value=1, max_value=10000, required=False,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control text-center",
+                "min": "1",
+            }))
+    fats = IntegerField(
+        min_value=1, max_value=10000, required=False,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control text-center",
+                "min": "1",
+            }))
+    carbohydrates = IntegerField(
+        min_value=1, max_value=10000, required=False,
+        widget=NumberInput(
+            attrs={
+                "class": "form-control text-center",
+                "min": "1",
+            }))
+    
     class Meta:
         model = NutritionRecommendation
         fields = [
@@ -14,31 +44,6 @@ class NutritionRecommendationForm(ModelForm):
             "note",
         ]
         widgets = {
-            "calories": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "1",
-                    "required": True,
-                }
-            ),
-            "protein": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "1",
-                }
-            ),
-            "fats": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "1",
-                }
-            ),
-            "carbohydrates": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "1",
-                }
-            ),
             "note": Textarea(
                 attrs={
                     "class": "form-control",
