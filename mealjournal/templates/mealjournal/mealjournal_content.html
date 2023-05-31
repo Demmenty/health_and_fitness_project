@@ -83,9 +83,9 @@
     <!-- сводка за день -->
     <div class="block-container" id="daybrief-container">
         <div class="block-header with-arrows">
-            <span class="prev-button" id="prev-daybrief"> &lang; </span> 
+            <span class="prev-button" id="prev-daybrief" title="Предыдущий день"> &lang; </span> 
             <span class="header" id="label-daybrief" value="{% now 'Y-m-d' %}">Сегодня</span>
-            <span class="next-button" id="next-daybrief"> &rang; </span>
+            <span class="next-button" id="next-daybrief" title="Следующий день"> &rang; </span>
         </div>
         <div class="block-content">
             <p class="loader">...</p>
@@ -117,10 +117,30 @@
                     <tr class="table-light">
                         <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
                         <th class="total-amount text-nowrap d-none d-lg-table-cell"></th>
-                        <th class="total-calories"></th>
-                        <th class="total-protein"></th>
-                        <th class="total-fat"></th>
-                        <th class="total-carbohydrate"></th>
+                        <th>
+                            <span class="total-calories"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-protein"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-fat"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
+                        <th>
+                            <span class="total-carbohydrate"></span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -131,9 +151,9 @@
     <!-- сводка за месяц -->
     <div class="block-container" id="monthbrief-container">
         <div class="block-header with-arrows">
-            <span class="prev-button" id="prev-monthbrief"> &lang; </span> 
+            <span class="prev-button" id="prev-monthbrief" title="Предыдущий месяц"> &lang; </span> 
             <span class="header" id="label-monthbrief" value="{% now 'Y-m-01' %}">{% now "F" %}</span>
-            <span class="next-button" id="next-monthbrief"> &rang; </span>
+            <span class="next-button" id="next-monthbrief" title="Следующий месяц"> &rang; </span>
         </div>
         <div class="block-content">
             <p class="loader">...</p>
@@ -258,7 +278,7 @@
         {% if not recommend_nutrition.calories.value and not for_expert %}
             <p class="text-center mt-2">Рекомендации пока не установлены</p>
         {% else %}
-            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form" class="align-items-center">
+            <form method="post" action="{% url 'save_nutrition_recommendation' %}" id="recommend_nutrition_form">
                 {% csrf_token %}
                 <input type="hidden" value="{{ client.id }}" name="client_id">
                 <div class="d-flex flex-column gap-2">
