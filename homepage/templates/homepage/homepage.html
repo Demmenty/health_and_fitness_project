@@ -4,7 +4,7 @@
 {% block title %}Health & Fitness{% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'homepage/css/homepage.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/homepage.css' %}?ver=2">
 {% endblock %}
 
 {% block content %}
@@ -29,6 +29,108 @@
                 </ul>
             </div>
 
+        </div>
+    </div>
+</section>
+
+<section id="about_specialist_section">
+    <div id="specialist_hello">
+        <div class="container">
+            <p>Привет, меня зовут</p>
+            <h1>Роман !</h1>
+            <img src="{% static 'homepage/img/diagonal_pin.svg' %}" class="diagonal-pin d-none d-md-block">
+            <img src="{% static 'homepage/img/diagonal_pin_slope.svg' %}" class="diagonal-pin d-md-none">
+            <p class="mt-3">
+                Я фитнес тренер, <br>нутрициолог и психолог <br>с десятилетним <br class="d-md-none">стажем 
+            </p>
+        </div>
+    </div>
+
+    <div id="photo_and_about_container">
+        <div id="specialist_photo_container">
+            <img src="{% static 'homepage/img/Roman_the_specialist.png' %}">
+        </div>
+        <div id="about_me_text">
+            <div class="container">
+                <div id="about_me_text_block">
+                    <p>
+                        &emsp; Занимаюсь построением стратегии <span class="text-royalblue fw-bolder">здоровой жизни</span> 
+                        и активного <span class="text-royalblue fw-bolder">долголетия</span>.
+                    </p>
+                    <p>
+                        &emsp; Являюсь специалистом по <span class="text-royalblue fw-bolder">снижению массы тела</span> 
+                        за счет жирового компонента, <span class="text-royalblue fw-bolder">обучении</span> 
+                        и формировании здорового образа жизни, а также здоровых 
+                        <span class="text-royalblue fw-bolder">семейных отношений</span>.
+                    </p>
+                    <p>
+                        &emsp; Имею свой <span class="text-royalblue fw-bolder">личный опыт</span> борьбы и избавления от ожирения, 
+                        набора вредных привычек и сопутствующих проблем со здоровьем, что позволяет мне понимать, 
+                        как на самом деле сложно даётся работа над собой, разделять ваши чувства и мысли.
+                    </p>
+                    <p>
+                        &emsp; Являюсь сторонником доказательного <span class="text-royalblue fw-bolder">научного подхода</span> 
+                        и <span class="text-royalblue fw-bolder">эмпатии</span> в работе.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="certificates_container">
+        <div class="container">
+            <div id="certificates_row" class="d-none d-md-flex">
+                <a href="{% static 'homepage/img/certificates/trainer_diploma.jpg' %}" target="_blank">
+                    <img src="{% static 'homepage/img/certificates/trainer_diploma.jpg' %}">
+                </a>
+                <a href="{% static 'homepage/img/certificates/trainer.jpg' %}" target="_blank">
+                    <img src="{% static 'homepage/img/certificates/trainer.jpg' %}">
+                </a>
+                <a href="{% static 'homepage/img/certificates/nutrition.jpg' %}" target="_blank">
+                    <img src="{% static 'homepage/img/certificates/nutrition.jpg' %}">
+                </a>
+                <a href="{% static 'homepage/img/certificates/psychology_diploma.jpg' %}" target="_blank">
+                    <img src="{% static 'homepage/img/certificates/psychology_diploma.jpg' %}">
+                </a>
+            </div>
+            <div id="certificates_carousel" class="carousel slide d-md-none" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#certificates_carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#certificates_carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#certificates_carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#certificates_carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="{% static 'homepage/img/certificates/trainer.jpg' %}" target="_blank">
+                            <img src="{% static 'homepage/img/certificates/trainer.jpg' %}">
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% static 'homepage/img/certificates/trainer_diploma.jpg' %}" target="_blank">
+                            <img src="{% static 'homepage/img/certificates/trainer_diploma.jpg' %}">
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% static 'homepage/img/certificates/nutrition.jpg' %}" target="_blank">
+                            <img src="{% static 'homepage/img/certificates/nutrition.jpg' %}">
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% static 'homepage/img/certificates/psychology_diploma.jpg' %}" target="_blank">
+                            <img src="{% static 'homepage/img/certificates/psychology_diploma.jpg' %}">
+                        </a>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#certificates_carousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#certificates_carousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+            </div>
         </div>
     </div>
 </section>
