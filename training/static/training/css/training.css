@@ -284,9 +284,6 @@ td.table-date.nil {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     height: 40px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 .exercise-selection-header span {
     display: inline-block;
@@ -511,9 +508,6 @@ td.table-date.nil {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     padding: 5px 10px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 .exercise-container-header span {
     display: inline-block;
