@@ -1788,6 +1788,7 @@ main {
 #certificates_container {
     padding-top: 2rem;
     padding-bottom: 2rem;
+    background-color: white;
     background-image: linear-gradient(90deg, #657ff7 1%, #ffffff00 100%);
 }
 #certificates_row {
@@ -1822,6 +1823,7 @@ main {
 }
 #about_me_text {
     padding-top: 2rem;
+    padding-bottom: 0.5rem;
     background-image: linear-gradient(90deg, #657ff7 1%, #ffffff00 100%);
 }
 #about_me_text_block {
