@@ -1308,7 +1308,8 @@ function openExerciseHelp() {
     console.log("showExerciseHelp");
 
     let exercise_id = $(this).closest("form").find("#id_exercise").val();
-    let exercise_name = $(this).prev(".exercise-name").text();
+    let exercise_name = $(this)
+        .closest(".exercise-report-header").find(".exercise-name").text();
 
     embedVideo(exercise_id);
     let exercise_info = $("#exercise-item-" + exercise_id + " .exercise-info").clone();
