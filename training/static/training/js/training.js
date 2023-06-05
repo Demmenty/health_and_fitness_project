@@ -415,6 +415,8 @@ function fillTrainingLikeLast() {
                 // обработчики кнопок
                 report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
                 report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
+                report_form.find(".move-up-btn").on("click", moveExerciseReportUp);
+                report_form.find(".move-down-btn").on("click", moveExerciseReportDown);
                 if (params.isExpert == 'true') {
                     report_form.find("#id_is_done").attr("disabled", true);
                 }
@@ -1410,6 +1412,8 @@ function addSavedExerciseReports(reports_data) {
         report_form.find("#id_is_done").on("change", autoFillExerciseReport);
         report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
         report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
+        report_form.find(".move-up-btn").on("click", moveExerciseReportUp);
+        report_form.find(".move-down-btn").on("click", moveExerciseReportDown);
 
         // вставка формы в тренировку и показ
         report_form.insertBefore(training.find(".training-additional-btns"));
@@ -1448,10 +1452,13 @@ function addExerciseToTraining() {
     report_form.find("#id_exercise").val(exercise_id);
     report_form.find(".exercise-name").text(exercise_name);
 
-    // обработка кнопок
+    // обработчики кнопок
     report_form.find("#id_is_done").on("change", autoFillExerciseReport);
     report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
     report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
+    report_form.find(".move-up-btn").on("click", moveExerciseReportUp);
+    report_form.find(".move-down-btn").on("click", moveExerciseReportDown);
+
     training.find("#fill-like-last-btn").remove();
 
     // вставка формы в тренировку
@@ -1657,6 +1664,22 @@ function disableFieldsForExpert() {
     if (params.isExpert == 'true') {
         $("input[name='is_done']").attr("disabled", true);
     }
+}
+
+function moveExerciseReportUp() {
+    // перемещение отчета упражнения в тренировке выше
+
+    let current_form = $(this).closest("form");
+    let prev_form = current_form.prev("form");
+    prev_form.before(current_form);
+}
+
+function moveExerciseReportDown() {
+    // перемещение отчета упражнения в тренировке ниже
+
+    let current_form = $(this).closest("form");
+    let next_form = current_form.next("form");
+    next_form.after(current_form);
 }
 
 
