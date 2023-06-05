@@ -232,10 +232,7 @@ td.table-date.nil {
     background-color: #eef5fb;
     padding: 7px;
 }
-.exercise-help-btn {
-    min-width: 20px;
-}
-.exercise-help-btn:hover {
+.exercise-report-btns svg:hover {
     cursor: pointer;
 }
 .exercise-report-field {

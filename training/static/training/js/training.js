@@ -414,6 +414,7 @@ function fillTrainingLikeLast() {
 
                 // обработчики кнопок
                 report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+                report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
                 if (params.isExpert == 'true') {
                     report_form.find("#id_is_done").attr("disabled", true);
                 }
@@ -1408,6 +1409,7 @@ function addSavedExerciseReports(reports_data) {
         // навешиваем обработчики
         report_form.find("#id_is_done").on("change", autoFillExerciseReport);
         report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+        report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
 
         // вставка формы в тренировку и показ
         report_form.insertBefore(training.find(".training-additional-btns"));
@@ -1449,6 +1451,7 @@ function addExerciseToTraining() {
     // обработка кнопок
     report_form.find("#id_is_done").on("change", autoFillExerciseReport);
     report_form.find(".exercise-help-btn").on("click", openExerciseHelp);
+    report_form.find(".exercise-remove-btn").on("click", removeExerciseFromTraining);
     training.find("#fill-like-last-btn").remove();
 
     // вставка формы в тренировку
@@ -1461,14 +1464,20 @@ function addExerciseToTraining() {
 function removeExerciseFromTraining() {
     // убрать упражнение из тренировки
     console.log("removeExerciseFromTraining");
-    
-    let training = $(".training.current");
-    let exercise_item = $(this).closest(".exercise-item");
-    let exercise_id = exercise_item.data("exercise-id");
+
+    if ($(this).hasClass("exercise-remove-btn")) {
+        // если кнопка из тренировки
+        $(this).closest("form").remove();
+        return;
+    }
+    // если кнопка из списка выбора
+    let exercise_id = $(this).closest(".exercise-item").data("exercise-id");
+    let current_training = $(".training.current");
+    let exercise_item = $("#exercise-item-" + exercise_id);
     let selection_div = $("#exercise-selection");
 
     // удалить форму упражнения из тренировки
-    training.find(".exercise-report-form").each(function() {
+    current_training.find(".exercise-report-form").each(function() {
         let id = $(this).find("#id_exercise").val();
         if(id == exercise_id) {
             $(this).remove();
@@ -1484,7 +1493,7 @@ function removeExerciseFromTraining() {
     // отметить заново добавленные упражнения
     markAddedExercises();
 
-    // изменение кнопки
+    // изменение кнопки упражнения в окне выбора
     exercise_item.find(".btn-exercise-add").show();
     exercise_item.find(".btn-exercise-remove").hide();
 }
