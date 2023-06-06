@@ -136,39 +136,55 @@
                             <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
                         </tr>
                     {% endif %}
-                    <tr>
+                    <tr id="today_measure_calories_tr">
                         <th class="tablerow_name table-light">Калории</th>
                         <td>
                             <span class="total-calories">{{ today_measure.calories|default_if_none:"-" }}</span>
                             <div class="bar hidden">
                                 <div class="bar-scale"></div>
                             </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_protein_tr">
                         <th class="tablerow_name table-light">Белки</th>
                         <td>
                             <span class="total-protein">{{ today_measure.protein|default_if_none:"-" }}</span>
                             <div class="bar hidden">
                                 <div class="bar-scale"></div>
                             </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_fats_tr">
                         <th class="tablerow_name table-light">Жиры</th>
                         <td>
                             <span class="total-fat">{{ today_measure.fats|default_if_none:"-" }}</span>
                             <div class="bar hidden">
                                 <div class="bar-scale"></div>
                             </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_carbohydrate_tr">
                         <th class="tablerow_name table-light">Углеводы</th>
                         <td>
                             <span class="total-carbohydrate">{{ today_measure.carbohydrates|default_if_none:"-" }}</span>
                             <div class="bar hidden">
                                 <div class="bar-scale"></div>
+                            </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
                             </div>
                         </td>
                     </tr>

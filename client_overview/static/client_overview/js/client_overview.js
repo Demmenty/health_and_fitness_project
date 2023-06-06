@@ -39,7 +39,6 @@ $(document).ready(function(){
 })
 
 const contacts_form = $('#contacts_form');
-const today_measure_table = $("#today_measure_block table");
 
 function saveContactsRequest() {
     return $.ajax({
@@ -137,6 +136,12 @@ function getNutritionRecommendationRequest() {
     });
 }
 
+const today_measure = $("#today_measure_block");
+const calories_row = $("#today_measure_calories_tr");
+const protein_row = $("#today_measure_protein_tr");
+const fats_row = $("#today_measure_fats_tr");
+const carbo_row = $("#today_measure_carbohydrate_tr");
+
 function getNutritionRecommendation() {
     // возвращает кбжу рекомендации с сервера для клиента
     let request = getNutritionRecommendationRequest();
@@ -144,7 +149,7 @@ function getNutritionRecommendation() {
     request.done(function(response) {
         if (response.length > 0) {
             recommendations = response[0].fields;
-            fillDailyNutritionBars(recommendations);
+            fillDailyNutritionBarsAndInfo(recommendations);
         }
     });
 
@@ -153,49 +158,43 @@ function getNutritionRecommendation() {
     });
 }
 
-function fillDailyNutritionBars(recommendations) {
+function fillDailyNutritionBarsAndInfo(recommendations) {
+    let rows = [calories_row, protein_row, fats_row, carbo_row];
+    let totals = [
+        parseInt(calories_row.find(".total-calories").text()),
+        parseInt(protein_row.find(".total-protein").text()),
+        parseInt(fats_row.find(".total-fat").text()),
+        parseInt(carbo_row.find(".total-carbohydrate").text()),
+    ]
+    let recommend = [
+        recommendations.calories,
+        recommendations.protein,
+        recommendations.fats,
+        recommendations.carbohydrates,
+    ]
 
-    let calories_total = parseInt(today_measure_table.find(".total-calories").text());
-    let protein_total = parseInt(today_measure_table.find(".total-protein").text());
-    let fats_total = parseInt(today_measure_table.find(".total-fat").text());
-    let carbohydrates_total = parseInt(today_measure_table.find(".total-carbohydrate").text());
+    for (i in rows) {
+        if (recommend[i] && !isNaN(totals[i])) {
+            let fulfillment = totals[i] / recommend[i] * 100;
+            let difference = parseInt(fulfillment - 100);
 
-    let daily_calories_bar = today_measure_table.find(".total-calories").next(".bar");
-    let daily_protein_bar = today_measure_table.find(".total-protein").next(".bar");
-    let daily_fats_bar = today_measure_table.find(".total-fat").next(".bar");
-    let daily_carbohydrate_bar = today_measure_table.find(".total-carbohydrate").next(".bar");
-
-    today_measure_table.find(".bar").removeClass("hidden");
-
-    if (!recommendations.calories || isNaN(calories_total)) {
-        daily_calories_bar.addClass("hidden");
-    }
-    else {
-        daily_calories_bar.find(".bar-scale").css(
-        {width: (calories_total / recommendations.calories * 100) + "%"});
-    }
-
-    if (!recommendations.protein || isNaN(protein_total)) {
-        daily_protein_bar.addClass("hidden");
-    }
-    else {
-        daily_protein_bar.find(".bar-scale").css(
-        {width: (protein_total / recommendations.protein * 100) + "%"});
-    }
-
-    if (!recommendations.fats || isNaN(fats_total)) {
-        daily_fats_bar.addClass("hidden");
-    }
-    else {
-        daily_fats_bar.find(".bar-scale").css(
-        {width: (fats_total / recommendations.fats * 100) + "%"});
+            rows[i].find(".bar-scale").css({width: fulfillment + "%"});
+            rows[i].find(".recommend").text("баланс: " + recommend[i]);
+            if (difference < 0) {
+                rows[i].find(".difference").text("дефицит: " + difference + " %");
+            }
+            else if (difference > 0 ) {
+                rows[i].find(".difference").text("профицит: " + difference + " %");
+            }
+            else {
+                rows[i].find(".difference").html("<i class='text-royalblue'>идеально</i>");
+            }
+            rows[i].find(".bar").removeClass("hidden");
+            rows[i].on("click", toggleNutritionExtraInfo);
+        }
     }
 
-    if (!recommendations.carbohydrates || isNaN(carbohydrates_total)) {
-        daily_carbohydrate_bar.addClass("hidden");
-    }
-    else {
-        daily_carbohydrate_bar.find(".bar-scale").css(
-        {width: (carbohydrates_total / recommendations.carbohydrates * 100) + "%"});
+    function toggleNutritionExtraInfo() {
+        $(this).find(".extra-info").toggleClass("hidden");
     }
 }
