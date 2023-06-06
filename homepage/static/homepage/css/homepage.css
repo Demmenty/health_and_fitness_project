@@ -15,11 +15,13 @@ main {
 /* welcome_section */
 #welcome_section {
     height: 100vh;
-    background-image: url(/static/homepage/img/homepage_trapeze.svg), url(/static/homepage/img/man_lowpoly.png);
+    background-image: 
+        url(/static/homepage/img/homepage_trapeze.svg),
+        url(/static/homepage/img/man_lowpoly.jpg);
     background-color: #e9ebfe;
     background-size: cover;
     background-position-x: center;
-    background-position-y: center, center;
+    background-position-y: center;
     background-repeat: no-repeat, no-repeat;
 }
 #welcome_section .container {
@@ -82,7 +84,7 @@ main {
 
 /* why_section */
 #why_section {
-    background-image: url(/static/homepage/img/why_section_back.png);
+    background-image: url(/static/homepage/img/background_hexagons.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -778,7 +780,7 @@ main {
     text-shadow: 0px 0px 10px #2a356a;
 }
 #hero_section1 {
-    background-image: url(/static/homepage/img/health_invest_background.png);
+    background-image: url(/static/homepage/img/health_invest_background.jpg);
     background-color: #5876fe;
     background-size: cover;
     background-position-y: center;
@@ -842,7 +844,7 @@ main {
 
 /* what_section */
 #what_section {
-    background-image: url(/static/homepage/img/why_section_back.png);
+    background-image: url(/static/homepage/img/background_hexagons.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1725,7 +1727,7 @@ main {
 
 /* about_specialist_section */
 #about_specialist_section {
-    background-image: url(/static/homepage/img/why_section_back.png);
+    background-image: url(/static/homepage/img/background_hexagons.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
