@@ -55,7 +55,7 @@
             <p class="text-center mt-2">Измерений не сделано</p>
         {% else %}
             <!-- таблицы для большого экрана -->
-            <table class="table table-bordered align-middle text-center mb-0 d-none d-md-table mb-3">
+            <table class="table table-bordered d-none d-md-table" id="today_measurements_table_big">
                 <thead>
                     <tr class="table-light align-middle">
                         <th>Самочувствие</th>
@@ -79,7 +79,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-bordered align-middle text-center mb-0 d-none d-md-table">
+            <table class="table table-bordered d-none d-md-table" id="today_measurements_table_big_nutrition">
                 <thead>
                     <tr class="table-light align-middle">
                         <th>Калории</th>
@@ -90,15 +90,35 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
-                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
-                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
-                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-calories">{{ today_measure.calories|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="total-protein">{{ today_measure.protein|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="total-fat">{{ today_measure.fats|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="total-carbohydrate">{{ today_measure.carbohydrates|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <!-- таблица для маленького экрана -->
-            <table class="table table-bordered align-middle text-center mb-0 d-md-none">
+            <table class="table table-bordered d-md-none" id="today_measurements_table_small">
                 <tbody>
                     <tr>
                         <th class="table-light">Самочувствие</th>
@@ -124,19 +144,39 @@
                     {% endif %}
                     <tr>
                         <th class="table-light">Калории</th>
-                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-calories">{{ today_measure.calories|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th class="table-light">Белки</th>
-                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-protein">{{ today_measure.protein|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th class="table-light">Жиры</th>
-                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-fat">{{ today_measure.fats|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th class="table-light">Углеводы</th>
-                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-carbohydrate">{{ today_measure.carbohydrates|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>                
             </table>
