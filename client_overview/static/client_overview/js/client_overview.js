@@ -29,59 +29,41 @@ $(document).ready(function(){
     $("#add_measure_form #id_date").on("input", updateMeasureForm);
     // сохранение измерений
     $("#add_measure_form").on("submit", saveMeasure);
-
     // сохранение контактов
-    $('#contacts_form').submit(function () {
+    $('#contacts_form').on("submit", saveContacts);
 
-        let statusField = $('#contacts_status');
-
-        $.ajax({
-            data: $(this).serialize(), 
-            type: $(this).attr('method'), 
-            url: $(this).attr('action'), 
-
-            success: function (response) {
-                // уведомление
-                statusField.text(response.result);
-                // визуальные эффекты
-                statusField.removeClass('text-info');
-                statusField.removeClass('text-danger');
-                setTimeout(() => {
-                    if (response.result == 'Контакты сохранены') {
-                        statusField.addClass('text-info');
-                    }
-                    else {
-                        statusField.addClass('text-danger');
-                    }
-                }, 500);
-            },
-            error: function (response) {
-                // уведомление
-                if (response.status === 0) {
-                    statusField.text('нет соединения с сервером :(');
-                }
-                else {
-                    statusField.text('возникла ошибка! статус ' + 
-                            response.status + ' ' + response.statusText);
-                }
-                // визуальные эффекты
-                statusField.removeClass('text-info');
-                statusField.removeClass('text-danger');
-                setTimeout(() => {
-                    statusField.addClass('text-danger');
-                }, 500); 
-            }
-        });    
-        return false;
-    })
-
-    const today_measure_exist = ($("#today_measure_block table").length > 0);
+    let today_measure_exist = ($("#today_measure_block table").length > 0);
     if (today_measure_exist) {
         getNutritionRecommendation();
     }
 })
 
+const contacts_form = $('#contacts_form');
 const today_measure_table = $("#today_measure_block table");
+
+function saveContactsRequest() {
+    return $.ajax({
+        data: contacts_form.serialize(), 
+        type: contacts_form.attr('method'), 
+        url: contacts_form.attr('action'),
+    })
+}
+
+function saveContacts() {
+    console.log("saveContacts");
+
+    let request = saveContactsRequest();
+
+    request.done(function(response) {
+        showSuccessAlert(response);
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + ": " + response.responseText);
+    });
+
+    return false;
+}
 
 function getMeasure(date) {
 // получение записей измерений с сервера по дате

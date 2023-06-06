@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from client_overview.forms import ClientContactForm, ClientMemoForm
@@ -18,13 +18,9 @@ def save_contacts(request):
         )
         form = ClientContactForm(request.POST, instance=instance)
         form.save()
-
-        data = {"result": "Контакты сохранены"}
-        return JsonResponse(data, status=200)
-
+        return HttpResponse("Контакты сохранены")
     else:
-        data = {"result": "Ссылки введены некорректно. Попробуйте ещё раз."}
-        return JsonResponse(data, status=200)
+        return HttpResponseBadRequest("Ссылки введены некорректно. Попробуй ещё раз.")
 
 
 @login_required
