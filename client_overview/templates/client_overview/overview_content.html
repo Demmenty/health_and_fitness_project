@@ -106,14 +106,14 @@
             {% endif %}
         </div>
     </div>
-    <!-- физические показатели сегодня  -->
+    <!-- физические показатели сегодня -->
     <div class="block-container" id="today_measure_block">
         <div class="block-header">
             <span class="header">{% now "j E Y" %}</span>
         </div>
         <div class="block-content">
             {% if today_measure %}
-                <table class="table table-bordered table-fixed text-center">
+                <table class="table table-bordered align-middle table-fixed text-center">
                     <tr>
                         <th class="tablerow_name table-light">Самочувствие</th>
                         <td>{% if today_measure.feel %}{{ today_measure.feel }}/10{% else %}-{% endif %}</td>
@@ -136,21 +136,57 @@
                             <td>{{ today_measure.pressure_upper }}/{{ today_measure.pressure_lower }}</td>
                         </tr>
                     {% endif %}
-                    <tr>
+                    <tr id="today_measure_calories_tr">
                         <th class="tablerow_name table-light">Калории</th>
-                        <td>{{ today_measure.calories|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-calories">{{ today_measure.calories|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_protein_tr">
                         <th class="tablerow_name table-light">Белки</th>
-                        <td>{{ today_measure.protein|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-protein">{{ today_measure.protein|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_fats_tr">
                         <th class="tablerow_name table-light">Жиры</th>
-                        <td>{{ today_measure.fats|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-fat">{{ today_measure.fats|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr id="today_measure_carbohydrate_tr">
                         <th class="tablerow_name table-light">Углеводы</th>
-                        <td>{{ today_measure.carbohydrates|default_if_none:"-" }}</td>
+                        <td>
+                            <span class="total-carbohydrate">{{ today_measure.carbohydrates|default_if_none:"-" }}</span>
+                            <div class="bar hidden">
+                                <div class="bar-scale"></div>
+                            </div>
+                            <div class="extra-info mt-2 hidden">
+                                <span class="recommend"></span><br>
+                                <span class="difference"></span>
+                            </div>
+                        </td>
                     </tr>
                     {% if today_measure.comment %}
                         <tr id="tr_today_comment">
@@ -293,10 +329,9 @@
                             <img src="{% static 'client_overview/img/facebook_help_img.jpg' %}" class="mb-3">
                             <img src="{% static 'client_overview/img/facebook_help_img2.jpg' %}">
                         </div>
-                        <br>
                         <label for="id_preferred_contact">Предпочтительный способ связи:</label>
                         {{ contacts_form.preferred_contact }}
-                        <p class="text-center transition_common text-transparent" id="contacts_status">&nbsp;</p>
+                        <br>
                         <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Закрыть</button>
                         <button type="submit" class="btn btn-primary float-end">Сохранить</button>
                     </form>

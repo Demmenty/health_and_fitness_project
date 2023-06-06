@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'client_overview/css/client_overview.css' %}">
+    <link rel="stylesheet" href="{% static 'client_overview/css/client_overview.css' %}?ver=3">
 {% endblock %}
 
 {% block title %}{{ client.username }}: обзор{% endblock %}
@@ -14,5 +14,5 @@
 {% endblock %}
 
 {% block script %}
-  <script src="{% static 'client_overview/js/client_overview.js' %}"></script>
+  <script src="{% static 'client_overview/js/client_overview.js' %}?ver=3"></script>
 {% endblock %}

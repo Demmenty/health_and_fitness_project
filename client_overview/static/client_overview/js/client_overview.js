@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    // кнопки помощи в контактах
+    // обработчики кликов на кнопки помощи в контактах
     $('#telegram_help_btn').click(function() {
         $(this).toggleClass("open");
         $('#telegram_help').toggleClass("hidden")
@@ -29,52 +29,40 @@ $(document).ready(function(){
     $("#add_measure_form #id_date").on("input", updateMeasureForm);
     // сохранение измерений
     $("#add_measure_form").on("submit", saveMeasure);
-
     // сохранение контактов
-    $('#contacts_form').submit(function () {
+    $('#contacts_form').on("submit", saveContacts);
 
-        let statusField = $('#contacts_status');
-
-        $.ajax({
-            data: $(this).serialize(), 
-            type: $(this).attr('method'), 
-            url: $(this).attr('action'), 
-
-            success: function (response) {
-                // уведомление
-                statusField.text(response.result);
-                // визуальные эффекты
-                statusField.removeClass('text-info');
-                statusField.removeClass('text-danger');
-                setTimeout(() => {
-                    if (response.result == 'Контакты сохранены') {
-                        statusField.addClass('text-info');
-                    }
-                    else {
-                        statusField.addClass('text-danger');
-                    }
-                }, 500);
-            },
-            error: function (response) {
-                // уведомление
-                if (response.status === 0) {
-                    statusField.text('нет соединения с сервером :(');
-                }
-                else {
-                    statusField.text('возникла ошибка! статус ' + 
-                            response.status + ' ' + response.statusText);
-                }
-                // визуальные эффекты
-                statusField.removeClass('text-info');
-                statusField.removeClass('text-danger');
-                setTimeout(() => {
-                    statusField.addClass('text-danger');
-                }, 500); 
-            }
-        });    
-        return false;
-    })
+    let today_measure_exist = ($("#today_measure_block table").length > 0);
+    if (today_measure_exist) {
+        getNutritionRecommendation();
+    }
 })
+
+const contacts_form = $('#contacts_form');
+
+function saveContactsRequest() {
+    return $.ajax({
+        data: contacts_form.serialize(), 
+        type: contacts_form.attr('method'), 
+        url: contacts_form.attr('action'),
+    })
+}
+
+function saveContacts() {
+    console.log("saveContacts");
+
+    let request = saveContactsRequest();
+
+    request.done(function(response) {
+        showSuccessAlert(response);
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + ": " + response.responseText);
+    });
+
+    return false;
+}
 
 function getMeasure(date) {
 // получение записей измерений с сервера по дате
@@ -138,4 +126,75 @@ $.ajax({
     }
 });
 return false;
+}
+
+function getNutritionRecommendationRequest() {
+    return $.ajax({
+        data: {client_id: params.clientId},
+        method: "get",
+        url: "/expert_recommendations/ajax/get_nutrition_recommendation",            
+    });
+}
+
+const today_measure = $("#today_measure_block");
+const calories_row = $("#today_measure_calories_tr");
+const protein_row = $("#today_measure_protein_tr");
+const fats_row = $("#today_measure_fats_tr");
+const carbo_row = $("#today_measure_carbohydrate_tr");
+
+function getNutritionRecommendation() {
+    // возвращает кбжу рекомендации с сервера для клиента
+    let request = getNutritionRecommendationRequest();
+
+    request.done(function(response) {
+        if (response.length > 0) {
+            recommendations = response[0].fields;
+            fillDailyNutritionBarsAndInfo(recommendations);
+        }
+    });
+
+    request.fail(function(response) {
+        showDangerAlert(response.status + " " + response.responseText);
+    });
+}
+
+function fillDailyNutritionBarsAndInfo(recommendations) {
+    let rows = [calories_row, protein_row, fats_row, carbo_row];
+    let totals = [
+        parseInt(calories_row.find(".total-calories").text()),
+        parseInt(protein_row.find(".total-protein").text()),
+        parseInt(fats_row.find(".total-fat").text()),
+        parseInt(carbo_row.find(".total-carbohydrate").text()),
+    ]
+    let recommend = [
+        recommendations.calories,
+        recommendations.protein,
+        recommendations.fats,
+        recommendations.carbohydrates,
+    ]
+
+    for (i in rows) {
+        if (recommend[i] && !isNaN(totals[i])) {
+            let fulfillment = totals[i] / recommend[i] * 100;
+            let difference = parseInt(fulfillment - 100);
+
+            rows[i].find(".bar-scale").css({width: fulfillment + "%"});
+            rows[i].find(".recommend").text("баланс: " + recommend[i]);
+            if (difference < 0) {
+                rows[i].find(".difference").text("дефицит: " + difference + " %");
+            }
+            else if (difference > 0 ) {
+                rows[i].find(".difference").text("профицит: " + difference + " %");
+            }
+            else {
+                rows[i].find(".difference").html("<i class='text-royalblue'>идеально</i>");
+            }
+            rows[i].find(".bar").removeClass("hidden");
+            rows[i].on("click", toggleNutritionExtraInfo);
+        }
+    }
+
+    function toggleNutritionExtraInfo() {
+        $(this).find(".extra-info").toggleClass("hidden");
+    }
 }

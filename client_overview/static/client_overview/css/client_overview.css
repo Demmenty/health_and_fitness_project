@@ -17,6 +17,28 @@
     text-align: left;
     width: 150px;
 }
+#today_measure_calories_tr:hover,
+#today_measure_protein_tr:hover,
+#today_measure_fats_tr:hover,
+#today_measure_carbohydrate_tr:hover {
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+.bar{
+    width: 100%;
+    max-width: 12rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: #e4e4e4;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.bar-scale {
+    background: #657ff7;
+    width: 0;
+    height: 7px;
+    border-radius: 5px;
+}
 @media (min-width: 768px) {
     #today_measure_block {
         width: 45%;
