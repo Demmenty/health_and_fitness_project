@@ -23,6 +23,66 @@ $(document).ready(function () {
 // TODO отрефакторить
 // TODO менять поле коммента в таблице за сегодня при сохранении
 
+const today_measurements = $("#today_measurements");
+const nutrition_form = $("#recommend_nutrition_form");
+
+var nutrition_is_set = (nutrition_form.length > 0);
+var today_measurements_exist = (today_measurements.find("table").length > 0);
+
+if (nutrition_is_set && today_measurements_exist) {
+  fillDailyNutritionBars();
+}
+
+function fillDailyNutritionBars() {
+  let nutrition_table = $("#today_measurements_table_big_nutrition");
+
+  let calories_total = parseInt(nutrition_table.find(".total-calories").text());
+  let protein_total = parseInt(nutrition_table.find(".total-protein").text());
+  let fats_total = parseInt(nutrition_table.find(".total-fat").text());
+  let carbohydrates_total = parseInt(nutrition_table.find(".total-carbohydrate").text());
+
+  let calories_recommend = parseInt(nutrition_form.find("#id_calories").val());
+  let protein_recommend = parseInt(nutrition_form.find("#id_protein").val());
+  let fats_recommend = parseInt(nutrition_form.find("#id_fats").val());
+  let carbohydrates_recommend = parseInt(nutrition_form.find("#id_carbohydrates").val());
+
+  let daily_calories_bar = today_measurements.find(".total-calories").next(".bar");
+  let daily_protein_bar = today_measurements.find(".total-protein").next(".bar");
+  let daily_fats_bar = today_measurements.find(".total-fat").next(".bar");
+  let daily_carbohydrate_bar = today_measurements.find(".total-carbohydrate").next(".bar");
+
+  today_measurements.find(".bar").removeClass("hidden");
+
+  if (isNaN(calories_recommend) || isNaN(calories_total)) {
+    daily_calories_bar.addClass("hidden");
+  }
+  else {
+    daily_calories_bar.find(".bar-scale").css(
+      {width: (calories_total / calories_recommend * 100) + "%"});
+  }
+  if (isNaN(protein_recommend) || isNaN(protein_total)) {
+    daily_protein_bar.addClass("hidden");
+  }
+  else {
+    daily_protein_bar.find(".bar-scale").css(
+      {width: (protein_total / protein_recommend * 100) + "%"});
+  }
+  if (isNaN(fats_recommend) || isNaN(fats_total)) {
+    daily_fats_bar.addClass("hidden");
+  }
+  else {
+    daily_fats_bar.find(".bar-scale").css(
+      {width: (fats_total / fats_recommend * 100) + "%"});
+  }
+  if (isNaN(carbohydrates_recommend) || isNaN(carbohydrates_total)) {
+    daily_carbohydrate_bar.addClass("hidden");
+  }
+  else {
+    daily_carbohydrate_bar.find(".bar-scale").css(
+      {width: (carbohydrates_total / carbohydrates_recommend * 100) + "%"});
+  }
+}
+
 // переменная для хранения настроек цветовых границ
 var colorSet = false;
 
