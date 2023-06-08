@@ -181,7 +181,7 @@ function fillDailyNutritionBarsAndInfo(recommendations) {
             rows[i].find(".bar-scale").css({width: fulfillment + "%"});
             rows[i].find(".recommend").text("баланс: " + recommend[i]);
             if (difference < 0) {
-                rows[i].find(".difference").text("дефицит: " + difference + " %");
+                rows[i].find(".difference").text("дефицит: " + Math.abs(difference) + " %");
             }
             else if (difference > 0 ) {
                 rows[i].find(".difference").text("профицит: " + difference + " %");
