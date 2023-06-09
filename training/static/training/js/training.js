@@ -1618,6 +1618,10 @@ function saveExerciseReport() {
     let formData = new FormData(this);
     formData.set("client", params.clientId);
 
+    if (formData.get("load_get")) {
+        formData.set("load_get", parseInt(formData.get("load_get")));
+    }
+
     $.ajax({
         data: formData,
         type: $(this).attr('method'),

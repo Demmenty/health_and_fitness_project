@@ -232,6 +232,16 @@ td.table-date.nil {
     background-color: #eef5fb;
     padding: 7px;
 }
+.exercise-report-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+@media (min-width: 576px) {
+    .exercise-report-btns {
+        flex-direction: row;
+    }
+}
 .exercise-report-btns svg:hover {
     cursor: pointer;
 }
