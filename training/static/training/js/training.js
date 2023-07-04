@@ -791,15 +791,10 @@ function selectExercise() {
 
     let exercise_item = $(this).closest(".exercise-item");
     let exercise_row = exercise_item.find(".exercise-row");
-    let exercise_id = exercise_item.data("exercise-id");
-    
+
     // показать\скрыть подробности
     exercise_item.find(".exercise-info").slideToggle();
-    
-    if (!exercise_row.hasClass("selected")) {
-        embedVideo(exercise_id);
-    }
-    
+
     // удалить все отметки и подсветки
     exercise_selection.find(".selected").removeClass("selected");
     exercise_selection.find(".colored").removeClass("colored");
@@ -1058,6 +1053,27 @@ function toggleInfoRow() {
 
     $(this).next(".exercise-info-detail").slideToggle();
     $(this).find(".caret").toggleClass("inverted");
+
+    let group_item = $(this).closest(".list-group-item");
+
+    if (!group_item.hasClass("lazy")) {
+        return;
+    }
+
+    if (group_item.hasClass("photo")) {
+        let imgs = group_item.find('.exercise-photo');
+        imgs.attr('src', imgs.attr('data-src'));
+        group_item.removeClass("lazy");
+        return;
+    }
+
+    if (group_item.hasClass("video")) {
+        // TODO оптимизировать тут
+        let exercise_id = group_item.closest('.exercise-item').data("exercise-id");
+        embedVideo(exercise_id);
+        group_item.removeClass("lazy");
+        return;
+    }
 }
 
 // создание упражнения
