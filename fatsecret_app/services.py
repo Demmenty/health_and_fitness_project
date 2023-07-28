@@ -248,9 +248,10 @@ class FatsecretManager:
                         result["total"]["amount"] += food["norm_amount"]
 
             # отфильтровать ненужное и добавить в результат
-            if food["serving"].get("metric_serving_unit"):
-                food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
-            del food["serving"]
+            if food.get('serving'):
+                if food["serving"].get("metric_serving_unit"):
+                    food["metric_serving_unit"] = food["serving"]["metric_serving_unit"]
+                del food["serving"]
             del food["date_int"]
             del food["food_entry_description"]
             del food["food_entry_id"]
