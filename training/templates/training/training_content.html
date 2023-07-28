@@ -170,7 +170,7 @@
               </li>
             {% endif %}
             {% if exercise.photo_1 or exercise.photo_2 %}
-              <li class="list-group-item photo">
+              <li class="list-group-item photo lazy">
                 <div class="exercise-info-toggle">
                   <div class="col-11">Фото</div>
                   <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">
@@ -179,17 +179,17 @@
                   <hr>
                   <div class="exercise-photo-container">
                     {% if exercise.photo_1 %}
-                      <img src="{{ exercise.photo_1.url }}" class="exercise-photo photo_1">
+                      <img data-src="{{ exercise.photo_1.url }}" class="exercise-photo photo_1">
                     {% endif %}
                     {% if exercise.photo_2 %}
-                      <img src="{{ exercise.photo_2.url }}" class="exercise-photo photo_2">
+                      <img data-src="{{ exercise.photo_2.url }}" class="exercise-photo photo_2">
                     {% endif %}
                   </div>
                 </div>
               </li>
             {% endif %}
             {% if exercise.video %}
-              <li class="list-group-item video">
+              <li class="list-group-item video lazy">
                 <div class="exercise-info-toggle">
                   <div class="col-11">Видео</div>
                   <img src="{% static 'common/img/caret-down-fill.svg' %}" class="caret">

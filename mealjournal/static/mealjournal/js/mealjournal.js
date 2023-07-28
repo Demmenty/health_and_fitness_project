@@ -1,5 +1,3 @@
-// TODO сделать приличный лоадер вместо многоточия
-
 $(document).ready(function () {
     const fs_connected = $("#fs-param").data("fs-connected");
     if (!fs_connected) return;
@@ -23,7 +21,7 @@ $(document).ready(function () {
 // СВОДКА ЗА ДЕНЬ
 const daybrief_block = $("#daybrief-container");
 const daybrief_label = $("#label-daybrief");
-const daybrief_loader = daybrief_block.find(".loader");
+const daybrief_loader = daybrief_block.find(".spinner-border");
 const daybrief_no_data = daybrief_block.find(".no-data-msg");
 const daybrief_table = daybrief_block.find("#daybrief-table");
 const daybrief_bars = daybrief_table.find(".bar");
@@ -277,7 +275,7 @@ function showDayBriefLoading() {
 // СВОДКА ЗА МЕСЯЦ
 const monthbrief_block = $("#monthbrief-container");
 const monthbrief_label = $("#label-monthbrief");
-const monthbrief_loader = monthbrief_block.find(".loader");
+const monthbrief_loader = monthbrief_block.find(".spinner-border");
 const monthbrief_no_data = monthbrief_block.find(".no-data-msg");
 const monthbrief_table = monthbrief_block.find("#monthbrief-table");
 
