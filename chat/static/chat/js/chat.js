@@ -335,6 +335,11 @@ function appendMessageToHistory(message, to_the_top=false) {
     // добавить сообщение в историю чата 
     // по умолчанию - в конец, если to_the_top=true - в начало
 
+    let msg_already_in_chat = chat.find("#message-" + message.pk).length > 0;
+    if (msg_already_in_chat) {
+        return;
+    }
+
     let new_msg = message_blank.clone();
 
     let from_me = false;
