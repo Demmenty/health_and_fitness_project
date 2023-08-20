@@ -1,9 +1,15 @@
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
 from django.conf import settings
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.contrib.auth.decorators import login_required
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+    JsonResponse,
+)
 from django.shortcuts import redirect
+from django.views.decorators.http import require_http_methods
 from fatsecret import GeneralError
+
 from common.cache_manager import cache
 from common.services import services
 
@@ -46,7 +52,7 @@ def fatsecretauth(request):
 def foodmetricsave(request):
     """Сохранение введенной метрики еды через ajax"""
 
-    prods_without_metric= dict(request.POST)
+    prods_without_metric = dict(request.POST)
     del prods_without_metric["csrfmiddlewaretoken"]
 
     cache.fs.save_foodmetric(prods_without_metric)
@@ -62,12 +68,12 @@ def get_monthly_top(request):
     month = request.GET.get("month")
     if not month:
         return HttpResponseBadRequest("Необходимо передать month")
-    
+
     try:
         month = datetime.strptime(month, "%Y-%m-%d")
     except ValueError as error:
         return HttpResponseBadRequest(error)
-    
+
     if request.user.is_expert:
         client_id = request.GET.get("client_id")
         if not client_id:

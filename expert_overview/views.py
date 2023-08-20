@@ -3,8 +3,11 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
+
+from expert_overview.forms import (
+    ConsultationBrowseForm,
+)
 from expert_overview.models import ConsultationSignup
-from expert_overview.forms import ConsultationBrowseForm, ConsultationsignupForm
 
 
 @login_required
@@ -14,7 +17,7 @@ def expert_overview_page(request):
 
     if not request.user.is_expert:
         return redirect("homepage")
-    
+
     template = "expert_overview/overview_page.html"
 
     # список зарегистрированных клиентов
@@ -40,7 +43,7 @@ def consult_requests_page(request):
 
     if not request.user.is_expert:
         return redirect("homepage")
-    
+
     template = "expert_overview/consult_requests_page.html"
 
     # функция сохранения заметки к заявке консультации

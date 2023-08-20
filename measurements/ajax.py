@@ -1,14 +1,22 @@
-from itertools import zip_longest
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
-from measurements.forms import AnthropometryPhotoAccessForm, MeasurementCommentForm, AnthropometryForm, MeasurementForm
-from measurements.models import AnthropometryPhotoAccess, Measurement
-from .services import *
-from measurements.utils import *
-from django.core.serializers import serialize
 from datetime import date
+from itertools import zip_longest
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.serializers import serialize
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.views.decorators.http import require_http_methods
+
+from measurements.forms import (
+    AnthropometryForm,
+    AnthropometryPhotoAccessForm,
+    MeasurementCommentForm,
+    MeasurementForm,
+)
+from measurements.models import AnthropometryPhotoAccess, Measurement
+from measurements.utils import *
+
+from .services import *
 
 
 @login_required
@@ -21,7 +29,7 @@ def get_measure(request):
 
     if not (measure_date and client_id):
         return HttpResponseBadRequest("Необходимы поля date и client_id")
-    
+
     measure = Measurement.objects.filter(user=client_id, date=measure_date)
     data = serialize("json", measure)
 
@@ -40,8 +48,10 @@ def save_measure(request):
         measure_date = form.cleaned_data["date"]
         if measure_date > date.today():
             return HttpResponseBadRequest("Нет, так нельзя 😠")
-    
-        instance = Measurement.objects.filter(user=client, date=measure_date).first()
+
+        instance = Measurement.objects.filter(
+            user=client, date=measure_date
+        ).first()
         if instance:
             form = MeasurementForm(request.POST, instance=instance)
             form.save()
@@ -50,7 +60,7 @@ def save_measure(request):
             form.user = client
             form.save()
         return HttpResponse("Измерения сохранены")
-    
+
     return HttpResponseBadRequest("Данные некорректны")
 
 
@@ -123,7 +133,6 @@ def photoaccess_change(request):
     form = AnthropometryPhotoAccessForm(request.POST)
 
     if form.is_valid():
-
         instance = AnthropometryPhotoAccess.objects.get(user=request.user)
         form = AnthropometryPhotoAccessForm(request.POST, instance=instance)
         form.save()
@@ -132,7 +141,7 @@ def photoaccess_change(request):
         if photoaccess_allowed:
             return HttpResponse("Доступ к фото разрешен")
         return HttpResponse("Доступ к фото запрещен")
-    
+
     return HttpResponseBadRequest("Данные некорректны")
 
 
@@ -157,5 +166,5 @@ def save_anthropometry(request):
             form.user = request.user
             form.save()
         return HttpResponse("Измерения сохранены")
-    
+
     return HttpResponseBadRequest("Данные некорректны")

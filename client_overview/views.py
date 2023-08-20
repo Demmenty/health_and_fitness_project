@@ -1,16 +1,15 @@
-from django.shortcuts import render, redirect
 from datetime import datetime
-from django.contrib.auth.models import User
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
-from client_overview.manager import ClientInfoManager
-from expert_remarks.services import get_today_commentary
-from measurements.services import renew_measure_nutrition
-from expert_remarks.services import get_remark_forms
+
 from client_overview.forms import HealthQuestionaryForm, MeetQuestionaryForm
 from client_overview.manager import ClientInfoManager
 from client_overview.models import MeetQuestionary
-
+from expert_remarks.services import get_remark_forms, get_today_commentary
+from measurements.services import renew_measure_nutrition
 
 
 @login_required
@@ -56,7 +55,6 @@ def meet_questionary_page(request):
     """Страница анкеты знакомства с клиентом"""
 
     if request.method == "GET":
-
         if request.user.is_expert:
             template = "client_overview/expert_meet_questionary_page.html"
 
@@ -87,22 +85,24 @@ def meet_questionary_page(request):
         # TODO в template tag
         meet_questionary = ClientInfoManager.get_meet_questionary(client)
         meet_questionary_form = ClientInfoManager.get_meet_questionary_form(
-            client)
+            client
+        )
         readiness_choices = MeetQuestionary.READINESS_CHOICES
         age = ClientInfoManager.get_age(client)
 
-        data.update({
-            "meet_questionary": meet_questionary,
-            "meet_questionary_form": meet_questionary_form,
-            "readiness_choices": readiness_choices,
-            "age": age,
-        })
+        data.update(
+            {
+                "meet_questionary": meet_questionary,
+                "meet_questionary_form": meet_questionary_form,
+                "readiness_choices": readiness_choices,
+                "age": age,
+            }
+        )
 
         return render(request, template, data)
-    
+
     # TODO переделать в ajax
     if request.method == "POST":
-
         form = MeetQuestionaryForm(request.POST)
 
         if form.is_valid():
@@ -117,13 +117,15 @@ def meet_questionary_page(request):
                 new_form.user = request.user
                 new_form.save()
                 return redirect("overviewpage")
-            
+
         else:
             template = "client_overview/client_meet_questionary_page.html"
             client = request.user
             clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
             meet_questionary = ClientInfoManager.get_meet_questionary(client)
-            meet_questionary_form = ClientInfoManager.get_meet_questionary_form(client)
+            meet_questionary_form = (
+                ClientInfoManager.get_meet_questionary_form(client)
+            )
             readiness_choices = MeetQuestionary.READINESS_CHOICES
             age = ClientInfoManager.get_age(request.user)
             today_commentary = get_today_commentary(request.user)
@@ -147,7 +149,6 @@ def health_questionary_page(request):
     """Страница анкеты здоровья клиента"""
 
     if request.method == "GET":
-
         if request.user.is_expert:
             template = "client_overview/expert_health_questionary_page.html"
 
@@ -176,23 +177,22 @@ def health_questionary_page(request):
             }
 
         # TODO в template tag
-        health_questionary = ClientInfoManager.get_health_questionary(
-            client
-        )
+        health_questionary = ClientInfoManager.get_health_questionary(client)
         health_questionary_form = (
             ClientInfoManager.get_health_questionary_form(client)
         )
 
-        data.update({
-            "health_questionary": health_questionary,
-            "health_questionary_form": health_questionary_form,
-        })
+        data.update(
+            {
+                "health_questionary": health_questionary,
+                "health_questionary_form": health_questionary_form,
+            }
+        )
 
         return render(request, template, data)
-    
+
     # TODO переделать в ajax
     if request.method == "POST":
-
         form = HealthQuestionaryForm(request.POST)
 
         if form.is_valid():
@@ -211,8 +211,12 @@ def health_questionary_page(request):
             template = "client_overview/client_health_questionary_page.html"
             client = request.user
             clientmemo_form = ClientInfoManager.get_clientmemo_form(client)
-            health_questionary = ClientInfoManager.get_health_questionary(client)
-            health_questionary_form = ClientInfoManager.get_health_questionary_form(client)
+            health_questionary = ClientInfoManager.get_health_questionary(
+                client
+            )
+            health_questionary_form = (
+                ClientInfoManager.get_health_questionary_form(client)
+            )
             today_commentary = get_today_commentary(client)
 
             data = {

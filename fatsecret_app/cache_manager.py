@@ -158,7 +158,9 @@ class FatsecretCacheManager:
             metric_serving_amount = prods_without_metric[
                 "metric_serving_amount"
             ][i]
-            metric_serving_unit = prods_without_metric["metric_serving_unit"][i]
+            metric_serving_unit = prods_without_metric["metric_serving_unit"][
+                i
+            ]
             serving_id = prods_without_metric["serving_id"][i]
 
             if type(cache[food_id]["servings"]["serving"]) is dict:
@@ -178,7 +180,9 @@ class FatsecretCacheManager:
         with open(self.food_info_cache, "wb") as f:
             pickle.dump(cache, f)
 
-    def get_daily_total(self, user_id, entry_date: datetime) -> Union[dict, None]:
+    def get_daily_total(
+        self, user_id, entry_date: datetime
+    ) -> Union[dict, None]:
         """добыча из кеша суммарного количества и калорий съеденной еды
         по названиям за один день в виде словаря:
         {'food_name': {'total_calories': ..., 'total_amount': ... , 'metric': ...}}
@@ -292,6 +296,7 @@ class FatsecretCacheManager:
 
             with open(self.monthly_total_cache, "wb") as file:
                 pickle.dump(cache, file)
+
 
 # fs = FatsecretCacheManager()
 # fs._remove_prods_without_metric()

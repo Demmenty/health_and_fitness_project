@@ -1,14 +1,13 @@
+from datetime import date
+
 from django import template
 from django.contrib.auth.models import User
-from django.contrib.auth.models import User
+
 from client_overview.manager import ClientInfoManager
 from common.services import services
-from measurements.services import get_daily_measure
-from client_overview.manager import ClientInfoManager
-from training.models import Training
-from datetime import date
 from measurements.forms import MeasurementForm
 from measurements.models import Measurement
+from training.models import Training
 
 register = template.Library()
 
@@ -24,7 +23,9 @@ TRAINING_TYPES = {
 def draw_overview_content(client: User, for_expert: bool = False) -> dict:
     """возвращает параметры для рендеринга контента обзорной страницы"""
 
-    today_measure = Measurement.objects.filter(date__exact=date.today(), user=client).first()
+    today_measure = Measurement.objects.filter(
+        date__exact=date.today(), user=client
+    ).first()
     fs_connected = services.fs.is_connected(client)
     health_questionary_filled = ClientInfoManager.is_health_questionary_filled(
         client
@@ -54,20 +55,24 @@ def draw_overview_content(client: User, for_expert: bool = False) -> dict:
         client_height = ClientInfoManager.get_height(client)
         date_joined = client.date_joined.date()
 
-        data.update({
-            "client_age": client_age,
-            "client_height": client_height,
-            "date_joined": date_joined,
-        })
+        data.update(
+            {
+                "client_age": client_age,
+                "client_height": client_height,
+                "date_joined": date_joined,
+            }
+        )
     else:
         contacts_form = ClientInfoManager.get_contacts_form(client)
         measure_form = MeasurementForm(instance=today_measure)
         fatsecret_connected = services.fs.is_connected(client)
 
-        data.update({
-            "contacts_form": contacts_form,
-            "measure_form": measure_form,
-            "fatsecret_connected": fatsecret_connected,
-        })
+        data.update(
+            {
+                "contacts_form": contacts_form,
+                "measure_form": measure_form,
+                "fatsecret_connected": fatsecret_connected,
+            }
+        )
 
     return data

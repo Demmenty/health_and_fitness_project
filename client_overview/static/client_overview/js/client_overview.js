@@ -58,7 +58,7 @@ function saveContacts() {
     });
 
     request.fail(function(response) {
-        showDangerAlert(response.status + ": " + response.responseText);
+        showDangerAlert(response.status + " " + response.responseText);
     });
 
     return false;

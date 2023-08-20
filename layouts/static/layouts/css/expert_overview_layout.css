@@ -31,6 +31,9 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 8px 1px #9fbfc5;
 }
+.blank {
+    display: none !important;
+}
 .hidden {
     display: none !important;
 }
