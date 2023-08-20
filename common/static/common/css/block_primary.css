@@ -1,0 +1,77 @@
+.block-primary {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
+    -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
+    -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
+}
+.block-primary .block-header {
+    display: flex;
+    justify-content: center;
+    background: #657ff7;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    line-height: 25px;
+}
+.block-primary .block-header.with-arrows {
+    justify-content: space-between;
+}
+.block-primary .block-header.with-cross {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.block-primary .block-header .header {
+    display: inline-block;
+    text-align: center;
+    padding: 7px;
+    font-size: 20px;
+}
+.block-primary .block-header.with-cross .header {
+    margin-left: 22px;
+    width: -webkit-fill-available;
+}
+.block-primary .block-header .btn-close {
+    font-size: 15px;
+    align-self: center;
+    margin-bottom: 1px;
+}
+.block-primary .block-header .prev-button,
+.block-primary .block-header .next-button { 
+    cursor: pointer;
+    width: 28px; 
+    text-align: center;
+    padding: 7px;
+    padding-top: 5px;
+    font-size: 20px;
+} 
+.block-primary .block-header .prev-button { 
+    -webkit-border-top-left-radius: 5px; 
+    -moz-border-radius-topleft: 5px; 
+    border-top-left-radius: 5px; 
+} 
+.block-primary .block-header .next-button { 
+    -webkit-border-top-right-radius: 5px; 
+    -moz-border-radius-topright: 5px; 
+    border-top-right-radius: 5px; 
+} 
+.block-primary .block-header .prev-button:hover,
+.block-primary .block-header .next-button:hover {
+    background: #3FADFF;
+}
+.block-primary .block-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 15px 10px;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+@media (min-width: 992px) {
+    .block-content {
+        padding: 15px;
+    }
+}
