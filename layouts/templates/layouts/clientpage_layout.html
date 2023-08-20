@@ -35,6 +35,9 @@
           <li><a href="{% url 'measurementspage' %}?client_id={{ client.id }}" class="nav_link" id="link_measurements">измерения</a></li>
           <li><a href="{% url 'mealjournal_page' %}" class="nav_link" id="link_meal">питание</a></li>
           <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout">тренировки</a></li>
+          {% if user.is_superuser %}
+            <li><a href="{% url 'admin:index' %}" class="nav_link" id="link_admin">админка</a></li>
+          {% endif %}
         </ul>
         <!-- навигация выпадающим меню -->
         <div class="d-flex align-items-center justify-content-center col-6 mt-2" id="nav_dropdown">
@@ -49,6 +52,9 @@
               <li><a href="{% url 'trainingpage' %}" class="nav_link" id="link_workout_drop">тренировки</a></li>
               <hr class="my-2 mx-auto d-md-none">
               <li><a href="{% url 'settings_page' %}" class="nav_link d-md-none" id="link_settings_drop">настройки</a></li>
+              {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}" class="nav_link d-md-none" id="link_admin_drop">админка</a></li>
+              {% endif %}
             </ul>
           </div>
         </div>
