@@ -27,11 +27,12 @@
         <!-- навигация -->
         <div class="d-flex flex-wrap justify-content-center align-items-center lh-1">
           <a href="{% url 'expert_overview_page' %}" class="nav_link text-nowrap" id="link_clients">мои клиенты</a>
-          <a href="{% url 'consult_requests_page' %}" class="nav_link text-nowrap" id="link_consult_requests">заявки
+          <a href="{% url 'consult_requests_page' %}" class="nav_link" id="link_consult_requests">заявки
             {% if new_consult_signup_amount > 0 %}
               <div class="rounded-circle ms-2" id="new_consult_signup_amount">{{ new_consult_signup_amount }}</div>
             {% endif %}
           </a>
+          <a href="{% url 'admin:index' %}" class="nav_link" id="link_admin">админка</a>
         </div>
         <!-- кнопка выхода -->
         <form method="POST" action="{% url 'logoutuser' %}" class="ms-3">
