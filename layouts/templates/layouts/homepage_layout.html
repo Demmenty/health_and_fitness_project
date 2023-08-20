@@ -78,10 +78,9 @@
           </form>
         </div>
         {% else %}
-        <!-- кнопки входа/регистрации -->
+        <!-- кнопка входа -->
         <div class="d-none d-sm-flex text-end justify-content-end">
           <button type="button" class="btn btn-primary ms-2" id="login_btn" data-bs-toggle="modal" data-bs-target="#login_form_container">Вход</button>
-          <button type="button" class="btn btn-outline-primary ms-2 d-none d-sm-flex" id="registration_btn" data-bs-toggle="modal" data-bs-target="#registration_form_container">Регистрация</button>
         </div>
         {% endif %}
       </nav>
@@ -107,38 +106,6 @@
       </div>
     </div>
   </div>
-
-  <!-- форма регистрации  -->
-  <div class="modal fade" id="registration_form_container" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <h4 class="modal-title text-center">РЕГИСТРАЦИЯ</h4><br>
-        <form method="POST" action="{% url 'registration' %}" id="registration_form">
-          {% csrf_token %}
-          <div class="px-4 pb-4">
-            <label>Логин</label>
-            <p>
-              {{ registration_form.username }}
-              <span class="helptext" id="username_error">&nbsp;</span>
-            </p>
-            <label>Пароль</label>
-            <p>
-              {{ registration_form.password1 }}
-            </p>
-            <label>Подтверждение пароля</label>
-            <p>
-              {{ registration_form.password2 }}
-              <span class="helptext" id="password2_error">&nbsp;</span>
-            </p>
-            <span id="registration_form_result" class="error">&nbsp;</span>
-            <button type="submit" class="btn btn-primary">СОЗДАТЬ АККАУНТ</button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-  <!--  -->
 
   <main>
     {% block content %}

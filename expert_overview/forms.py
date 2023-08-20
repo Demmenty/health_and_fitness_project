@@ -1,9 +1,9 @@
-from django.forms import HiddenInput, ModelForm, Textarea, TextInput
+from django import forms
 
 from expert_overview.models import ConsultationSignup
 
 
-class ConsultationsignupForm(ModelForm):
+class ConsultationsignupForm(forms.ModelForm):
     """Форма для подачи заявки на консультацию"""
 
     class Meta:
@@ -16,27 +16,27 @@ class ConsultationsignupForm(ModelForm):
             "contacts",
         ]
         widgets = {
-            "name": TextInput(
+            "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "age": TextInput(
+            "age": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "location": TextInput(
+            "location": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "email": TextInput(
+            "email": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "contacts": TextInput(
+            "contacts": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
@@ -44,7 +44,7 @@ class ConsultationsignupForm(ModelForm):
         }
 
 
-class ConsultationBrowseForm(ModelForm):
+class ConsultationBrowseForm(forms.ModelForm):
     """Форма для просмотра заявки на консультацию"""
 
     class Meta:
@@ -59,38 +59,38 @@ class ConsultationBrowseForm(ModelForm):
             "expert_note",
         ]
         widgets = {
-            "name": TextInput(
+            "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "readonly": True,
                 }
             ),
-            "age": TextInput(
+            "age": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "readonly": True,
                 }
             ),
-            "location": TextInput(
+            "location": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "readonly": True,
                 }
             ),
-            "email": TextInput(
+            "email": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "readonly": True,
                 }
             ),
-            "contacts": TextInput(
+            "contacts": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "readonly": True,
                 }
             ),
-            "is_read": HiddenInput(),
-            "expert_note": Textarea(
+            "is_read": forms.HiddenInput(),
+            "expert_note": forms.Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": "5",

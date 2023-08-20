@@ -1,0 +1,30 @@
+.btn-primary {
+    --bs-btn-bg: #657ff7;
+    --bs-btn-border-color: #657ff7;
+    --bs-btn-hover-bg: #3f54b2;
+    --bs-btn-hover-border-color: #3f54b2;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #657ff7;
+    --bs-btn-disabled-bg: #657ff7;
+    --bs-btn-disabled-border-color: #657ff7;
+}
+.btn-outline-primary {
+    --bs-btn-color: #657ff7;
+    --bs-btn-border-color: #657ff7;
+    --bs-btn-hover-bg: #657ff7;
+    --bs-btn-hover-border-color: #657ff7;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #657ff7;
+    --bs-btn-disabled-color: #657ff7;
+    --bs-btn-disabled-border-color: #657ff7;
+}
+input[type="radio"]:checked {
+    border: solid 6px #657ff7;
+}
+input[type="radio"]:focus {
+    border-color: #657ff7;
+}
+.form-check-input:checked {
+    background-color: #657ff7 !important;
+    border-color: #657ff7 !important;
+}
