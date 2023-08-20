@@ -4,9 +4,8 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
-from expert_overview.forms import (
-    ConsultationBrowseForm,
-)
+from authentication.forms import ClientRegistrationForm
+from expert_overview.forms import ConsultationBrowseForm
 from expert_overview.models import ConsultationSignup
 
 
@@ -33,6 +32,7 @@ def expert_overview_page(request):
     data = {
         "clients": clients,
         "new_consult_signup_amount": new_consult_signup_amount,
+        "client_registration_form": ClientRegistrationForm(),
     }
     return render(request, template, data)
 
