@@ -2,8 +2,6 @@ from datetime import date
 
 from django.contrib.auth.models import User
 
-from common.utils import get_noun_ending
-
 from client_overview.forms import (
     ClientContactForm,
     ClientMemoForm,
@@ -16,6 +14,7 @@ from client_overview.models import (
     HealthQuestionary,
     MeetQuestionary,
 )
+from common.utils import get_noun_ending
 
 
 class ClientInfoManager:

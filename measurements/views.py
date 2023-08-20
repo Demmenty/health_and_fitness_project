@@ -1,16 +1,16 @@
 from datetime import datetime
-from expert_remarks.services import get_today_commentary
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from measurements.utils import *
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+
 from client_overview.manager import ClientInfoManager
 from expert_recommendations.services import *
-from expert_remarks.services import get_remark_forms
+from expert_remarks.services import get_remark_forms, get_today_commentary
 from fatsecret_app.services import *
 from measurements.services import *
-
+from measurements.utils import *
 
 
 @login_required
@@ -69,7 +69,7 @@ def anthropometrypage(request):
             "client_remark": client_remark,
             "for_expert": True,
         }
-    
+
     if not request.user.is_expert:
         template = "measurements/client_anthropometry_page.html"
 
@@ -82,12 +82,11 @@ def anthropometrypage(request):
             "clientmemo_form": clientmemo_form,
             "today_commentary": today_commentary,
         }
-    
+
     return render(request, template, data)
 
 
 def _create_list_of_dates(days: int) -> list:
-
     list_of_dates = []
 
     for i in range(days):

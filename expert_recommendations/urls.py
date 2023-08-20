@@ -8,7 +8,7 @@ urlpatterns = [
         views.save_nutrition_recommendation,
         name="save_nutrition_recommendation",
     ),
-        path(
+    path(
         "ajax/get_nutrition_recommendation",
         views.get_nutrition_recommendation,
         name="get_nutrition_recommendation",

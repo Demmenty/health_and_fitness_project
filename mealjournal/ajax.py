@@ -1,15 +1,16 @@
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from expert_recommendations.services import *
-from common.services import services
-from expert_recommendations.services import *
 from datetime import datetime
+
+from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponseBadRequest,
-    JsonResponse,
     HttpResponseServerError,
+    JsonResponse,
 )
+from django.views.decorators.http import require_http_methods
 from fatsecret import GeneralError
+
+from common.services import services
+from expert_recommendations.services import *
 
 
 @login_required
@@ -20,12 +21,12 @@ def get_briefbydate(request):
     briefdate = request.GET.get("briefdate")
     if not briefdate:
         return HttpResponseBadRequest("Необходимо передать briefdate")
-    
+
     try:
         briefdate = datetime.strptime(briefdate, "%Y-%m-%d")
     except ValueError as error:
         return HttpResponseBadRequest(error)
-    
+
     if request.user.is_expert:
         client_id = request.GET.get("client_id")
         if not client_id:
@@ -52,12 +53,12 @@ def get_briefbymonth(request):
     briefmonth = request.GET.get("briefmonth")
     if not briefmonth:
         return HttpResponseBadRequest("Необходимо передать briefmonth")
-    
+
     try:
         briefmonth = datetime.strptime(briefmonth, "%Y-%m-%d")
     except ValueError as error:
         return HttpResponseBadRequest(error)
-    
+
     if request.user.is_expert:
         client_id = request.GET.get("client_id")
         if not client_id:

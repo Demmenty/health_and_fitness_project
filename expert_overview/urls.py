@@ -1,6 +1,6 @@
 from django.urls import path
-from expert_overview import views, ajax
 
+from expert_overview import ajax, views
 
 urlpatterns = [
     path("", views.expert_overview_page, name="expert_overview_page"),

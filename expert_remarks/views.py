@@ -38,7 +38,7 @@ def get_commentary_form(request):
 
 def save_commentary_form(request):
     """Сохранение формы коммента для клиента через аякс-скрипт"""
-    
+
     if not request.user.is_expert:
         data = {}
         return JsonResponse(data, status=403)
@@ -119,7 +119,7 @@ def get_commentary(request):
 def mark_comment_readed(request):
     """Запись инфо о том, что коммент прочитан клиентом
     через скрипт в layout"""
-    
+
     if request.user.is_anonymous:
         return JsonResponse({}, status=403)
 

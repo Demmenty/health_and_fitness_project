@@ -303,7 +303,7 @@ def renew_measure_nutrition(user, measure_date: datetime) -> None:
             fs_nutrition = services.fs.daily_nutrition(user, measure_date)
         except KeyError:
             return
-        
+
         if fs_nutrition:
             if fs_nutrition["calories"] != measure.calories:
                 measure.calories = fs_nutrition["calories"]

@@ -2,7 +2,6 @@ from django.urls import path
 
 from measurements import ajax, views
 
-
 urlpatterns = [
     path("", views.measurementspage, name="measurementspage"),
     path("anthropometry/", views.anthropometrypage, name="anthropometrypage"),

@@ -1,14 +1,19 @@
 from django.forms import (
+    CheckboxInput,
+    ClearableFileInput,
     DateInput,
     HiddenInput,
     ModelForm,
     NumberInput,
     Textarea,
-    ClearableFileInput,
-    CheckboxInput,
 )
 
-from measurements.models import MeasureColorField, Measurement, Anthropometry, AnthropometryPhotoAccess
+from measurements.models import (
+    Anthropometry,
+    AnthropometryPhotoAccess,
+    MeasureColorField,
+    Measurement,
+)
 
 
 class MeasurementForm(ModelForm):

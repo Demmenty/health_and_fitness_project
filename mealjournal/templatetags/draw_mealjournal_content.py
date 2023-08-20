@@ -1,8 +1,8 @@
 from django import template
 from django.contrib.auth.models import User
+
 from common.services import services
 from expert_recommendations.services import *
-
 
 register = template.Library()
 
@@ -22,7 +22,7 @@ def draw_mealjournal_content(client: User, for_expert: bool = False) -> dict:
         data = {
             "client": client,
             "for_expert": for_expert,
-            "client_not_connected": True
+            "client_not_connected": True,
         }
 
     return data

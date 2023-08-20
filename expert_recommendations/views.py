@@ -1,8 +1,13 @@
-from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
+from django.contrib.auth.models import User
 from django.core.serializers import serialize
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+)
+from django.views.decorators.http import require_http_methods
+
 from .forms import NutritionRecommendationForm
 from .models import NutritionRecommendation
 
@@ -18,7 +23,6 @@ def save_nutrition_recommendation(request):
     form = NutritionRecommendationForm(request.POST)
 
     if form.is_valid():
-
         client_id = request.POST.get("client_id")
         client = User.objects.get(id=client_id)
 
@@ -27,7 +31,7 @@ def save_nutrition_recommendation(request):
         )
         form = NutritionRecommendationForm(request.POST, instance=instance)
         form.save()
-        
+
         return HttpResponse("Рекомендации сохранены")
     else:
         return HttpResponseBadRequest("Информация некорректна")
