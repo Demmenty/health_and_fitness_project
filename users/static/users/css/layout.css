@@ -1,0 +1,93 @@
+*, ::after, ::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #F3F5F9;
+}
+#logo:hover {
+    filter: brightness(0.8);
+}
+
+.bg-primary {
+    background-color: #657ff7 !important;
+}
+a {
+    color: #657ff7;
+}
+a:hover {
+    color: #4a62cc;
+}
+.btn-primary {
+    --bs-btn-bg: #657ff7;
+    --bs-btn-border-color: #657ff7;
+    --bs-btn-hover-bg: #4a62cc;
+    --bs-btn-hover-border-color: #4a62cc;;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #4a62cc;
+    --bs-btn-disabled-bg: #4a62cc;
+    --bs-btn-disabled-border-color: #4a62cc;
+}
+.btn-outline-primary {
+    --bs-btn-color: #657ff7;
+    --bs-btn-border-color: #657ff7;
+    --bs-btn-hover-bg: #657ff7;
+    --bs-btn-hover-border-color: #657ff7;
+    --bs-btn-active-bg: #657ff7;
+    --bs-btn-active-border-color: #657ff7;
+    --bs-btn-disabled-color: #657ff7;
+    --bs-btn-disabled-border-color: #657ff7;
+}
+.pointer:hover {
+    cursor: pointer;
+}
+.input-icon-right {
+    position: absolute;
+    right: 0.75rem;
+    top: 30px;
+}
+main {
+    margin-bottom: 2.5rem;
+}
+footer {
+    background-color: #657ff7;
+    border-top-color: #b9b9b9;
+    border-top-style: solid;
+    border-top-width: 3px;
+    margin-top: auto;
+}
+.mail_ref {
+    color: #b9b9b9;
+    text-decoration: none;
+}
+.mail_ref:hover {
+    color: black;
+}
+.contact_ico {
+    height: 25px;
+    filter: invert(1);
+}
+.contact_ico:hover {
+    filter: brightness();
+}
+
+::-webkit-scrollbar {
+    max-width: 9px;
+    max-height: 9px;
+    background-color: #f8f8f8;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #bdcbf3;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #92a7e0;
+}
+::-webkit-scrollbar-track {
+    background-color: #eeeef570;
+}

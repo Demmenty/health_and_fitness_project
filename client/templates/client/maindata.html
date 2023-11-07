@@ -1,0 +1,46 @@
+{% extends 'client/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: основная информация</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-maindata-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 936px;">
+			<div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">{{ maindata_form.header }}</h5>
+			</div>
+			<div class="card-body">
+                <form id="maindata-form" method="post" class="d-flex flex-column gap-4 mt-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in usernames_form %}
+                        <div id="{{ field.name }}">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    {% for field in maindata_form %}
+                        <div id="{{ field.name }}">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            <div class="helptext text-secondary">{{ field.help_text }}</div>
+                            {% for error in field.errors %}
+                                <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between mt-4">
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                        <input type="submit" class="btn btn-primary" value="Сохранить">
+					</div>
+                </form>
+			</div>
+		</div>
+    </div>
+</section>
+{% endblock %}

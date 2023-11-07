@@ -1,0 +1,35 @@
+#consultation_section_text ul li::marker {
+    content: '► ';
+    color: #657ff7;
+}
+#consultation_section_text ul {
+    font-size: 1.25rem;
+}
+@media (min-width: 1200px) {
+    #consultation_section_text ul {
+        font-size: 1.5rem;
+    } 
+}
+#consultation-form .helptext {
+    margin-left: 14px;
+    color: #00000000;
+    display: block;
+    white-space: pre-wrap;
+    transition: all 1s ease;
+    text-align: end;
+    font-size: smaller;
+}
+#consultation-form .form-control {
+    font-size: 1.3rem !important;
+}
+#consultation-form .form-control:focus + .helptext {
+    color: grey;
+}
+#consultation-form p {
+    margin-bottom: 0.5rem;
+}
+#consultation_error {
+    transition: all 1s ease;
+    color: #ffffff00;
+    text-align: center;
+}

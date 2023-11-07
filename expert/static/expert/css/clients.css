@@ -1,0 +1,4 @@
+#client-registration-link img {
+    filter: invert(1); 
+    margin-top: -3px;
+}

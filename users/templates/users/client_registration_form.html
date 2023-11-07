@@ -1,0 +1,26 @@
+<form id="client-registration-form" method="POST" 
+    action="{% url 'users:register_client' %}" class="d-flex flex-column gap-3">
+    {% csrf_token %}
+    <div>
+        {{ client_registration_form.username.label_tag }}
+        {{ client_registration_form.username }}
+    </div>
+    <div>
+        {{ client_registration_form.email.label_tag }}
+        {{ client_registration_form.email }}
+    </div>
+    <div>
+        {{ client_registration_form.password1.label_tag }}
+        {{ client_registration_form.password1 }}
+        <button id="generate-password-btn" type="button" 
+            class="btn btn-link d-block mx-auto text-decoration-none">
+            сгенерировать
+        </button>
+    </div>
+    <span id="registration-status" class="text-center text-danger"></span>
+    <div class="d-flex justify-content-between mt-2">
+        <button onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+        <a id="return-to-clients-link" href="{% url 'expert:clients' %}" class="btn btn-primary d-none">Готово!</a>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>

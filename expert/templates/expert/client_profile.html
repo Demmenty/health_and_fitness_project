@@ -1,0 +1,32 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: профиль</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-profile-section">
+    <div class="container">
+
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+			<div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Личные данные</h5>
+			</div>
+			<div class="card-body pt-4">
+                <!-- аватар -->
+                <p>Имя: {{ client.first_name|default:"?" }}</p>
+                <p>Фамилия: {{ client.last_name|default:"?" }}</p>
+                <p>Пол: {{ maindata.sex|default:"?" }}</p>
+                <p>Возраст: {{ maindata.get_age|default:"?" }}</p>
+                <p>Рост: {{ maindata.height|default:"?" }}</p>
+                <br><br>
+                <a href="{% url 'expert:client_contacts' client.id %}" class="btn btn-primary">Контакты</a>
+                <br><br>
+                <a href="{% url 'expert:client_health' client.id %}" class="btn btn-primary">Данные о здоровье</a>
+			</div>
+		</div>
+
+    </div>
+</section>
+{% endblock %}

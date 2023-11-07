@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="750mm"
+   height="400mm"
+   viewBox="0 0 749.99999 400"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="home_trapeze.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.829812"
+     inkscape:cx="1338.1156"
+     inkscape:cy="1386.208"
+     inkscape:window-width="2560"
+     inkscape:window-height="1361"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <clipPath
+       id="c06c291a9d">
+      <path
+         d="m 313,66 h 87 v 66.23828 h -87 z m 0,0"
+         clip-rule="nonzero"
+         id="path46948" />
+    </clipPath>
+    <clipPath
+       id="08ba84efca">
+      <path
+         d="M 23.335938,78 H 301 V 92 H 23.335938 Z m 0,0"
+         clip-rule="nonzero"
+         id="path46951" />
+    </clipPath>
+    <clipPath
+       id="8d7fc597e6">
+      <path
+         d="m 356,37.738281 h 87 V 104 h -87 z m 0,0"
+         clip-rule="nonzero"
+         id="path46954" />
+    </clipPath>
+    <clipPath
+       id="79947dd10e">
+      <path
+         d="m 440,90 h 61.83594 v 14 H 440 Z m 0,0"
+         clip-rule="nonzero"
+         id="path46957" />
+    </clipPath>
+    <clipPath
+       id="8d7fc597e6-3">
+      <path
+         d="m 356,37.738281 h 87 V 104 h -87 z m 0,0"
+         clip-rule="nonzero"
+         id="path46954-2" />
+    </clipPath>
+    <clipPath
+       id="8d7fc597e6-6">
+      <path
+         d="m 356,37.738281 h 87 V 104 h -87 z m 0,0"
+         clip-rule="nonzero"
+         id="path46954-5" />
+    </clipPath>
+    <clipPath
+       id="08ba84efca-2">
+      <path
+         d="M 23.335938,78 H 301 V 92 H 23.335938 Z m 0,0"
+         clip-rule="nonzero"
+         id="path46951-4" />
+    </clipPath>
+    <clipPath
+       id="08ba84efca-2-6">
+      <path
+         d="M 23.335938,78 H 301 V 92 H 23.335938 Z m 0,0"
+         clip-rule="nonzero"
+         id="path46951-4-5" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(118.92276,136.4008)">
+    <path
+       id="rect2240"
+       style="fill:#ffffff;stroke:none;stroke-width:0.714378"
+       d="m 319.07724,-136.4008 311.95053,-0.0657 0.0956,400.08234 -397.04613,-0.0166 z"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#e8ebfa;stroke-width:1.74625;stroke-dasharray:none;stroke-opacity:1"
+       d="m 319.07724,-136.4008 c -27.44239,133.1501288 -59.70705,266.83458 -85,400"
+       id="path26636"
+       sodipodi:nodetypes="cc" />
+    <path
+       id="rect2240-0"
+       style="fill:#e8ebfa;fill-opacity:1;stroke:none;stroke-width:0.714378"
+       d="m 326.07724,-136.4008 h 305 v 400 l -390,0 z"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+</svg>

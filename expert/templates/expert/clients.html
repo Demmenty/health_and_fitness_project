@@ -1,0 +1,33 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'expert/css/clients.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>Клиенты</title>
+{% endblock %}
+
+{% block content %}
+<section id="clients-control-section">
+    <div class="container">
+        <a id="client-registration-link" href="{% url 'expert:client_registration' %}" class="btn btn-primary">
+            <img src="{% static 'expert/img/person-plus-fill.svg' %}" type="image/svg+xml" width="20">
+            <span class="ms-1">Новый клиент</span>
+        </a>
+
+        <br><br><br>
+
+        <p>Клиенты:</p>
+        {% for client in clients %}
+            <p>аватар</p>
+            <a href="{% url 'expert:client_profile' client.id %}" class="btn btn-primary">{{ client }}</a>
+            <p>последняя активность</p>
+            <p>записки по клиенту</p>
+            <p>кнопка чата</p>
+            <br><br><br>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

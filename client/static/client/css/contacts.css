@@ -1,0 +1,13 @@
+.help-icon.active {
+    color: #657ff7;
+    filter: invert(42%) sepia(65%) saturate(1255%) hue-rotate(209deg);
+}
+.help-detail img {
+    width: 100%;
+    height: fit-content;
+}
+@media (min-width: 768px) {
+    .help-detail img {
+        width: calc(50% - 0.5rem);
+    }
+}

@@ -1,0 +1,44 @@
+{% extends 'client/layout.html' %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: профиль</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-profile-section">
+    <div class="container">
+
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+			<div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Личные данные</h5>
+			</div>
+			<div class="card-body pt-4">
+                <!-- аватар-->
+                <p>Имя: {{ user.first_name|default:"?" }}</p>
+                <p>Фамилия: {{ user.last_name|default:"?" }}</p>
+                <p>Пол: {{ maindata.sex|default:"?" }}</p>
+                <p>Возраст: {{ maindata.get_age|default:"?" }}</p>
+                <p>Рост: {{ maindata.height|default:"?" }}</p>
+                <br><br>
+                <a href="{% url 'client:maindata' %}" class="btn btn-primary">Редактировать</a>
+                <br><br>
+                <a href="{% url 'client:contacts' %}" class="btn btn-primary">Контакты</a>
+                <br><br>
+                <a href="{% url 'client:health' page=0 %}" class="btn btn-primary">Данные о здоровье</a>
+                <br><br>
+                <a href="{% url 'users:password_change' %}" class="btn btn-primary">Сменить пароль</a>
+			</div>
+		</div>
+
+        <br><br>
+
+        <p>Важные уведомления:</p>
+        <p>заполнить анкеты и контакты</p>
+        <p>тренировка сегодня</p>
+        <p>не заполнены измерения за сегодня</p>
+        <p>не подключен Fatsecret</p>
+        <br><br><br>
+        <p>Статистика ?</p>
+    </div>
+</section>
+{% endblock %}

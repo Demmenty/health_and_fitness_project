@@ -1,0 +1,189 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+<!-- TODO if not fatsecret_is_linked ! -->
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
+    <link rel="stylesheet" href="{% static 'expert/css/extra_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'expert/css/client_nutrition.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: питание</title>
+{% endblock %}
+
+{% block content %}
+{% include 'home/alerts.html' %}
+<section id="nutrition-menu-section">
+    <div class="container">
+        <div class="extra-menu mx-auto mb-4">
+            <div class="extra-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
+                <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
+            </div>
+            <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
+                <div id="monthtop-btn" class="text-nowrap align-middle btn-link-blackblue
+                {% if not fatsecret_is_linked %} disabled {% endif %}" title="Топ-10 продуктов за месяц">
+                    <img src="{% static 'client/img/star.svg' %}" width="20" class="mb-1">
+                    <span class="d-none d-sm-inline">Топ-10</span>
+                </div>
+                <div id="recommendations-btn" class="text-nowrap align-middle btn-link-blackblue" 
+                    title="Рекомендации по питанию">
+                    <img src="{% static 'client/img/file-ruled.svg' %}" width="20" class="mb-1">
+                    <span class="d-none d-sm-inline">Кбжу</span>
+                </div>
+                <div id="statistics-btn" class="text-nowrap align-middle btn-link-blackblue disabled" 
+                    title="Раздел в разработке">
+                    <img src="{% static 'client/img/graph-up.svg' %}" width="20">
+                    <span class="d-none d-sm-inline">Статистика</span>
+                </div>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="nutrition-section">
+    <div class="container">
+        {% if fatsecret_is_linked %}
+            <div id="day-nutrition" class="card shadow-sm mx-auto mb-4" 
+                data-get-url="{% url 'nutrition:get_food_by_day' %}?client={{ client.id }}">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
+                    <span class="prev-arrow" title="Предыдущий день"> &lang; </span> 
+                    <h5 class="header mb-0">Сегодня</h5>
+                    <span class="next-arrow" title="Следующий день"> &rang; </span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-primary my-5" role="status"></div>
+                        <span class="status my-5" style="display: none;">Данные отсутствуют</span>
+                    </div>
+                    <table class="table table-bordered text-center mb-0" style="display: none;">
+                        <thead class="table-light d-none d-lg-table-row-group">
+                            <tr>
+                                <th>Категория</th>
+                                <th colspan="2">Продукт</th>
+                                <th>Калории</th>
+                                <th>Белки</th>
+                                <th>Жиры</th>
+                                <th>Углеводы</th>
+                            </tr>
+                        </thead>
+                        <tbody class="body-bg d-none d-lg-table-row-group">
+                        </tbody>
+                        <tbody class="body-sm d-lg-none">
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light d-lg-none">
+                                <th colspan="4">Всего</th>
+                            </tr>
+                            <tr class="table-light d-lg-none">
+                                <th>ккал</th>
+                                <th>белки</th>
+                                <th>жиры</th>
+                                <th>углев.</th>
+                            </tr>
+                            <tr class="table-light">
+                                <th colspan="2" class="d-none d-lg-table-cell text-end">Всего:</th>
+                                <th class="total-amount text-nowrap d-none d-lg-table-cell"></th>
+                                <th>
+                                    <span class="total-calories"></span>
+                                    <div class="bar" style="display: none">
+                                        <div class="bar-scale"></div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <span class="total-protein"></span>
+                                    <div class="bar" style="display: none">
+                                        <div class="bar-scale"></div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <span class="total-fat"></span>
+                                    <div class="bar" style="display: none">
+                                        <div class="bar-scale"></div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <span class="total-carbohydrate"></span>
+                                    <div class="bar" style="display: none">
+                                        <div class="bar-scale"></div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div id="month-nutrition" class="card shadow-sm mx-auto">
+            </div>
+        {% else %}
+            <div class="card shadow-sm mx-auto">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Сегодня</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-center my-5">Клиент не подключил FatSecret аккаунт</p>
+                </div>
+            </div>
+        {% endif %} 
+    </div>
+</section>
+
+<div id="recommendations" class="card overflow-auto draggable border-0 shadow">
+    <div class="card-header draggable-point d-flex align-items-center bg-auxiliary gap-2 text-light justify-content-between">
+        <div class="col-1"></div>
+        <h6 class="mb-0 text-nowrap col-auto">КБЖУ рекомендации</h6>
+        <button type="button" class="col-1 btn-close btn-close-white"></button>
+    </div>
+    <div class="card-body bg-white">
+        <form method="post" id="recommedations-form" class="d-flex flex-column gap-2"
+            action="{% url 'metrics:save_nutrition_recommendations' client.id %}">
+            {% csrf_token %}
+            {% for field in recommedations_form %}
+                {% if field.name != "comment" %}
+                <div class="d-flex align-items-center gap-3">
+                    <label for="{{ field.id_for_label }}" class="w-50">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div class="my-3">
+                {{ recommedations_form.comment }}
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-auxiliary float-end">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="food-metrics-modal" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog shadow">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center bg-primary">
+                <h5 class="modal-title text-white">Внесение метрики продуктов</h5>
+            </div>
+            <div class="modal-body px-2 px-sm-3">
+                <p class="text-center">
+                    Некоторые продукты не удалось посчитать.<br>
+                    Укажите их массу или объем, пожалуйста.
+                </p>
+                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:save_food_metrics' %}">
+                    {% csrf_token %}
+                    <div class="food-list d-flex flex-column gap-3">
+                    </div>
+                    <p class="error text-center text-danger"></p>
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'home/js/draggable.js' %}"></script>
+    <script src="{% static 'home/js/alerts.js' %}"></script>
+    <script src="{% static 'expert/js/client_nutrition.js' %}"></script>
+{% endblock %}

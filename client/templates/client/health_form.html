@@ -1,0 +1,63 @@
+{% extends 'client/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: анкета здоровья</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-health-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 936px;">
+			<div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">{{ form.header }}</h5>
+			</div>
+			<div class="card-body">
+                {% if form.preamble %}
+                    <p class="text-secondary mt-3 mb-4">{{ form.preamble }}</p>
+                {% endif %}
+                <form id="health-form" method="post" class="d-flex flex-column gap-4 mt-3">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div id="{{ field.name }}" 
+                        class="{% if field.name in 'is_pregnant, had_birth_in_last_six_months' and user.maindata.sex == 'M' %} d-none {% endif %}">
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <div class="form-check">
+                                    {{ field }}
+                                    {{ field.label_tag }}
+                                </div>
+                            {% elif field.field.widget.input_type == 'radio' %}
+                                <p>{{ field.label }}</p>
+                                {% for radio in field|slice:"1:" %}
+                                    <div class="form-check">
+                                        {{ radio }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {{ field.label_tag }}
+                                {{ field }}
+                            {% endif %}
+                            <div class="helptext text-secondary ms-4">{{ field.help_text }}</div>
+                            {% for error in field.errors %}
+                                <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between mt-4">
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                        {% if page == last_page %}
+                            <input type="submit" class="btn btn-primary" value="Готово!">
+                        {% else %}
+                            <input type="submit" class="btn btn-primary" value="Продолжить">
+                        {% endif %}
+					</div>
+                </form>
+			</div>
+		</div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'client/js/health_form.js' %}"></script>
+{% endblock %}

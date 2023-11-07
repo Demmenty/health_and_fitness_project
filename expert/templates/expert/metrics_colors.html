@@ -1,0 +1,38 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>Цвета измерений</title>
+{% endblock %}
+
+{% block content %}
+<!-- TODO add reactive example -->
+<section id="metrics-colors-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">Настройка цветов измерений</h5>
+			</div>
+            <div class="card-body">
+                <form id="colors-form" method="post" class="d-flex flex-column mt-2 gap-2">
+                    {% csrf_token %}
+                    <p class="text-secondary">
+                        Данные настройки будут применены к измерениям всех клиентов. 
+                        Для редактирования нажмите на квадрат с примером цвета.
+                    </p>
+                    {% for field in form %}
+                        <div class="d-flex align-items-center justify-content-around">
+                            <label for="{{ field.id_for_label }}" class="col-6">{{ field.label }} ({{ field.help_text }})</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between mt-3">
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                        <input type="submit" class="btn btn-primary" value="Сохранить">
+					</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

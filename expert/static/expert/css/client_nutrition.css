@@ -1,0 +1,38 @@
+/* common */
+@media (min-width: 992px) {
+    .d-lg-table-row-group {
+        display: table-row-group !important;
+    }
+}
+.draggable {
+    z-index: 5;
+    position: fixed;
+    height: fit-content;
+    max-width: 90vw;
+    max-height: 90vh;
+    left: 12px;
+    top: 12px;
+}
+.draggable .card-header:hover {
+    cursor: default;
+}
+
+/* nutrition recommendations */
+#recommendations {
+    display: none;
+    width: 350px;
+}
+
+/* day nutrition */
+.bar{
+    width: 100%;
+    background: #e4e4e4;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.bar-scale {
+    background: #657ff7;
+    width: 0;
+    height: 7px;
+    border-radius: 5px;
+}

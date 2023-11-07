@@ -1,0 +1,30 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+{% load draw_client_registration_form %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" href="{% static 'users/css/client_registration_form.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>Регистрация клиента</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-registration-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+			<div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Регистрация клиента</h5>
+			</div>
+			<div class="card-body pt-4">
+                {% draw_client_registration_form %}
+			</div>
+		</div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'users/js/client_registration_form.js' %}"></script>
+{% endblock %}

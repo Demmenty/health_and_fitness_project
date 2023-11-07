@@ -1,0 +1,167 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'expert/css/client_health.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: анкета здоровья</title>
+{% endblock %}
+
+{% block content %}
+<!-- TODO сделать кнопку "история изменений", 
+направляющую на страницу с историей активности с фильтром по модели Health -->
+<section id="client-health-section">
+    <div class="container">
+        {% if not health_data %}
+            <div id="health-form-card" class="card shadow-sm mx-auto" style="max-width: 30rem;">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Анкета здоровья</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-center mt-4 mb-5">
+                        Данные о здоровье не заполнены.
+                    </p>
+                    <div class="d-flex justify-content-between">
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+					</div>
+                </div>
+            </div>
+        {% else %}
+            <div id="health-evaluation-card" class="card shadow-sm mx-auto mb-5">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Оценка готовности к нагрузкам.</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table id="health-evaluation-table" class="table table-bordered d-block align-middle overflow-auto text-center">
+                        <thead class="table-primary align-middle">
+                            <tr>
+                                <th colspan="4">Показатели</th>
+                                <th rowspan="2">Готовность к нагрузкам</th>
+                            </tr>
+                            <tr>
+                                <th>Тренировочный стаж</th>
+                                <th>Уровень двигательной активности</th>
+                                <th>Здоровье, физическое состояние</th>
+                                <th>Другие факторы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-danger">
+                                <td>Отсутствует</td>
+                                <td class="current-load-none">Отсутствует</td>
+                                <td class="significant-restrictions">Значительные ограничения, связанные с физическим состоянием*</td>
+                                <td rowspan="2">Отсутствие возможностей для полноценного восстановления после нагрузок</td>
+                                <td rowspan="2">Низкая</td>
+                            </tr>
+                            <tr class="table-danger">
+                                <td>Незначительный, < 3 мес.</td>
+                                <td class="current-load-low">Низкий, < 2 занятий в неделю, занятия нерегулярные, нагрузки от низких до средних</td>
+                                <td>Признаки значительного переутомления или перетренированности</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td rowspan="2">Средний, 3-6 мес. (при хорошей переносимости нагрузок и при отсутствии ограничений - от 1 мес.)</td>
+                                <td rowspan="2" class="current-load-medium">Средний, 2-3 занятия в неделю, занятия достаточно регулярные, нагрузки от средних до высоких</td>
+                                <td class="small-restrictions">Незначительные ограничения, связанные с физическим состоянием**</td>
+                                <td rowspan="2">Ограниченные возможности для восстановления после нагрузок</td>
+                                <td rowspan="2">Средняя</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td>Признаки незначительного переутомления</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td rowspan="2">Значительный, > 6 мес. (при хорошей переносимости нагрузок и при отсутствии ограничений - от 3 мес.)</td>
+                                <td rowspan="2" class="current-load-high">Высокий, >= 3 занятий в неделю, занятия регулярные, нагрузки от высоких до предельных</td>
+                                <td>Отсутствие ограничений, связанных с физическим состоянием***</td>
+                                <td rowspan="2">Наличие всех условий для восстановления после нагрузок</td>
+                                <td rowspan="2">Высокая</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td>Нет признаков переутомления</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="health-evaluation-footnotes" class="m-3">
+                        <div class="d-flex">
+                            <strong class="me-2">*</strong>
+                            <span>
+                                Клиент ответил "да" хотя бы на один вопрос в 
+                                <a href="#health-form-part-1" class="text-decoration-none text-nowrap">разделе 1</a> 
+                                (и получил мед. допуск к тренировкам).
+                            </span>
+                        </div>
+                        <div class="d-flex">
+                            <strong class="me-2">**</strong>
+                            <span>
+                                Диагностированы сердечно-сосудистые, метаболические или почечные заболевания
+                                (клиент ответил "да" хотя бы на один вопрос в 
+                                <a href="#health-form-part-2" class="text-decoration-none text-nowrap">разделе 2</a>),
+                                но их симптомы не проявляются (клиент ответил "нет" на все вопросы в 
+                                <a href="#health-form-part-1" class="text-decoration-none text-nowrap">разделе 1</a>),
+                                и при этом стаж занятий включает 3 и более месяцев регулярных тренировок
+                                с интенсивностью не ниже средней (клиент ответил "да" на первый вопрос в
+                                в <a href="#health-form-part-4" class="text-decoration-none text-nowrap">разделе 4</a>).
+                            </span>
+                        </div>
+                        <div class="d-flex">
+                            <strong class="me-2">***</strong>
+                            <span>
+                                Нет противопоказаний к нагрузкам высокой интенсивности, или же 
+                                противопоказания есть, но имеется медицинский допуск к таким тренировкам.
+                            </span>
+                        </div>
+                    </div>
+                    <div id="health-eval-result" class="m-3">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ result_form }}
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                                <button type="submit" class="btn btn-primary">Сохранить и выйти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% for form in health_forms|slice:"1:" %}
+                <div id="health-form-part-{{ forloop.counter }}" class="card shadow-sm mx-auto mb-4" style="max-width: 936px;">
+                    <div class="card-header bg-primary text-light text-center">
+                        <h5 class="mb-0">{{ form.header }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column gap-4 my-3">
+                            {% for field in form %}
+                                <div id="{{ field.name }}">
+                                    {% if field.field.widget.input_type == 'checkbox' %}
+                                        <div class="form-check">
+                                            {{ field|append_attr:"disabled" }}
+                                            {{ field.label_tag }}
+                                        </div>
+                                    {% elif field.field.widget.input_type == 'radio' %}
+                                        <p>{{ field.label }}</p>
+                                        {% for radio in field|slice:"1:" %}
+                                            <div class="form-check disabled">
+                                                {{ radio }}
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        {{ field.label_tag }}
+                                        {{ field|append_attr:"readonly" }}
+                                    {% endif %}
+                                    <div class="helptext text-secondary ms-4">{{ field.help_text }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'expert/js/client_health.js' %}"></script>
+{% endblock %}

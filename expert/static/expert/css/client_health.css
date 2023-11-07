@@ -1,0 +1,11 @@
+#health-evaluation-table td:hover {
+    cursor: pointer;
+    color: #657ff7;
+}
+#health-evaluation-footnotes strong {
+    text-align: end;
+    min-width: 25px;
+}
+#health-evaluation-table td.detected {
+    color: #657ff7 !important;
+}

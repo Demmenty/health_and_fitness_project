@@ -1,0 +1,88 @@
+{% extends 'client/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: измерения</title>
+{% endblock %}
+
+{% block content %}
+{% include 'home/alerts.html' %}
+<section id="client-metrics-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 696px;">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">{{ daily_metrics_form.header }}</h5>
+			</div>
+            <div class="card-body">
+                <form id="metrics-form" method="post">
+                    {% csrf_token %}
+                    <div class="d-none">{{ daily_metrics_form.date }}</div>
+                    <div class="form-group row mb-2">
+                        <div class="col-sm-4 col-form-label">Дата</div>
+                        <div class="col-sm-8 text-center align-self-center">
+                            <button type="button" class="btn-link-blackblue" title="Выбрать дату"
+                                data-bs-toggle="modal" data-bs-target="#select-date-modal">
+                                {{ daily_metrics_form.date.value }}
+                            </button>
+                        </div>
+                    </div>
+                    {% for field in daily_metrics_form %}
+                        {% if field.name not in 'date, comment' %}
+                            <div class="form-group row mb-2">
+                                <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">{{ field }}</div>
+                                {% for error in field.errors %}
+                                    <small class="text-danger">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="form-group row mb-4">
+                        <p class="col-sm-4"></p>
+                        <small id="fs-connect-status" class="col-sm-8 text-center mb-0" 
+                            data-get-nutrition-url="{% url 'nutrition:get_total_by_day' daily_metrics_form.date.value %}">
+                            <span class="spinner-border text-primary spinner-border-sm"></span>
+                            <span class="text-primary me-1">подключение к FatSecret</span>
+                        </small>
+                    </div>
+                    <div class="form-group row mb-4">
+                        <label class="form-label">{{ daily_metrics_form.comment.label }}</label>
+                        <div class="">{{ daily_metrics_form.comment }}</div>
+                        {% for error in daily_metrics_form.comment.errors %}
+                            <small class="text-danger">• {{ error|striptags }}</small><br>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="history.back();">Назад</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="select-date-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog shadow">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center bg-primary">
+                <h5 class="modal-title text-white">Выбор даты измерений</h5>
+            </div>
+            <div class="modal-body">
+                <form method="get" class="d-flex gap-3 my-3 mx-sm-5">
+                    {{ daily_metrics_form.date }}
+                    <button type="submit" class="btn btn-primary">Ок</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'home/js/alerts.js' %}"></script>
+    <script src="{% static 'client/js/metrics_add.js' %}"></script>
+{% endblock %}

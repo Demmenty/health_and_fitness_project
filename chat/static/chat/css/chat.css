@@ -1,0 +1,17 @@
+#chat-btn {
+    top: -31px;
+    right: 2rem;
+    border: 3px solid #b9b9b9;
+    background-color: white;
+}
+@media (min-width: 576px) {
+    #chat-btn {
+        right: 0;
+    }
+}
+#chat-btn:hover img {
+    filter: invert(46%) sepia(50%) saturate(2348%) hue-rotate(211deg);
+}
+#chat-btn.active img {
+    filter: invert(46%) sepia(50%) saturate(2348%) hue-rotate(211deg);
+}

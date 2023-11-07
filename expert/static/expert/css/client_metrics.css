@@ -1,0 +1,43 @@
+.draggable {
+    z-index: 5;
+    position: fixed;
+    height: fit-content;
+    max-width: 90vw;
+    max-height: 90vh;
+    left: 12px;
+    top: 12px;
+}
+.draggable .card-header:hover {
+    cursor: default;
+}
+.comment {
+    display: none;
+    overflow: auto;
+    resize: both;
+    width: 350px;
+}
+.comment-text {
+    text-align: start;
+    white-space: pre-line;
+}
+.comment::-webkit-scrollbar-thumb {
+    background-color: #c3c5d8;
+}
+.comment::-webkit-scrollbar-thumb:hover {
+    background-color: #74789d;
+}
+#recommendations {
+    display: none;
+    width: 350px;
+}
+#algorithm {
+    max-width: 500px;
+}
+.list-group-item:hover {
+    color: #657ff7;
+}
+.list-group-item.active {
+    color: #657ff7;
+    background-color: unset;
+    border-color: #dee2e6;
+}
