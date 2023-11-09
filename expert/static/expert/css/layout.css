@@ -124,7 +124,7 @@ table th {
 .hover-primary:hover {
     color: #657ff7 !important;
 }
-.hover-pointer {
+.cursor-pointer {
     cursor: pointer;
 }
 .w-fit {

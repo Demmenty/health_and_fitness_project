@@ -17,6 +17,14 @@ const dayTotalProtein = dayNutritionTable.find(".total-protein");
 const dayTotalFats = dayNutritionTable.find(".total-fat");
 const dayTotalCarbs = dayNutritionTable.find(".total-carbohydrate");
 
+const monthNutrition = $("#month-nutrition");
+const nextMonthBtn = monthNutrition.find(".next-arrow");
+const prevMonthBtn = monthNutrition.find(".prev-arrow");
+const monthNutritionStatus = monthNutrition.find(".status");
+const monthNutritionHeader = monthNutrition.find(".header");
+const monthNutritionSpinner = monthNutrition.find(".spinner-border");
+const monthNutritionTable = monthNutrition.find("table");
+
 const nutritionParams = ["calories", "protein", "fat", "carbohydrate"];
 const nutritionParamsRU = {
     "calories": "Калории",
@@ -38,6 +46,7 @@ const foodMetricsModal = new bootstrap.Modal(
 
 const today = new Date().toLocaleDateString('en-CA');
 var nutritionDay = today;
+var nutritionMonth = today;
 
 // EVENTS & AUTOSTART
 
@@ -45,15 +54,23 @@ $(document).ready(() => {
     setRecommendedValuesDict(recommendedValues);
 
     updateDayNutrition(today);
-
     nextDayBtn.on("click", () => {
         nutritionDay = addDays(nutritionDay, 1);
         updateDayNutrition(nutritionDay);
     });
-
     prevDayBtn.on("click", () => {
         nutritionDay = addDays(nutritionDay, -1);
         updateDayNutrition(nutritionDay);
+    });
+
+    updateMonthNutrition(today);
+    nextMonthBtn.on("click", () => {
+        nutritionMonth = addMonths(nutritionMonth, 1);
+        updateMonthNutrition(nutritionMonth);
+    });
+    prevMonthBtn.on("click", () => {
+        nutritionMonth = addMonths(nutritionMonth, -1);
+        updateMonthNutrition(nutritionMonth);
     });
 
     foodMetricsForm.on("submit", saveFoodMetric);
@@ -86,8 +103,24 @@ async function sendFormRequest(form) {
  * @param {string} day - The day for which to retrieve food data.
  * @return {Promise} - A Promise that resolves with the retrieved food data.
  */
-async function getFoodByDayRequest(day) {
+async function getDailyFoodRequest(day) {
     const url = dayNutrition.data("get-url");
+
+    return $.ajax({
+        url: url,
+        type: "GET",
+        data: { "day": day },
+    });
+}
+
+/**
+ * Retrieves dictionary with nutrition data for a specific month.
+ *
+ * @param {string} month - The month for which to retrieve food data.
+ * @return {Promise} - A Promise that resolves with the retrieved food data.
+ */
+async function getMonthlyNutritionRequest(month) {
+    const url = monthNutrition.data("get-url");
 
     // If the URL is not set, then the client didn't link FatSecret.
     if (!url) return {};
@@ -95,8 +128,8 @@ async function getFoodByDayRequest(day) {
     return $.ajax({
         url: url,
         type: "GET",
-        data: { "day": day },
-    });
+        data: { "month": month },
+    })
 }
 
 /**
@@ -169,22 +202,22 @@ async function updateDayNutrition(day) {
     showLoading();
 
     try {
-        const dayFood = await getFoodByDayRequest(day);
+        const dailyFood = await getFoodByDayRequest(day);
 
         dayNutritionSpinner.hide();
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        if ($.isEmptyObject(dayFood)) {
+        if ($.isEmptyObject(dailyFood.meal)) {
             dayNutritionStatus.show();
             return;
         }
 
-        if (!$.isEmptyObject(dayFood.no_metric)) {
-            updateFoodMetricsForm(dayFood);
+        if (!$.isEmptyObject(dailyFood.meal.no_metric)) {
+            updateFoodMetricsForm(dailyFood);
             foodMetricsModal.show();
         }
 
-        updateDayNutritionTable(dayFood);
+        updateDayNutritionTable(dailyFood);
         dayNutritionTable.show();
     }
     catch (error) {
@@ -221,17 +254,18 @@ function updateDayNutritionHeader(day) {
  *
  * @param {Object} dayFood - The dayFood object containing food entries for the day.
  */
-function updateDayNutritionTable(dayFood) {
+function updateDayNutritionTable(dailyFood) {
     const tbodyBG = dayNutritionTable.find(".body-bg");
     const tbodySM = dayNutritionTable.find(".body-sm");
 
     tbodyBG.empty();
     tbodySM.empty();
 
-    for (const category in dayFood.meal) {
-        addFoodCategory(dayFood.meal[category], mealCategoriesRU[category]);
+    for (const category in dailyFood.meal.categories) {
+        addFoodCategory(dailyFood.meal.categories[category], mealCategoriesRU[category]);
     }
-    updateFooter(dayFood);
+
+    updateFooter(dailyFood);
     
     /**
      * Adds food in the given category to a day nutition table.
@@ -345,10 +379,10 @@ function updateDayNutritionTable(dayFood) {
      *
      * @param {object} dayFood - The object containing the day's food information.
      */
-    function updateFooter(dayFood) {
-        const { calories, protein, fat, carbohydrate } = dayFood.total_nutrition;
+    function updateFooter(dailyFood) {
+        const { calories, protein, fat, carbohydrate } = dailyFood.total_nutrition;
 
-        dayTotalAmount.text(`${dayFood.total_amount} г/мл`);
+        dayTotalAmount.text(`${dailyFood.total_amount} г/мл`);
         dayTotalCalories.text(calories);
         dayTotalProtein.text(protein);
         dayTotalFats.text(fat);
@@ -391,6 +425,122 @@ function addDays(date, days) {
     return result.toLocaleDateString('en-CA');
 }
 
+// MONTH NUTRITION
+
+/**
+ * Gets the month nutrition data for the given month and updates the table accordingly.
+ *
+ * @param {string} month - The month for which to update the nutrition data.
+ */
+async function updateMonthNutrition(month) {
+    showLoading();
+
+    try {
+        const monthNutrition = await getMonthlyNutritionRequest(month);
+        console.log('monthNutrition', monthNutrition);
+
+        monthNutritionSpinner.hide();
+
+        if ($.isEmptyObject(monthNutrition.days)) {
+            monthNutritionStatus.show();
+            return;
+        }
+
+        // TODO month top btn toggle
+
+        updateMonthNutritionTable(monthNutrition);
+        monthNutritionTable.show();
+
+        monthNutritionTable.find("tbody tr").on("click", function() {
+            const clickedDate = $(this).attr("value");
+            nutritionDay = clickedDate;
+            updateDayNutrition(clickedDate);
+        });
+    }
+    catch (error) {
+        console.error('updateMonthNutrition error', error);
+        showDangerAlert(`${error.status} ${error.responseText}`);
+        monthNutritionSpinner.hide();
+        monthNutritionStatus.show();
+    }
+    finally {
+        updateMonthNutritionHeader(month);
+    }
+
+    function showLoading() {
+        monthNutritionSpinner.show();
+        monthNutritionStatus.hide();
+        monthNutritionTable.hide();
+    }
+}
+
+/**
+ * Updates the month nutrition block header with the formatted date.
+ *
+ * @param {Date} month - The date to be formatted.
+ */
+function updateMonthNutritionHeader(day) {
+    const formatted_date = new Date(day).toLocaleString(
+        'default', { month: 'long' });
+
+    monthNutritionHeader.text(formatted_date);
+}
+
+/**
+ * Update the month nutrition table with the given monthFood data.
+ *
+ * @param {Object} monthNutrition - The object containing nutrition for the each day and avg.
+ */
+function updateMonthNutritionTable(monthNutrition) {
+    const { days, avg } = monthNutrition;
+    const body = monthNutritionTable.find("tbody");
+    const footer = monthNutritionTable.find("tfoot");
+    const options = { day: 'numeric', month: 'long' };
+
+    body.empty();
+
+    days.forEach(addDayToBody);
+    updateFooter(avg);
+
+    function addDayToBody(day) {
+        const { date, calories, protein, fat, carbohydrate } = day;
+        const formattedDate = new Date(date).toLocaleDateString('default', options);
+
+        const dateRow = $('<tr>', { class: "d-sm-none", value: date })
+            .append($('<td>', { colspan: "4", text: formattedDate }));
+        body.append(dateRow);
+
+        const nutritionRow = $('<tr>', { value: date })
+            .append($('<td>', { class: "d-none d-sm-table-cell", text: formattedDate }))
+            .append($('<td>', { title: "калории", text: calories }))
+            .append($('<td>', { title: "белки", text: protein }))
+            .append($('<td>', { title: "жиры", text: fat }))
+            .append($('<td>', { title: "углеводы", text: carbohydrate }));
+        body.append(nutritionRow);
+    }
+
+    function updateFooter(avg) {
+        footer.find(".avg-calories").text(avg.calories);
+        footer.find(".avg-protein").text(avg.protein);
+        footer.find(".avg-fat").text(avg.fat);
+        footer.find(".avg-carbohydrate").text(avg.carbohydrate);
+    }
+}
+
+/**
+ * Adds the specified number of months to the given date.
+ *
+ * @param {Date} date - The date to which the months will be added.
+ * @param {number} months - The number of months to be added.
+ * @return {string} - The resulting date in the format 'YYYY-MM-DD'.
+ */
+function addMonths(date, months) {
+    const result = new Date(date);
+
+    result.setMonth(result.getMonth() + months);
+    return result.toLocaleDateString('en-CA');
+}
+
 //  FOOD WITHOUT METRICS
 
 /**
@@ -398,9 +548,9 @@ function addDays(date, days) {
  *
  * @param {Object} dayFood - The dayFood object containing the food entries without metrics.
  */
-function updateFoodMetricsForm(dayFood) {
+function updateFoodMetricsForm(dailyFood) {
     const foodList = foodMetricsForm.find(".food-list");
-    const food = dayFood.no_metric;
+    const food = dailyFood.meal.no_metric;
 
     foodList.empty();
 

@@ -189,7 +189,7 @@ class DailyData(models.Model):
         if not fs_entry_data:
             return metrics
 
-        fs_session = FSManager(entry_data=fs_entry_data)
+        fatsecret = FSManager(entry_data=fs_entry_data)
 
         months_in_metrics = {
             datetime(metric.date.year, metric.date.month, 1)
@@ -197,20 +197,20 @@ class DailyData(models.Model):
         }
 
         for month in months_in_metrics:
-            fs_monthly_nutrition = fs_session.get_monthly_nutrition(month)
-            if not fs_monthly_nutrition:
+            monthly_nutrition = fatsecret.get_monthly_nutrition_dict(month)
+            if not monthly_nutrition:
                 continue
 
             for day in metrics:
-                fs_day_nutrition = fs_monthly_nutrition.get(day.date)
-                if not fs_day_nutrition:
+                day_nutrition = monthly_nutrition.get(day.date)
+                if not day_nutrition:
                     continue
 
-                if day.calories != fs_day_nutrition["calories"]:
-                    day.calories = fs_day_nutrition["calories"]
-                    day.protein = fs_day_nutrition["protein"]
-                    day.fat = fs_day_nutrition["fat"]
-                    day.carbohydrate = fs_day_nutrition["carbohydrate"]
+                if day.calories != day_nutrition["calories"]:
+                    day.calories = day_nutrition["calories"]
+                    day.protein = day_nutrition["protein"]
+                    day.fat = day_nutrition["fat"]
+                    day.carbohydrate = day_nutrition["carbohydrate"]
                     day.save()
 
         return metrics

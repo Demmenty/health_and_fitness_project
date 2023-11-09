@@ -33,7 +33,7 @@
                             {{ field.label_tag }}
                             {% if field.name != 'preferred_contact' %}
                                 <img src="{% static 'client/img/question-circle.svg' %}" alt="help-icon" title="Инструкция"
-                                class="help-icon svg-hover-primary hover-pointer float-end mt-1">
+                                class="help-icon svg-hover-primary cursor-pointer float-end mt-1">
                             {% endif %}
                             {{ field }}
                             {% for error in field.errors %}

@@ -237,8 +237,9 @@ def nutrition(request):
 @client_required
 @require_http_methods(["GET"])
 def link_fatsecret(request):
-    client = request.user
+    """
+    A view function that shows the page, which offers linking Fatsecret.
+    """
 
     template = "client/link_fatsecret.html"
-    data = {}
-    return render(request, template, data)
+    return render(request, template)

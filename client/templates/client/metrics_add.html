@@ -45,7 +45,7 @@
                     <div class="form-group row mb-4">
                         <p class="col-sm-4"></p>
                         <small id="fs-connect-status" class="col-sm-8 text-center mb-0" 
-                            data-get-nutrition-url="{% url 'nutrition:get_total_by_day' daily_metrics_form.date.value %}">
+                            data-get-nutrition-url="{% url 'nutrition:get_daily' daily_metrics_form.date.value %}">
                             <span class="spinner-border text-primary spinner-border-sm"></span>
                             <span class="text-primary me-1">подключение к FatSecret</span>
                         </small>

@@ -1,7 +1,22 @@
 from datetime import date, datetime, time, timedelta
 from typing import Union
-
+from users.models import User
 from django.http import HttpRequest
+
+
+def get_client_from_request(request: HttpRequest) -> User|None:
+    """
+    Returns the client information from the given HttpRequest object.
+    Based on the user type, the client information is returned.
+        
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        Optional[User]: The client information if found, None otherwise.
+    """
+
+    return request.GET.get("client") if request.user.is_expert else request.user
 
 
 def is_ajax(request: HttpRequest) -> bool:

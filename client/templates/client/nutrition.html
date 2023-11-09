@@ -44,8 +44,8 @@
 
 <section id="nutrition-section">
     <div class="container">
-
-        <div id="day-nutrition" class="card shadow-sm mx-auto mb-4" data-get-url="{% url 'nutrition:get_food_by_day' %}">
+        <div id="day-nutrition" class="card shadow-sm mx-auto mb-4" 
+            data-get-url="{% url 'nutrition:get_daily_food' %}">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
                 <span class="prev-arrow" title="Предыдущий день"> &lang; </span> 
                 <h5 class="header mb-0">Сегодня</h5>
@@ -113,10 +113,56 @@
                 </table>
             </div>
         </div>
-
-        <div id="month-nutrition" class="card shadow-sm mx-auto">
+        <div id="month-nutrition" class="card shadow-sm mx-auto" 
+            data-get-url="{% url 'nutrition:get_monthly' %}">
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
+                <span class="prev-arrow" title="Предыдущий месяц"> &lang; </span> 
+                <h5 class="header text-capitalize mb-0">Текущий месяц</h5>
+                <span class="next-arrow" title="Следующий месяц"> &rang; </span>
+            </div>
+            <div class="card-body p-0">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary my-5" role="status"></div>
+                    <span class="status my-5" style="display: none;">Данные отсутствуют</span>
+                </div>
+                <table class="table table-bordered table-hover text-center mb-0" style="display: none;">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="d-none d-sm-table-cell">Дата</th>
+                            <th>
+                                <span class="d-sm-none">Ккал</span>
+                                <span class="d-none d-sm-inline">Калории</span>
+                            </th>
+                            <th>Белки</th>
+                            <th>Жиры</th>
+                            <th>
+                                <span class="d-sm-none">Углев.</span>
+                                <span class="d-none d-sm-inline">Углеводы</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="cursor-pointer"></tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <th colspan="4" class="d-sm-none">В среднем</th>
+                        </tr>
+                        <tr class="table-light d-sm-none">
+                            <th class="text-center">ккал</th>
+                            <th class="text-center">белки</th>
+                            <th class="text-center">жиры</th>
+                            <th class="text-center">углев.</th>
+                        </tr>
+                        <tr class="table-light">
+                            <th class="d-none d-sm-table-cell">В среднем</th>
+                            <th class="avg-calories" title="калории"></th>
+                            <th class="avg-protein" title="белки"></th>
+                            <th class="avg-fat" title="жиры"></th>
+                            <th class="avg-carbohydrate" title="углеводы"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
-
     </div>
 </section>
 
@@ -156,7 +202,7 @@
                     Некоторые продукты не удалось посчитать.<br>
                     Укажите их массу или объем, пожалуйста.
                 </p>
-                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:save_food_metrics' %}">
+                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:save_food_servings' %}">
                     {% csrf_token %}
                     <div class="food-list d-flex flex-column gap-3">
                     </div>

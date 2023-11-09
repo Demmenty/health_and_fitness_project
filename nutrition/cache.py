@@ -144,34 +144,41 @@ class FatsecretCacheManager:
         with open(self.servings, "wb") as f:
             pickle.dump(cache, f)
 
-    def save_foodmetric(self, prods_no_metric) -> None:
-        """получает словарь с продуктами, которым добавили метрику
-        вручную в дневнике питания, и сохраняет в servings"""
+    def save_serving(self, servings: dict) -> None:
+        """
+        Saves the servings provided in the `servings` parameter to the cache file.
+        
+        Args:
+            servings (dict): A dictionary containing the servings to be saved. 
+            The dictionary should have the following keys:
+                - "food_id" (list): A list of food IDs.
+                - "serving_id" (list): A list of serving IDs.
+                - "metric_serving_amount" (list): A list of metric serving amounts.
+                - "metric_serving_unit" (list): A list of metric serving units.
+        """
 
         with open(self.servings, "rb") as file:
-            cache = pickle.load(file)
+            cache: dict = pickle.load(file)
 
-        count_of_prods = len(prods_no_metric.get("food_id"))
+        amount_of_food = len(servings.get("food_id"))
 
-        for i in range(count_of_prods):
-            food_id = prods_no_metric["food_id"][i]
-            metric_serving_amount = prods_no_metric["metric_serving_amount"][i]
-            metric_serving_unit = prods_no_metric["metric_serving_unit"][i]
-            serving_id = prods_no_metric["serving_id"][i]
+        for i in range(amount_of_food):
+            food_id = servings["food_id"][i]
 
-            if type(cache[food_id]["servings"]["serving"]) is dict:
-                cache[food_id]["servings"]["serving"][
-                    "metric_serving_amount"
-                ] = metric_serving_amount
-                cache[food_id]["servings"]["serving"][
-                    "metric_serving_unit"
-                ] = metric_serving_unit
-            else:
-                for dic in cache[food_id]["servings"]["serving"]:
-                    if dic["serving_id"] == serving_id:
-                        dic["metric_serving_amount"] = metric_serving_amount
-                        dic["metric_serving_unit"] = metric_serving_unit
-                        break
+            new_serving = {
+                "serving_id": servings["serving_id"][i],
+                "metric_serving_amount": servings["metric_serving_amount"][i],
+                "metric_serving_unit": servings["metric_serving_unit"][i],
+            }
+
+            food_servings_in_cache = cache[food_id]["servings"]["serving"]
+            if isinstance(food_servings_in_cache, dict):
+                food_servings_in_cache = [food_servings_in_cache]
+
+            for serving in food_servings_in_cache:
+                if serving["serving_id"] == new_serving["serving_id"]:
+                    serving.update(new_serving)
+                    break
 
         with open(self.servings, "wb") as f:
             pickle.dump(cache, f)

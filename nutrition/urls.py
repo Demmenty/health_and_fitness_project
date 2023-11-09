@@ -11,18 +11,23 @@ urlpatterns = [
         name="link_fatsecret",
     ),
     path(
-        "get_total_by_day/<str:day>/",
-        ajax.get_total_by_day,
-        name="get_total_by_day",
+        "get_daily/<str:day>/",
+        ajax.get_daily,
+        name="get_daily",
     ),
     path(
-        "get_food_by_day/",
-        ajax.get_food_by_day,
-        name="get_food_by_day",
+        "get_daily_food/",
+        ajax.get_daily_food,
+        name="get_daily_food",
     ),
     path(
-        "save_food_metrics/",
-        ajax.save_food_metrics,
-        name="save_food_metrics",
+        "get_monthly/",
+        ajax.get_monthly,
+        name="get_monthly",
+    ),
+    path(
+        "save_food_servings/",
+        ajax.save_food_servings,
+        name="save_food_servings",
     ),
 ]
