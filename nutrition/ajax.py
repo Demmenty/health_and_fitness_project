@@ -31,9 +31,10 @@ def get_daily(request, day: str):
     if not entry_data:
         return HttpResponseNotFound("FS не подключен")
 
-    fatsecret = FSManager(entry_data)
-    daily_food = fatsecret.get_daily_food(day)
-    daily_nutrition = fatsecret.calc_daily_total_nutrition(daily_food)
+    fs = FSManager(entry_data)
+
+    daily_food = fs.get_daily_food(day)
+    daily_nutrition = fs.calc_daily_total_nutrition(daily_food)
 
     return JsonResponse(data=daily_nutrition)
 
@@ -65,14 +66,15 @@ def get_daily_food(request):
     if not entry_data:
         return HttpResponseNotFound("FS не подключен")
 
-    fatsecret = FSManager(entry_data)
+    fs = FSManager(entry_data)
 
-    daily_food = fatsecret.get_daily_food(day)
-    daily_total = fatsecret.calc_daily_total_nutrition(daily_food)
-    daily_amount = fatsecret.calc_daily_total_amount(daily_food)
+    daily_food = fs.get_daily_food(day)
+    daily_total = fs.calc_daily_total_nutrition(daily_food)
+    daily_amount = fs.calc_daily_total_amount(daily_food)
 
     data = {
-        "meal": daily_food,
+        "meal": daily_food["meal"],
+        "no_metric": daily_food["no_metric"],
         "total_nutrition": daily_total,
         "total_amount": daily_amount,
     }
@@ -106,10 +108,10 @@ def get_monthly(request):
     if not entry_data:
         return HttpResponseNotFound("FS не подключен")
     
-    fatsecret = FSManager(entry_data)
+    fs = FSManager(entry_data)
 
-    monthly_nutrition = fatsecret.get_monthly_nutrition_list(month)
-    avg_monthly_nutrition = fatsecret.calc_monthly_avg_nutrition(
+    monthly_nutrition = fs.get_monthly_nutrition_list(month)
+    avg_monthly_nutrition = fs.calc_monthly_avg_nutrition(
         monthly_nutrition, count_today=False
     )
 
@@ -140,3 +142,31 @@ def save_food_servings(request):
     fs_cache.save_serving(food_servings)
 
     return HttpResponse("ok")
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_monthly_top_food(request):
+
+    client = get_client_from_request(request)
+    if not client:
+        return HttpResponseNotFound("Клиент не найден")
+
+    month = request.GET.get("month", date.today())
+
+    entry_data = FatSecretEntry.objects.filter(client=client).first()
+    if not entry_data:
+        return HttpResponseNotFound("FS не подключен")
+
+    fs = FSManager(entry_data)
+
+    monthly_food = fs.get_monthly_food(month)
+    top_by_amount = fs.calc_monthly_top(monthly_food, "amount")
+    top_by_calories = fs.calc_monthly_top(monthly_food, "calories")
+
+    data = {
+        "top_by_amount": top_by_amount,
+        "top_by_calories": top_by_calories,
+        "no_metric": monthly_food["no_metric"],
+    }
+    return JsonResponse(data)

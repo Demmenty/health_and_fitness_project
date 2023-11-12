@@ -25,6 +25,12 @@ const monthNutritionHeader = monthNutrition.find(".header");
 const monthNutritionSpinner = monthNutrition.find(".spinner-border");
 const monthNutritionTable = monthNutrition.find("table");
 
+const monthTopBtn = $("#monthtop-btn");
+const monthTopSection = $("#monthtop-section");
+const topByAmountTable = $("#top-by-amount table");
+const topByCaloriesTable = $("#top-by-calories table");
+const catLoader = $("#cat-loader");
+
 const nutritionParams = ["calories", "protein", "fat", "carbohydrate"];
 const nutritionParamsRU = {
     "calories": "Калории",
@@ -32,6 +38,7 @@ const nutritionParamsRU = {
     "fat": "Жиры",
     "carbohydrate": "Углеводы",
 };
+const servingUnitsRU = { g: "г", ml: "мл" };
 const mealCategoriesRU = {
     "breakfast": "Завтрак",
     "lunch": "Обед",
@@ -72,6 +79,8 @@ $(document).ready(() => {
         nutritionMonth = addMonths(nutritionMonth, -1);
         updateMonthNutrition(nutritionMonth);
     });
+
+    monthTopBtn.on("click", toggleMonthTop);
 
     foodMetricsForm.on("submit", saveFoodMetric);
 
@@ -130,6 +139,22 @@ async function getMonthlyNutritionRequest(month) {
         type: "GET",
         data: { "month": month },
     })
+}
+
+/**
+ * Retrieves the dictionary with monthly top food.
+ *
+ * @param {string} month - The month for which to retrieve the top.
+ * @return {Promise} A promise that resolves with the AJAX response.
+ */
+async function getMonthlyTopFoodRequest(month) {
+    const url = monthTopSection.data("get-url");
+
+    return $.ajax({
+        url: url,
+        type: "GET",
+        data: { "month": month },
+    });
 }
 
 /**
@@ -202,22 +227,23 @@ async function updateDayNutrition(day) {
     showLoading();
 
     try {
-        const dailyFood = await getFoodByDayRequest(day);
+        const dailyFood = await getDailyFoodRequest(day);
+        const { meal, no_metric, total_nutrition, total_amount } = dailyFood;
 
         dayNutritionSpinner.hide();
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        if ($.isEmptyObject(dailyFood.meal)) {
+        if ($.isEmptyObject(meal)) {
             dayNutritionStatus.show();
             return;
         }
 
-        if (!$.isEmptyObject(dailyFood.meal.no_metric)) {
-            updateFoodMetricsForm(dailyFood);
+        if (!$.isEmptyObject(no_metric)) {
+            updateFoodMetricsForm(no_metric);
             foodMetricsModal.show();
         }
 
-        updateDayNutritionTable(dailyFood);
+        updateDayNutritionTable(meal, total_nutrition, total_amount);
         dayNutritionTable.show();
     }
     catch (error) {
@@ -254,18 +280,18 @@ function updateDayNutritionHeader(day) {
  *
  * @param {Object} dayFood - The dayFood object containing food entries for the day.
  */
-function updateDayNutritionTable(dailyFood) {
+function updateDayNutritionTable(meal, totalNutrition, totalAmount) {
     const tbodyBG = dayNutritionTable.find(".body-bg");
     const tbodySM = dayNutritionTable.find(".body-sm");
 
     tbodyBG.empty();
     tbodySM.empty();
 
-    for (const category in dailyFood.meal.categories) {
-        addFoodCategory(dailyFood.meal.categories[category], mealCategoriesRU[category]);
+    for (const category in meal) {
+        addFoodCategory(meal[category], mealCategoriesRU[category]);
     }
 
-    updateFooter(dailyFood);
+    updateFooter(totalNutrition, totalAmount);
     
     /**
      * Adds food in the given category to a day nutition table.
@@ -282,6 +308,7 @@ function updateDayNutritionTable(dailyFood) {
         });
 
         function addToTbodyBG(food, foodIndex, categoryLength, categoryName) {
+            const { name, amount, serving_unit } = food;
             const foodRow = $("<tr>");
 
             if (foodIndex === 0) {
@@ -301,18 +328,15 @@ function updateDayNutritionTable(dailyFood) {
             }
 
             function addNameCell() {
-                const foodNameCell = $("<td>", { 
-                    class: "text-start", text: food.name 
-                });
+                const foodNameCell = $("<td>", { class: "text-start", text: name });
                 foodRow.append(foodNameCell);
             }
 
             function addAmountCell() {
-                if (food.amount) {
-                    const unit = food.serving_unit;
+                if (amount) {
                     const amountCell = $("<td>", {
                         class: "text-nowrap",
-                        text: `${food.amount} ${unit === "g" ? "г" : unit === "ml" ? "мл" : ""}`,
+                        text: formatAmount(amount, serving_unit),
                     });
                     foodRow.append(amountCell);
                 }
@@ -332,6 +356,8 @@ function updateDayNutritionTable(dailyFood) {
         }
     
         function addToTbodySM(food, foodIndex, categoryName) {
+            const { name, amount, serving_unit } = food;
+
             if (foodIndex === 0) {
                 addCategoryRow();
             }
@@ -346,7 +372,7 @@ function updateDayNutritionTable(dailyFood) {
             }
 
             function addNameRow() {
-                const nameWithAmount = getNameWithAmount(food);
+                const nameWithAmount = `${name} - ${formatAmount(amount, serving_unit)}`;
                 const nameRow = $('<tr>').append(
                     $('<td>', { colspan: "4", text: nameWithAmount })
                 );
@@ -363,13 +389,6 @@ function updateDayNutritionTable(dailyFood) {
                 });
                 tbodySM.append(nutritionRow);
             }
-
-            function getNameWithAmount(food) {
-                const { name, amount, serving_unit: unit } = food;
-                const serving_unit = unit === "g" ? "г" : unit === "ml" ? "мл" : "";
-    
-                return `${name} - ${amount || "?"} ${serving_unit}`;
-            }
         }
     }
 
@@ -379,10 +398,10 @@ function updateDayNutritionTable(dailyFood) {
      *
      * @param {object} dayFood - The object containing the day's food information.
      */
-    function updateFooter(dailyFood) {
-        const { calories, protein, fat, carbohydrate } = dailyFood.total_nutrition;
+    function updateFooter(totalNutrition, totalAmount) {
+        const { calories, protein, fat, carbohydrate } = totalNutrition;
 
-        dayTotalAmount.text(`${dailyFood.total_amount} г/мл`);
+        dayTotalAmount.text(`${totalAmount} г/мл`);
         dayTotalCalories.text(calories);
         dayTotalProtein.text(protein);
         dayTotalFats.text(fat);
@@ -433,12 +452,13 @@ function addDays(date, days) {
  * @param {string} month - The month for which to update the nutrition data.
  */
 async function updateMonthNutrition(month) {
+    monthTopBtn.addClass('disabled');
     showLoading();
+    hideMonthTop();
 
     try {
         const monthNutrition = await getMonthlyNutritionRequest(month);
-        console.log('monthNutrition', monthNutrition);
-
+ 
         monthNutritionSpinner.hide();
 
         if ($.isEmptyObject(monthNutrition.days)) {
@@ -446,10 +466,9 @@ async function updateMonthNutrition(month) {
             return;
         }
 
-        // TODO month top btn toggle
-
         updateMonthNutritionTable(monthNutrition);
         monthNutritionTable.show();
+        monthTopBtn.removeClass('disabled');
 
         monthNutritionTable.find("tbody tr").on("click", function() {
             const clickedDate = $(this).attr("value");
@@ -541,20 +560,106 @@ function addMonths(date, months) {
     return result.toLocaleDateString('en-CA');
 }
 
+// MONTH TOP 10
+
+/**
+ * Toggles the visibility of the month top section.
+ */
+function toggleMonthTop() {
+    monthTopBtn.hasClass('active') ? hideMonthTop() : showMonthTop();
+}
+
+/**
+ * Hides the top month section.
+ */
+function hideMonthTop() {
+    monthTopBtn.removeClass('active');
+    monthTopSection.hide();
+}
+
+/**
+ * Shows the top month section.
+ * Updates it if the month has changed.
+ */
+async function showMonthTop() {
+    const currentTopMonth = monthTopSection.attr("data-month");
+
+    if (currentTopMonth !== nutritionMonth ) {
+        monthTopBtn.addClass("disabled");
+        catLoader.show();
+        window.scrollTo({ top: catLoader.offset().top, behavior: 'smooth' });
+
+        try {
+            await updateMonthTop();
+            monthTopSection.attr("data-month", nutritionMonth);
+            catLoader.hide();
+            monthTopBtn.removeClass("disabled");
+        }
+        catch (error) {
+            console.error('getMonthTop error', error);
+            showDangerAlert(`${error.status} ${error.responseText}`);
+            catLoader.hide();
+            monthTopBtn.removeClass("disabled");
+            return;
+        }
+    }
+
+    monthTopBtn.addClass('active');
+    monthTopSection.show();
+    window.scrollTo({ top: monthTopSection.offset().top, behavior: 'smooth' });
+}
+
+/**
+ * Updates the monthly top food tables with the data retrieved from the server.
+ *
+ */
+async function updateMonthTop() {
+    const monthTop = await getMonthlyTopFoodRequest(nutritionMonth);
+    const { top_by_amount, top_by_calories, no_metric } = monthTop;
+
+    if (!$.isEmptyObject(no_metric)) {
+        updateFoodMetricsForm(no_metric);
+        foodMetricsModal.show();
+    }
+
+    updateMonthTopTable(top_by_amount, topByAmountTable)
+    updateMonthTopTable(top_by_calories, topByCaloriesTable);
+}
+
+/**
+ * Updates the month's top food table with the provided data.
+ *
+ * @param {Object} topFood - The object containing the top food data.
+ * @param {jQuery} table - The jQuery object representing the table element.
+ */
+function updateMonthTopTable(topFood, table) {
+    const tbody = table.find("tbody");
+
+    tbody.empty();
+
+    for (const [rank, foodData] of Object.entries(topFood)) {
+        const { name, amount, calories, serving_unit } = foodData;
+        const foodRow = $("<tr>")
+            .append($("<td>", { class: "text-start" }).text(`${rank}.${name}`))
+            .append($("<td>").text(formatAmount(amount, serving_unit)))
+            .append($("<td>").text(calories));
+        tbody.append(foodRow);
+    }
+}
+
 //  FOOD WITHOUT METRICS
 
 /**
  * Generates a form in the modal to update the food metrics.
  *
- * @param {Object} dayFood - The dayFood object containing the food entries without metrics.
+ * @param {Object} noMetricFood - The object containing the food entries without metrics.
  */
-function updateFoodMetricsForm(dailyFood) {
+function updateFoodMetricsForm(noMetricFood) {
     const foodList = foodMetricsForm.find(".food-list");
-    const food = dailyFood.meal.no_metric;
 
     foodList.empty();
 
-    Object.entries(food).forEach(([foodId, data]) => {
+    Object.entries(noMetricFood).forEach(([foodId, data]) => {
         addFoodBlock(foodId, data);
     });
 
@@ -574,8 +679,8 @@ function updateFoodMetricsForm(dailyFood) {
                 type: "number", class: "form-control text-center", 
                 name: "metric_serving_amount", required: true, min: "0" }))
             .append($("<select>", { class: "form-select", name: "metric_serving_unit" })
-                .append("<option value='g'>г</option>")
-                .append("<option value='ml'>мл</option>")
+                .append("<option>", { value: "g" }).text("г")
+                .append("<option>", { value: "ml" }).text("мл")
                 .css("width", "unset"));
         foodBlock.append(inputRow);
 
@@ -622,4 +727,21 @@ async function saveFoodMetric(event) {
     function showError(message) {
         foodMetricsError.text(message);
     }
+}
+
+// UTILS
+
+/**
+ * Formats the given amount with the specified serving unit.
+ * If the amount is null, returns '?'
+ *
+ * @param {number} amount - The amount to be formatted.
+ * @param {string} serving_unit - The serving unit to be used for formatting.
+ * @return {string} The formatted amount with the serving unit in russian.
+ */
+function formatAmount(amount, servingUnit) {
+    if (!amount) {
+        return "?";
+    }
+    return `${amount} ${servingUnitsRU[servingUnit ] || servingUnit }`;
 }

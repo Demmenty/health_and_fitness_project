@@ -1,4 +1,9 @@
 /* common */
+.trancate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
 @media (min-width: 992px) {
     .d-lg-table-row-group {
         display: table-row-group !important;
@@ -35,4 +40,14 @@
     width: 0;
     height: 7px;
     border-radius: 5px;
+}
+
+/* top tables */
+#monthtop-section th {
+    max-width: 5rem;
+}
+@media (min-width: 576px) {
+    #monthtop-section th {
+        max-width: unset;
+    }
 }

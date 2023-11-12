@@ -1,7 +1,7 @@
 {% extends 'expert/layout.html' %}
 {% load static %}
 {% load custom_filters %}
-<!-- TODO if not fatsecret_is_linked ! -->
+
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/extra_menu.css' %}">
@@ -21,8 +21,8 @@
                 <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
             </div>
             <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
-                <div id="monthtop-btn" class="text-nowrap align-middle btn-link-blackblue
-                {% if not fatsecret_is_linked %} disabled {% endif %}" title="Топ-10 продуктов за месяц">
+                <div id="monthtop-btn" class="text-nowrap align-middle btn-link-blackblue disabled" 
+                    title="Топ-10 продуктов за месяц">
                     <img src="{% static 'client/img/star.svg' %}" width="20" class="mb-1">
                     <span class="d-none d-sm-inline">Топ-10</span>
                 </div>
@@ -178,6 +178,55 @@
     </div>
 </section>
 
+<div id="cat-loader" class="mt-4" style="display: none;">
+    <div class="d-flex flex-column align-items-center gap-3">
+        <img src="{% static 'expert/img/cat_with_coffee.gif' %}" width="150px">
+        <p class="text-secondary text-center"><i>идет расчет топ 10 продуктов месяца...</i></p>
+    </div>
+</div>
+
+<section id="monthtop-section" class="mt-4" style="display: none;" 
+    data-get-url="{% url 'nutrition:get_monthly_top_food' %}?client={{ client.id }}" data-month="">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
+            <div id="top-by-calories" class="card shadow-sm w-100">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Топ по калорийности</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover text-center m-0">
+                        <thead class="table-light align-middle">
+                            <tr>
+                                <th class="trancate">Продукт</th>
+                                <th class="trancate">Количество</th>
+                                <th class="trancate">Ккал</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="top-by-amount" class="card shadow-sm w-100">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Топ по количеству</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover text-center m-0">
+                        <thead class="table-light align-middle">
+                            <tr>
+                                <th class="trancate">Продукт</th>
+                                <th class="trancate">Количество</th>
+                                <th class="trancate">Ккал</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div id="recommendations" class="card overflow-auto draggable border-0 shadow">
     <div class="card-header draggable-point d-flex align-items-center bg-auxiliary gap-2 text-light justify-content-between">
         <div class="col-1"></div>
@@ -210,7 +259,7 @@
     <div class="modal-dialog shadow">
         <div class="modal-content">
             <div class="modal-header justify-content-center bg-primary">
-                <h5 class="modal-title text-white">Внесение метрики продуктов</h5>
+                <h5 class="modal-title text-center text-white">Внесение метрики продуктов</h5>
             </div>
             <div class="modal-body px-2 px-sm-3">
                 <p class="text-center">

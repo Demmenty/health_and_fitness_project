@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from home.cache import weak_lru
 from typing import Union
-
+from collections import defaultdict
 from fatsecret import Fatsecret
 
 from config.settings import FS_CONSUMER_KEY, FS_CONSUMER_SECRET
@@ -71,21 +71,23 @@ class FSManager:
 
         Args:
             day (Union[datetime, date, str], optional): The day for which to retrieve the food information. 
-                Defaults to the current date and time.
+                Defaults to the current date.
 
         Returns:
             dict: A dictionary containing the daily food information.
-                "categories" (dict): A dictionary of food items grouped by meal category.
-                "no_metric" (dict): A dictionary of food items without metric information.
+                "categories" (dict): Food items grouped by meal category.
+                "no_metric" (dict): Food items without serving metrics.
         """
+
         day_datetime = convert_to_datetime(day)
+
+        # try to get from cache first
+        # cache if not today or yesterday
+
         entries = self.session.food_entries_get(date=day_datetime)
 
-        if not entries:
-            return {}
-
         daily_food = {
-            "categories": {},
+            "meal": {},
             "no_metric": {},
         }
 
@@ -96,7 +98,7 @@ class FSManager:
             food_item = self._generate_food_item(entry, all_servings, serving)
 
             category = entry["meal"].lower()
-            daily_food["categories"].setdefault(category, []).append(food_item)
+            daily_food["meal"].setdefault(category, []).append(food_item)
 
             if not food_item.get("amount"):
                 additional_info = self._get_info_for_no_metric_item(entry, serving)
@@ -105,9 +107,38 @@ class FSManager:
 
         return daily_food
 
-    def get_monthly_nutrition_dict(
-        self, month: Union[datetime, date, str] = datetime.now()
-    ) -> dict[dict]:
+    def get_monthly_food(self, month: Union[datetime, date, str] = datetime.now()) -> dict:
+        """
+        Retrieves the monthly food information for a given month.
+
+        Args:
+            month (Union[datetime, date, str], optional): The month for which to retrieve the food information.
+                Defaults to the current month.
+
+        Returns:
+            dict: A dictionary containing the monthly food information. 
+                "days" (dict): Food information for each day of the month.
+                "no_metric" (dict): Food items without serving metrics.
+        """
+
+        monthly_nutrition = self.get_monthly_nutrition_dict(month)
+
+        if not monthly_nutrition:
+            return {}
+        
+        monthly_food = {
+            "days": {},
+            "no_metric": {},
+        }
+        
+        for day in monthly_nutrition.keys():
+            daily_food = self.get_daily_food(day)
+            monthly_food["days"][day] = daily_food
+            monthly_food["no_metric"].update(daily_food["no_metric"])
+        
+        return monthly_food
+
+    def get_monthly_nutrition_dict(self, month: Union[datetime, date, str] = datetime.now()) -> dict:
         """
         Retrieves the nutrition info from client account in Fatsecret for a given month.
 
@@ -124,6 +155,7 @@ class FSManager:
                 "carbohydrate" (float): The amount of carbohydrates consumed on that day.
                 If no nutrition information is available for the specified month, an empty dictionary is returned.
         """
+        
         month_datetime = convert_to_datetime(month)
 
         try:
@@ -190,6 +222,69 @@ class FSManager:
 
         return monthly_nutrition
 
+    def calc_daily_total_nutrition(self, daily_food: dict) -> dict:
+        """
+        Calculates the total nutrition of food consumed in a day.
+
+        Args:
+            daily_food (dict): A dictionary containing the daily food consumption.
+                "meal" (dict): A dictionary of food items grouped by meal category.
+
+        Returns:
+            dict: A dictionary containing the following keys:
+                calories (float): The total number of calories from all the food entries.
+                protein (float): The total amount of protein from all the food entries.
+                fat (float): The total amount of fat from all the food entries.
+                carbohydrate (float): The total amount of carbohydrates from all the food entries.
+        """
+
+        if not daily_food:
+            return {}
+
+        all_food = []
+        for food_list in daily_food["meal"].values():
+            all_food.extend(food_list)
+
+        total_daily_nutrition = {
+            param: round(sum(float(food.get(param, 0)) for food in all_food), 2)
+            for param in NUTRITION_PARAMS
+        }
+        return total_daily_nutrition
+
+    def calc_daily_total_amount(self, daily_food: dict) -> int:
+        """
+        Calculate the total amount of food consumed in a day.
+
+        Args:
+            daily_food (dict): A dictionary representing the daily food consumption.
+                It should have the following structure:
+                {
+                    "meal": {
+                        "breakfast": [food_item, food_item, ...],
+                        "lunch": [food_item, food_item, ...],
+                        ...
+                    }
+                }
+                Each food_item should have the "amount" key indicating the amount of food consumed.
+                If the food item does not have an "amount" key, it will be ignored.
+
+        Returns:
+            int: The total amount of food consumed in a day (grams or milliliters).
+        """
+
+        if not daily_food:
+            return 0
+        
+        all_food = []
+        for food_list in daily_food["meal"].values():
+            all_food.extend(food_list)
+
+        total_amount = sum(
+            food["amount"] for food in all_food
+            if food.get("amount")
+        )
+        return total_amount
+
     def calc_monthly_avg_nutrition(
         self, monthly_nutrition: list[dict]|dict[dict], count_today: bool = True) -> dict:
         """
@@ -228,68 +323,92 @@ class FSManager:
 
         return avg_nutrition
 
-    def calc_daily_total_nutrition(self, daily_food: dict) -> dict:
+    def calc_monthly_top(self, monthly_food: dict, parameter: str, limit: int = 10):
         """
-        Calculates the total nutrition of food consumed in a day.
+        Calculate the top monthly food items by a given parameter.
+        Food items are gruped by common name and sorted based in descending order.
 
         Args:
-            daily_food (dict): A dictionary containing the daily food consumption.
-                "categories" (dict): A dictionary of food items grouped by meal category.
+            monthly_food (dict): A dictionary representing the food items consumed in a month.
+            parameter (str): The parameter to use for determining the top food items.
+                Must be one of "amount" or "calories".
+            limit (int, optional): The maximum number of top food items to include. 
+                Defaults to 10.
 
         Returns:
-            dict: A dictionary containing the following keys:
-                calories (float): The total number of calories from all the food entries.
-                protein (float): The total amount of protein from all the food entries.
-                fat (float): The total amount of fat from all the food entries.
-                carbohydrate (float): The total amount of carbohydrates from all the food entries.
+            numerated_top (dict): A dictionary containing the top food items.
+                The keys are rank numbers, and the values are dictionaries with the following keys:
+                    "name": The common name of the food item.
+                    "calories": The total number of calories consumed in kcal.
+                    "amount": The amount of food consumed in grams or milliliters (if available, else None).
+                    "serving_unit": The unit of measure used for the serving.
         """
 
-        if not daily_food:
-            return {}
+        totals = self.calc_monthly_food_totals(monthly_food)
 
-        all_food = []
-        for food_list in daily_food["categories"].values():
-            all_food.extend(food_list)
+        sort_key = lambda item: item[1][parameter] if item[1][parameter] is not None else 0
+        sorted_food = sorted(totals.items(), key=sort_key, reverse=True)
+        top_food = sorted_food[:limit]
 
-        total_daily_nutrition = {
-            param: round(sum(float(food.get(param, 0)) for food in all_food), 2)
-            for param in NUTRITION_PARAMS
+        numerated_top = {
+            i+1: {
+                "name": name, 
+                "calories": data["calories"], 
+                "amount": data["amount"], 
+                "serving_unit": data["serving_unit"],
+            } 
+            for i, (name, data) in enumerate(top_food)
         }
-        return total_daily_nutrition
+        return numerated_top
 
-    def calc_daily_total_amount(self, daily_food: dict) -> int:
+    def calc_monthly_food_totals(self, monthly_food: dict) -> dict:
         """
-        Calculate the total amount of food consumed in a day.
-
-        Args:
-            daily_food (dict): A dictionary representing the daily food consumption.
-                It should have the following structure:
-                {
-                    "categories": {
-                        "breakfast": [food_item, food_item, ...],
-                        "lunch": [food_item, food_item, ...],
-                        ...
-                    }
-                }
-                Each food_item should have the "amount" key indicating the amount of food consumed.
-                If the food item does not have an "amount" key, it will be ignored.
-
-        Returns:
-            int: The total amount of food consumed in a day (grams or milliliters).
-        """
-
-        if not daily_food:
-            return 0
+        Calculate the monthly total for each food item in the given monthly food dictionary.
+        Totals grouped by food's common name.
         
-        all_food = []
-        for food_list in daily_food["categories"].values():
-            all_food.extend(food_list)
+        Args:
+            monthly_food (dict): A dictionary containing the monthly food data.
+            
+        Returns:
+            dict: A dictionary containing the monthly totals for each food item.
+                The keys are the names of the food items and the values are:
+                    "amount": The amount of food consumed in grams or milliliters (if available, else None).
+                    "serving_unit": The unit of measure used for the serving.
+                    "calories": The total number of calories consumed in kcal.
+                    "protein": The total number of protein in grams.
+                    "fat": The total number of fat in grams.
+                    "carbohydrate": The total number of carbohydrates in grams.
+        """
 
-        total_amount = sum(
-            food["amount"] for food in all_food
-            if food.get("amount")
-        )
-        return total_amount
+        parameters = NUTRITION_PARAMS + ("amount",)
+
+        totals = defaultdict(lambda: {
+            "serving_unit": None,
+            "amount": None,
+            "calories": None,
+            "protein": None,
+            "fat": None,
+            "carbohydrate": None,
+        })
+
+        for day in monthly_food["days"].values():
+            for meal_category in day["meal"].values():
+                for item in meal_category:
+                    name = item["common_name"]
+
+                    unit = item.get("serving_unit")
+                    if unit is not None:
+                        totals[name]["serving_unit"] = unit
+
+                    for param in parameters:
+                        value = item.get(param)
+                        if value is not None:
+                            if totals[name][param] is None:
+                                totals[name][param] = float(value)
+                            else:
+                                totals[name][param] += float(value)
+
+        return totals
 
     def _generate_food_item(
         self, entry: dict, all_servings: dict, serving: dict

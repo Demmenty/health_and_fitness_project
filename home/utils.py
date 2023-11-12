@@ -6,9 +6,8 @@ from django.http import HttpRequest
 
 def get_client_from_request(request: HttpRequest) -> User|None:
     """
-    Returns the client information from the given HttpRequest object.
-    Based on the user type, the client information is returned.
-        
+    Returns the client from the given HttpRequest based on the user type.
+
     Args:
         request (HttpRequest): The HTTP request object.
 
