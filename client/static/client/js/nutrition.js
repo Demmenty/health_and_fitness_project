@@ -646,8 +646,8 @@ function updateFoodMetricsForm(noMetricFood) {
                 type: "number", class: "form-control text-center", 
                 name: "metric_serving_amount", required: true, min: "0" }))
             .append($("<select>", { class: "form-select", name: "metric_serving_unit" })
-                .append("<option>", { value: "g" }).text("г")
-                .append("<option>", { value: "ml" }).text("мл")
+                .append("<option value='g'>г</option>")
+                .append("<option value='ml'>мл</option>")
                 .css("width", "unset"));
         foodBlock.append(inputRow);
 
