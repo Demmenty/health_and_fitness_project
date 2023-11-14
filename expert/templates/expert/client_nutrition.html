@@ -266,7 +266,7 @@
                     Некоторые продукты не удалось посчитать.<br>
                     Укажите их массу или объем, пожалуйста.
                 </p>
-                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:save_food_servings' %}">
+                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:update_food_servings' %}">
                     {% csrf_token %}
                     <div class="food-list d-flex flex-column gap-3">
                     </div>

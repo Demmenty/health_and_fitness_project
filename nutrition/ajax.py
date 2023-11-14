@@ -1,11 +1,15 @@
 from datetime import date
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.decorators.http import require_http_methods
+
 from home.utils import get_client_from_request
-from nutrition.cache import FatsecretCacheManager
+from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
+
+fs_cache = FSCacheManager()
 
 
 @login_required
@@ -55,7 +59,7 @@ def get_daily_food(request):
     Returns:
         JsonResponse: A JSON response containing the food data as a dict.
     """
-    
+
     client = get_client_from_request(request)
     if not client:
         return HttpResponseNotFound("Клиент не найден")
@@ -73,8 +77,8 @@ def get_daily_food(request):
     daily_amount = fs.calc_daily_total_amount(daily_food)
 
     data = {
-        "meal": daily_food["meal"],
-        "no_metric": daily_food["no_metric"],
+        "meal": daily_food.get("meal"),
+        "no_metric": daily_food.get("no_metric"),
         "total_nutrition": daily_total,
         "total_amount": daily_amount,
     }
@@ -107,7 +111,7 @@ def get_monthly(request):
     entry_data = FatSecretEntry.objects.filter(client=client).first()
     if not entry_data:
         return HttpResponseNotFound("FS не подключен")
-    
+
     fs = FSManager(entry_data)
 
     monthly_nutrition = fs.get_monthly_nutrition_list(month)
@@ -124,9 +128,9 @@ def get_monthly(request):
 
 @login_required
 @require_http_methods(["POST"])
-def save_food_servings(request):
+def update_food_servings(request):
     """
-    Saves the food serving data received from the request.
+    Updates the food serving metrics received from the request.
     Helps then FatSecret did not provide metric info for the food serving.
 
     Args:
@@ -136,10 +140,23 @@ def save_food_servings(request):
         HttpResponse: The HTTP response object with the ok message.
     """
 
-    food_servings = dict(request.POST)
+    new_details = dict(request.POST)
+    amount_of_details = len(new_details.get("food_id"))
 
-    fs_cache = FatsecretCacheManager()
-    fs_cache.save_serving(food_servings)
+    for i in range(amount_of_details):
+        food_id = new_details["food_id"][i]
+        serving_id = new_details["serving_id"][i]
+        metric_serving_amount = new_details["metric_serving_amount"][i]
+        metric_serving_unit = new_details["metric_serving_unit"][i]
+
+        fs_cache.update_food_serving(
+            food_id,
+            serving_id,
+            {
+                "metric_serving_amount": metric_serving_amount,
+                "metric_serving_unit": metric_serving_unit,
+            },
+        )
 
     return HttpResponse("ok")
 
@@ -147,6 +164,15 @@ def save_food_servings(request):
 @login_required
 @require_http_methods(["GET"])
 def get_monthly_top_food(request):
+    """
+    Get the monthly top food for a client.
+
+    Args:
+        request: The HTTP request object.
+    
+    Returns:
+       JsonResponse: A JSON response containing the top food items for the month.
+    """
 
     client = get_client_from_request(request)
     if not client:

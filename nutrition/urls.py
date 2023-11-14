@@ -31,8 +31,8 @@ urlpatterns = [
         name="get_monthly_top_food",
     ),
     path(
-        "save_food_servings/",
-        ajax.save_food_servings,
-        name="save_food_servings",
+        "update_food_servings/",
+        ajax.update_food_servings,
+        name="update_food_servings",
     ),
 ]

@@ -1,10 +1,12 @@
 from datetime import date, datetime, time, timedelta
 from typing import Union
-from users.models import User
+
 from django.http import HttpRequest
 
+from users.models import User
 
-def get_client_from_request(request: HttpRequest) -> User|None:
+
+def get_client_from_request(request: HttpRequest) -> User | None:
     """
     Returns the client from the given HttpRequest based on the user type.
 
@@ -15,7 +17,9 @@ def get_client_from_request(request: HttpRequest) -> User|None:
         Optional[User]: The client information if found, None otherwise.
     """
 
-    return request.GET.get("client") if request.user.is_expert else request.user
+    return (
+        request.GET.get("client") if request.user.is_expert else request.user
+    )
 
 
 def is_ajax(request: HttpRequest) -> bool:
@@ -67,22 +71,10 @@ def convert_date_to_epoch(request_date: date) -> int:
     return str((request_date - date(1970, 1, 1)).days)
 
 
-def convert_epoch_into_datetime(date_epoch: int) -> datetime:
-    """Converts number of days since 1970 into datetime"""
-
-    return datetime.fromtimestamp(date_epoch)
-
-
 def convert_epoch_to_date(date_epoch: int) -> date:
     """Converts number of days since 1970 into date"""
 
     return date(1970, 1, 1) + timedelta(days=date_epoch)
-
-
-def convert_datetime_into_epoch(request_date: datetime) -> int:
-    """Converts datetime into the number of days since 1970"""
-
-    return (request_date - datetime(1970, 1, 1)).days
 
 
 def convert_to_datetime(input_date: Union[datetime, date, str]) -> datetime:
@@ -95,6 +87,7 @@ def convert_to_datetime(input_date: Union[datetime, date, str]) -> datetime:
     Returns:
         datetime: The datetime object.
     """
+
     if isinstance(input_date, str):
         return datetime.strptime(input_date, "%Y-%m-%d")
     elif isinstance(input_date, date):
