@@ -1,0 +1,40 @@
+/* day input */
+#day-input {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-clip: padding-box;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+#day-input .prev-arrow,
+#day-input .next-arrow {
+    cursor: pointer;
+    font-size: 24px;
+    padding: 0 1rem 0.25rem 1rem;
+}
+#day-input .prev-arrow { 
+    border-top-left-radius: 5px; 
+    border-bottom-left-radius: 5px; 
+    border-right: 1px solid #dee2e6;
+} 
+#day-input .next-arrow { 
+    border-top-right-radius: 5px; 
+    border-bottom-right-radius: 5px; 
+    border-left: 1px solid #dee2e6;
+} 
+#day-input .prev-arrow:hover,
+#day-input .next-arrow:hover {
+    background: #3FADFF;
+    color: white;
+}
