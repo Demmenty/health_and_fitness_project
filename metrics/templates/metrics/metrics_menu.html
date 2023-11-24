@@ -1,0 +1,49 @@
+{% load static %}
+
+<div class="extra-menu mx-auto mb-4">
+    <div class="extra-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
+        <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
+    </div>
+    <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
+        {% if request.user.is_expert %}
+            <button title="Только для клиента" disabled
+                class="btn-link text-nowrap align-middle disabled">
+                <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Измерение</span>
+            </button>
+        {% else %}
+            <a href="{% url 'client:metrics_add' %}" title="Добавить измерения" 
+                class="btn-link text-nowrap align-middle text-black">
+                <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Измерение</span>
+            </a>
+        {% endif %}
+        {% if request.user.is_expert %}
+            <button id="colouring-btn" title="Окрашивание измерений"
+                class="btn-link text-nowrap align-middle"
+                data-get-url="{% url 'metrics:get_сolouring' %}?client={{ client.id }}">
+                <img src="{% static 'metrics/img/palette.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Окрашивание</span>
+            </button>
+        {% else %}
+            <button id="colouring-btn" title="Окрашивание измерений" 
+                class="btn-link text-nowrap align-middle"
+                data-get-url="{% url 'metrics:get_сolouring' %}">
+                <img src="{% static 'metrics/img/palette.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Окрашивание</span>
+            </button>
+        {% endif %}
+        <button id="recommendations-btn" title="Рекомендации по питанию"
+            class="btn-link text-nowrap align-middle">
+            <img src="{% static 'metrics/img/file-ruled.svg' %}" width="20">
+            <span class="d-none d-sm-inline">Кбжу</span>
+        </button>
+        <a href="" title="Страница антропометрии" 
+            class="btn-link text-nowrap align-middle text-black">
+            <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
+            <span class="d-none d-sm-inline">Антропометрия</span>
+        </a>
+    </div>
+    <div class="col-2">
+    </div>
+</div>

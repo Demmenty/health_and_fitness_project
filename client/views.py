@@ -17,17 +17,16 @@ from client.forms import (
     UserNamesForm,
 )
 from client.models import Contacts, Health, MainData
-from metrics.forms import DailyDataForm, NutritionRecsForm
-from metrics.models import DailyData, NutritionRecs
+from metrics.forms import DailyDataForm
+from metrics.models import DailyData
 from nutrition.models import FatSecretEntry
 
 
 @client_required
 @require_http_methods(["GET"])
 def profile(request):
-    """
-    Render the profile page for a client account.
-    """
+    """Render the profile page for a client"""
+
     maindata = MainData.objects.filter(client=request.user).first()
 
     template = "client/profile.html"
@@ -41,11 +40,12 @@ def profile(request):
 @require_http_methods(["GET", "POST"])
 def health(request, page: int):
     """
-    A view function that handles the health form submission and rendering.
+    Handle the health form submission and rendering for a client.
 
     Args:
         page (int): The current page number of the health form section.
     """
+
     form_class = HEALTH_FORMS.get(page)
     if not form_class:
         raise Http404
@@ -53,9 +53,7 @@ def health(request, page: int):
     if page == LAST_HEALTH_FORM_PAGE:
         next_page_url = reverse_lazy("client:profile")
     else:
-        next_page_url = reverse_lazy(
-            "client:health", kwargs={"page": page + 1}
-        )
+        next_page_url = reverse_lazy("client:health", kwargs={"page": page + 1})
 
     instance = Health.objects.filter(client=request.user).first()
 
@@ -86,9 +84,8 @@ def health(request, page: int):
 @client_required
 @require_http_methods(["GET", "POST"])
 def maindata(request):
-    """
-    A view function that handles the client's main Information forms.
-    """
+    """Handle the client's main Information forms"""
+
     maindata = MainData.objects.filter(client=request.user).first()
 
     if request.method == "GET":
@@ -116,9 +113,8 @@ def maindata(request):
 @client_required
 @require_http_methods(["GET", "POST"])
 def contacts(request):
-    """
-    A view function that handles the client's contacts forms.
-    """
+    """Handle the client's contacts forms"""
+
     contacts = Contacts.objects.filter(client=request.user).first()
 
     if request.method == "GET":
@@ -149,10 +145,12 @@ def contacts(request):
 @require_http_methods(["GET"])
 def metrics(request):
     """
-    A view function that shows the metrics for a client
+    Render the metrics page for a client
     within a specified date range or number of days.
     """
+
     client = request.user
+
     start = request.GET.get("start")
     end = request.GET.get("end")
 
@@ -167,17 +165,12 @@ def metrics(request):
     metrics = DailyData.update_nutrition_from_fs(metrics)
     metrics_avg = DailyData.get_avg(metrics, count_today_nutrition=False)
 
-    recommendatons = NutritionRecs.objects.filter(client=client).first()
-    recommedations_form = NutritionRecsForm(instance=recommendatons)
-
     template = "client/metrics.html"
     data = {
-        "client": client,
         "start_date": start or metrics[0].date,
         "end_date": end or metrics[-1].date,
         "metrics": metrics,
         "metrics_avg": metrics_avg,
-        "recommedations_form": recommedations_form,
     }
     return render(request, template, data)
 
@@ -185,9 +178,8 @@ def metrics(request):
 @client_required
 @require_http_methods(["GET", "POST"])
 def metrics_add(request):
-    """
-    A view function that handles the client's metrics form.
-    """
+    """Handle the client's metrics form"""
+
     client = request.user
 
     if request.method == "GET":
@@ -215,31 +207,22 @@ def metrics_add(request):
 @client_required
 @require_http_methods(["GET"])
 def nutrition(request):
-    """
-    A view function that shows the client's nutrition page.
-    """
+    """Render the client's nutrition page"""
+
     client = request.user
 
-    fatsecret_is_linked = FatSecretEntry.objects.filter(client=client).exists()
-    if not fatsecret_is_linked:
+    fatsecret_linked = FatSecretEntry.objects.filter(client=client).exists()
+    if not fatsecret_linked:
         return redirect("client:link_fatsecret")
 
-    recommendatons = NutritionRecs.objects.filter(client=client).first()
-    recommedations_form = NutritionRecsForm(instance=recommendatons)
-
     template = "client/nutrition.html"
-    data = {
-        "recommedations_form": recommedations_form,
-    }
-    return render(request, template, data)
+    return render(request, template)
 
 
 @client_required
 @require_http_methods(["GET"])
 def link_fatsecret(request):
-    """
-    A view function that shows the page, which offers linking Fatsecret.
-    """
+    """Render the page offering to link Fatsecret."""
 
     template = "client/link_fatsecret.html"
     return render(request, template)

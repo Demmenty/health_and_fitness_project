@@ -127,6 +127,8 @@ STATICFILES_DIRS = [
     (BASE_DIR / "users" / "static"),
     (BASE_DIR / "client" / "static"),
     (BASE_DIR / "expert" / "static"),
+    (BASE_DIR / "metrics" / "static"),
+    (BASE_DIR / "nutrition" / "static"),
 ]
 
 

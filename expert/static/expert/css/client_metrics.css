@@ -1,35 +1,36 @@
-.draggable {
-    z-index: 5;
-    position: fixed;
-    height: fit-content;
-    max-width: 90vw;
-    max-height: 90vh;
-    left: 12px;
-    top: 12px;
-}
-.draggable .card-header:hover {
-    cursor: default;
-}
+/* comments */
 .comment {
-    display: none;
+    left: 0;
+    width: 100%;
+    bottom: 2rem;
     overflow: auto;
     resize: both;
-    width: 350px;
+}
+@media (min-width: 576px) {
+    .comment {
+        left: 1.5rem;
+        width: 350px;
+    }
 }
 .comment-text {
     text-align: start;
     white-space: pre-line;
 }
-.comment::-webkit-scrollbar-thumb {
-    background-color: #c3c5d8;
-}
-.comment::-webkit-scrollbar-thumb:hover {
-    background-color: #74789d;
-}
+
+/* recommendations */
 #recommendations {
-    display: none;
     width: 350px;
 }
+
+/* metrics */
+#select-days-form button {
+    width: 25px;
+}
+#select-days-form #id_days {
+    width: 5rem;
+}
+
+/* colouring */
 #algorithm {
     max-width: 500px;
 }
