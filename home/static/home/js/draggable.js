@@ -1,3 +1,7 @@
+$(document).ready(() => {
+    $(".draggable").each((i, elmnt) => {makeDraggable(elmnt)})
+})
+
 /**
  * Makes an element draggable.
  *

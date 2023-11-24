@@ -1,15 +1,4 @@
-.draggable {
-    z-index: 5;
-    position: fixed;
-    height: fit-content;
-    max-width: 90vw;
-    max-height: 90vh;
-    left: 12px;
-    top: 12px;
-}
-.draggable .card-header:hover {
-    cursor: default;
-}
+/* comments */
 .comment {
     display: none;
     overflow: auto;
@@ -24,9 +13,10 @@
     background-color: #c3c5d8;
 }
 .comment::-webkit-scrollbar-thumb:hover {
-    background-color: #74789d;
+    background-color: #d8e0ff;
 }
+
+/* recommendations */
 #recommendations {
-    display: none;
     width: 350px;
 }

@@ -1,0 +1,73 @@
+{% load static %}
+
+<button id="chat-btn" class="btn-img position-fixed rounded-circle bg-white shadow" title="Чат">
+  <span class="badge position-absolute translate-middle rounded-pill bg-primary">{% if new_msgs_count > 0 %}{{ new_msgs_count }}{% endif %}</span>
+  <img src="{% static 'chat/img/chat.png' %}" width="50" class="filter-secondary filter-hover-primary">
+</button>
+
+<div id="chat" class="card draggable shadow" data-first-open="true" style="display: none;">
+  <params
+    data-url-get-last="{% url 'chat:get_last_msgs' %}"
+    data-url-get-old="{% url 'chat:get_old_msgs' %}" 
+    data-url-get-new="{% url 'chat:get_new_msgs' %}"
+    data-url-count-new="{% url 'chat:count_new_msgs' %}"
+    data-url-set-seen="{% url 'chat:set_seen' %}">
+  </params>
+  <div class="card-header draggable-point d-flex align-items-center bg-auxiliary gap-2 justify-content-between">
+    <div class="col-1"></div>
+    <h6 class="mb-0 text-nowrap col-auto">Чат</h6>
+    <button type="button" class="col-1 btn-close" title="Закрыть чат"></button>
+  </div>
+  <div class="card-body position-relative py-0 pe-0">
+    <div id="chat-history" class="d-flex flex-column">
+      <template id="message-template-user">
+        <div id="" class="chat-message user-message d-flex flex-column align-items-end my-2 me-2 p-1" data-id="">
+          <div class="chat-message-header d-flex flex-row gap-1">
+            <small class="username">{{ user.username|title }}</small>
+            <small> • </small>
+            <small class="created-at"></small>
+          </div>
+          <p class="message-text"></p>
+        </div>
+      </template>
+      <template id="message-template-partner">
+        <div id="" class="chat-message partner-message rounded d-flex flex-column my-2 me-2 p-1" data-id="">
+          <div class="chat-message-header d-flex flex-row gap-1">
+            <small class="username">{{ partner.username|title }}</small>
+            <small> • </small>
+            <small class="created-at"></small>
+          </div>
+          <p class="message-text"></p>
+        </div>
+      </template>
+    </div>
+    <button id="chat-scroll-btn" type="button" title="Вниз" style="display: none;" 
+      class="btn-img rounded-circle position-absolute bg-white">
+      <img src="{% static 'chat/img/arrow-down-circle.svg' %}" width="25" 
+        class="filter-secondary filter-hover-primary">
+    </button>
+  </div>
+  <div class="card-footer bg-auxiliary px-2">
+    <form id="message-form" method="POST" action="{% url 'chat:save_msg' %}">
+      {% csrf_token %}
+      {{ message_form.sender }}
+      {{ message_form.recipient }}
+      <div class="d-flex flex-row gap-2">
+        <div class="d-flex flex-column justify-content-end gap-2 pb-1">
+          <button type="button" id="attach-img-btn" title="Прикрепить изображение" class="btn-img">
+            <img src="{% static 'chat/img/card-image.svg' %}" width="22" class="filter-secondary filter-hover-primary">
+          </button>
+          <button type="button" id="attach-audio-btn" title="Голосовое сообщение" class="btn-img">
+            <img src="{% static 'chat/img/mic.svg' %}" width="25" class="filter-secondary filter-hover-primary">
+          </button>
+        </div>
+        {{ message_form.text }}
+        <div class="d-flex flex-column justify-content-end gap-2 pb-1">
+          <button type="submit" title="Отправить сообщение (Enter)" class="btn-img">
+            <img src="{% static 'chat/img/send-fill.svg' %}" width="23" class="filter-secondary filter-hover-primary">
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

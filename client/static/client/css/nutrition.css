@@ -9,24 +9,6 @@
         display: table-row-group !important;
     }
 }
-.draggable {
-    z-index: 5;
-    position: fixed;
-    height: fit-content;
-    max-width: 90vw;
-    max-height: 90vh;
-    left: 12px;
-    top: 12px;
-}
-.draggable .card-header:hover {
-    cursor: default;
-}
-
-/* nutrition recommendations */
-#recommendations {
-    display: none;
-    width: 350px;
-}
 
 /* day nutrition */
 .bar{

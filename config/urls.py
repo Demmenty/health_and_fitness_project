@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("home.urls", namespace="home")),
     path("users/", include("users.urls", namespace="users")),
+    path("chat/", include("chat.urls", namespace="chat")),
     path("client/", include("client.urls", namespace="client")),
     path("expert/", include("expert.urls", namespace="expert")),
     path("metrics/", include("metrics.urls", namespace="metrics")),
