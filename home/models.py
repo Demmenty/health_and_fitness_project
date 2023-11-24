@@ -4,9 +4,7 @@ from django.db import models
 class ConsultRequest(models.Model):
     """Заявка на консультацию с экспертом"""
 
-    name = models.CharField(
-        "Имя", max_length=100, help_text="Как к вам обращаться?"
-    )
+    name = models.CharField("Имя", max_length=100, help_text="Как к вам обращаться?")
     age = models.CharField(
         "Возраст", max_length=100, blank=True, help_text="Сколько вам лет?"
     )

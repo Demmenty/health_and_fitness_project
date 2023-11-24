@@ -32,9 +32,7 @@ class FSManager:
             entry_data (FatSecretEntry): An instance of the FatSecretEntry class.
         """
         client_token = (entry_data.oauth_token, entry_data.oauth_token_secret)
-        self.session = Fatsecret(
-            FS_CONSUMER_KEY, FS_CONSUMER_SECRET, client_token
-        )
+        self.session = Fatsecret(FS_CONSUMER_KEY, FS_CONSUMER_SECRET, client_token)
         self.client_id = entry_data.client.id
 
     def save_tokens(self, client_tokens: tuple, client: User) -> None:
@@ -65,9 +63,7 @@ class FSManager:
         self.session = self.clients_sessions[client_id]
         self.client_id = client_id
 
-    def get_daily_food(
-        self, day: Union[datetime, date, str] = datetime.now()
-    ) -> dict:
+    def get_daily_food(self, day: Union[datetime, date, str] = datetime.now()) -> dict:
         """
         Retrieves the daily food information for a given day.
 
@@ -182,7 +178,7 @@ class FSManager:
             month (datetime): The date of the month for which to retrieve the entries.
 
         Returns:
-            list: A list of monthly entries (dictionaries) for the given month. 
+            list: A list of monthly entries (dictionaries) for the given month.
         """
 
         if month > datetime.now():
@@ -192,18 +188,14 @@ class FSManager:
 
         if monthly_entries is None:
             try:
-                monthly_entries = self.session.food_entries_get_month(
-                    date=month
-                )
+                monthly_entries = self.session.food_entries_get_month(date=month)
                 if isinstance(monthly_entries, dict):
                     monthly_entries = [monthly_entries]
             except KeyError:
                 monthly_entries = []
 
             if fs_cache.is_month_saveable(month):
-                fs_cache.save_monthly_entries(
-                    self.client_id, month, monthly_entries
-                )
+                fs_cache.save_monthly_entries(self.client_id, month, monthly_entries)
 
         return monthly_entries
 
@@ -264,10 +256,7 @@ class FSManager:
         monthly_nutrition = [
             {
                 "date": convert_epoch_to_date(int(entry["date_int"])),
-                **{
-                    param: float(entry.get(param, 0))
-                    for param in NUTRITION_PARAMS
-                },
+                **{param: float(entry.get(param, 0)) for param in NUTRITION_PARAMS},
             }
             for entry in monthly_entries
         ]
@@ -282,7 +271,7 @@ class FSManager:
             food_id (str): The unique identifier of the food item.
 
         Returns:
-            FoodDetails | None: The details of the food item, 
+            FoodDetails | None: The details of the food item,
                 or None if the details are not available.
         """
 
@@ -298,9 +287,7 @@ class FSManager:
 
         return food_details
 
-    def calc_food_amount(
-        self, number_of_units: float, serving: Serving
-    ) -> int | None:
+    def calc_food_amount(self, number_of_units: float, serving: Serving) -> int | None:
         """
         Calculates the amount of food based on the number of units and serving information.
 
@@ -345,9 +332,7 @@ class FSManager:
             all_food.extend(food_list)
 
         total_daily_nutrition = {
-            param: round(
-                sum(float(food.get(param, 0)) for food in all_food), 2
-            )
+            param: round(sum(float(food.get(param, 0)) for food in all_food), 2)
             for param in NUTRITION_PARAMS
         }
         return total_daily_nutrition
@@ -380,9 +365,7 @@ class FSManager:
         for food_list in daily_food["meal"].values():
             all_food.extend(food_list)
 
-        total_amount = sum(
-            food["amount"] for food in all_food if food.get("amount")
-        )
+        total_amount = sum(food["amount"] for food in all_food if food.get("amount"))
         return total_amount
 
     def calc_monthly_avg_nutrition(
@@ -408,8 +391,7 @@ class FSManager:
 
         if isinstance(monthly_nutrition, dict):
             monthly_nutrition = [
-                {"date": day, **nutr}
-                for day, nutr in monthly_nutrition.items()
+                {"date": day, **nutr} for day, nutr in monthly_nutrition.items()
             ]
 
         if not count_today:
@@ -423,8 +405,7 @@ class FSManager:
 
         avg_nutrition = {
             param: round(
-                sum(float(day.get(param, 0)) for day in monthly_nutrition)
-                / days,
+                sum(float(day.get(param, 0)) for day in monthly_nutrition) / days,
                 2,
             )
             for param in NUTRITION_PARAMS
@@ -483,9 +464,7 @@ class FSManager:
 
         return totals
 
-    def calc_monthly_top(
-        self, monthly_food: dict, parameter: str, limit: int = 10
-    ):
+    def calc_monthly_top(self, monthly_food: dict, parameter: str, limit: int = 10):
         """
         Calculate the top monthly food items by a given parameter.
         Food items are gruped by common name and sorted based in descending order.
@@ -509,9 +488,7 @@ class FSManager:
         totals = self.calc_monthly_food_totals(monthly_food)
 
         sort_key = (
-            lambda item: item[1][parameter]
-            if item[1][parameter] is not None
-            else 0
+            lambda item: item[1][parameter] if item[1][parameter] is not None else 0
         )
         sorted_food = sorted(totals.items(), key=sort_key, reverse=True)
         top_food = sorted_food[:limit]

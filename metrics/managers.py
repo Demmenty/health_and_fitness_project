@@ -5,6 +5,7 @@ from django.db.models import Manager
 from users.models import User
 
 
+# TODO refactor
 class DailyDataManager(Manager):
     """Manager for handling entries of DailyData model."""
 
@@ -31,8 +32,7 @@ class DailyDataManager(Manager):
         dates = (start + timedelta(days=i) for i in range(days))
 
         metrics = tuple(
-            metrics.filter(date=date).first()
-            or self.model(client=client, date=date)
+            metrics.filter(date=date).first() or self.model(client=client, date=date)
             for date in dates
         )
         return metrics
@@ -55,8 +55,7 @@ class DailyDataManager(Manager):
             return tuple(metrics)
 
         metrics = tuple(
-            metrics.filter(date=date).first()
-            or self.model(client=client, date=date)
+            metrics.filter(date=date).first() or self.model(client=client, date=date)
             for date in reversed(dates)
         )
         return metrics

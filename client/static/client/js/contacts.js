@@ -1,5 +1,3 @@
-// EVENTS
-
 $(document).ready(function () {
     $(".help-icon ").on("click", toggleHelpDetail);
 })

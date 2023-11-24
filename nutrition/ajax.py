@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.decorators.http import require_http_methods
 
-from home.utils import get_client_from_request
+from home.utils import get_client
 from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
@@ -27,7 +27,7 @@ def get_daily(request, day: str):
         JsonResponse: A JSON response containing the nutrition data as a dict.
     """
 
-    client = get_client_from_request(request)
+    client = get_client(request)
     if not client:
         return HttpResponseNotFound("Клиент не найден")
 
@@ -60,7 +60,7 @@ def get_daily_food(request):
         JsonResponse: A JSON response containing the food data as a dict.
     """
 
-    client = get_client_from_request(request)
+    client = get_client(request)
     if not client:
         return HttpResponseNotFound("Клиент не найден")
 
@@ -102,7 +102,7 @@ def get_monthly(request):
         JsonResponse: A JSON response containing the food data as a dict.
     """
 
-    client = get_client_from_request(request)
+    client = get_client(request)
     if not client:
         return HttpResponseNotFound("Клиент не найден")
 
@@ -169,12 +169,12 @@ def get_monthly_top_food(request):
 
     Args:
         request: The HTTP request object.
-    
+
     Returns:
        JsonResponse: A JSON response containing the top food items for the month.
     """
 
-    client = get_client_from_request(request)
+    client = get_client(request)
     if not client:
         return HttpResponseNotFound("Клиент не найден")
 

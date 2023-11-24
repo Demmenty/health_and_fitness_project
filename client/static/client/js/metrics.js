@@ -8,10 +8,7 @@ const avgDetailBtn = $("#avg-detail-btn");
 const colouringBtn = $("#colouring-btn");
 const metricsTable = $("#metrics-table");
 
-// EVENTS & AUTOSTART
-
 $(document).ready(() => {
-    $(".draggable").each((i, elmnt) => {makeDraggable(elmnt)})
     commentBtns.on('click', toggleComment);
     commentCloseBtns.on('click', closeComment);
     recommendationsBtn.on('click', toggleNutritionRecss);
@@ -33,7 +30,7 @@ $(document).ready(() => {
  *
  * @returns {Promise} A promise that resolves with the colouring data.
  */
-async function getColouringDataRequest() {
+async function getColouringRequest() {
     return $.ajax({
         url: colouringBtn.data('get-url'),
         type: "GET",
@@ -96,7 +93,8 @@ async function toggleColouring() {
     colouringBtn.toggleClass('active');
 
     if (colouringBtn.hasClass('active')) {
-        colouringData = await getColouringData();
+        colouringData = await getColouring();
+        console.log("colouringData", colouringData);
         if (colouringData) {
             applyColouring(colouringData);
         }
@@ -114,13 +112,13 @@ async function toggleColouring() {
  *
  * @return {Promise<object>} The colouring data.
  */
-async function getColouringData() {
+async function getColouring() {
     if (colouringData) {
         return colouringData;
     }
 
     try {
-        colouringData = await getColouringDataRequest();
+        colouringData = await getColouringRequest();
         return colouringData;
     }
     catch (error) {

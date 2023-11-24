@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from users.models import User
 
 
-def get_client_from_request(request: HttpRequest) -> User | None:
+def get_client(request: HttpRequest) -> User | None:
     """
     Returns the client from the given HttpRequest based on the user type.
 
@@ -17,9 +17,9 @@ def get_client_from_request(request: HttpRequest) -> User | None:
         Optional[User]: The client information if found, None otherwise.
     """
 
-    return (
-        request.GET.get("client") if request.user.is_expert else request.user
-    )
+    if request.user.is_expert:
+        return request.GET.get("client")
+    return request.user
 
 
 def is_ajax(request: HttpRequest) -> bool:

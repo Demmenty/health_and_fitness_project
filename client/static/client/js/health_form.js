@@ -45,8 +45,6 @@ const details = {
 const currentPhysicalActivityRadios = healthForm.find("#current_physical_activity input[type='radio']");
 const currentPhysicalActivityPeriod = healthForm.find("#current_physical_activity_period");
 
-// EVENTS
-
 $(document).ready(function () {
     for (const key in checkboxes) {
         toggleDetail(details[key], checkboxes[key]);

@@ -105,7 +105,7 @@ class DailyData(models.Model):
     )
 
     def __str__(self):
-        return f"Измерения клиента {self.client} за {self.date}"
+        return f"Измерениe {self.id}: {self.client}"
 
     class Meta:
         unique_together = ("client", "date")
@@ -157,19 +157,17 @@ class DailyData(models.Model):
                 values = [
                     getattr(metric, parameter)
                     for metric in metrics
-                    if metric.date != today
-                    or parameter not in nutrition_parameters
+                    if metric.date != today or parameter not in nutrition_parameters
                     if getattr(metric, parameter) is not None
                 ]
+                print("values", values)
                 if values:
                     metrics_avg[parameter] = sum(values) / len(values)
 
         return metrics_avg
 
     @classmethod
-    def update_nutrition_from_fs(
-        cls, metrics: list["DailyData"]
-    ) -> list["DailyData"]:
+    def update_nutrition_from_fs(cls, metrics: list["DailyData"]) -> list["DailyData"]:
         """
         Update the nutrition data of the given list of metrics from the client's FatSecret account.
 
@@ -191,8 +189,7 @@ class DailyData(models.Model):
         fatsecret = FSManager(entry_data=fs_entry_data)
 
         months_in_metrics = {
-            datetime(metric.date.year, metric.date.month, 1)
-            for metric in metrics
+            datetime(metric.date.year, metric.date.month, 1) for metric in metrics
         }
 
         for month in months_in_metrics:
@@ -351,8 +348,7 @@ class Levels(models.Model):
 
         excluded_fields = ["id", "client", "parameter"]
         result = {
-            obj.parameter: model_to_dict(obj, exclude=excluded_fields)
-            for obj in objects
+            obj.parameter: model_to_dict(obj, exclude=excluded_fields) for obj in objects
         }
         return result
 
@@ -361,18 +357,14 @@ class NutritionRecs(models.Model):
     """Nutrition recommendations for the client."""
 
     client = models.OneToOneField("users.User", on_delete=models.CASCADE)
-    calories = models.PositiveSmallIntegerField(
-        "Калории", null=True, blank=True
-    )
+    calories = models.PositiveSmallIntegerField("Калории", null=True, blank=True)
     protein = models.PositiveSmallIntegerField("Белки", null=True, blank=True)
     fat = models.PositiveSmallIntegerField("Жиры", null=True, blank=True)
-    carbohydrate = models.PositiveSmallIntegerField(
-        "Углеводы", null=True, blank=True
-    )
+    carbohydrate = models.PositiveSmallIntegerField("Углеводы", null=True, blank=True)
     comment = models.TextField("Комментарий", default="", blank=True)
 
     def __str__(self):
-        return f"Рекомендации КБЖУ для: {self.client}"
+        return f"Рекомендации КБЖУ: {self.client}"
 
     class Meta:
         verbose_name = "Рекомендации КБЖУ"
@@ -428,7 +420,7 @@ class Anthropometry(models.Model):
     )
 
     def __str__(self):
-        return f"Антропометрия клиента {self.user} за {self.date}"
+        return f"Антропометрия {self.id}: {self.user}"
 
     class Meta:
         ordering = ["-date"]
@@ -446,9 +438,9 @@ class AnthropometryPhotoAccess(models.Model):
 
     def __str__(self):
         if self.photo_access:
-            return f"Клиент {self.user} разрешил доступ к своим фото"
+            return f"{self.user} разрешил доступ к своим фото"
         else:
-            return f"Клиент {self.user} не разрешил доступ к своим фото"
+            return f"{self.user} не разрешил доступ к своим фото"
 
     class Meta:
         verbose_name = "Доступ к фото"

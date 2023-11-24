@@ -125,9 +125,7 @@ class FSCacheManager:
 
         return daily_food
 
-    def get_monthly_entries(
-        self, client_id: int, month: datetime
-    ) -> list | None:
+    def get_monthly_entries(self, client_id: int, month: datetime) -> list | None:
         """
         Retrieve the monthly entries for a specific client and month from cache.
 
@@ -145,7 +143,7 @@ class FSCacheManager:
 
         client_dict: dict = cache.get(client_id)
         if not client_dict:
-            return []
+            return None
 
         month_str = month.strftime("%Y-%m")
         monthly_entries = client_dict.get(month_str)
@@ -177,9 +175,7 @@ class FSCacheManager:
 
         return monthly_food
 
-    def update_food_serving(
-        self, food_id: str, serving_id: str, params: dict
-    ) -> None:
+    def update_food_serving(self, food_id: str, serving_id: str, params: dict) -> None:
         """
         Updates the serving details for a specific food item in the cache.
 
@@ -215,9 +211,7 @@ class FSCacheManager:
         with open(self.food_details, "wb") as f:
             pickle.dump(cache, f)
 
-    def save_daily_food(
-        self, client_id: int, day: datetime, food: dict
-    ) -> None:
+    def save_daily_food(self, client_id: int, day: datetime, food: dict) -> None:
         """
         Save daily food for a specific client on a given day to the cache.
 
@@ -261,9 +255,7 @@ class FSCacheManager:
         with open(self.monthly_entries, "wb") as file:
             pickle.dump(cache, file)
 
-    def save_monthly_food(
-        self, client_id: int, month: datetime, food: dict
-    ) -> None:
+    def save_monthly_food(self, client_id: int, month: datetime, food: dict) -> None:
         """
         Save monthly food for a specific client on a given month to the cache.
 

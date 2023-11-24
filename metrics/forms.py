@@ -146,13 +146,9 @@ class DailyDataForm(ModelForm):
         if isinstance(metrics_date, str):
             metrics_date = date.fromisoformat(metrics_date)
 
-        instance = DailyData.objects.filter(
-            date=metrics_date, client=client
-        ).first()
+        instance = DailyData.objects.filter(date=metrics_date, client=client).first()
         form = (
-            cls(instance=instance)
-            if instance
-            else cls(initial={"date": metrics_date})
+            cls(instance=instance) if instance else cls(initial={"date": metrics_date})
         )
 
         return form
@@ -209,31 +205,31 @@ class ColorsForm(ModelForm):
         widgets = {
             "lvl1": TextInput(
                 attrs={
-                    "class": "col-6 cursor-pointer",
+                    "class": "col-6 pointer",
                     "type": "color",
                 }
             ),
             "lvl2": TextInput(
                 attrs={
-                    "class": "col-6 cursor-pointer",
+                    "class": "col-6 pointer",
                     "type": "color",
                 }
             ),
             "lvl3": TextInput(
                 attrs={
-                    "class": "col-6 cursor-pointer",
+                    "class": "col-6 pointer",
                     "type": "color",
                 }
             ),
             "lvl4": TextInput(
                 attrs={
-                    "class": "col-6 cursor-pointer",
+                    "class": "col-6 pointer",
                     "type": "color",
                 }
             ),
             "lvl5": TextInput(
                 attrs={
-                    "class": "col-6 cursor-pointer",
+                    "class": "col-6 pointer",
                     "type": "color",
                 }
             ),

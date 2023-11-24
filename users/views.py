@@ -1,9 +1,4 @@
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-    views as auth_views,
-)
+from django.contrib.auth import authenticate, login, logout, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect

@@ -13,10 +13,7 @@ const colouringBtn = $("#colouring-btn");
 const metricsTable = $("#metrics-table");
 const metricsLevelsSection = $("#metrics-levels-section");
 
-// EVENTS & AUTOSTART
-
 $(document).ready(() => {
-    $(".draggable").each((i, elmnt) => {makeDraggable(elmnt)})
     commentBtns.on('click', toggleComment);
     commentCloseBtns.on('click', closeComment);
     recommendationsBtn.on('click', toggleNutritionRecs);

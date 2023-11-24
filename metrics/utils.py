@@ -1,21 +1,14 @@
 from datetime import date, datetime
 
 from metrics.forms import AnthropometryPhotoAccessForm, LevelsForm
-from metrics.models import (
-    Anthropometry,
-    AnthropometryPhotoAccess,
-    DailyData,
-    Levels,
-)
+from metrics.models import Anthropometry, AnthropometryPhotoAccess, DailyData, Levels
 from users.models import User
 
 
 def get_anthropo_entry(user, entry_date: date):
     """возвращает антропометрию из БД за выбранный день"""
 
-    entry = Anthropometry.objects.filter(
-        date__exact=entry_date, user=user
-    ).first()
+    entry = Anthropometry.objects.filter(date__exact=entry_date, user=user).first()
 
     return entry
 
@@ -46,9 +39,7 @@ def get_anthropo_entries(user) -> dict:
 def get_anthropo_photoaccess_form(user):
     """возвращает форму для галочки о разрешении доступа эксперта к фото"""
 
-    instance, is_created = AnthropometryPhotoAccess.objects.get_or_create(
-        user=user
-    )
+    instance, is_created = AnthropometryPhotoAccess.objects.get_or_create(user=user)
 
     form = AnthropometryPhotoAccessForm(instance=instance)
 
@@ -86,9 +77,7 @@ def create_levels_forms(client: User) -> list[LevelsForm]:
         if instance:
             form = LevelsForm(instance=instance)
         else:
-            form = LevelsForm(
-                initial={"client": client, "parameter": parameter}
-            )
+            form = LevelsForm(initial={"client": client, "parameter": parameter})
         levels_forms.append(form)
 
     return levels_forms

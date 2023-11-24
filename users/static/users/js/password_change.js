@@ -1,8 +1,6 @@
 const passwordChangeForm = $('#password-change-form');
 const showPasswordTogglers = passwordChangeForm.find('.show-password-toggler');
 
-// EVENTS
-
 $(document).ready(function () {
     showPasswordTogglers.on('click', togglePasswordVisibility);
 })

@@ -11,9 +11,7 @@ urlpatterns = [
         views.client_registration,
         name="client_registration",
     ),
-    path(
-        "client/<int:client_id>/", views.client_profile, name="client_profile"
-    ),
+    path("client/<int:client_id>/", views.client_profile, name="client_profile"),
     path(
         "client/<int:client_id>/health",
         views.client_health,

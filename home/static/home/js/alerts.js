@@ -1,8 +1,6 @@
 const successAlert = $("#success-alert");
 const dangerAlert = $("#danger-alert");
 
-// EVENTS 
-
 $(document).ready(function() {
     $(".alert .btn-close").on("click", hideAlert);
 })
@@ -26,9 +24,14 @@ function showSuccessAlert(msg) {
  * @param {string} msg - The message to be displayed in the alert.
  */
 function showDangerAlert(msg) {
-    const truncatedMsg = msg.length > 300 ? `${msg.substring(0, 300)}...` : msg;
+    if (msg == "0 undefined") {
+        msg = "Нет соединения с сервером";
+    }
+    else {
+        msg = msg.length > 300 ? `${msg.substring(0, 300)}...` : msg;
+    }
 
-    dangerAlert.find(".text").text(truncatedMsg);
+    dangerAlert.find(".text").text(msg);
     dangerAlert.addClass("active");
     setTimeout(() => dangerAlert.removeClass("active"), 4000);
 }

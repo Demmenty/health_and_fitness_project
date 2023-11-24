@@ -17,9 +17,7 @@ def renew_measure_nutrition(user, measure_date: datetime) -> None:
     if not fs.is_connected(user):
         return
 
-    measure = DailyData.objects.filter(
-        user=user, date=measure_date.date()
-    ).first()
+    measure = DailyData.objects.filter(user=user, date=measure_date.date()).first()
 
     if measure:
         try:
@@ -51,25 +49,16 @@ def renew_weekly_measures_nutrition(user) -> None:
 
     for i in range(7):
         measure_date = date.today() - timedelta(days=(6 - i))
-        measure = DailyData.objects.filter(
-            user=user, date=measure_date
-        ).first()
+        measure = DailyData.objects.filter(user=user, date=measure_date).first()
 
         if measure:
             measure_date_int = convert_date_to_epoch(measure.date)
             if weekly_nutrition_fs.get(measure_date_int):
-                if (
-                    measure.calories
-                    != weekly_nutrition_fs[measure_date_int]["calories"]
-                ):
-                    measure.calories = weekly_nutrition_fs[measure_date_int][
-                        "calories"
-                    ]
-                    measure.protein = weekly_nutrition_fs[measure_date_int][
-                        "protein"
-                    ]
+                if measure.calories != weekly_nutrition_fs[measure_date_int]["calories"]:
+                    measure.calories = weekly_nutrition_fs[measure_date_int]["calories"]
+                    measure.protein = weekly_nutrition_fs[measure_date_int]["protein"]
                     measure.fat = weekly_nutrition_fs[measure_date_int]["fat"]
-                    measure.carbohydrate = weekly_nutrition_fs[
-                        measure_date_int
-                    ]["carbohydrate"]
+                    measure.carbohydrate = weekly_nutrition_fs[measure_date_int][
+                        "carbohydrate"
+                    ]
                     measure.save()

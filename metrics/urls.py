@@ -7,8 +7,8 @@ app_name = "metrics"
 urlpatterns = [
     path(
         "colouring/get",
-        ajax.get_сolouring_data,
-        name="get_сolouring_data",
+        ajax.get_сolouring,
+        name="get_сolouring",
     ),
     path(
         "levels/<int:client_id>/save",

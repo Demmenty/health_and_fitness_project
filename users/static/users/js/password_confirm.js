@@ -1,8 +1,6 @@
 const passwordResetForm = $('#password-reset-form');
 const showPasswordTogglers = passwordResetForm.find('.show-password-toggler');
 
-// EVENTS
-
 $(document).ready(function () {
     showPasswordTogglers.on('click', togglePasswordVisibility);
 })
@@ -10,8 +8,8 @@ $(document).ready(function () {
 // FUNCS
 
 /**
- * Toggles the visibility of the password field in the form.
- */
+* Toggles the visibility of the password field in the form.
+*/
 function togglePasswordVisibility() {
     const showPasswordToggler = $(this);
     const div = showPasswordToggler.closest('div');

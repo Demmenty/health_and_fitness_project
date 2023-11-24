@@ -3,8 +3,6 @@ const consultationForm = $('#consultation-form');
 const consultationError = $('#consultation_error');
 const applicantNameDisplay = $('#applicant_name');
 
-// EVENTS
-
 $(document).ready(function () {
     consultationForm.on('submit', handleConsultRequest);
 })

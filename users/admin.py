@@ -10,10 +10,10 @@ admin.site.unregister(Group)
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (
-        "username",
+        "__str__",
         "first_name",
+        "last_name",
         "email",
-        "is_expert",
         "is_active",
         "is_superuser",
     )

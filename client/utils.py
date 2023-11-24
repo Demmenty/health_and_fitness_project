@@ -6,9 +6,7 @@ from users.models import User
 # TODO rename this file to log_utils.py or smth
 
 
-def create_log_entry(
-    form: ModelForm, change_message: str, client: User
-) -> None:
+def create_log_entry(form: ModelForm, change_message: str, client: User) -> None:
     """
     Save a log entry for a model form about client activity.
 

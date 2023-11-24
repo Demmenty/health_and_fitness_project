@@ -4,8 +4,6 @@ const registrationSubmitBtn = clientRegistrationForm.find('button[type="submit"]
 const returnToClientsLink = clientRegistrationForm.find('#return-to-clients-link');
 const generatePasswordBtn = clientRegistrationForm.find('#generate-password-btn');
 
-// EVENTS
-
 $(document).ready(function () {
     clientRegistrationForm.on('submit', registerClient);
     generatePasswordBtn.on('click', generatePassword);

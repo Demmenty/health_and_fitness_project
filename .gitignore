@@ -13,3 +13,4 @@ media/
 .venv/
 # Other
 TODO
+nutrition/cache/

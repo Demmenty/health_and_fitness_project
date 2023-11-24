@@ -3,8 +3,6 @@ const loginStatus = $('#login-status');
 const passwordInput = loginForm.find('#id_password');
 const showPasswordToggler = loginForm.find('#show-password-toggler');
 
-// EVENTS
-
 $(document).ready(function () {
     showPasswordToggler.on('click', togglePasswordVisibility);
     loginForm.on('submit', loginUser);

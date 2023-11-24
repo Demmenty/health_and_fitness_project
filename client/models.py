@@ -26,7 +26,7 @@ class MainData(models.Model):
     # )
 
     def __str__(self):
-        return f"Основная информация о клиенте {self.client}"
+        return f"Основная информация: {self.client}"
 
     def get_age(self) -> int:
         """Return the age of the client"""
@@ -35,8 +35,7 @@ class MainData(models.Model):
         age: int = today.year - self.birthday.year
 
         if (today.month < self.birthday.month) or (
-            today.month == self.birthday.month
-            and today.day < self.birthday.day
+            today.month == self.birthday.month and today.day < self.birthday.day
         ):
             age -= 1
 
@@ -115,9 +114,7 @@ class Health(models.Model):
         "Кардиостимулятор/имплантируемый сердечный дефибриллятор.",
         default=False,
     )
-    arrhythmia = models.BooleanField(
-        "Нарушения сердечного ритма.", default=False
-    )
+    arrhythmia = models.BooleanField("Нарушения сердечного ритма.", default=False)
     heart_defect = models.BooleanField(
         "Врожденные пороки сердца, патологии сердечных клапанов, сердечная недостаточность.",
         default=False,
@@ -319,7 +316,7 @@ class Health(models.Model):
     )
 
     def __str__(self):
-        return f"Информация о здоровье клиента {self.client}"
+        return f"Информация о здоровье: {self.client}"
 
     class Meta:
         verbose_name = "Информация о здоровье"
@@ -392,7 +389,7 @@ class Contacts(models.Model):
     )
 
     def __str__(self):
-        return f"Контакты клиента {self.client}"
+        return f"Контакты: {self.client}"
 
     class Meta:
         verbose_name = "Контакты клиента"
@@ -402,9 +399,7 @@ class Contacts(models.Model):
 class Log(models.Model):
     """Change log of the client's information"""
 
-    action_time = models.DateField(
-        "Дата изменения", default=now, editable=False
-    )
+    action_time = models.DateField("Дата изменения", default=now, editable=False)
     modelname = models.CharField("Модель данных", max_length=255)
     change_message = models.CharField("Описание", max_length=255)
     client = models.ForeignKey(

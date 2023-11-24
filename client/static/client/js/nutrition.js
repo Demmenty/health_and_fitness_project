@@ -54,8 +54,6 @@ const today = new Date().toLocaleDateString('en-CA');
 var nutritionDay = today;
 var nutritionMonth = today;
 
-// EVENTS & AUTOSTART
-
 $(document).ready(() => {
     setRecommendedValuesDict(recommendedValues);
 
@@ -82,8 +80,6 @@ $(document).ready(() => {
     monthTopBtn.on("click", toggleMonthTop);
 
     foodMetricsForm.on("submit", saveFoodMetric);
-
-    $(".draggable").each((i, elmnt) => { makeDraggable(elmnt) })
 
     recommendationsBtn.on('click', toggleRecommendations);
     recommendationsCloseBtn.on('click', toggleRecommendations);
