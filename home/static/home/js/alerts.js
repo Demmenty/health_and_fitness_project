@@ -19,21 +19,42 @@ function showSuccessAlert(msg) {
 }
 
 /**
- * Shows the danger alert message.
+ * Shows the danger alert message based on the error.
  * 
- * @param {string} msg - The message to be displayed in the alert.
+ * @param {any} error - The error to be displayed in the alert.
  */
-function showDangerAlert(msg) {
-    if (msg == "0 undefined") {
-        msg = "Нет соединения с сервером";
-    }
-    else {
-        msg = msg.length > 300 ? `${msg.substring(0, 300)}...` : msg;
-    }
+function showDangerAlert(error) {
+    const msg = renderErrorMessage(error);
 
     dangerAlert.find(".text").text(msg);
     dangerAlert.addClass("active");
     setTimeout(() => dangerAlert.removeClass("active"), 4000);
+}
+
+/**
+ * Render an error message based on the given error object.
+ *
+ * @param {any} error - The error object to render the message for.
+ * @return {string} The rendered error message.
+ */
+function renderErrorMessage(error) {
+    if (typeof error === "string") {
+        return error.length > 300 ? `${error.substring(0, 300)}...` : error;
+    }
+
+    if (error.status === 400 && error.responseJSON) {
+        return Object.entries(error.responseJSON.errors)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join("\n");
+    }
+
+    if (error.status === 0) {
+        return "Нет соединения с сервером";
+    }
+
+    let msg = `Ошибка ${error.status}: ${error.statusText}`;
+    msg = msg.length > 300 ? `${msg.substring(0, 300)}...` : msg;
+    return msg;
 }
 
 /**

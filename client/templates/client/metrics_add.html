@@ -3,7 +3,6 @@
 {% load custom_filters %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/metrics_add.css' %}">
 {% endblock %}
 
@@ -12,7 +11,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'home/alerts.html' %}
 <section id="client-metrics-section">
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 696px;">
@@ -88,6 +86,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'home/js/alerts.js' %}"></script>
     <script src="{% static 'client/js/metrics_add.js' %}"></script>
 {% endblock %}

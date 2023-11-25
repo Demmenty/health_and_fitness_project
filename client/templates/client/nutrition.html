@@ -3,7 +3,6 @@
 {% load nutrition_recommendations %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/nutrition.css' %}">
 {% endblock %}
@@ -13,7 +12,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'home/alerts.html' %}
 {% nutrition_recommendations %}
 
 <section id="nutrition-menu-section">
@@ -220,6 +218,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'home/js/alerts.js' %}"></script>
     <script src="{% static 'client/js/nutrition.js' %}"></script>
 {% endblock %}

@@ -3,7 +3,6 @@
 {% load nutrition_recommendations %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/client_metrics.css' %}">
     <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
 {% endblock %}
@@ -13,7 +12,6 @@
 {% endblock %}
 
 {% block content %}
-{% include 'home/alerts.html' %}
 {% include 'metrics/period_select.html' %}
 {% nutrition_recommendations %}
 <section id="metrics-menu-section">
@@ -169,6 +167,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'home/js/alerts.js' %}"></script>
     <script src="{% static 'expert/js/client_metrics.js' %}"></script>
 {% endblock %}
