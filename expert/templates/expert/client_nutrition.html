@@ -4,7 +4,7 @@
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
-    <link rel="stylesheet" href="{% static 'expert/css/extra_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/client_nutrition.css' %}">
 {% endblock %}
 
@@ -18,30 +18,7 @@
 
 <section id="nutrition-menu-section">
     <div class="container">
-        <div class="extra-menu mx-auto mb-4">
-            <div class="extra-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
-                <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
-            </div>
-            <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
-                <div id="monthtop-btn" class="text-nowrap align-middle btn-link disabled" 
-                    title="Топ-10 продуктов за месяц">
-                    <img src="{% static 'client/img/star.svg' %}" width="20" class="mb-1">
-                    <span class="d-none d-sm-inline">Топ-10</span>
-                </div>
-                <div id="recommendations-btn" class="text-nowrap align-middle btn-link" 
-                    title="Рекомендации по питанию">
-                    <img src="{% static 'client/img/file-ruled.svg' %}" width="20" class="mb-1">
-                    <span class="d-none d-sm-inline">Кбжу</span>
-                </div>
-                <div id="statistics-btn" class="text-nowrap align-middle btn-link disabled" 
-                    title="Раздел в разработке">
-                    <img src="{% static 'client/img/graph-up.svg' %}" width="20">
-                    <span class="d-none d-sm-inline">Статистика</span>
-                </div>
-            </div>
-            <div class="col-2">
-            </div>
-        </div>
+        {% include 'nutrition/page_menu.html' %}
     </div>
 </section>
 

@@ -1,10 +1,10 @@
 {% load static %}
 
-<div class="extra-menu mx-auto mb-4">
-    <div class="extra-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
+<div class="page-menu mx-auto mb-4">
+    <div class="page-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
         <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
     </div>
-    <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
+    <div class="page-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
         {% if request.user.is_expert %}
             <button title="Только для клиента" disabled
                 class="btn-link text-nowrap align-middle disabled">

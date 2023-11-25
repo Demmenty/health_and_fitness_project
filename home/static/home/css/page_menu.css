@@ -1,16 +1,16 @@
-.extra-menu {
+.page-menu {
     display: flex;
     border-radius: 0.375rem;
     border: 1px solid #dee2e6;
     flex-direction: column;
     justify-content: space-between;
 }
-.extra-menu-date {
+.page-menu-date {
     text-align: center;
     border-top-left-radius: 0.375rem;
     border-top-right-radius: 0.375rem;
 }
-.extra-menu-btns {
+.page-menu-btns {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -18,12 +18,12 @@
     border-bottom-right-radius: 0.375rem;
 }
 @media (min-width: 992px) {
-    .extra-menu {
+    .page-menu {
         border: none;
         flex-direction: row;
     }
-    .extra-menu-date,
-    .extra-menu-btns {
+    .page-menu-date,
+    .page-menu-btns {
         border-radius: 0.375rem;
         border: 1px solid #dee2e6;
     }

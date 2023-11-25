@@ -1,11 +1,10 @@
 {% extends 'client/layout.html' %}
 {% load static %}
-{% load custom_filters %}
 {% load nutrition_recommendations %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
-    <link rel="stylesheet" href="{% static 'client/css/extra_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/nutrition.css' %}">
 {% endblock %}
 
@@ -19,30 +18,7 @@
 
 <section id="nutrition-menu-section">
     <div class="container">
-        <div class="extra-menu mx-auto mb-4">
-            <div class="extra-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
-                <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
-            </div>
-            <div class="extra-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
-                <button id="monthtop-btn" title="Топ-10 продуктов за месяц"
-                    class="btn-link text-nowrap align-middle disabled">
-                    <img src="{% static 'client/img/star.svg' %}" width="20" class="mb-1">
-                    <span class="d-none d-sm-inline">Топ-10</span>
-                </button>
-                <button id="recommendations-btn" title="Рекомендации по питанию"
-                    class="btn-link text-nowrap align-middle">
-                    <img src="{% static 'client/img/file-ruled.svg' %}" width="20" class="mb-1">
-                    <span class="d-none d-sm-inline">Кбжу</span>
-                </button>
-                <button id="statistics-btn" title="Раздел в разработке"
-                    class="btn-link text-nowrap align-middle disabled">
-                    <img src="{% static 'client/img/graph-up.svg' %}" width="20">
-                    <span class="d-none d-sm-inline">Статистика</span>
-                </button>
-            </div>
-            <div class="col-2">
-            </div>
-        </div>
+        {% include 'nutrition/page_menu.html' %}
     </div>
 </section>
 

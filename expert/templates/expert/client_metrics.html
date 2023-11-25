@@ -5,7 +5,7 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/client_metrics.css' %}">
-    <link rel="stylesheet" href="{% static 'expert/css/extra_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -14,11 +14,11 @@
 
 {% block content %}
 {% include 'home/alerts.html' %}
-{% include 'metrics/metrics_period_select.html' %}
+{% include 'metrics/period_select.html' %}
 {% nutrition_recommendations %}
 <section id="metrics-menu-section">
     <div class="container">
-        {% include 'metrics/metrics_menu.html' %}
+        {% include 'metrics/page_menu.html' %}
     </div>
 </section>
 <section id="metrics-section" class="mb-4">

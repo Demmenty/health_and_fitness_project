@@ -126,7 +126,7 @@ def client_contacts(request, client_id):
 @require_http_methods(["GET"])
 def client_metrics(request, client_id):
     """
-    Render metrics page of a client for the expert 
+    Render metrics page of a client for the expert
     within a specified date range or number of days.
     """
 
