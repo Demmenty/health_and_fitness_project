@@ -1,5 +1,6 @@
-from django.template.context import RequestContext
 from django import template
+from django.template.context import RequestContext
+
 from metrics.forms import NutritionRecsForm
 from metrics.models import NutritionRecs
 

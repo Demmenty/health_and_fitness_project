@@ -30,11 +30,17 @@ body {
 .fw-500 {
     font-weight: 500;
 }
+.trancate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
 
 /* colors */
 .filter-secondary {
     filter: invert(54%) sepia(5%) saturate(776%) hue-rotate(167deg) brightness(100%);
 }
+.filter-primary,
 .filter-hover-primary:hover {
     filter: invert(42%) sepia(65%) saturate(1255%) hue-rotate(209deg);
 }
@@ -97,6 +103,7 @@ body {
     border: none;
     background: none;
     padding: 0;
+    cursor: pointer;
 }
 .btn-img.active img,
 .btn-img.active svg {

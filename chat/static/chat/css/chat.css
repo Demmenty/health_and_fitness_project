@@ -13,7 +13,6 @@
 #chat {
     left: unset;
     bottom: 2rem;
-    max-height: 87vh;
     width: 100%;
     overflow: auto;
 }
@@ -28,14 +27,6 @@
     max-height: 73vh;
     min-height: 16rem;
 }
-#message-form #id_text {
-    min-height: 65px;
-    border-color: #d1d1d1;
-}
-#message-form #id_text:focus {
-    box-shadow: none;
-    border-color: #d1d1d1;
-}
 #chat-scroll-btn {
     bottom: 0.5rem;
     right: 1rem;
@@ -45,4 +36,55 @@
 }
 #chat .spinner-border {
     min-height: 2rem;
+}
+#chat .message-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+#chat .message-image img {
+    max-width: 100%;
+    opacity: 0;
+    animation: fade-in 0.3s ease-in-out forwards;
+    border-radius: 0.375rem;
+}
+#chat .message-image img.lazy {
+    width: 20rem;
+    height: 20rem;
+    box-shadow: inset 0px 0px 13px 2px #6a717980;
+    background-image: url("/static/chat/img/hourglass.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0.5rem;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* message-form */
+#message-form #id_text {
+    min-height: 65px;
+    border-color: #d1d1d1;
+}
+#message-form #id_text:focus {
+    box-shadow: none;
+    border-color: #d1d1d1;
+}
+#message-form #id_text.drag-over {
+    border-color: #657ff7 !important;
+    box-shadow: 0 0 10px #657ff7 !important;
+}
+#input-img-preview {
+    display: flex;
+    align-items: center;
+    margin-left: calc(0.5rem + 25px);
+}
+#input-img-name span {
+    max-width: 19rem;
+    display: inline-block;
 }

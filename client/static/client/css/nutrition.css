@@ -1,9 +1,3 @@
-/* common */
-.trancate {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
 @media (min-width: 992px) {
     .d-lg-table-row-group {
         display: table-row-group !important;

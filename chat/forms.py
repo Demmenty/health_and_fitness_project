@@ -1,9 +1,9 @@
-from django import forms
+from django.forms import ClearableFileInput, HiddenInput, ModelForm, Textarea
 
 from chat.models import Message
 
 
-class MessageForm(forms.ModelForm):
+class MessageForm(ModelForm):
     """Form for sending a chat message"""
 
     class Meta:
@@ -16,15 +16,15 @@ class MessageForm(forms.ModelForm):
             "audio",
         )
         widgets = {
-            "sender": forms.HiddenInput(),
-            "recipient": forms.HiddenInput(),
-            "text": forms.Textarea(
+            "sender": HiddenInput(),
+            "recipient": HiddenInput(),
+            "text": Textarea(
                 attrs={
                     "placeholder": "Написать сообщение...",
                     "class": "form-control",
                     "rows": 2,
                 }
             ),
-            "image": forms.ClearableFileInput(),
-            "audio": forms.ClearableFileInput(),
+            "image": ClearableFileInput(),
+            "audio": ClearableFileInput(),
         }

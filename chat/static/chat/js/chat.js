@@ -2,17 +2,22 @@ const chat = $('#chat');
 const chatBtn = $('#chat-btn');
 const chatBtnBadge = chatBtn.find(".badge");
 const chatHistory = chat.find("#chat-history");
+const chatScrollBtn = chat.find("#chat-scroll-btn");
+const chatParams = chat.find("params");
+
 const chatMsgForm = chat.find('#message-form');
 const chatMsgText = chatMsgForm.find("#id_text");
+const chatImageInput = chatMsgForm.find("#id_image");
+const chatImageInputPreview = chatMsgForm.find("#input-img-preview");
+const chatImageDeleteBtn = chatMsgForm.find("#input-img-delete");
 const chatMsgSubmitBtn = chatMsgForm.find("button [type=submit]");
-const scrollBtn = chat.find("#chat-scroll-btn");
-const chatParams = chat.find("params");
-const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
 
 const userID = chatMsgForm.find("#id_sender").val();
 const chatPartnerID = chatMsgForm.find("#id_recipient").val();
+const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
 
 const newMsgObserver = new IntersectionObserver(handleNewMsgIntersection);
+const lazyImgObserver = new IntersectionObserver(handleLazyImgIntersection);
 
 const messageTemplates = {
     [userID]: chat.find("#message-template-user"),
@@ -24,6 +29,7 @@ const messageTemplates = {
 // make resize by sides
 // btn for fuulscreen chat and back
 // increase limit in the end
+// open image full screen when clicked
 
 $(document).ready(function () {
     // chat open/close
@@ -31,15 +37,24 @@ $(document).ready(function () {
     chat.find(".btn-close").on("click", toggleChat);
 
     // chat scrolling
-    chatHistory.on("scroll", toggleScrollBtn);
-    scrollBtn.on("click", scrollToLastMessage);
-
-    // send message
-    chatMsgForm.on('submit', handleMessageSending);
-    chatMsgText.on("keypress", handleMessageKeyPress);
+    chatHistory.on("scroll", toggleChatScrollBtn);
+    chatScrollBtn.on("click", scrollToLastMessage);
 
     // auto load new messages
     setInterval(loadNewMessages, 10000);
+
+    // sending message
+    chatMsgForm.on('submit', handleMessageSending);
+    chatMsgText.on("keypress", handleMessageKeyPress);
+
+    // file upload
+    chatMsgText.on("dragenter dragover dragleave drop", preventDefault);
+    chatMsgText.on("dragenter", addDragEffect);
+    chatMsgText.on("dragleave drop", removeDragEffect);
+    chatImageInput.on("change", handleFileUpload);
+    chatMsgText.on("drop", handleFileDrop);
+    chatMsgText.on("paste", handleFilePaste);
+    chatImageDeleteBtn.on("click", removeUploadedImg);
 })
 
 // REQUESTS
@@ -184,8 +199,10 @@ function handleMessageKeyPress(event) {
 async function handleMessageSending(event) {
     event.preventDefault();
 
-    const isTextEmpty = chatMsgText.val().trim() == "";
-    if (isTextEmpty) {
+    // TODO +check audio
+    const textEmpty = chatMsgText.val().trim() == "";
+    const uploadedImg = chatImageInput[0].files[0];
+    if (textEmpty && !uploadedImg) {
         return;
     }
 
@@ -196,6 +213,7 @@ async function handleMessageSending(event) {
         const message = response[0];
 
         chatMsgForm.trigger("reset");
+        chatImageInputPreview.hide();
         chatMsgSubmitBtn.prop("disabled", false);
 
         const scrolledToBottom = isChatScrolledToBottom(allowance=50);
@@ -207,10 +225,134 @@ async function handleMessageSending(event) {
         }
     }
     catch (error) {
-        console.error(`saveChatMessage error: ${error}`);
-        showDangerAlert(`${error}`);
+        console.error("saveChatMessage error:", error);
+        showDangerAlert(error);
         chatMsgSubmitBtn.prop("disabled", false);
     }
+}
+
+// IMAGES
+
+/**
+ * Handles the event of pasting a file into textarea.
+ */
+function handleFilePaste(event) {
+    const file = event.originalEvent.clipboardData.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        return;
+    }
+
+    chatImageInput[0].files = event.originalEvent.clipboardData.files;
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Handles file uploading to the chat message.
+ */
+function handleFileUpload() {
+    const file = chatImageInput[0].files[0];
+
+    if (!file) {
+        chatImageInputPreview.hide();
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        chatImageInput.val("");
+        showDangerAlert("Это не изображение");
+        return;
+    }
+
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Handles the file drop into textarea event.
+ */
+function handleFileDrop(event) {
+    const file = event.originalEvent.dataTransfer.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        chatImageInput.val("");
+        showDangerAlert("Это не изображение");
+        return;
+    }
+
+    chatImageInput[0].files = event.originalEvent.dataTransfer.files;
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Updates the preview of the uploaded image with the given filename.
+ *
+ * @param {string} filename - The name of the uploaded image file.
+ */
+function updateUploadedImgPreview(filename) {
+    chatImageInputPreview.find('span').text(filename);
+    chatImageInputPreview.show();
+}
+
+/**
+ * Removes the uploaded image. Updates the preview of it.
+ */
+function removeUploadedImg() {
+    chatImageInput.val("");
+    chatImageInputPreview.hide();
+}
+
+/**
+ * Checks if the given file is a valid image file.
+ *
+ * @param {Object} file - The file to be checked.
+ * @return {boolean} True if the file is a valid image file, false otherwise.
+ */
+function isValidImageFile(file) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    return allowedTypes.includes(file.type);
+}
+
+/**
+ * Adds a drag effect to the element by adding the "drag-over" class.
+ *
+ * @param {type} this - The element to add the drag effect to.
+ */
+function addDragEffect() {
+    $(this).addClass("drag-over");
+}
+
+/**
+ * Removes the drag effect from the element by removing the "drag-over" class.
+ *
+ * @param {type} this - The element to add the drag effect to.
+ */
+function removeDragEffect() {
+    $(this).removeClass("drag-over");
+}
+
+/**
+ * Handles the intersection of lazy-loaded images.
+ * Loads the image if it is visible.
+ *
+ * @param {Array} entries - The entries to be processed.
+ */
+async function handleLazyImgIntersection(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const image = $(entry.target);
+            image.attr("src", image.attr("data-src"));
+            image.removeClass("lazy").removeAttr("data-src");
+            lazyImgObserver.unobserve(image[0]);
+        }
+    });
 }
 
 // CHAT WINDOW
@@ -229,8 +371,7 @@ async function openChat() {
 
     if (chat.data("first-open")) {
         chat.data("first-open", false);
-        await loadLastMessages();
-        scrollToLastMessage();
+        loadLastMessages();
     }
 }
 
@@ -264,8 +405,11 @@ async function loadLastMessages() {
             return;
         }
 
+        // wait+scroll prevent chat from moving on top
         for (const message of response) {
             chatHistory.prepend(renderMessage(message));
+            await wait(1);
+            scrollToLastMessage();
         }
 
         if (messagesAmount == limit) {
@@ -273,8 +417,8 @@ async function loadLastMessages() {
         }
     }
     catch (error) {
-        console.error("loadLastMessages error", error);
-        showDangerAlert(`Ошибка при загрузке сообщений! ${error}`);
+        console.error("loadLastMessages error:", error);
+        showDangerAlert(error);
         spinner.remove();
     }
 }
@@ -323,8 +467,8 @@ async function loadOldMessages() {
         }
     }
     catch (error) {
-        console.error("loadOldMessages error", error);
-        showDangerAlert(`Ошибка при загрузке сообщений! ${error}`);
+        console.error("loadOldMessages error:", error);
+        showDangerAlert(error);
         spinner.remove();
     }
 }
@@ -363,7 +507,7 @@ async function loadNewMessages() {
         updateNewMessagesBadge();
     }
     catch (error) {
-        console.error(`loadNewMessages error: ${error}`);
+        console.error("loadNewMessages error:", error);
         updateNewMessagesBadge();
     }
 }
@@ -372,11 +516,12 @@ async function loadNewMessages() {
  * Render a message and return the rendered message as a jQuery object.
  *
  * @param {object} message - The dictionary with the message data.
+ * @param {boolean} lazy - Whether the image should be loaded lazily.
  * @return {object} The rendered message as a jQuery object.
  */
-function renderMessage(message) {
+function renderMessage(message, lazy=true) {
     const { pk, fields } = message;
-    const { created_at, sender, text, seen } = fields;
+    const { created_at, sender, text, image: imageUrl, seen } = fields;
     const createdAtFormatted = formatMessageDate(created_at);
 
     const messageTemplate = messageTemplates[sender].html();
@@ -385,18 +530,32 @@ function renderMessage(message) {
     newMessage.attr("data-id", pk);
     newMessage.attr("id", `message-${pk}`);
     newMessage.find('.created-at').text(createdAtFormatted);
+    newMessage.find('.message-text').text(text);
+
+    if (imageUrl) {
+        const image = lazy ? renderLazyImage(imageUrl) : renderImage(imageUrl);
+        newMessage.find(".message-image").append(image);
+
+        if (lazy) {
+            lazyImgObserver.observe(image[0]);
+        }
+    }
 
     if (sender == chatPartnerID && !seen) {
         newMessage.addClass("new");
         newMsgObserver.observe(newMessage[0]);
     }
 
-    // temp for testing
-    // newMessage.find('.message-text').text(text);
-    newMessage.find('.message-text').text(`id ${pk}: ${text}`);
-    // 
-
     return newMessage;
+
+    function renderLazyImage(imageUrl) {
+        return $("<img>", { class: "lazy" })
+            .attr("data-src", `/media/${imageUrl}`);
+    }
+
+    function renderImage(imageUrl) {
+        return $("<img>", {src: `/media/${imageUrl}`});
+    }
 }
 
 /**
@@ -464,7 +623,7 @@ async function updateNewMessagesBadge() {
         }
     }
     catch (error) {
-        console.error(`updateUnreadMessagesCount error: ${error}`);
+        console.error("updateUnreadMessagesCount error:", error);
         chatBtnBadge.text("?");
     }
 }
@@ -478,7 +637,8 @@ async function updateNewMessagesBadge() {
 function handleNewMsgIntersection(entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            setMessageAsSeen($(entry.target));
+            const message = $(entry.target);
+            setMessageAsSeen(message);
         }
     });
 }
@@ -501,14 +661,12 @@ async function setMessageAsSeen(message) {
 
     try {
         await setMessageAsSeenRequest(msgID);
-
         setTimeout(() => {message.removeClass("new")}, 2000);
-
         updateNewMessagesBadge();
     }
     catch (error) {
-        console.error(`setMessageAsSeen error: ${error}`);
-        showDangerAlert(`Ошибка! ${error}`);
+        console.error("setMessageAsSeen error:", error);
+        showDangerAlert(error);
         newMsgObserver.observe(message[0]);
     }
 }
@@ -519,8 +677,8 @@ async function setMessageAsSeen(message) {
  * Toggles the scroll to the bottom button in the chat
  * based on the current scroll position.
  */
-function toggleScrollBtn() {
-    scrollBtn.toggle(!isChatScrolledToBottom(100));
+function toggleChatScrollBtn() {
+    chatScrollBtn.toggle(!isChatScrolledToBottom(100));
 }
 
 /**
@@ -571,4 +729,22 @@ function formatMessageDate(date) {
     const messageDate = new Date(date).toLocaleDateString('ru-RU', options);
 
     return messageDate;
+}
+
+/**
+ * Prevents the default behavior of an event.
+ *
+ * @param {Event} event - The event object.
+ */
+function preventDefault(event) {
+    event.preventDefault();
+}
+
+/**
+ * Waits for a specified number of ms asynchronously.
+ *
+ * @param {number} ms - The number of milliseconds to wait.
+ */
+async function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

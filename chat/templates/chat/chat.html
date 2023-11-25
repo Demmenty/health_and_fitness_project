@@ -27,7 +27,8 @@
             <small> • </small>
             <small class="created-at"></small>
           </div>
-          <p class="message-text"></p>
+          <p class="message-text m-0"></p>
+          <div class="message-image"></div>
         </div>
       </template>
       <template id="message-template-partner">
@@ -37,12 +38,13 @@
             <small> • </small>
             <small class="created-at"></small>
           </div>
-          <p class="message-text"></p>
+          <p class="message-text m-0"></p>
+          <div class="message-image"></div>
         </div>
       </template>
     </div>
     <button id="chat-scroll-btn" type="button" title="Вниз" style="display: none;" 
-      class="btn-img rounded-circle position-absolute bg-white">
+      class="btn-img rounded-circle position-absolute shadow-sm bg-white">
       <img src="{% static 'chat/img/arrow-down-circle.svg' %}" width="25" 
         class="filter-secondary filter-hover-primary">
     </button>
@@ -52,11 +54,22 @@
       {% csrf_token %}
       {{ message_form.sender }}
       {{ message_form.recipient }}
-      <div class="d-flex flex-row gap-2">
+      <div style="display: none;" >
+        {{ message_form.image }}
+        {{ message_form.audio }}
+      </div>
+      <div id="input-img-preview" class="mb-1" style="display: none;">
+        <img src="{% static 'chat/img/file-earmark-arrow-up.svg' %}" width="22"
+          title="Прикрепленное изображение" class="filter-primary mb-1 me-1">
+        <span class="trancate"></span>
+        <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
+          title="Удалить изображение" class="filter-secondary filter-hover-primary pointer ms-1">
+      </div>
+      <div class="d-flex gap-2">
         <div class="d-flex flex-column justify-content-end gap-2 pb-1">
-          <button type="button" id="attach-img-btn" title="Прикрепить изображение" class="btn-img">
+          <label id="input-img-label" for="id_image" title="Прикрепить изображение" class="btn-img align-self-center">
             <img src="{% static 'chat/img/card-image.svg' %}" width="22" class="filter-secondary filter-hover-primary">
-          </button>
+          </label>
           <button type="button" id="attach-audio-btn" title="Голосовое сообщение" class="btn-img">
             <img src="{% static 'chat/img/mic.svg' %}" width="25" class="filter-secondary filter-hover-primary">
           </button>
