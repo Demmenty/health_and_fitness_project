@@ -24,7 +24,9 @@ const messageTemplates = {
     [chatPartnerID]: chat.find("#message-template-partner"),
 }
 
-// TODO
+// NOTE: timeouts before scrolling added to prevent scrolling bugs
+
+// TODO:
 // adjustChatBtnPosition
 // make resize by sides
 // btn for fuulscreen chat and back
@@ -218,10 +220,11 @@ async function handleMessageSending(event) {
 
         const scrolledToBottom = isChatScrolledToBottom(allowance=50);
 
-        chatHistory.append(renderMessage(message));
+        chat.find("#no-messages").remove();
+        chatHistory.append(renderMessage(message, lazy=false));
 
         if (scrolledToBottom) {
-            scrollToLastMessage();
+            setTimeout(() => {scrollToLastMessage()}, 10);
         }
     }
     catch (error) {
@@ -348,9 +351,9 @@ async function handleLazyImgIntersection(entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const image = $(entry.target);
+            lazyImgObserver.unobserve(image[0]);
             image.attr("src", image.attr("data-src"));
             image.removeClass("lazy").removeAttr("data-src");
-            lazyImgObserver.unobserve(image[0]);
         }
     });
 }
@@ -405,11 +408,9 @@ async function loadLastMessages() {
             return;
         }
 
-        // wait+scroll prevent chat from moving on top
         for (const message of response) {
             chatHistory.prepend(renderMessage(message));
-            await wait(1);
-            scrollToLastMessage();
+            setTimeout(() => {scrollToLastMessage()}, 1);
         }
 
         if (messagesAmount == limit) {
@@ -451,7 +452,7 @@ async function loadOldMessages() {
             return;
         }
 
-        // prevent moving up while new messages are adding
+        // to prevent moving up while new messages are adding
         chatHistory[0].scrollTo(1, 1);
 
         for (const message of response) {
@@ -522,8 +523,8 @@ async function loadNewMessages() {
 function renderMessage(message, lazy=true) {
     const { pk, fields } = message;
     const { created_at, sender, text, image: imageUrl, seen } = fields;
-    const createdAtFormatted = formatMessageDate(created_at);
 
+    const createdAtFormatted = formatMessageDate(created_at);
     const messageTemplate = messageTemplates[sender].html();
     const newMessage = $(messageTemplate);
 
@@ -533,11 +534,16 @@ function renderMessage(message, lazy=true) {
     newMessage.find('.message-text').text(text);
 
     if (imageUrl) {
-        const image = lazy ? renderLazyImage(imageUrl) : renderImage(imageUrl);
-        newMessage.find(".message-image").append(image);
+        const { image_width: width, image_height: height } = fields;
 
         if (lazy) {
-            lazyImgObserver.observe(image[0]);
+            const imageElement = renderLazyImage(imageUrl, width, height);
+            newMessage.find(".message-image").append(imageElement);
+            lazyImgObserver.observe(imageElement[0]);
+        }
+        else {
+            const imageElement = renderImage(imageUrl);
+            newMessage.find(".message-image").append(imageElement);
         }
     }
 
@@ -548,8 +554,8 @@ function renderMessage(message, lazy=true) {
 
     return newMessage;
 
-    function renderLazyImage(imageUrl) {
-        return $("<img>", { class: "lazy" })
+    function renderLazyImage(imageUrl, width, height) {
+        return $(`<img width="${width}" height="${height}" class="lazy">`)
             .attr("data-src", `/media/${imageUrl}`);
     }
 
@@ -738,13 +744,4 @@ function formatMessageDate(date) {
  */
 function preventDefault(event) {
     event.preventDefault();
-}
-
-/**
- * Waits for a specified number of ms asynchronously.
- *
- * @param {number} ms - The number of milliseconds to wait.
- */
-async function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
