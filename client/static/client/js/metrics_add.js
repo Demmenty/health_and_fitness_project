@@ -71,6 +71,10 @@ async function getNutritionFromFS() {
  */
 async function updateNutritionFromFS() {
     const nutrition = await getNutritionFromFS();
+    
+    if (!nutrition) {
+        return;
+    }
 
     for (const [parameter, field] of Object.entries(nutritionFields)) {
         const value = nutrition[parameter];
