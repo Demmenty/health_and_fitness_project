@@ -205,7 +205,7 @@ function handleMessageKeyPress(event) {
 /**
  * Handles the sending of a message.
  * 
- * It checks if the message input field is empty and if so, returns. 
+ * It checks if the message input fields are empty and if so, returns. 
  * Makes an AJAX call to the server to save the message.
  * On success: renders the message and appends it to the chat history.
  *
@@ -213,6 +213,11 @@ function handleMessageKeyPress(event) {
  */
 async function handleMessageSending(event) {
     event.preventDefault();
+
+    if (rec && rec.state === "recording") {
+        stopRecording();
+        await wait(1000);
+    }
 
     if (messageIsEmpty()) {
         return;
@@ -395,7 +400,7 @@ function toggleAudioRecording() {
 /**
  * Starts recording audio using the microphone.
  * Show status and time of recording in chat preview.
- * Minimum time = 1 second. Maximum time = 1 hour.
+ * Minimum time = 1.5 second. Maximum time = 1 hour.
  * Makes recorded audio available in chat preview before sending.
  */
 async function startRecording() {
@@ -438,13 +443,14 @@ async function startRecording() {
             if (rec.state == "inactive") {
                 const blob = new Blob(audioChunks, { type: "audio/mp3" });
 
-                if (blob.size < 25000) {
+                // if audio is less than 24kb (< 1.5 sec), doesn't count
+                if (blob.size < 24000) {
                     removeUploadedAudio();
                     return;
                 }
 
                 putRecordToAudioInput(blob);
-                putRecordToPreview(blob)
+                putRecordToPreview(blob);
             }
         };
     }
@@ -460,15 +466,16 @@ async function startRecording() {
         const url = URL.createObjectURL(blob);
         const audioElement = $("<audio controls controlsList='nodownload'>")
             .append(`<source src="${url}" type="audio/mpeg">`);
+
         chatAudioInputPreview.find(".status").html(audioElement);
     }
 
     function updatePreview() {
-        const status = chatAudioInputPreview.find(".status");
+        const status = $("<p>", {class: "m-2", text: "Запись..."});
 
         chatAudioStopBtn.show();
         chatAudioDeleteBtn.hide();
-        status.text(`Запись...`);
+        chatAudioInputPreview.find(".status").html(status);
         chatAudioInputPreview.show();
         startTimer();
 
@@ -476,10 +483,13 @@ async function startRecording() {
             let startTime = new Date();
             recordingTimer = setInterval(() => {
                 let currentTime = new Date() - startTime;
-                let minutes = Math.floor((currentTime / (1000 * 60)) % 60).toString().padStart(2, "0");
-                let seconds = Math.floor((currentTime / 1000) % 60).toString().padStart(2, "0");
+                let minutes = Math.floor((currentTime / (1000 * 60)) % 60)
+                    .toString().padStart(2, "0");
+                let seconds = Math.floor((currentTime / 1000) % 60)
+                    .toString().padStart(2, "0");
+
                 status.text(`Запись... ${minutes}:${seconds}`);
-                if (minutes == 59 && seconds == 59) stopRecording(); 
+                if (minutes == 59 && seconds == 59) stopRecording();
             }, 1000);
         }
     }
@@ -491,8 +501,14 @@ async function startRecording() {
  */
 function stopRecording() {
     chatAudioRecordBtn.removeClass("active");
-    rec.stop();
+    rec.stop(); // rec.state => "inactive"
+    
+    stopUsingMicrophone();
     updatePreview();
+
+    function stopUsingMicrophone() {
+        rec.stream.getTracks().forEach(track => track.stop());
+    }
 
     function updatePreview() {
         chatAudioStopBtn.hide();
@@ -906,4 +922,13 @@ function formatMessageDate(date) {
  */
 function preventDefault(event) {
     event.preventDefault();
+}
+
+/**
+ * Asynchronously waits for a specified number of milliseconds.
+ *
+ * @param {number} ms - The number of milliseconds to wait.
+ */
+async function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

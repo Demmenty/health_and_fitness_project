@@ -60,21 +60,23 @@
         {{ message_form.image }}
         {{ message_form.audio }}
       </div>
-      <div id="input-img-preview" class="mb-1" style="display: none;">
-        <img src="{% static 'chat/img/file-earmark-image.svg' %}" width="22"
-          title="Прикрепляемое изображение" class="filter-primary ms-1 mb-1">
-        <span class="trancate mx-2"></span>
-        <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
-          title="Удалить" class="filter-secondary filter-hover-primary pointer">
-      </div>
-      <div id="input-audio-preview" class="mb-2" style="display: none;">
-        <img src="{% static 'chat/img/file-earmark-music.svg' %}" width="22"
-          title="Прикрепляемое аудио" class="filter-primary ms-1">
-        <div class="status mx-2"></div>
-        <img src="{% static 'chat/img/stop-fill.svg' %}" id="stop-audio" width="25" 
-          title="Завершить запись" class="filter-secondary filter-hover-primary pointer ms-1">
-        <img src="{% static 'chat/img/x.svg' %}" id="input-audio-delete" width="25"
-          title="Удалить" class="filter-secondary filter-hover-primary pointer">
+      <div id="attach-files-preview" class="d-flex flex-column gap-1 mb-1">
+        <div id="input-img-preview" style="display: none;">
+          <img src="{% static 'chat/img/file-earmark-image.svg' %}" width="19"
+            title="Прикрепляемое изображение" class="file-type filter-primary">
+          <span class="trancate mx-2"></span>
+          <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
+            title="Удалить" class="filter-secondary filter-hover-primary pointer">
+        </div>
+        <div id="input-audio-preview" style="display: none;">
+          <img src="{% static 'chat/img/file-earmark-music.svg' %}" width="19"
+            title="Прикрепляемое аудио" class="file-type filter-primary">
+          <div class="status"></div>
+          <img src="{% static 'chat/img/stop-fill.svg' %}" id="stop-audio" width="22"
+            title="Завершить запись" class="filter-secondary filter-hover-primary pointer">
+          <img src="{% static 'chat/img/x.svg' %}" id="input-audio-delete" width="25"
+            title="Удалить" class="filter-secondary filter-hover-primary pointer">
+        </div>
       </div>
       <div class="d-flex gap-2">
         <div class="d-flex flex-column justify-content-end gap-2 pb-1">
