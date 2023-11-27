@@ -3,7 +3,6 @@ const chatBtn = $('#chat-btn');
 const chatBtnBadge = chatBtn.find(".badge");
 const chatHistory = chat.find("#chat-history");
 const chatScrollBtn = chat.find("#chat-scroll-btn");
-const chatParams = chat.find("params");
 
 const chatMsgForm = chat.find('#message-form');
 const chatMsgText = chatMsgForm.find("#id_text");
@@ -17,6 +16,9 @@ const chatAudioRecordBtn = chatMsgForm.find("#audio-record-btn");
 const chatAudioStopBtn = chatMsgForm.find("#stop-audio");
 const chatMsgSubmitBtn = chatMsgForm.find("button [type=submit]");
 
+const chatParams = chat.find("params");
+const lastMessagesLimit = 20;
+const oldMessagesLimit = 30;
 const userID = chatMsgForm.find("#id_sender").val();
 const chatPartnerID = chatMsgForm.find("#id_recipient").val();
 const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
@@ -35,10 +37,8 @@ const messageTemplates = {
 // adjustChatBtnPosition
 // make resize by sides
 // btn for fuulscreen chat and back
-// increase limit in the end
 // open image full screen when clicked
 // noise cancelling?
-// check if no sound
 // add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
@@ -92,10 +92,10 @@ async function saveMessageRequest() {
 /**
  * Retrieves last messages from the server.
  *
- * @param {number} limit - The maximum number of messages to retrieve. Defaults to 10.
+ * @param {number} limit - The maximum number of messages to retrieve.
  * @return {Promise} A Promise that resolves with the retrieved messages.
  */
-async function getLastMessagesRequest(limit=10) {
+async function getLastMessagesRequest(limit) {
     const url = chatParams.data("url-get-last");
 
     return $.ajax({
@@ -112,10 +112,10 @@ async function getLastMessagesRequest(limit=10) {
  * Retrieves messages from the server older than the given message.
  *
  * @param {string} msgID - The ID of the message to retrieve older messages from.
- * @param {number} limit - The maximum number of messages to retrieve. Default is 10.
+ * @param {number} limit - The maximum number of messages to retrieve.
  * @return {Promise} A promise that resolves with the retrieved messages.
  */
-async function getOldMessagesRequest(msgID, limit=10) {
+async function getOldMessagesRequest(msgID, limit) {
     const url = chatParams.data("url-get-old");
 
     return $.ajax({
@@ -560,13 +560,12 @@ function closeChat() {
  * Last messages - messages with the latest date.
  */
 async function loadLastMessages() {
-    const limit = 10;
     const spinner = renderLoadingSpinner();
 
     chatHistory.append(spinner);
 
     try {
-        const response = await getLastMessagesRequest(limit);
+        const response = await getLastMessagesRequest(lastMessagesLimit);
         const messagesAmount = response.length;
 
         spinner.remove();
@@ -581,7 +580,7 @@ async function loadLastMessages() {
             setTimeout(() => {scrollToLastMessage()}, 1);
         }
 
-        if (messagesAmount == limit) {
+        if (messagesAmount == lastMessagesLimit) {
             chatHistory.prepend(renderLoadMoreBtn());
         }
     }
@@ -604,13 +603,12 @@ async function loadOldMessages() {
     const oldestMsgID = oldestMsg.attr("data-id");
     const loadMoreBtn = chatHistory.find("#load-more-btn");
     const spinner = renderLoadingSpinner();
-    const limit = 10;
 
     loadMoreBtn.hide();
     chatHistory.prepend(spinner);
 
     try {
-        const response = await getOldMessagesRequest(oldestMsgID, limit);
+        const response = await getOldMessagesRequest(oldestMsgID, oldMessagesLimit);
         const messagesAmount = response.length;
 
         spinner.remove();
@@ -627,7 +625,7 @@ async function loadOldMessages() {
             chatHistory.prepend(renderMessage(message));
         }
 
-        if (messagesAmount < limit) {
+        if (messagesAmount < oldMessagesLimit) {
             loadMoreBtn.remove();
         }
         else {
