@@ -23,22 +23,24 @@
       <template id="message-template-user">
         <div id="" class="chat-message user-message d-flex flex-column align-items-end my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
-            <small class="username">{{ user.username|title }}</small>
+            <small>Я</small>
             <small> • </small>
             <small class="created-at"></small>
           </div>
           <p class="message-text m-0"></p>
+          <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>
       </template>
       <template id="message-template-partner">
         <div id="" class="chat-message partner-message rounded d-flex flex-column my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
-            <small class="username">{{ partner.username|title }}</small>
+            <small>{{ partner.username|title }}</small>
             <small> • </small>
             <small class="created-at"></small>
           </div>
           <p class="message-text m-0"></p>
+          <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>
       </template>
@@ -50,27 +52,36 @@
     </button>
   </div>
   <div class="card-footer bg-auxiliary px-2">
-    <form id="message-form" method="POST" action="{% url 'chat:save_msg' %}">
+    <form id="message-form" method="POST" action="{% url 'chat:save_msg' %}" enctype="multipart/form-data">
       {% csrf_token %}
       {{ message_form.sender }}
       {{ message_form.recipient }}
-      <div style="display: none;" >
+      <div style="display: none;">
         {{ message_form.image }}
         {{ message_form.audio }}
       </div>
       <div id="input-img-preview" class="mb-1" style="display: none;">
-        <img src="{% static 'chat/img/file-earmark-arrow-up.svg' %}" width="22"
-          title="Прикрепленное изображение" class="filter-primary mb-1 me-1">
-        <span class="trancate"></span>
+        <img src="{% static 'chat/img/file-earmark-image.svg' %}" width="22"
+          title="Прикрепляемое изображение" class="filter-primary ms-1 mb-1">
+        <span class="trancate mx-2"></span>
         <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
-          title="Удалить изображение" class="filter-secondary filter-hover-primary pointer ms-1">
+          title="Удалить" class="filter-secondary filter-hover-primary pointer">
+      </div>
+      <div id="input-audio-preview" class="mb-2" style="display: none;">
+        <img src="{% static 'chat/img/file-earmark-music.svg' %}" width="22"
+          title="Прикрепляемое аудио" class="filter-primary ms-1">
+        <div class="status mx-2"></div>
+        <img src="{% static 'chat/img/stop-fill.svg' %}" id="stop-audio" width="25" 
+          title="Завершить запись" class="filter-secondary filter-hover-primary pointer ms-1">
+        <img src="{% static 'chat/img/x.svg' %}" id="input-audio-delete" width="25"
+          title="Удалить" class="filter-secondary filter-hover-primary pointer">
       </div>
       <div class="d-flex gap-2">
         <div class="d-flex flex-column justify-content-end gap-2 pb-1">
           <label id="input-img-label" for="id_image" title="Прикрепить изображение" class="btn-img align-self-center">
             <img src="{% static 'chat/img/card-image.svg' %}" width="22" class="filter-secondary filter-hover-primary">
           </label>
-          <button type="button" id="attach-audio-btn" title="Голосовое сообщение" class="btn-img">
+          <button type="button" id="audio-record-btn" title="Голосовое сообщение" class="btn-img">
             <img src="{% static 'chat/img/mic.svg' %}" width="25" class="filter-secondary filter-hover-primary">
           </button>
         </div>

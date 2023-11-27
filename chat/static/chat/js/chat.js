@@ -10,6 +10,11 @@ const chatMsgText = chatMsgForm.find("#id_text");
 const chatImageInput = chatMsgForm.find("#id_image");
 const chatImageInputPreview = chatMsgForm.find("#input-img-preview");
 const chatImageDeleteBtn = chatMsgForm.find("#input-img-delete");
+const chatAudioInput = chatMsgForm.find("#id_audio");
+const chatAudioInputPreview = chatMsgForm.find("#input-audio-preview");
+const chatAudioDeleteBtn = chatMsgForm.find("#input-audio-delete");
+const chatAudioRecordBtn = chatMsgForm.find("#audio-record-btn");
+const chatAudioStopBtn = chatMsgForm.find("#stop-audio");
 const chatMsgSubmitBtn = chatMsgForm.find("button [type=submit]");
 
 const userID = chatMsgForm.find("#id_sender").val();
@@ -32,31 +37,39 @@ const messageTemplates = {
 // btn for fuulscreen chat and back
 // increase limit in the end
 // open image full screen when clicked
+// noise cancelling?
+// check if no sound
+// add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
-    // chat open/close
+    // opening/closing
     chatBtn.on('click', toggleChat);
     chat.find(".btn-close").on("click", toggleChat);
 
-    // chat scrolling
+    // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
     chatScrollBtn.on("click", scrollToLastMessage);
 
-    // auto load new messages
+    // new messages loading
     setInterval(loadNewMessages, 10000);
 
-    // sending message
+    // message sending
     chatMsgForm.on('submit', handleMessageSending);
     chatMsgText.on("keypress", handleMessageKeyPress);
 
-    // file upload
+    // image uploading
     chatMsgText.on("dragenter dragover dragleave drop", preventDefault);
     chatMsgText.on("dragenter", addDragEffect);
     chatMsgText.on("dragleave drop", removeDragEffect);
-    chatImageInput.on("change", handleFileUpload);
-    chatMsgText.on("drop", handleFileDrop);
-    chatMsgText.on("paste", handleFilePaste);
-    chatImageDeleteBtn.on("click", removeUploadedImg);
+    chatImageInput.on("change", handleImageUpload);
+    chatMsgText.on("drop", handleImageDrop);
+    chatMsgText.on("paste", handleImagePaste);
+    chatImageDeleteBtn.on("click", removeUploadedImage);
+
+    // audio recording
+    chatAudioRecordBtn.on('click', toggleAudioRecording);
+    chatAudioDeleteBtn.on("click", removeUploadedAudio);
+    chatAudioStopBtn.on("click", stopRecording);
 })
 
 // REQUESTS
@@ -201,10 +214,7 @@ function handleMessageKeyPress(event) {
 async function handleMessageSending(event) {
     event.preventDefault();
 
-    // TODO +check audio
-    const textEmpty = chatMsgText.val().trim() == "";
-    const uploadedImg = chatImageInput[0].files[0];
-    if (textEmpty && !uploadedImg) {
+    if (messageIsEmpty()) {
         return;
     }
 
@@ -213,14 +223,14 @@ async function handleMessageSending(event) {
     try {
         const response = await saveMessageRequest();
         const message = response[0];
+        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
 
         chatMsgForm.trigger("reset");
         chatImageInputPreview.hide();
+        chatAudioInputPreview.hide();
         chatMsgSubmitBtn.prop("disabled", false);
-
-        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
-
         chat.find("#no-messages").remove();
+
         chatHistory.append(renderMessage(message, lazy=false));
 
         if (scrolledToBottom) {
@@ -232,6 +242,14 @@ async function handleMessageSending(event) {
         showDangerAlert(error);
         chatMsgSubmitBtn.prop("disabled", false);
     }
+
+    function messageIsEmpty() {
+        const textEmpty = chatMsgText.val().trim() == "";
+        const uploadedImg = chatImageInput[0].files[0];
+        const uploadedAudio = chatAudioInput[0].files[0];
+
+        return textEmpty && !uploadedImg && !uploadedAudio
+    }
 }
 
 // IMAGES
@@ -239,7 +257,7 @@ async function handleMessageSending(event) {
 /**
  * Handles the event of pasting a file into textarea.
  */
-function handleFilePaste(event) {
+function handleImagePaste(event) {
     const file = event.originalEvent.clipboardData.files[0];
 
     if (!file) {
@@ -257,7 +275,7 @@ function handleFilePaste(event) {
 /**
  * Handles file uploading to the chat message.
  */
-function handleFileUpload() {
+function handleImageUpload() {
     const file = chatImageInput[0].files[0];
 
     if (!file) {
@@ -277,7 +295,7 @@ function handleFileUpload() {
 /**
  * Handles the file drop into textarea event.
  */
-function handleFileDrop(event) {
+function handleImageDrop(event) {
     const file = event.originalEvent.dataTransfer.files[0];
 
     if (!file) {
@@ -307,7 +325,7 @@ function updateUploadedImgPreview(filename) {
 /**
  * Removes the uploaded image. Updates the preview of it.
  */
-function removeUploadedImg() {
+function removeUploadedImage() {
     chatImageInput.val("");
     chatImageInputPreview.hide();
 }
@@ -356,6 +374,140 @@ async function handleLazyImgIntersection(entries) {
             image.removeClass("lazy").removeAttr("data-src");
         }
     });
+}
+
+// AUDIO
+
+let rec;
+let audioChunks = [];
+let recordingTimer;
+
+/**
+ * Toggles the audio recording.
+ */
+function toggleAudioRecording() {
+    chatAudioRecordBtn.toggleClass("active");
+    const isActive = chatAudioRecordBtn.hasClass("active");
+
+    (isActive ? startRecording : stopRecording)();
+}
+
+/**
+ * Starts recording audio using the microphone.
+ * Show status and time of recording in chat preview.
+ * Minimum time = 1 second. Maximum time = 1 hour.
+ * Makes recorded audio available in chat preview before sending.
+ */
+async function startRecording() {
+    audioChunks = [];
+    await startUsingMicrophone();
+    updatePreview();
+
+    async function startUsingMicrophone() {
+        try {
+            const stream = await getUserMedia({ audio: true });
+            handleRecording(stream);
+        } 
+        catch (error) {
+            showDangerAlert("Микрофон не доступен :(");
+        }
+    }
+
+    async function getUserMedia(constraints) {
+        if (navigator.mediaDevices) {
+            return navigator.mediaDevices.getUserMedia(constraints);
+        }
+
+        let legacyApi =
+            navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+
+        return new Promise(function (resolve, reject) {
+            legacyApi.bind(navigator)(constraints, resolve, reject);
+        });
+    }
+
+    function handleRecording(stream) {
+        rec = new MediaRecorder(stream);
+        rec.start();
+        rec.ondataavailable = (e) => {
+            audioChunks.push(e.data);
+
+            if (rec.state == "inactive") {
+                const blob = new Blob(audioChunks, { type: "audio/mp3" });
+
+                if (blob.size < 25000) {
+                    removeUploadedAudio();
+                    return;
+                }
+
+                putRecordToAudioInput(blob);
+                putRecordToPreview(blob)
+            }
+        };
+    }
+
+    function putRecordToAudioInput(blob) {
+        const file = new File([blob], 'record.mp3', { type: 'audio/mp3' });
+        const fileList = new DataTransfer();
+        fileList.items.add(file);
+        chatAudioInput[0].files = fileList.files;
+    }
+
+    function putRecordToPreview(blob) {
+        const url = URL.createObjectURL(blob);
+        const audioElement = $("<audio controls controlsList='nodownload'>")
+            .append(`<source src="${url}" type="audio/mpeg">`);
+        chatAudioInputPreview.find(".status").html(audioElement);
+    }
+
+    function updatePreview() {
+        const status = chatAudioInputPreview.find(".status");
+
+        chatAudioStopBtn.show();
+        chatAudioDeleteBtn.hide();
+        status.text(`Запись...`);
+        chatAudioInputPreview.show();
+        startTimer();
+
+        function startTimer() {
+            let startTime = new Date();
+            recordingTimer = setInterval(() => {
+                let currentTime = new Date() - startTime;
+                let minutes = Math.floor((currentTime / (1000 * 60)) % 60).toString().padStart(2, "0");
+                let seconds = Math.floor((currentTime / 1000) % 60).toString().padStart(2, "0");
+                status.text(`Запись... ${minutes}:${seconds}`);
+                if (minutes == 59 && seconds == 59) stopRecording(); 
+            }, 1000);
+        }
+    }
+}
+
+/**
+ * Stops the recording process.
+ * Updates status and preview.
+ */
+function stopRecording() {
+    chatAudioRecordBtn.removeClass("active");
+    rec.stop();
+    updatePreview();
+
+    function updatePreview() {
+        chatAudioStopBtn.hide();
+        chatAudioDeleteBtn.show();
+        clearInterval(recordingTimer);
+    }
+}
+
+/**
+ * Removes the uploaded audio from the message form.
+ * Clears preview.
+ */
+function removeUploadedAudio() {
+    chatAudioInput.val("");
+    chatAudioInputPreview.hide();
 }
 
 // CHAT WINDOW
@@ -522,7 +674,7 @@ async function loadNewMessages() {
  */
 function renderMessage(message, lazy=true) {
     const { pk, fields } = message;
-    const { created_at, sender, text, image: imageUrl, seen } = fields;
+    const { created_at, sender, text, seen, image, audio } = fields;
 
     const createdAtFormatted = formatMessageDate(created_at);
     const messageTemplate = messageTemplates[sender].html();
@@ -533,18 +685,23 @@ function renderMessage(message, lazy=true) {
     newMessage.find('.created-at').text(createdAtFormatted);
     newMessage.find('.message-text').text(text);
 
-    if (imageUrl) {
+    if (image) {
         const { image_width: width, image_height: height } = fields;
 
         if (lazy) {
-            const imageElement = renderLazyImage(imageUrl, width, height);
+            const imageElement = renderLazyImage(image, width, height);
             newMessage.find(".message-image").append(imageElement);
             lazyImgObserver.observe(imageElement[0]);
         }
         else {
-            const imageElement = renderImage(imageUrl);
+            const imageElement = renderImage(image);
             newMessage.find(".message-image").append(imageElement);
         }
+    }
+
+    if (audio) {
+        const audioElement = renderAudio(audio);
+        newMessage.find(".message-audio").append(audioElement);
     }
 
     if (sender == chatPartnerID && !seen) {
@@ -554,13 +711,18 @@ function renderMessage(message, lazy=true) {
 
     return newMessage;
 
-    function renderLazyImage(imageUrl, width, height) {
+    function renderLazyImage(url, width, height) {
         return $(`<img width="${width}" height="${height}" class="lazy">`)
-            .attr("data-src", `/media/${imageUrl}`);
+            .attr("data-src", `/media/${url}`);
     }
 
-    function renderImage(imageUrl) {
-        return $("<img>", {src: `/media/${imageUrl}`});
+    function renderImage(url) {
+        return $("<img>", {src: `/media/${url}`});
+    }
+
+    function renderAudio(url) {
+        return $("<audio controls controlsList='nodownload' class='py-2'></audio>")
+            .append(`<source src="/media/${url}" type="audio/mpeg">`);
     }
 }
 
