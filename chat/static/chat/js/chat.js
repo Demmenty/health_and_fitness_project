@@ -38,11 +38,10 @@ const messageTemplates = {
 // make resize by sides
 // btn for fuulscreen chat and back
 // open image full screen when clicked
-// noise cancelling?
 // add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
-    // opening/closing
+    // chat window
     chatBtn.on('click', toggleChat);
     chat.find(".btn-close").on("click", toggleChat);
 
@@ -50,14 +49,13 @@ $(document).ready(function () {
     chatHistory.on("scroll", toggleChatScrollBtn);
     chatScrollBtn.on("click", scrollToLastMessage);
 
-    // new messages loading
+    // messages loading
     setInterval(loadNewMessages, 10000);
 
-    // message sending
-    chatMsgForm.on('submit', handleMessageSending);
-    chatMsgText.on("keypress", handleMessageKeyPress);
+    // typing
+    chatMsgText.on("input change", adjustTextAreaHeight);
 
-    // image uploading
+    // images
     chatMsgText.on("dragenter dragover dragleave drop", preventDefault);
     chatMsgText.on("dragenter", addDragEffect);
     chatMsgText.on("dragleave drop", removeDragEffect);
@@ -66,10 +64,14 @@ $(document).ready(function () {
     chatMsgText.on("paste", handleImagePaste);
     chatImageDeleteBtn.on("click", removeUploadedImage);
 
-    // audio recording
+    // audio
     chatAudioRecordBtn.on('click', toggleAudioRecording);
     chatAudioDeleteBtn.on("click", removeUploadedAudio);
     chatAudioStopBtn.on("click", stopRecording);
+
+    // message sending
+    chatMsgForm.on('submit', handleMessageSending);
+    chatMsgText.on("keypress", handleMessageKeyPress);
 })
 
 // REQUESTS
@@ -186,346 +188,6 @@ async function countNewMessagesRequest() {
     })
 }
 
-// SENDING MESSAGES
-
-/**
- * Handles the key press event for the message input field.
- * Messages are sent when the enter key is pressed and the shift key is not.
- *
- * @param {Event} event - The key press event.
- */
-function handleMessageKeyPress(event) {
-    let isEnter = event.keyCode == 13;
-    let isShift = event.shiftKey;
-    if (isEnter && !isShift) {
-        handleMessageSending(event);
-    }
-}
-
-/**
- * Handles the sending of a message.
- * 
- * It checks if the message input fields are empty and if so, returns. 
- * Makes an AJAX call to the server to save the message.
- * On success: renders the message and appends it to the chat history.
- *
- * @param {Event} event - The event object.
- */
-async function handleMessageSending(event) {
-    event.preventDefault();
-
-    if (rec && rec.state === "recording") {
-        stopRecording();
-        await wait(1000);
-    }
-
-    if (messageIsEmpty()) {
-        return;
-    }
-
-    chatMsgSubmitBtn.prop("disabled", true);
-
-    try {
-        const response = await saveMessageRequest();
-        const message = response[0];
-        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
-
-        chatMsgForm.trigger("reset");
-        chatImageInputPreview.hide();
-        chatAudioInputPreview.hide();
-        chatMsgSubmitBtn.prop("disabled", false);
-        chat.find("#no-messages").remove();
-
-        chatHistory.append(renderMessage(message, lazy=false));
-
-        if (scrolledToBottom) {
-            setTimeout(() => {scrollToLastMessage()}, 10);
-        }
-    }
-    catch (error) {
-        console.error("saveChatMessage error:", error);
-        showDangerAlert(error);
-        chatMsgSubmitBtn.prop("disabled", false);
-    }
-
-    function messageIsEmpty() {
-        const textEmpty = chatMsgText.val().trim() == "";
-        const uploadedImg = chatImageInput[0].files[0];
-        const uploadedAudio = chatAudioInput[0].files[0];
-
-        return textEmpty && !uploadedImg && !uploadedAudio
-    }
-}
-
-// IMAGES
-
-/**
- * Handles the event of pasting a file into textarea.
- */
-function handleImagePaste(event) {
-    const file = event.originalEvent.clipboardData.files[0];
-
-    if (!file) {
-        return;
-    }
-
-    if (!isValidImageFile(file)) {
-        return;
-    }
-
-    chatImageInput[0].files = event.originalEvent.clipboardData.files;
-    updateUploadedImgPreview(file.name);
-}
-
-/**
- * Handles file uploading to the chat message.
- */
-function handleImageUpload() {
-    const file = chatImageInput[0].files[0];
-
-    if (!file) {
-        chatImageInputPreview.hide();
-        return;
-    }
-
-    if (!isValidImageFile(file)) {
-        chatImageInput.val("");
-        showDangerAlert("Это не изображение");
-        return;
-    }
-
-    updateUploadedImgPreview(file.name);
-}
-
-/**
- * Handles the file drop into textarea event.
- */
-function handleImageDrop(event) {
-    const file = event.originalEvent.dataTransfer.files[0];
-
-    if (!file) {
-        return;
-    }
-
-    if (!isValidImageFile(file)) {
-        chatImageInput.val("");
-        showDangerAlert("Это не изображение");
-        return;
-    }
-
-    chatImageInput[0].files = event.originalEvent.dataTransfer.files;
-    updateUploadedImgPreview(file.name);
-}
-
-/**
- * Updates the preview of the uploaded image with the given filename.
- *
- * @param {string} filename - The name of the uploaded image file.
- */
-function updateUploadedImgPreview(filename) {
-    chatImageInputPreview.find('span').text(filename);
-    chatImageInputPreview.show();
-}
-
-/**
- * Removes the uploaded image. Updates the preview of it.
- */
-function removeUploadedImage() {
-    chatImageInput.val("");
-    chatImageInputPreview.hide();
-}
-
-/**
- * Checks if the given file is a valid image file.
- *
- * @param {Object} file - The file to be checked.
- * @return {boolean} True if the file is a valid image file, false otherwise.
- */
-function isValidImageFile(file) {
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-    return allowedTypes.includes(file.type);
-}
-
-/**
- * Adds a drag effect to the element by adding the "drag-over" class.
- *
- * @param {type} this - The element to add the drag effect to.
- */
-function addDragEffect() {
-    $(this).addClass("drag-over");
-}
-
-/**
- * Removes the drag effect from the element by removing the "drag-over" class.
- *
- * @param {type} this - The element to add the drag effect to.
- */
-function removeDragEffect() {
-    $(this).removeClass("drag-over");
-}
-
-/**
- * Handles the intersection of lazy-loaded images.
- * Loads the image if it is visible.
- *
- * @param {Array} entries - The entries to be processed.
- */
-async function handleLazyImgIntersection(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const image = $(entry.target);
-            lazyImgObserver.unobserve(image[0]);
-            image.attr("src", image.attr("data-src"));
-            image.removeClass("lazy").removeAttr("data-src");
-        }
-    });
-}
-
-// AUDIO
-
-let rec;
-let audioChunks = [];
-let recordingTimer;
-
-/**
- * Toggles the audio recording.
- */
-function toggleAudioRecording() {
-    chatAudioRecordBtn.toggleClass("active");
-    const isActive = chatAudioRecordBtn.hasClass("active");
-
-    (isActive ? startRecording : stopRecording)();
-}
-
-/**
- * Starts recording audio using the microphone.
- * Show status and time of recording in chat preview.
- * Minimum time = 1.5 second. Maximum time = 1 hour.
- * Makes recorded audio available in chat preview before sending.
- */
-async function startRecording() {
-    audioChunks = [];
-    await startUsingMicrophone();
-    updatePreview();
-
-    async function startUsingMicrophone() {
-        try {
-            const stream = await getUserMedia({ audio: true });
-            handleRecording(stream);
-        } 
-        catch (error) {
-            showDangerAlert("Микрофон не доступен :(");
-        }
-    }
-
-    async function getUserMedia(constraints) {
-        if (navigator.mediaDevices) {
-            return navigator.mediaDevices.getUserMedia(constraints);
-        }
-
-        let legacyApi =
-            navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia;
-
-        return new Promise(function (resolve, reject) {
-            legacyApi.bind(navigator)(constraints, resolve, reject);
-        });
-    }
-
-    function handleRecording(stream) {
-        rec = new MediaRecorder(stream);
-        rec.start();
-        rec.ondataavailable = (e) => {
-            audioChunks.push(e.data);
-
-            if (rec.state == "inactive") {
-                const blob = new Blob(audioChunks, { type: "audio/mp3" });
-
-                // if audio is less than 24kb (< 1.5 sec), doesn't count
-                if (blob.size < 24000) {
-                    removeUploadedAudio();
-                    return;
-                }
-
-                putRecordToAudioInput(blob);
-                putRecordToPreview(blob);
-            }
-        };
-    }
-
-    function putRecordToAudioInput(blob) {
-        const file = new File([blob], 'record.mp3', { type: 'audio/mp3' });
-        const fileList = new DataTransfer();
-        fileList.items.add(file);
-        chatAudioInput[0].files = fileList.files;
-    }
-
-    function putRecordToPreview(blob) {
-        const url = URL.createObjectURL(blob);
-        const audioElement = $("<audio controls controlsList='nodownload'>")
-            .append(`<source src="${url}" type="audio/mpeg">`);
-
-        chatAudioInputPreview.find(".status").html(audioElement);
-    }
-
-    function updatePreview() {
-        const status = $("<p>", {class: "m-2", text: "Запись..."});
-
-        chatAudioStopBtn.show();
-        chatAudioDeleteBtn.hide();
-        chatAudioInputPreview.find(".status").html(status);
-        chatAudioInputPreview.show();
-        startTimer();
-
-        function startTimer() {
-            let startTime = new Date();
-            recordingTimer = setInterval(() => {
-                let currentTime = new Date() - startTime;
-                let minutes = Math.floor((currentTime / (1000 * 60)) % 60)
-                    .toString().padStart(2, "0");
-                let seconds = Math.floor((currentTime / 1000) % 60)
-                    .toString().padStart(2, "0");
-
-                status.text(`Запись... ${minutes}:${seconds}`);
-                if (minutes == 59 && seconds == 59) stopRecording();
-            }, 1000);
-        }
-    }
-}
-
-/**
- * Stops the recording process.
- * Updates status and preview.
- */
-function stopRecording() {
-    chatAudioRecordBtn.removeClass("active");
-    rec.stop(); // rec.state => "inactive"
-    
-    stopUsingMicrophone();
-    updatePreview();
-
-    function stopUsingMicrophone() {
-        rec.stream.getTracks().forEach(track => track.stop());
-    }
-
-    function updatePreview() {
-        chatAudioStopBtn.hide();
-        chatAudioDeleteBtn.show();
-        clearInterval(recordingTimer);
-    }
-}
-
-/**
- * Removes the uploaded audio from the message form.
- * Clears preview.
- */
-function removeUploadedAudio() {
-    chatAudioInput.val("");
-    chatAudioInputPreview.hide();
-}
-
 // CHAT WINDOW
 
 /**
@@ -549,6 +211,50 @@ async function openChat() {
 function closeChat() {
     chat.hide();
     chatBtn.removeClass('active');
+}
+
+// SCROLLING
+
+/**
+ * Toggles the scroll to the bottom button in the chat
+ * based on the current scroll position.
+ */
+function toggleChatScrollBtn() {
+    chatScrollBtn.toggle(!isChatScrolledToBottom(100));
+}
+
+/**
+ * Scrolls the chat history to the last message.
+ */
+function scrollToLastMessage() {
+    const destination = chatHistory.prop('scrollHeight');
+    chatHistory.scrollTop(destination);
+}
+
+/**
+ * Checks if the chat is scrolled to the bottom, with an optional allowance.
+ *
+ * @param {number} allowance - The offset to consider when checking. Defaults to 0 pixels.
+ * @return {boolean} Returns true if the chat is scrolled to the bottom, false otherwise.
+ */
+function isChatScrolledToBottom(allowance=0) {
+    const { scrollHeight, scrollTop, clientHeight } = chatHistory[0];
+    const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + allowance;
+
+    return isScrolledToBottom;
+}
+
+/**
+ * Checks if the chat is scrolled to the top, with an optional allowance.
+ *
+ * @param {number} allowance - The offset to consider when checking. Defaults to 0 pixels.
+ * @return {boolean} Returns true if the chat is scrolled to the top, false otherwise.
+ */
+function isChatScrolledToTop(allowance=0) {
+    const scrollTop = chatHistory.scrollTop();
+    const isScrolledToTop = scrollTop <= allowance;
+
+    return isScrolledToTop;
 }
 
 // MESSAGES LOADING
@@ -783,6 +489,373 @@ function renderLoadingSpinner() {
     });
 }
 
+// TYPING
+
+/**
+ * Adjusts the height of a textarea based on its content.
+ */
+function adjustTextAreaHeight() {
+    const scrollHeight = parseInt(this.scrollHeight);
+    const maxHeight = 500;
+
+    if (scrollHeight > maxHeight) {
+        this.style.overflow = 'auto';
+        return;
+    }
+
+    this.style.overflow = 'hidden';
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+}
+
+// IMAGES
+
+/**
+ * Handles the event of pasting a file into textarea.
+ */
+function handleImagePaste(event) {
+    const file = event.originalEvent.clipboardData.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        return;
+    }
+
+    chatImageInput[0].files = event.originalEvent.clipboardData.files;
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Handles file uploading to the chat message.
+ */
+function handleImageUpload() {
+    const file = chatImageInput[0].files[0];
+
+    if (!file) {
+        chatImageInputPreview.hide();
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        chatImageInput.val("");
+        showDangerAlert("Это не изображение");
+        return;
+    }
+
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Handles the file drop into textarea event.
+ */
+function handleImageDrop(event) {
+    const file = event.originalEvent.dataTransfer.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!isValidImageFile(file)) {
+        chatImageInput.val("");
+        showDangerAlert("Это не изображение");
+        return;
+    }
+
+    chatImageInput[0].files = event.originalEvent.dataTransfer.files;
+    updateUploadedImgPreview(file.name);
+}
+
+/**
+ * Updates the preview of the uploaded image with the given filename.
+ *
+ * @param {string} filename - The name of the uploaded image file.
+ */
+function updateUploadedImgPreview(filename) {
+    chatImageInputPreview.find('span').text(filename);
+    chatImageInputPreview.show();
+}
+
+/**
+ * Removes the uploaded image. Updates the preview of it.
+ */
+function removeUploadedImage() {
+    chatImageInput.val("");
+    chatImageInputPreview.hide();
+}
+
+/**
+ * Checks if the given file is a valid image file.
+ *
+ * @param {Object} file - The file to be checked.
+ * @return {boolean} True if the file is a valid image file, false otherwise.
+ */
+function isValidImageFile(file) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    return allowedTypes.includes(file.type);
+}
+
+/**
+ * Adds a drag effect to the element by adding the "drag-over" class.
+ *
+ * @param {type} this - The element to add the drag effect to.
+ */
+function addDragEffect() {
+    $(this).addClass("drag-over");
+}
+
+/**
+ * Removes the drag effect from the element by removing the "drag-over" class.
+ *
+ * @param {type} this - The element to add the drag effect to.
+ */
+function removeDragEffect() {
+    $(this).removeClass("drag-over");
+}
+
+/**
+ * Handles the intersection of lazy-loaded images.
+ * Loads the image if it is visible.
+ *
+ * @param {Array} entries - The entries to be processed.
+ */
+async function handleLazyImgIntersection(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const image = $(entry.target);
+            lazyImgObserver.unobserve(image[0]);
+            image.attr("src", image.attr("data-src"));
+            image.removeClass("lazy").removeAttr("data-src");
+        }
+    });
+}
+
+// AUDIO
+
+let rec;
+let audioChunks = [];
+let recordingTimer;
+const mediaConstraints = { 
+    audio: { 
+        noiseSuppression: true, 
+        echoCancellation: true,
+    } 
+}
+
+/**
+ * Toggles the audio recording.
+ */
+function toggleAudioRecording() {
+    chatAudioRecordBtn.toggleClass("active");
+    const isActive = chatAudioRecordBtn.hasClass("active");
+
+    (isActive ? startRecording : stopRecording)();
+}
+
+/**
+ * Starts recording audio using the microphone.
+ * Show status and time of recording in chat preview.
+ * Minimum time = 1.5 second. Maximum time = 1 hour.
+ * Makes recorded audio available in chat preview before sending.
+ */
+async function startRecording() {
+    audioChunks = [];
+    await startUsingMicrophone();
+    updatePreview();
+
+    async function startUsingMicrophone() {
+        try {
+            const stream = await getUserMedia(mediaConstraints);
+            handleRecording(stream);
+        } 
+        catch (error) {
+            showDangerAlert("Микрофон не доступен :(");
+        }
+    }
+
+    async function getUserMedia(constraints) {
+        if (navigator.mediaDevices) {
+            return navigator.mediaDevices.getUserMedia(constraints);
+        }
+
+        let legacyApi =
+            navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+
+        return new Promise(function (resolve, reject) {
+            legacyApi.bind(navigator)(constraints, resolve, reject);
+        });
+    }
+
+    function handleRecording(stream) {
+        rec = new MediaRecorder(stream);
+        rec.start();
+        rec.ondataavailable = (e) => {
+            audioChunks.push(e.data);
+
+            if (rec.state == "inactive") {
+                const blob = new Blob(audioChunks, { type: "audio/mp3" });
+
+                // if audio is less than 24kb (< 1.5 sec), doesn't count
+                if (blob.size < 24000) {
+                    removeUploadedAudio();
+                    return;
+                }
+
+                const file = new File([blob], 'record.mp3', { type: 'audio/mp3' });
+
+                putRecordToAudioInput(file);
+                putRecordToPreview(file);
+            }
+        };
+    }
+
+    function putRecordToAudioInput(file) {
+        const fileList = new DataTransfer();
+        fileList.items.add(file);
+        chatAudioInput[0].files = fileList.files;
+    }
+
+    function putRecordToPreview(file) {
+        const url = URL.createObjectURL(file);
+        const audioElement = $("<audio controls controlsList='nodownload'>")
+            .append(`<source src="${url}" type="audio/mpeg">`);
+
+        chatAudioInputPreview.find(".status").html(audioElement);
+    }
+
+    function updatePreview() {
+        const status = $("<p>", {class: "m-2", text: "Запись..."});
+
+        chatAudioStopBtn.show();
+        chatAudioDeleteBtn.hide();
+        chatAudioInputPreview.find(".status").html(status);
+        chatAudioInputPreview.show();
+        startTimer();
+
+        function startTimer() {
+            let startTime = new Date();
+            recordingTimer = setInterval(() => {
+                let currentTime = new Date() - startTime;
+                let minutes = Math.floor((currentTime / (1000 * 60)) % 60)
+                    .toString().padStart(2, "0");
+                let seconds = Math.floor((currentTime / 1000) % 60)
+                    .toString().padStart(2, "0");
+
+                status.text(`Запись... ${minutes}:${seconds}`);
+                if (minutes == 59 && seconds == 59) stopRecording();
+            }, 1000);
+        }
+    }
+}
+
+/**
+ * Stops the recording process.
+ * Updates status and preview.
+ */
+function stopRecording() {
+    chatAudioRecordBtn.removeClass("active");
+    rec.stop(); // rec.state => "inactive"
+    
+    stopUsingMicrophone();
+    updatePreview();
+
+    function stopUsingMicrophone() {
+        rec.stream.getTracks().forEach(track => track.stop());
+    }
+
+    function updatePreview() {
+        chatAudioStopBtn.hide();
+        chatAudioDeleteBtn.show();
+        clearInterval(recordingTimer);
+    }
+}
+
+/**
+ * Removes the uploaded audio from the message form.
+ * Clears preview.
+ */
+function removeUploadedAudio() {
+    chatAudioInput.val("");
+    chatAudioInputPreview.hide();
+}
+
+// SENDING MESSAGES
+
+/**
+ * Handles the key press event for the message input field.
+ * Messages are sent when the enter key is pressed and the shift key is not.
+ *
+ * @param {Event} event - The key press event.
+ */
+function handleMessageKeyPress(event) {
+    let isEnter = event.keyCode == 13;
+    let isShift = event.shiftKey;
+    if (isEnter && !isShift) {
+        handleMessageSending(event);
+    }
+}
+
+/**
+ * Handles the sending of a message.
+ * 
+ * It checks if the message input fields are empty and if so, returns. 
+ * Makes an AJAX call to the server to save the message.
+ * On success: renders the message and appends it to the chat history.
+ *
+ * @param {Event} event - The event object.
+ */
+async function handleMessageSending(event) {
+    event.preventDefault();
+
+    if (rec && rec.state === "recording") {
+        stopRecording();
+        await wait(1000);
+    }
+
+    if (messageIsEmpty()) {
+        return;
+    }
+
+    chatMsgSubmitBtn.prop("disabled", true);
+
+    try {
+        const response = await saveMessageRequest();
+        const message = response[0];
+        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
+
+        chatMsgForm.trigger("reset");
+        chatMsgText.height(0);
+        chatImageInputPreview.hide();
+        chatAudioInputPreview.hide();
+        chatMsgSubmitBtn.prop("disabled", false);
+        chat.find("#no-messages").remove();
+
+        chatHistory.append(renderMessage(message, lazy=false));
+
+        if (scrolledToBottom) {
+            setTimeout(() => {scrollToLastMessage()}, 10);
+        }
+    }
+    catch (error) {
+        console.error("saveChatMessage error:", error);
+        showDangerAlert(error);
+        chatMsgSubmitBtn.prop("disabled", false);
+    }
+
+    function messageIsEmpty() {
+        const textEmpty = chatMsgText.val().trim() == "";
+        const uploadedImg = chatImageInput[0].files[0];
+        const uploadedAudio = chatAudioInput[0].files[0];
+
+        return textEmpty && !uploadedImg && !uploadedAudio
+    }
+}
+
 // NEW/SEEN HANDLING
 
 /**
@@ -851,50 +924,6 @@ async function setMessageAsSeen(message) {
         showDangerAlert(error);
         newMsgObserver.observe(message[0]);
     }
-}
-
-// SCROLLING
-
-/**
- * Toggles the scroll to the bottom button in the chat
- * based on the current scroll position.
- */
-function toggleChatScrollBtn() {
-    chatScrollBtn.toggle(!isChatScrolledToBottom(100));
-}
-
-/**
- * Scrolls the chat history to the last message.
- */
-function scrollToLastMessage() {
-    const destination = chatHistory.prop('scrollHeight');
-    chatHistory.scrollTop(destination);
-}
-
-/**
- * Checks if the chat is scrolled to the bottom, with an optional allowance.
- *
- * @param {number} allowance - The offset to consider when checking. Defaults to 0 pixels.
- * @return {boolean} Returns true if the chat is scrolled to the bottom, false otherwise.
- */
-function isChatScrolledToBottom(allowance=0) {
-    const { scrollHeight, scrollTop, clientHeight } = chatHistory[0];
-    const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + allowance;
-
-    return isScrolledToBottom;
-}
-
-/**
- * Checks if the chat is scrolled to the top, with an optional allowance.
- *
- * @param {number} allowance - The offset to consider when checking. Defaults to 0 pixels.
- * @return {boolean} Returns true if the chat is scrolled to the top, false otherwise.
- */
-function isChatScrolledToTop(allowance=0) {
-    const scrollTop = chatHistory.scrollTop();
-    const isScrolledToTop = scrollTop <= allowance;
-
-    return isScrolledToTop;
 }
 
 // UTILS

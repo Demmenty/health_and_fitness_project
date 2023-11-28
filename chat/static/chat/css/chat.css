@@ -84,6 +84,9 @@
 /* message-form */
 #message-form #id_text {
     min-height: 65px;
+    max-height: 500px;
+    overflow: hidden;
+    resize: none;
     border-color: #d1d1d1;
 }
 #message-form #id_text:focus {
