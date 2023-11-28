@@ -27,6 +27,9 @@ function makeDraggable(elmnt) {
         e.preventDefault();
         let lastX = e.clientX;
         let lastY = e.clientY;
+        let elementWidth = elmnt.offsetWidth;
+        let pointHeight = this.offsetHeight;
+
         document.addEventListener('mousemove', elementDrag);
         document.addEventListener('mouseup', closeDragElement);
 
@@ -37,8 +40,13 @@ function makeDraggable(elmnt) {
             lastX = e.clientX;
             lastY = e.clientY;
 
-            elmnt.style.top = (elmnt.offsetTop - deltaY) + 'px';
-            elmnt.style.left = (elmnt.offsetLeft - deltaX) + 'px';
+            const newTop = elmnt.offsetTop - deltaY;
+            const newLeft = elmnt.offsetLeft - deltaX;
+            const maxWidth = window.innerWidth - elementWidth;
+            const maxHeight = window.innerHeight - pointHeight;
+
+            elmnt.style.top = (newTop < 0 ? 0 : (newTop > maxHeight ? maxHeight : newTop)) + 'px';
+            elmnt.style.left = (newLeft < 0 ? 0 : (newLeft > maxWidth ? maxWidth : newLeft)) + 'px';
         }
 
         function closeDragElement() {
