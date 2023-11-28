@@ -11,22 +11,24 @@
 
 /* chat-window */
 #chat {
-    left: unset;
-    bottom: 2rem;
+    top: 0;
+    bottom: 0;
+    max-height: 100vh;
     width: 100%;
-    overflow: auto;
+    overflow: hidden;
 }
 @media (min-width: 576px) {
     #chat {
-        right: 7.5rem;
+        left: 0;
         width: 28rem;
     }
 }
 #chat-history {
-    overflow-y: auto;
-    max-height: 73vh;
     min-height: 16rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
 }
+
 #chat-scroll-btn {
     bottom: 0.5rem;
     right: 1rem;

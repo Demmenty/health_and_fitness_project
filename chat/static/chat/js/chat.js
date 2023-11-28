@@ -31,8 +31,6 @@ const messageTemplates = {
     [chatPartnerID]: chat.find("#message-template-partner"),
 }
 
-// NOTE: timeouts before scrolling added to prevent scrolling bugs
-
 // TODO:
 // adjustChatBtnPosition
 // make resize by sides
@@ -44,6 +42,7 @@ $(document).ready(function () {
     // chat window
     chatBtn.on('click', toggleChat);
     chat.find(".btn-close").on("click", toggleChat);
+    chatMsgText.on("input change", adjustChatHeight);
 
     // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
@@ -51,9 +50,6 @@ $(document).ready(function () {
 
     // messages loading
     setInterval(loadNewMessages, 10000);
-
-    // typing
-    chatMsgText.on("input change", adjustTextAreaHeight);
 
     // images
     chatMsgText.on("dragenter dragover dragleave drop", preventDefault);
@@ -213,7 +209,41 @@ function closeChat() {
     chatBtn.removeClass('active');
 }
 
+/**
+ * Adjusts the optimal height of the chat window.
+ */
+function adjustChatHeight() {
+    adjustTextarea();
+    adjustHistory();
+
+    function adjustTextarea() {
+        const textarea = chatMsgText[0];
+        const textareaMaxHeight = parseInt(chatMsgText.css('max-height').split('px')[0]);
+
+        if (textarea.scrollHeight > textareaMaxHeight) {
+            textarea.style.overflow = 'auto';
+            return;
+        }
+    
+        textarea.style.overflow = 'hidden';
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    function adjustHistory() {
+        const headerHeight = chat.find(".card-header").outerHeight();
+        const footerHeight = chat.find(".card-footer").outerHeight();
+
+        const allowance = headerHeight + footerHeight;
+        const historyHeight = `calc(100vh - ${allowance}px)`;
+
+        chatHistory.css("height", historyHeight);
+    }
+}
+
 // SCROLLING
+
+// NOTE: timeouts before scrolling added to prevent scrolling bugs
 
 /**
  * Toggles the scroll to the bottom button in the chat
@@ -489,25 +519,6 @@ function renderLoadingSpinner() {
     });
 }
 
-// TYPING
-
-/**
- * Adjusts the height of a textarea based on its content.
- */
-function adjustTextAreaHeight() {
-    const scrollHeight = parseInt(this.scrollHeight);
-    const maxHeight = 500;
-
-    if (scrollHeight > maxHeight) {
-        this.style.overflow = 'auto';
-        return;
-    }
-
-    this.style.overflow = 'hidden';
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
-}
-
 // IMAGES
 
 /**
@@ -536,6 +547,7 @@ function handleImageUpload() {
 
     if (!file) {
         chatImageInputPreview.hide();
+        adjustChatHeight();
         return;
     }
 
@@ -576,6 +588,7 @@ function handleImageDrop(event) {
 function updateUploadedImgPreview(filename) {
     chatImageInputPreview.find('span').text(filename);
     chatImageInputPreview.show();
+    adjustChatHeight();
 }
 
 /**
@@ -584,6 +597,7 @@ function updateUploadedImgPreview(filename) {
 function removeUploadedImage() {
     chatImageInput.val("");
     chatImageInputPreview.hide();
+    adjustChatHeight();
 }
 
 /**
@@ -726,6 +740,7 @@ async function startRecording() {
             .append(`<source src="${url}" type="audio/mpeg">`);
 
         chatAudioInputPreview.find(".status").html(audioElement);
+        adjustChatHeight();
     }
 
     function updatePreview() {
@@ -735,6 +750,7 @@ async function startRecording() {
         chatAudioDeleteBtn.hide();
         chatAudioInputPreview.find(".status").html(status);
         chatAudioInputPreview.show();
+        adjustChatHeight();
         startTimer();
 
         function startTimer() {
@@ -782,6 +798,7 @@ function stopRecording() {
 function removeUploadedAudio() {
     chatAudioInput.val("");
     chatAudioInputPreview.hide();
+    adjustChatHeight();
 }
 
 // SENDING MESSAGES
@@ -829,9 +846,9 @@ async function handleMessageSending(event) {
         const scrolledToBottom = isChatScrolledToBottom(allowance=50);
 
         chatMsgForm.trigger("reset");
-        chatMsgText.height(0);
         chatImageInputPreview.hide();
         chatAudioInputPreview.hide();
+        adjustChatHeight();
         chatMsgSubmitBtn.prop("disabled", false);
         chat.find("#no-messages").remove();
 
