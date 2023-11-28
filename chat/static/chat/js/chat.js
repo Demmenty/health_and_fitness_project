@@ -237,7 +237,7 @@ function adjustChatHeight() {
         const allowance = headerHeight + footerHeight;
         const historyHeight = `calc(100vh - ${allowance}px)`;
 
-        chatHistory.css("height", historyHeight);
+        chatHistory.css("max-height", historyHeight);
     }
 }
 
