@@ -1,6 +1,7 @@
-from PIL import Image
 from io import BytesIO
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
 
 
 def crop_to_square(image: Image) -> Image:
@@ -13,7 +14,7 @@ def crop_to_square(image: Image) -> Image:
     Returns:
         The cropped image, which is a square version of the input image.
     """
-        
+
     width, height = image.size
 
     if width == height:

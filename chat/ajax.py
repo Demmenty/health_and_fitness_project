@@ -41,7 +41,7 @@ def set_seen(request):
     Sets the 'seen' attribute of a message to True.
 
     Args:
-        request: The HTTP request object.
+        request: The HTTP request object (with message_id).
 
     Returns:
         HttpResponse: A response object with the string "ok".

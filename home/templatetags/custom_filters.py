@@ -1,8 +1,10 @@
 import re
 import types
 from copy import copy
-from home.utils import get_noun_ending
+
 from django.template import Library
+
+from home.utils import get_noun_ending
 
 register = Library()
 

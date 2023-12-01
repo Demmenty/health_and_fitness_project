@@ -89,6 +89,16 @@ body {
     --bs-btn-disabled-color: #657ff7;
     --bs-btn-disabled-border-color: #657ff7;
 }
+.btn-danger {
+    --bs-btn-bg: #ec4884;
+    --bs-btn-border-color: #ec4884;
+    --bs-btn-hover-bg: #c23b6a;
+    --bs-btn-hover-border-color: #c23b6a;
+    --bs-btn-active-bg: #ec4884;
+    --bs-btn-active-border-color: #c23b6a;
+    --bs-btn-disabled-bg: #c23b6a;
+    --bs-btn-disabled-border-color: #c23b6a;
+}
 
 .form-check-input:checked {
     background-color: #657ff7;
