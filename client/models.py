@@ -1,49 +1,5 @@
-from datetime import date
-
 from django.db import models
 from django.utils.timezone import now
-
-
-class MainData(models.Model):
-    """Main information about the client"""
-
-    class Sex(models.TextChoices):
-        MALE = "M", "Мужской"
-        FEMALE = "F", "Женский"
-        OTHER = "X", "Другое"
-
-    client = models.OneToOneField(
-        "users.User", on_delete=models.CASCADE, verbose_name="Клиент"
-    )
-    sex = models.CharField("Пол", max_length=1, choices=Sex.choices)
-    birthday = models.DateField("День рождения")
-    height = models.PositiveSmallIntegerField(
-        "Рост (см)",
-        help_text="Нужен для расчетов, например, индекса массы тела.",
-    )
-    # avatar = models.ImageField(
-    #     "Аватар", upload_to="client/avatars", blank=True, null=True
-    # )
-
-    def __str__(self):
-        return f"Основная информация: {self.client}"
-
-    def get_age(self) -> int:
-        """Return the age of the client"""
-
-        today: date = date.today()
-        age: int = today.year - self.birthday.year
-
-        if (today.month < self.birthday.month) or (
-            today.month == self.birthday.month and today.day < self.birthday.day
-        ):
-            age -= 1
-
-        return age
-
-    class Meta:
-        verbose_name = "Основная информация"
-        verbose_name_plural = "Основная информация"
 
 
 class Health(models.Model):
@@ -307,6 +263,7 @@ class Health(models.Model):
     )
 
     # Result
+    is_filled = models.BooleanField("Анкета заполнена", default=False)
     workout_readiness = models.CharField(
         "Готовность к нагрузкам",
         max_length=1,
@@ -401,13 +358,19 @@ class Log(models.Model):
 
     action_time = models.DateField("Дата изменения", default=now, editable=False)
     modelname = models.CharField("Модель данных", max_length=255)
-    change_message = models.CharField("Описание", max_length=255)
+    description = models.CharField("Описание", max_length=255)
     client = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, verbose_name="Клиент"
     )
 
     def __str__(self):
         return f"Изменение №{self.pk}"
+
+    def save(self, *args, **kwargs):
+        if len(self.description) > 255:
+            self.description = self.description[:252] + "..."
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "История действий"

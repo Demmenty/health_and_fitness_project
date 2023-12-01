@@ -843,7 +843,7 @@ async function handleMessageSending(event) {
     try {
         const response = await saveMessageRequest();
         const message = response[0];
-        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
+        const scrolledToBottom = isChatScrolledToBottom(allowance=100);
 
         chatMsgForm.trigger("reset");
         chatImageInputPreview.hide();

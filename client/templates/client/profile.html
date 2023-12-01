@@ -1,4 +1,6 @@
 {% extends 'client/layout.html' %}
+{% load static %}
+{% load custom_filters %}
 
 {% block title %}
 	<title>{{ user.username|capfirst }}: профиль</title>
@@ -8,19 +10,70 @@
 <section id="client-profile-section">
     <div class="container">
 
-        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+        <div id="user-info-card" class="card shadow-sm mx-auto" style="max-width: 30rem;">
 			<div class="card-header bg-primary text-light text-center">
-				<h5 class="mb-0">Личные данные</h5>
+				<h5 class="mb-0">{{ user.username|capfirst }}</h5>
 			</div>
 			<div class="card-body pt-4">
-                <!-- аватар-->
-                <p>Имя: {{ user.first_name|default:"?" }}</p>
-                <p>Фамилия: {{ user.last_name|default:"?" }}</p>
-                <p>Пол: {{ maindata.sex|default:"?" }}</p>
-                <p>Возраст: {{ maindata.get_age|default:"?" }}</p>
-                <p>Рост: {{ maindata.height|default:"?" }}</p>
+
+                <div class="d-flex flex-column flex-sm-row align-items-center gap-3 gap-sm-0 mb-3">
+                    <div id="avatar" class="rounded-circle h-fit ms-sm-2" style="max-width: 80px;">
+                        {% if user.avatar %}
+                            <img src="{{ user.avatar.url }}" width="80" class="rounded-circle w-100">
+                        {% else %}
+                            {% if user.sex == 'M' %}
+                                <img src="{% static 'client/img/avatar_male.png' %}" width="80" class="w-100">
+                            {% elif user.sex == 'F' %}
+                                <img src="{% static 'client/img/avatar_female.png' %}" width="80" class="w-100">
+                            {% else %}
+                                <img src="{% static 'client/img/avatar.png' %}" width="80" class="w-100">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="d-flex flex-column text-center gap-2 mx-sm-auto">
+                        <h5 class="fw-500 text-dark-emphasis mb-0">
+                            {{ user.first_name|default:"Имя неизвестно" }}
+                        </h5>
+                        <h5 class="fw-500 text-dark-emphasis mb-0">
+                            {{ user.last_name|default:"Фамилия неизвестна" }}
+                        </h5>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <td class="label">Пол:</td>
+                        <td class="text-center">{{ user.get_sex_display|default:"?"|lower }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">День рождения:</td>
+                        {% if user.birthday %}
+                            <td class="text-center">{{ user.birthday|date:"d E Y" }}</td>
+                        {% else %}
+                            <td class="text-center">?</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td class="label">Возраст:</td>
+                        <td class="text-center">
+                            {{ user.get_age|default:"?"|add_ending:"год, года, лет" }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Рост:</td>
+                        <td class="text-center">
+                            {{ user.height|default:"?" }}
+                            {% if user.height %} см{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- TODO -->
+                        <td class="label">Тариф:</td>
+                        <td class="text-center">индивидуальный</td>
+                    </tr>
+                </table>
+
                 <br><br>
-                <a href="{% url 'client:maindata' %}" class="btn btn-primary">Редактировать</a>
+                <a href="{% url 'client:info' %}" class="btn btn-primary">Редактировать</a>
                 <br><br>
                 <a href="{% url 'client:contacts' %}" class="btn btn-primary">Контакты</a>
                 <br><br>

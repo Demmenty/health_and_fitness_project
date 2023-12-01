@@ -33,7 +33,7 @@
                     {% with request.resolver_match.view_name as url %}
                     <li>
                         <a href="{% url 'client:profile' %}" class="nav-link px-2 px-lg-3 
-                        {% if url in 'client:profile, client:health, client:contacts, client:maindata' %} active {% endif %}">
+                        {% if url in 'client:profile, client:health, client:contacts, client:info' %} active {% endif %}">
                             Профиль
                         </a>
                     </li>

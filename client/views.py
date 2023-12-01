@@ -12,11 +12,10 @@ from client.forms import (
     HEALTH_FORMS,
     LAST_HEALTH_FORM_PAGE,
     ContactsForm,
-    MainDataForm,
     UserEmailForm,
-    UserNamesForm,
+    UserInfoForm,
 )
-from client.models import Contacts, Health, MainData
+from client.models import Contacts, Health
 from metrics.forms import DailyDataForm
 from metrics.models import DailyData
 from nutrition.models import FatSecretEntry
@@ -27,13 +26,8 @@ from nutrition.models import FatSecretEntry
 def profile(request):
     """Render the profile page for a client"""
 
-    maindata = MainData.objects.filter(client=request.user).first()
-
     template = "client/profile.html"
-    data = {
-        "maindata": maindata,
-    }
-    return render(request, template, data)
+    return render(request, template)
 
 
 @client_required
@@ -83,30 +77,21 @@ def health(request, page: int):
 
 @client_required
 @require_http_methods(["GET", "POST"])
-def maindata(request):
-    """Handle the client's main Information forms"""
-
-    maindata = MainData.objects.filter(client=request.user).first()
+def info(request):
+    """Handle the client's main information"""
 
     if request.method == "GET":
-        usernames_form = UserNamesForm(instance=request.user)
-        maindata_form = MainDataForm(instance=maindata)
+        form = UserInfoForm(instance=request.user)
 
     if request.method == "POST":
-        usernames_form = UserNamesForm(request.POST, instance=request.user)
-        maindata_form = MainDataForm(request.POST, instance=maindata)
-
-        if maindata_form.is_valid() and usernames_form.is_valid():
-            maindata_form.instance.client = request.user
-            maindata_form.save()
-            usernames_form.save()
+        form = UserInfoForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
             return redirect("client:profile")
 
-    template = "client/maindata.html"
-    data = {
-        "maindata_form": maindata_form,
-        "usernames_form": usernames_form,
-    }
+    template = "client/info.html"
+    data = {"form": form}
     return render(request, template, data)
 
 

@@ -15,7 +15,7 @@ body {
 }
 .nav-link {
     font-weight: 500;
-    color: #545454;
+    color: #495057;
     text-wrap: nowrap;
 }
 .nav-link.active {
@@ -115,7 +115,6 @@ body {
     padding: 0;
     text-decoration: none;
 }
-.btn-link:hover,
 .btn-link.active {
     filter: invert(47%) sepia(56%) saturate(600%) brightness(90%) hue-rotate(192deg);
 }
@@ -171,6 +170,9 @@ table th {
 .w-fit {
     width: fit-content;
 }
+.h-fit {
+    height: fit-content;
+}
 
 /* cards */
 .card-header {
@@ -201,7 +203,7 @@ table th {
     height: fit-content;
     width: 100%;
 }
-.draggable .card-header:hover {
+.draggable .card-header {
     cursor: default;
 }
 @media (min-width: 576px) {

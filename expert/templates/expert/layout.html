@@ -28,14 +28,15 @@
     <header class="border-bottom bg-white shadow py-2">
         <div class="container">
             {% if client %}
-                <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center justify-content-lg-between">
-                    <div class="col-lg-3 d-flex flex-nowrap align-items-center gap-2">
-                        <img src="{% static 'expert/img/person-circle.svg' %}" type="image/svg+xml" width="40" class="my-1">
-                        <h5 class="fw-500 mb-0">{{ client.username|capfirst }}</h5>
+                <div class="d-flex flex-wrap gap-lg-2 align-items-center justify-content-center justify-content-lg-between">
+                    <div class="col-lg-3">
+                        <a href="{% url 'expert:client_profile' client.id %}" title="Профиль" class="btn-link">
+                            <h5 class="fw-500 text-dark-emphasis mb-0">{{ client.username|capfirst }}</h5>
+                        </a>
                     </div>
-                    <ul class="nav col-12 col-lg-auto justify-content-center">
+                    <ul class="nav col-12 col-lg-auto justify-content-center mb-1 mb-lg-0">
                         {% with request.resolver_match.view_name as url %}
-                        <li>
+                        <li class="d-none d-sm-block">
                             <a href="{% url 'expert:client_profile' client.id %}" class="nav-link px-2 px-lg-3 
                             {% if url in 'expert:client_profile, expert:client_contacts, expert:client_health' %} active {% endif %}">
                                 Профиль

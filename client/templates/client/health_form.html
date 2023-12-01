@@ -20,7 +20,7 @@
                     {% csrf_token %}
                     {% for field in form %}
                         <div id="{{ field.name }}" 
-                        class="{% if field.name in 'is_pregnant, had_birth_in_last_six_months' and user.maindata.sex == 'M' %} d-none {% endif %}">
+                        class="{% if field.name in 'is_pregnant, had_birth_in_last_six_months' and user.sex == 'M' %} d-none {% endif %}">
                             {% if field.field.widget.input_type == 'checkbox' %}
                                 <div class="form-check">
                                     {{ field }}

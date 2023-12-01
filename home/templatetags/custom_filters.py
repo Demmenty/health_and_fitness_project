@@ -1,10 +1,36 @@
 import re
 import types
 from copy import copy
-
+from home.utils import get_noun_ending
 from django.template import Library
 
 register = Library()
+
+
+@register.filter("add_ending")
+def add_ending(number: int, endings: str):
+    """
+    A function that adds an appropriate ending to a given number
+    based on a list of endings.
+    If the number is a string, it will return it.
+
+    Example: add_ending(4, 'слон', 'слона', 'слонов') --> '4 слона'
+
+    Args:
+        number (int): The number to which the ending will be added.
+        endings (str): A comma-separated list of possible endings:
+            first (str) - The noun ending for numbers ending in 1.
+            second (str) - The noun ending for numbers ending in 2, 3, or 4.
+            third (str) - The noun ending for numbers ending in 0 or 5-9.
+
+    Returns:
+        str: The original number with the appropriate ending added.
+    """
+
+    if isinstance(number, str):
+        return number
+
+    return f'{number} {get_noun_ending(number, *endings.split(","))}'
 
 
 def silence_without_field(fn):

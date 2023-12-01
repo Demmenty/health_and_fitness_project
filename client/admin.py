@@ -1,17 +1,9 @@
 from django.contrib import admin
 
-from client.models import Contacts, Health, Log, MainData
+from client.models import Contacts, Health, Log
 
 admin.site.register(Health)
 admin.site.register(Contacts)
-
-
-@admin.register(MainData)
-class MainDataAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "client", "sex", "birthday")
-    display = ("client", "sex", "height", "birthday", "avatar")
-    readonly_fields = ("sex", "birthday")
-    list_filter = ("sex",)
 
 
 @admin.register(Log)

@@ -1,4 +1,18 @@
+.text-hover-light:hover {
+    color: white !important;
+}
+
 #client-registration-link img {
     filter: invert(1); 
     margin-top: -3px;
+}
+#clients-container .card-header h5 {
+    margin-left: 6rem;
+}
+#avatar {
+    margin-top: -7rem;
+    border: 3px solid white;
+}
+summary::marker {
+    color: #657ff7;
 }

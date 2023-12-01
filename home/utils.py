@@ -42,12 +42,13 @@ def get_noun_ending(number: int, one: str, two: str, five: str) -> str:
     Example: get_noun_ending(4, 'слон', 'слона', 'слонов'))
 
     Args:
-    - `number` : int - The number for which the noun ending needs to be determined.
-    - `one` : str - The noun ending for numbers ending in 1.
-    - `two` : str - The noun ending for numbers ending in 2, 3, or 4.
-    - `five` : str - The noun ending for numbers ending in 0 or 5-9.
+        number (int) - The number for which the noun ending needs to be determined.
+        one (str) - The noun ending for numbers ending in 1.
+        two (str) - The noun ending for numbers ending in 2, 3, or 4.
+        five (str) - The noun ending for numbers ending in 0 or 5-9.
+
     Returns:
-        - str - The appropriate noun ending based on the input number.
+        str - The appropriate noun ending based on the input number.
     """
 
     n = abs(number) % 100

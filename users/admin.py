@@ -7,6 +7,7 @@ from users.models import User
 admin.site.unregister(Group)
 
 
+# TODO !
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (
@@ -17,12 +18,22 @@ class CustomUserAdmin(UserAdmin):
         "is_active",
         "is_superuser",
     )
-    list_filter = ("is_superuser", "is_active", "is_expert")
+    list_filter = ("is_superuser", "is_active", "is_expert", "sex")
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (
             "Персональная информация",
-            {"fields": ("first_name", "last_name", "email")},
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "sex",
+                    "birthday",
+                    "height",
+                    "avatar",
+                )
+            },
         ),
         (
             "Права",

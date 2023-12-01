@@ -25,7 +25,11 @@ class MessageForm(ModelForm):
                     "rows": 2,
                 }
             ),
-            "image": ClearableFileInput(),
+            "image": ClearableFileInput(
+                attrs={
+                    "accept": "image/*",
+                }
+            ),
             "audio": ClearableFileInput(
                 attrs={
                     "accept": "audio/mp3",

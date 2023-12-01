@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from client.forms import HEALTH_FORMS, ContactsForm, HealthFormResult
-from client.models import Contacts, Health, MainData
+from client.models import Contacts, Health
 from expert.decorators import expert_required
 from home.models import ConsultRequest
 from metrics.forms import ColorsForm
@@ -12,6 +12,8 @@ from metrics.models import Colors, DailyData
 from metrics.utils import create_levels_forms
 from nutrition.models import FatSecretEntry
 from users.models import User
+from client.models import Log
+from chat.models import Message
 
 
 @expert_required
@@ -22,6 +24,12 @@ def clients(request):
     clients = User.objects.filter(is_expert=False)
     unread_requests = ConsultRequest.objects.filter(is_read=False)
     unread_requests_amount = unread_requests.count()
+
+    for client in clients:
+        client.logs = Log.objects.filter(client=client).order_by("-id")[:10]
+        client.new_messages_count = Message.objects.filter(
+            sender=client, seen=False
+        ).count()
 
     template = "expert/clients.html"
     data = {
@@ -51,13 +59,9 @@ def client_profile(request, client_id):
     """
 
     client = get_object_or_404(User, id=client_id)
-    maindata = MainData.objects.filter(client=client).first()
 
     template = "expert/client_profile.html"
-    data = {
-        "client": client,
-        "maindata": maindata,
-    }
+    data = {"client": client}
     return render(request, template, data)
 
 
@@ -75,7 +79,7 @@ def client_health(request, client_id):
     client = get_object_or_404(User, id=client_id)
     health_data = Health.objects.filter(client=client).first()
 
-    if not health_data:
+    if not health_data or not health_data.is_filled:
         template = "expert/client_health.html"
         data = {"client": client}
         return render(request, template, data)

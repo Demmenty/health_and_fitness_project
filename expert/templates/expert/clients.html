@@ -1,5 +1,6 @@
 {% extends 'expert/layout.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block stylesheet %}
   <link rel="stylesheet" href="{% static 'expert/css/clients.css' %}">
@@ -12,22 +13,75 @@
 {% block content %}
 <section id="clients-control-section">
     <div class="container">
-        <a id="client-registration-link" href="{% url 'expert:client_registration' %}" class="btn btn-primary">
-            <img src="{% static 'expert/img/person-plus-fill.svg' %}" type="image/svg+xml" width="20">
-            <span class="ms-1">Новый клиент</span>
-        </a>
-
-        <br><br><br>
-
-        <p>Клиенты:</p>
-        {% for client in clients %}
-            <p>аватар</p>
-            <a href="{% url 'expert:client_profile' client.id %}" class="btn btn-primary">{{ client }}</a>
-            <p>последняя активность</p>
-            <p>записки по клиенту</p>
-            <p>кнопка чата</p>
-            <br><br><br>
-        {% endfor %}
+        <div class="d-flex justify-content-end gap-3">
+            <a id="client-registration-link" href="{% url 'expert:client_registration' %}" class="btn btn-primary float-end mb-5">
+                <img src="{% static 'expert/img/person-plus-fill.svg' %}" type="image/svg+xml" width="20">
+                <span class="ms-1">Новый клиент</span>
+            </a>
+        </div>
+        <div id="clients-container" class="row g-5">
+            {% for client in clients %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card shadow-sm w-100 h-fit mb-4">
+                        <div class="card-header bg-primary text-light">
+                            <a href="{% url 'expert:client_profile' client.id %}" title="Профиль"
+                               class="btn-link text-light w-fit d-block">
+                                <h5 class="mb-0">{{ client.username|capfirst }}</h5>
+                            </a>
+                        </div>
+                        <div class="card-body pt-4">
+                            <div id="avatar" class="rounded-circle h-fit mb-3" style="max-width: 80px;">
+                                <a href="{% url 'expert:client_profile' client.id %}" title="Профиль">
+                                    {% if client.avatar %}
+                                        <img src="{{ client.avatar.url }}" width="80" class="rounded-circle w-100">
+                                    {% else %}
+                                        {% if client.sex == 'M' %}
+                                            <img src="{% static 'client/img/avatar_male.png' %}" width="80" class="w-100">
+                                        {% elif client.sex == 'F' %}
+                                            <img src="{% static 'client/img/avatar_female.png' %}" width="80" class="w-100">
+                                        {% else %}
+                                            <img src="{% static 'client/img/avatar.png' %}" width="80" class="w-100">
+                                        {% endif %}
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="d-flex flex-wrap justify-content-around gap-2 mb-3">
+                                <a href="{% url 'expert:client_metrics' client.id %}"
+                                    class="btn-link fw-500 text-dark-emphasis text-hover-primary">
+                                    Измерения
+                                </a>
+                                <a href="{% url 'expert:client_nutrition' client.id %}" 
+                                    class="btn-link fw-500 text-dark-emphasis text-hover-primary">
+                                    Питание
+                                </a>
+                                <a href="" 
+                                    class="btn-link fw-500 text-dark-emphasis text-hover-primary">
+                                    Тренировки
+                                </a>
+                            </div>
+                            {% if client.new_messages_count > 0 %}
+                                <p>
+                                    <img src="{% static 'expert/img/chat-text.svg' %}" width="18" class="filter-primary mb-1 me-1"> 
+                                    {{ client.new_messages_count|add_ending:"новое сообщение,новых сообщений,новых сообщений" }}
+                                </p>
+                            {% endif %}
+                            {% if client.logs %}
+                            <details>
+                                <summary class="mb-2">последняя активность</summary>
+                                {% for log in client.logs %}
+                                    <p class="ms-3">
+                                        {{ log.action_time|date:"d.m" }}: {{ log.modelname }}<br>
+                                        <small>{{ log.description }}</small>
+                                    </p>
+                                {% endfor %}
+                                <!-- TODO link to the full logs page -->
+                                </details>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+         </div>
     </div>
 </section>
 {% endblock %}

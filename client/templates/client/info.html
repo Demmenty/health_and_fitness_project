@@ -1,0 +1,54 @@
+{% extends 'client/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: основная информация</title>
+{% endblock %}
+
+{% block content %}
+<section id="client-maindata-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 936px;">
+			<div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">Основная информация</h5>
+			</div>
+			<div class="card-body">
+                <form method="post" class="d-flex flex-column gap-3 mt-3" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% if field.name != 'avatar' %}
+                            <div id="{{ field.name }}">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                <div class="helptext text-secondary">{{ field.help_text }}</div>
+                                {% for error in field.errors %}
+                                    <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div id="avatar">
+                        <label for="id_avatar" class="me-1">{{ form.avatar.label_tag }}</label>
+                        {% if form.avatar.value %}
+                            <a href="{{ form.avatar.value }}" class="me-2">{{ form.avatar.value }}</a>
+                            <span class="text-nowrap">
+                                <input type="checkbox" name="avatar-clear" id="avatar-clear_id" class="form-check-input me-1">
+                                <label for="avatar-clear_id">Удалить</label>
+                            </span>
+                        {% endif %}
+                        <input type="file" name="avatar" class="form-control" accept="image/*" id="id_avatar">
+                        <div class="helptext text-secondary">{{ form.avatar.help_text }}</div>   
+                        {% for error in form.avatar.errors %}
+                            <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                        {% endfor %}            
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                        <input type="submit" class="btn btn-primary" value="Сохранить">
+					</div>
+                </form>
+			</div>
+		</div>
+    </div>
+</section>
+{% endblock %}

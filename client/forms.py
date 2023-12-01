@@ -1,16 +1,24 @@
 from django import forms
 
-from client.models import Contacts, Health, MainData
+from client.models import Contacts, Health
 from client.utils import create_change_log_entry, create_log_entry
 from users.models import User
 
 
-class UserNamesForm(forms.ModelForm):
-    """Form for the user names."""
+class UserInfoForm(forms.ModelForm):
+    """Form for the user main information."""
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name")
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "sex",
+            "birthday",
+            "height",
+            "avatar",
+        )
         widgets = {
             "username": forms.TextInput(
                 attrs={
@@ -26,6 +34,31 @@ class UserNamesForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                 }
+            ),
+            "avatar": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                    "accept": "image/*",
+                }
+            ),
+            "sex": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+            "birthday": forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                },
+            ),
+            "height": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "min": "0",
+                    "max": "300",
+                },
             ),
         }
 
@@ -55,48 +88,6 @@ class UserEmailForm(forms.ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         create_change_log_entry(form=self, client=self.instance)
-
-        super().save(*args, **kwargs)
-
-
-class MainDataForm(forms.ModelForm):
-    """Form for the main information about the client."""
-
-    header = "Основная информация"
-
-    class Meta:
-        model = MainData
-        fields = (
-            "sex",
-            "birthday",
-            "height",
-        )
-        widgets = {
-            "sex": forms.Select(
-                attrs={
-                    "class": "form-select",
-                }
-            ),
-            "birthday": forms.DateInput(
-                format="%Y-%m-%d",
-                attrs={
-                    "class": "form-control",
-                    "type": "date",
-                },
-            ),
-            "height": forms.NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "min": "0",
-                    "max": "300",
-                },
-            ),
-        }
-
-    def save(self, *args, **kwargs):
-        """Save the instance and create a Log entry about the changes."""
-
-        create_change_log_entry(form=self, client=self.instance.client)
 
         super().save(*args, **kwargs)
 
@@ -137,17 +128,6 @@ class HealthFormPage0(forms.ModelForm):
             )
 
         return self.is_bound and not self.errors
-
-    def save(self, *args, **kwargs):
-        """Save the instance and create a Log entry."""
-
-        create_log_entry(
-            form=self,
-            change_message="Начато заполнение анкеты здоровья",
-            client=self.instance.client,
-        )
-
-        super().save(*args, **kwargs)
 
 
 class HealthFormPage1(forms.ModelForm):
@@ -216,7 +196,8 @@ class HealthFormPage1(forms.ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance.client)
+        if self.instance.is_filled:
+            create_change_log_entry(form=self, client=self.instance.client)
 
         super().save(*args, **kwargs)
 
@@ -282,7 +263,8 @@ class HealthFormPage2(forms.ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance.client)
+        if self.instance.is_filled:
+            create_change_log_entry(form=self, client=self.instance.client)
 
         super().save(*args, **kwargs)
 
@@ -476,7 +458,8 @@ class HealthFormPage3(forms.ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance.client)
+        if self.instance.is_filled:
+            create_change_log_entry(form=self, client=self.instance.client)
 
         super().save(*args, **kwargs)
 
@@ -543,7 +526,8 @@ class HealthFormPage4(forms.ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance.client)
+        if self.instance.is_filled:
+            create_change_log_entry(form=self, client=self.instance.client)
 
         super().save(*args, **kwargs)
 
@@ -594,12 +578,13 @@ class HealthFormPage5(forms.ModelForm):
 
         client = self.instance.client
 
-        create_change_log_entry(form=self, client=client)
-        create_log_entry(
-            form=self,
-            change_message="Клиент завершил заполнение анкеты.",
-            client=client,
-        )
+        if self.instance.is_filled:
+            create_change_log_entry(form=self, client=client)
+        else:
+            self.instance.is_filled = True
+            create_log_entry(
+                form=self, description="Клиент заполнил анкету", client=client
+            )
 
         super().save(*args, **kwargs)
 
