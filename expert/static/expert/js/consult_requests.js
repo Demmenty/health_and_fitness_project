@@ -141,9 +141,7 @@ async function setRequestSeen(requestID) {
 /**
  * Deletes a consultation request.
  */
-async function deleteRequest(e) {
-    e.preventDefault();
-
+async function deleteRequest() {
     const confirmation  = confirm('Точно удалить заявку?');
     if (!confirmation ) {
         return;
