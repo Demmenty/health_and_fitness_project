@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "home.apps.HomeConfig",
+    "consults.apps.ConsultsConfig",
     "users.apps.UsersConfig",
     "client.apps.ClientConfig",
     "expert.apps.ExpertConfig",
@@ -129,6 +130,7 @@ STATICFILES_DIRS = [
     (BASE_DIR / "expert" / "static"),
     (BASE_DIR / "metrics" / "static"),
     (BASE_DIR / "nutrition" / "static"),
+    (BASE_DIR / "chat" / "static"),
 ]
 
 

@@ -1,0 +1,80 @@
+{% extends 'expert/layout.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'expert/css/consult_requests.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>Заявки на консультацию</title>
+{% endblock %}
+
+{% block content %}
+<section id="consult-requests-section">
+    <div class="container">
+        <div class="row gy-4 gx-5">
+            <div id="requests-list" class="col-12 col-md-6 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-light text-center">
+                        <h5 class="mb-0">Список заявок</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if not request_forms %}
+                            <p class="text-center mx-3 my-4">
+                                Заявки на консультацию отсутствуют
+                            </p>
+                        {% else %}
+                            <table class="table table-hover pointer mb-0">
+                                {% for form in request_forms %}
+                                    {% with request_id=form.instance.id %}
+                                    <tr id="request-row-{{ request_id }}" class="request-row" data-request-id="{{ request_id }}" 
+                                        data-url-set-seen="{% url 'consults:set_seen' request_id %}">
+                                        <td>
+                                            <span class="text-primary mx-2">&#9658;</span>
+                                            Заявка № {{ request_id }}
+                                            {% if form.seen.value == False %}
+                                                <span class="status-new text-primary ms-2">new !</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr> 
+                                    {% endwith %}
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% for form in request_forms %}
+                {% with request_id=form.instance.id %}
+                <div id="request-card-{{ request_id }}" class="request-card col-12 col-md-6" style="display: none;">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light gap-2">
+                            <div class="col-1"></div>
+                            <h5 class=" col-auto mb-0">Заявка № {{ request_id }}</h5>
+                            <button type="button" class="col-1 btn-close btn-close-white float-end"></button>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'consults:edit' request_id %}" 
+                                data-url-delete="{% url 'consults:delete' request_id %}" class="d-flex flex-column gap-2">
+                                {% csrf_token %}
+                                <span>Дата создания: {{ form.instance.created_at }}</span>
+                                {{ form.as_div }}
+                                <div class="d-flex justify-content-between gap-3">
+                                    <button type="button" class="delete-btn btn btn-danger">Удалить</button>
+                                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %} 
+        </div>
+        <img src="{% static 'expert/img/cat_with_laptop.svg' %}" id="cat_with_laptop">
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'expert/js/consult_requests.js' %}"></script>
+{% endblock %}

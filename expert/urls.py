@@ -6,12 +6,13 @@ app_name = "expert"
 
 urlpatterns = [
     path("", views.clients, name="clients"),
+    path("consult_requests", views.consult_requests, name="consult_requests"),
     path(
-        "client/new/",
+        "client/new",
         views.client_registration,
         name="client_registration",
     ),
-    path("client/<int:client_id>/", views.client_profile, name="client_profile"),
+    path("client/<int:client_id>", views.client_profile, name="client_profile"),
     path(
         "client/<int:client_id>/health",
         views.client_health,
@@ -27,7 +28,7 @@ urlpatterns = [
         views.client_metrics,
         name="client_metrics",
     ),
-    path("metrics/colors/", views.metrics_colors, name="metrics_colors"),
+    path("metrics/colors", views.metrics_colors, name="metrics_colors"),
     path(
         "client/<int:client_id>/nutrition",
         views.client_nutrition,

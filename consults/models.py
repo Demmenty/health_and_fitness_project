@@ -1,8 +1,8 @@
 from django.db import models
 
 
-class ConsultRequest(models.Model):
-    """Заявка на консультацию с экспертом"""
+class Request(models.Model):
+    """Model for consultation requests from new users"""
 
     name = models.CharField("Имя", max_length=100, help_text="Как к вам обращаться?")
     age = models.CharField(
@@ -25,13 +25,13 @@ class ConsultRequest(models.Model):
         max_length=255,
         help_text="Оставьте ссылку на предпочитаемый способ связи",
     )
-    is_read = models.BooleanField("Заявка прочитана", default=False)
+    seen = models.BooleanField("Заявка прочитана", default=False)
     comment = models.TextField("Заметка эксперта", default="", blank=True)
-    date = models.DateField("Дата заполнения", auto_now_add=True)
+    created_at = models.DateField("Дата создания", auto_now_add=True)
 
     def __str__(self):
         return f"Заявка № {self.id}"
 
     class Meta:
-        verbose_name = "Заявка на консультацию"
-        verbose_name_plural = "Заявки на консультацию"
+        verbose_name = "Заявка"
+        verbose_name_plural = "Заявки"

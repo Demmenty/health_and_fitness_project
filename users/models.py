@@ -1,6 +1,8 @@
+from datetime import date
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import date
+
 from users.utils import prepare_avatar
 
 

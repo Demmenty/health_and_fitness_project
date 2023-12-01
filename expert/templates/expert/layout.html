@@ -89,9 +89,14 @@
                             </a>
                         </li>
                         <li>
-                            <a href="" class="nav-link px-2 px-lg-3 
+                            <a href="{% url 'expert:consult_requests' %}" class="nav-link px-2 px-lg-3 
                             {% if url == 'expert:consult_requests' %} active {% endif %}">
                                 Заявки
+                                {% if new_requests.count > 0 %}
+                                    <span id="new-requests-badge" class="badge rounded-pill bg-primary">
+                                        {{ new_requests.count }}
+                                    </span>
+                                {% endif %}
                             </a>
                         </li>
                         {% endwith %}

@@ -3,17 +3,17 @@ from datetime import date
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
+from chat.models import Message
 from client.forms import HEALTH_FORMS, ContactsForm, HealthFormResult
-from client.models import Contacts, Health
+from client.models import Contacts, Health, Log
+from consults.forms import RequestViewForm
+from consults.models import Request
 from expert.decorators import expert_required
-from home.models import ConsultRequest
 from metrics.forms import ColorsForm
 from metrics.models import Colors, DailyData
 from metrics.utils import create_levels_forms
 from nutrition.models import FatSecretEntry
 from users.models import User
-from client.models import Log
-from chat.models import Message
 
 
 @expert_required
@@ -22,8 +22,7 @@ def clients(request):
     """Render the clients page for the expert"""
 
     clients = User.objects.filter(is_expert=False)
-    unread_requests = ConsultRequest.objects.filter(is_read=False)
-    unread_requests_amount = unread_requests.count()
+    new_requests = Request.objects.filter(seen=False)
 
     for client in clients:
         client.logs = Log.objects.filter(client=client).order_by("-id")[:10]
@@ -34,7 +33,24 @@ def clients(request):
     template = "expert/clients.html"
     data = {
         "clients": clients,
-        "unread_requests_amount": unread_requests_amount,
+        "new_requests": new_requests,
+    }
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def consult_requests(request):
+    """Render the page for consult requests handling for the expert"""
+
+    requests = Request.objects.all()
+    new_requests = requests.filter(seen=False)
+    request_forms = [RequestViewForm(instance=request) for request in requests]
+
+    template = "expert/consult_requests.html"
+    data = {
+        "new_requests": new_requests,
+        "request_forms": request_forms,
     }
     return render(request, template, data)
 
