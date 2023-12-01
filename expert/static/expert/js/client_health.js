@@ -1,4 +1,10 @@
 const evalTable = $("#health-evaluation-table");
+const loadParameters = {
+    "N": evalTable.find(".current-load-none"),
+    "L": evalTable.find(".current-load-low"),
+    "M": evalTable.find(".current-load-medium"),
+    "H": evalTable.find(".current-load-high")
+}
 
 $(document).ready(function() {
     $(".disabled input").attr("disabled", true);
@@ -14,21 +20,15 @@ $(document).ready(function() {
  * and highlights them in the evaluation table.
  */
 function calculateWorkoutReadiness(){
-    let currentLoad;
-    const loadParameters = {
-        "N": evalTable.find(".current-load-none"),
-        "L": evalTable.find(".current-load-low"),
-        "M": evalTable.find(".current-load-medium"),
-        "H": evalTable.find(".current-load-high")
-    }
     const hasRegularTraining = $("#id_has_regular_training").is(":checked");
+
+    let currentLoad;
     let isSignificantRestrictions = false;
     let isSmallRestrictions = false;
 
     $("#current_physical_activity input").each(function(){
         if ($(this).is(":checked")){
             currentLoad = $(this).val();
-            console.log('Current load: ' + currentLoad);
             return;
         }
     })

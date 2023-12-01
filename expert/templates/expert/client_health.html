@@ -15,7 +15,7 @@
 направляющую на страницу с историей активности с фильтром по модели Health -->
 <section id="client-health-section">
     <div class="container">
-        {% if not health_data %}
+        {% if not health_data or not health_data.is_filled %}
             <div id="health-form-card" class="card shadow-sm mx-auto" style="max-width: 30rem;">
                 <div class="card-header bg-primary text-light text-center">
                     <h5 class="mb-0">Анкета здоровья</h5>

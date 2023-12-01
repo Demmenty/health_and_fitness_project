@@ -189,7 +189,7 @@ class DailyDataForm(ModelForm):
 
         create_log_entry(
             form=self,
-            change_message=f"Внесены измерения за {self.instance.date}",
+            description=f"Внесены измерения за {self.instance.date}",
             client=self.instance.client,
         )
 
