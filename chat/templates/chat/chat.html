@@ -1,6 +1,6 @@
 {% load static %}
 
-<button id="chat-btn" class="btn-img position-fixed rounded-circle bg-white shadow" title="Чат">
+<button id="chat-btn" class="btn-img rounded-circle bg-white shadow" title="Чат">
   <span class="badge position-absolute translate-middle rounded-pill bg-primary">{% if new_msgs_count > 0 %}{{ new_msgs_count }}{% endif %}</span>
   <img src="{% static 'chat/img/chat.png' %}" width="50" class="filter-secondary filter-hover-primary">
 </button>

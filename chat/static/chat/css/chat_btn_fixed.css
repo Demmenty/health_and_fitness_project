@@ -1,0 +1,17 @@
+/* chat-btn */
+#chat-btn {
+    position: fixed;
+    z-index: 2;
+    right: 1rem;
+    bottom: 1rem;
+    border: 3px solid #b9b9b9;
+}
+@media (min-width: 992px) {
+    #chat-btn  {
+        right: 2rem;
+        bottom: 2rem;
+    }
+}
+#chat-btn .badge {
+    left: 95%;
+}

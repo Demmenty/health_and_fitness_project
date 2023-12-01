@@ -1,14 +1,3 @@
-/* chat-btn */
-#chat-btn {
-    z-index: 2;
-    right: 2rem;
-    bottom: 2rem;
-    border: 3px solid #b9b9b9;
-}
-#chat-btn .badge {
-    left: 95%;
-}
-
 /* chat-window */
 #chat {
     bottom: 0;
