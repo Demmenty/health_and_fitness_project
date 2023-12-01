@@ -9,13 +9,11 @@
 {% block content %}
 <section id="client-profile-section">
     <div class="container">
-
         <div id="user-info-card" class="card shadow-sm mx-auto" style="max-width: 30rem;">
 			<div class="card-header bg-primary text-light text-center">
 				<h5 class="mb-0">{{ user.username|capfirst }}</h5>
 			</div>
 			<div class="card-body pt-4">
-
                 <div class="d-flex flex-column flex-sm-row align-items-center gap-3 gap-sm-0 mb-3">
                     <div id="avatar" class="rounded-circle h-fit ms-sm-2" style="max-width: 80px;">
                         {% if user.avatar %}
@@ -71,27 +69,23 @@
                         <td class="text-center">индивидуальный</td>
                     </tr>
                 </table>
-
-                <br><br>
-                <a href="{% url 'client:info' %}" class="btn btn-primary">Редактировать</a>
-                <br><br>
-                <a href="{% url 'client:contacts' %}" class="btn btn-primary">Контакты</a>
-                <br><br>
-                <a href="{% url 'client:health' page=0 %}" class="btn btn-primary">Данные о здоровье</a>
-                <br><br>
-                <a href="{% url 'users:password_change' %}" class="btn btn-primary">Сменить пароль</a>
+                <div class="d-flex justify-content-center gap-4">
+                    <a href="{% url 'client:info' %}" title="Изменить информацию" class="filter-hover-primary">
+                        <img src="{% static 'client/img/pencil-square.svg' %}" width="20">
+                    </a>
+                    <a href="{% url 'client:contacts' %}" title="Контакты" class="filter-hover-primary">
+                        <img src="{% static 'client/img/envelope.svg' %}" width="20">
+                    </a>
+                    <a href="{% url 'client:health' page=0 %}" title="Данные о здоровье" class="filter-hover-primary">
+                        <img src="{% static 'client/img/postcard-heart.svg' %}" width="20">
+                    </a>
+                    <a href="{% url 'users:password_change' %}" title="Смена пароля" class="filter-hover-primary">
+                        <img src="{% static 'client/img/key.svg' %}" width="20">
+                    </a>
+                </div>
 			</div>
 		</div>
-
-        <br><br>
-
-        <p>Важные уведомления:</p>
-        <p>заполнить анкеты и контакты</p>
-        <p>тренировка сегодня</p>
-        <p>не заполнены измерения за сегодня</p>
-        <p>не подключен Fatsecret</p>
-        <br><br><br>
-        <p>Статистика ?</p>
+        <!-- TODO add important notifications! -->
     </div>
 </section>
 {% endblock %}

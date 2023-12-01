@@ -9,13 +9,11 @@
 {% block content %}
 <section id="client-profile-section">
     <div class="container">
-
         <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
 			<div class="card-header bg-primary text-light text-center">
 				<h5 class="mb-0">{{ client.username|capfirst }}</h5>
 			</div>
 			<div class="card-body pt-4">
-
                 <div class="d-flex flex-column flex-sm-row align-items-center gap-3 gap-sm-0 mb-3">
                     <div id="avatar" class="rounded-circle h-fit ms-sm-2" style="max-width: 80px;">
                         {% if client.avatar %}
@@ -71,14 +69,16 @@
                         <td class="text-center">индивидуальный</td>
                     </tr>
                 </table>
-
-                <br><br>
-                <a href="{% url 'expert:client_contacts' client.id %}" class="btn btn-primary">Контакты</a>
-                <br><br>
-                <a href="{% url 'expert:client_health' client.id %}" class="btn btn-primary">Данные о здоровье</a>
+                <div class="d-flex justify-content-center gap-4">
+                    <a href="{% url 'expert:client_contacts' client.id %}" title="Контакты" class="filter-hover-primary">
+                        <img src="{% static 'expert/img/envelope.svg' %}" width="20">
+                    </a>
+                    <a href="{% url 'expert:client_health' client.id %}" title="Данные о здоровье" class="filter-hover-primary">
+                        <img src="{% static 'expert/img/postcard-heart.svg' %}" width="20">
+                    </a>
+                </div>
 			</div>
 		</div>
-
     </div>
 </section>
 {% endblock %}
