@@ -43,6 +43,7 @@ def prepare_avatar(image: InMemoryUploadedFile, name: str) -> InMemoryUploadedFi
     """
 
     image = Image.open(image)
+    image = image.convert("RGB")
     cropped_image = crop_to_square(image)
     resized_image = cropped_image.resize((150, 150))
 
