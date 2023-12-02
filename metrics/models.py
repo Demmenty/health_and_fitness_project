@@ -182,11 +182,11 @@ class DailyData(models.Model):
             return []
 
         client = metrics[0].client
-        fs_entry_data = FatSecretEntry.objects.filter(client=client).first()
-        if not fs_entry_data:
+        client_entry = FatSecretEntry.objects.filter(client=client).first()
+        if not client_entry:
             return metrics
 
-        fatsecret = FSManager(entry_data=fs_entry_data)
+        fatsecret = FSManager(client_entry)
 
         months_in_metrics = {
             datetime(metric.date.year, metric.date.month, 1) for metric in metrics

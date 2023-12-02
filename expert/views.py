@@ -210,11 +210,11 @@ def client_nutrition(request, client_id):
 
     client = get_object_or_404(User, id=client_id)
 
-    fatsecret_linked = FatSecretEntry.objects.filter(client=client).exists()
+    fs_linked = FatSecretEntry.objects.filter(client=client).exists()
 
     template = "expert/client_nutrition.html"
     data = {
         "client": client,
-        "fatsecret_linked": fatsecret_linked,
+        "fatsecret_linked": fs_linked,
     }
     return render(request, template, data)

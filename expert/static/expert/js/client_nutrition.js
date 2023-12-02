@@ -535,6 +535,12 @@ function updateMonthNutritionTable(monthNutrition) {
     }
 
     function updateFooter(avg) {
+        if ($.isEmptyObject(avg)) {
+            footer.hide();
+            return;
+        }
+        
+        footer.show();
         footer.find(".avg-calories").text(avg.calories);
         footer.find(".avg-protein").text(avg.protein);
         footer.find(".avg-fat").text(avg.fat);

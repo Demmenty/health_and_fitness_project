@@ -18,22 +18,30 @@ NUTRITION_PARAMS = ("calories", "protein", "fat", "carbohydrate")
 
 
 class FSManager:
-    """Functions for working with FatSecret API."""
+    """Functions for working with FatSecret API"""
 
-    session: Fatsecret = Fatsecret(FS_CONSUMER_KEY, FS_CONSUMER_SECRET)
+    session: Fatsecret
     clients_sessions: dict = {}
-    client_id: int | None = None
+    client_id: int | None
 
-    def __init__(self, entry_data: FatSecretEntry):
+    def __init__(self, client_entry: FatSecretEntry = None):
         """
-        Initializes an instance and session specific to a client.
+        Initializes an instance and session for work with FatSecret API.
+        If client_entry is provided, it loads the session specific to a client.
+        (And allows to interact with client's FS account and methods).
 
         Args:
-            entry_data (FatSecretEntry): An instance of the FatSecretEntry class.
+            client_entry (FatSecretEntry): An instance of the FatSecretEntry class
+                with client's credentials. Defaults to None.
         """
-        client_token = (entry_data.oauth_token, entry_data.oauth_token_secret)
-        self.session = Fatsecret(FS_CONSUMER_KEY, FS_CONSUMER_SECRET, client_token)
-        self.client_id = entry_data.client.id
+
+        if client_entry:
+            client_token = (client_entry.oauth_token, client_entry.oauth_token_secret)
+            self.session = Fatsecret(FS_CONSUMER_KEY, FS_CONSUMER_SECRET, client_token)
+            self.client_id = client_entry.client.id
+        else:
+            self.session = Fatsecret(FS_CONSUMER_KEY, FS_CONSUMER_SECRET)
+            self.client_id = None
 
     def save_tokens(self, client_tokens: tuple, client: User) -> None:
         """Save tokens for interacting with client's FS account in the database."""
@@ -48,10 +56,15 @@ class FSManager:
             },
         )
 
-    def save_session(self) -> None:
-        """Saves the session for a specific client."""
+    def save_session(self, client_id: int) -> None:
+        """
+        Saves the session for a specific client.
 
-        self.clients_sessions[self.client_id] = self.session
+        Args:
+            client_id (int): The ID of the client.
+        """
+
+        self.clients_sessions[client_id] = self.session
 
     def load_session(self, client_id: int) -> None:
         """
@@ -60,6 +73,7 @@ class FSManager:
         Args:
             client_id (int): The ID of the client.
         """
+
         self.session = self.clients_sessions[client_id]
         self.client_id = client_id
 
@@ -379,7 +393,8 @@ class FSManager:
         Args:
             monthly_nutrition (list[dict]|dict[dict]): The monthly nutrition data.
                 It can be either a list of dictionaries or a dictionary of dictionaries.
-            count_today (bool, optional): Determines whether to include today's data in the calculation. Defaults to True.
+            count_today (bool, optional): Determines whether to include today's data in the calculation.
+                Defaults to True.
 
         Returns:
             dict: A dictionary containing the average nutrition values for the given month.
@@ -402,6 +417,9 @@ class FSManager:
             ]
 
         days = len(monthly_nutrition)
+        
+        if not days:
+            return {}
 
         avg_nutrition = {
             param: round(

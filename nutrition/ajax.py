@@ -31,11 +31,11 @@ def get_daily(request, day: str):
     if not client:
         return HttpResponseNotFound("Клиент не найден")
 
-    entry_data = FatSecretEntry.objects.filter(client=client).first()
-    if not entry_data:
+    client_entry = FatSecretEntry.objects.filter(client=client).first()
+    if not client_entry:
         return HttpResponseNotFound("FS не подключен")
 
-    fs = FSManager(entry_data)
+    fs = FSManager(client_entry)
 
     daily_food = fs.get_daily_food(day)
     daily_nutrition = fs.calc_daily_total_nutrition(daily_food)
@@ -66,11 +66,11 @@ def get_daily_food(request):
 
     day = request.GET.get("day", date.today())
 
-    entry_data = FatSecretEntry.objects.filter(client=client).first()
-    if not entry_data:
+    client_entry = FatSecretEntry.objects.filter(client=client).first()
+    if not client_entry:
         return HttpResponseNotFound("FS не подключен")
 
-    fs = FSManager(entry_data)
+    fs = FSManager(client_entry)
 
     daily_food = fs.get_daily_food(day)
     daily_total = fs.calc_daily_total_nutrition(daily_food)
@@ -108,11 +108,11 @@ def get_monthly(request):
 
     month = request.GET.get("month", date.today())
 
-    entry_data = FatSecretEntry.objects.filter(client=client).first()
-    if not entry_data:
+    client_entry = FatSecretEntry.objects.filter(client=client).first()
+    if not client_entry:
         return HttpResponseNotFound("FS не подключен")
 
-    fs = FSManager(entry_data)
+    fs = FSManager(client_entry)
 
     monthly_nutrition = fs.get_monthly_nutrition_list(month)
     avg_monthly_nutrition = fs.calc_monthly_avg_nutrition(
@@ -180,11 +180,11 @@ def get_monthly_top_food(request):
 
     month = request.GET.get("month", date.today())
 
-    entry_data = FatSecretEntry.objects.filter(client=client).first()
-    if not entry_data:
+    client_entry = FatSecretEntry.objects.filter(client=client).first()
+    if not client_entry:
         return HttpResponseNotFound("FS не подключен")
 
-    fs = FSManager(entry_data)
+    fs = FSManager(client_entry)
 
     monthly_food = fs.get_monthly_food(month)
     top_by_amount = fs.calc_monthly_top(monthly_food, "amount")
