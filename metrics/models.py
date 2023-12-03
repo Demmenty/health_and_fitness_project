@@ -353,24 +353,6 @@ class Levels(models.Model):
         return result
 
 
-class NutritionRecs(models.Model):
-    """Nutrition recommendations for the client."""
-
-    client = models.OneToOneField("users.User", on_delete=models.CASCADE)
-    calories = models.PositiveSmallIntegerField("Калории", null=True, blank=True)
-    protein = models.PositiveSmallIntegerField("Белки", null=True, blank=True)
-    fat = models.PositiveSmallIntegerField("Жиры", null=True, blank=True)
-    carbohydrate = models.PositiveSmallIntegerField("Углеводы", null=True, blank=True)
-    comment = models.TextField("Комментарий", default="", blank=True)
-
-    def __str__(self):
-        return f"Рекомендации КБЖУ: {self.client}"
-
-    class Meta:
-        verbose_name = "Рекомендации КБЖУ"
-        verbose_name_plural = "Рекомендации КБЖУ"
-
-
 class Anthropometry(models.Model):
     """Модель для данных антропометрических измерений"""
 

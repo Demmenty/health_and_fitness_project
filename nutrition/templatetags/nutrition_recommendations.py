@@ -1,12 +1,10 @@
 from django import template
 from django.template.context import RequestContext
 
-from metrics.forms import NutritionRecsForm
-from metrics.models import NutritionRecs
+from nutrition.forms import RecommendationForm
+from nutrition.models import Recommendation
 
 register = template.Library()
-
-# TODO replace nutricion recs to nutrition module
 
 
 @register.inclusion_tag("nutrition/recommendations.html", takes_context=True)
@@ -16,8 +14,8 @@ def nutrition_recommendations(context: RequestContext) -> dict:
     user = context.request.user
     client = context.get("client") if user.is_expert else user
 
-    instance = NutritionRecs.objects.filter(client=client).first()
-    form = NutritionRecsForm(instance=instance)
+    instance = Recommendation.objects.filter(client=client).first()
+    form = RecommendationForm(instance=instance)
 
     data = {
         "user": user,

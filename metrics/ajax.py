@@ -9,8 +9,10 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from expert.decorators import expert_required
-from metrics.forms import LevelsForm, NutritionRecsForm
-from metrics.models import Colors, Levels, NutritionRecs
+from metrics.forms import LevelsForm
+from metrics.models import Colors, Levels
+from nutrition.forms import RecommendationForm
+from nutrition.models import Recommendation
 from users.models import User
 
 
@@ -54,6 +56,7 @@ def save_levels(request, client_id: int):
     Returns:
         HttpResponse: Response indicating the success or failure of the operation.
     """
+
     client = get_object_or_404(User, id=client_id)
     form = LevelsForm(request.POST)
 
@@ -77,10 +80,11 @@ def save_nutrition_recommendations(request, client_id: int):
     Args:
         client_id (int): The ID of the client.
     """
-    client = get_object_or_404(User, id=client_id)
-    instance = NutritionRecs.objects.filter(client=client).first()
 
-    form = NutritionRecsForm(request.POST, instance=instance)
+    client = get_object_or_404(User, id=client_id)
+    instance = Recommendation.objects.filter(client=client).first()
+
+    form = RecommendationForm(request.POST, instance=instance)
     if form.is_valid():
         form.instance.client = client
         form.save()

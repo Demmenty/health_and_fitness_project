@@ -18,7 +18,6 @@ from metrics.models import (
     Colors,
     DailyData,
     Levels,
-    NutritionRecs,
 )
 from users.models import User
 
@@ -143,6 +142,7 @@ class DailyDataForm(ModelForm):
         Returns:
             ModelForm: The ModelForm instance retrieved based on the given client and metrics date.
         """
+
         if isinstance(metrics_date, str):
             metrics_date = date.fromisoformat(metrics_date)
 
@@ -304,56 +304,6 @@ class LevelsForm(ModelForm):
             "lvl5_max": NumberInput(
                 attrs={
                     "class": "form-control text-center pe-1",
-                }
-            ),
-        }
-
-
-class NutritionRecsForm(ModelForm):
-    """Form for nutrition recommendations for the client."""
-
-    class Meta:
-        model = NutritionRecs
-        fields = (
-            "calories",
-            "protein",
-            "fat",
-            "carbohydrate",
-            "comment",
-        )
-        widgets = {
-            "calories": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "10000",
-                }
-            ),
-            "protein": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "10000",
-                }
-            ),
-            "fat": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "10000",
-                }
-            ),
-            "carbohydrate": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "10000",
-                }
-            ),
-            "comment": Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": "7",
                 }
             ),
         }

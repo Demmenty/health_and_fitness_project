@@ -417,7 +417,7 @@ class FSManager:
             ]
 
         days = len(monthly_nutrition)
-        
+
         if not days:
             return {}
 

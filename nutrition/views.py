@@ -31,7 +31,7 @@ def link_fatsecret(request):
         fs.save_session(request.user.id)
         return redirect(auth_url)
 
-    # Step 2: Authenticate the user with FatSecret and save the tokens 
+    # Step 2: Authenticate the user with FatSecret and save the tokens
     # (session must be the same!)
     try:
         fs.load_session(request.user.id)

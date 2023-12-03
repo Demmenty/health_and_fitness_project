@@ -6,7 +6,6 @@ from metrics.models import (
     Colors,
     DailyData,
     Levels,
-    NutritionRecs,
 )
 
 
@@ -33,7 +32,6 @@ class LevelsAdmin(admin.ModelAdmin):
     list_filter = ("client", "parameter")
 
 
-admin.site.register(NutritionRecs)
 admin.site.register(Colors)
 admin.site.register(Anthropometry)
 admin.site.register(AnthropometryPhotoAccess)
