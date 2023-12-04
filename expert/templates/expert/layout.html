@@ -45,7 +45,7 @@
                         </li>
                         <li>
                             <a href="{% url 'expert:client_metrics' client.id %}" class="nav-link px-2 px-lg-3 
-                            {% if url in 'expert:client_metrics' %} active {% endif %}">
+                            {% if url in 'expert:client_metrics, expert:client_anthropo_metrics' %} active {% endif %}">
                                 Измерения
                             </a>
                         </li>

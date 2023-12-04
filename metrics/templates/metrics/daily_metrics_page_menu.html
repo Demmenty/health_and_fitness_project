@@ -13,36 +13,44 @@
             </button>
         {% else %}
             <a href="{% url 'client:metrics_add' %}" title="Добавить измерения" 
-                class="btn-link text-nowrap align-middle text-black">
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Измерение</span>
             </a>
         {% endif %}
         {% if request.user.is_expert %}
             <button id="colouring-btn" title="Окрашивание измерений"
-                class="btn-link text-nowrap align-middle"
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary"
                 data-get-url="{% url 'metrics:get_сolouring' %}?client={{ client.id }}">
                 <img src="{% static 'metrics/img/palette.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Окрашивание</span>
             </button>
         {% else %}
             <button id="colouring-btn" title="Окрашивание измерений" 
-                class="btn-link text-nowrap align-middle"
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary"
                 data-get-url="{% url 'metrics:get_сolouring' %}">
                 <img src="{% static 'metrics/img/palette.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Окрашивание</span>
             </button>
         {% endif %}
         <button id="recommendations-btn" title="Рекомендации по питанию"
-            class="btn-link text-nowrap align-middle">
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
             <img src="{% static 'metrics/img/file-ruled.svg' %}" width="20">
             <span class="d-none d-sm-inline">Кбжу</span>
         </button>
-        <a href="" title="Страница антропометрии" 
-            class="btn-link text-nowrap align-middle text-black">
-            <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
-            <span class="d-none d-sm-inline">Антропометрия</span>
-        </a>
+        {% if request.user.is_expert %}
+            <a href="{% url 'expert:client_anthropo_metrics' client.id %}" title="Страница антропометрии" 
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+                <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Антропометрия</span>
+            </a>
+        {% else %}
+            <a href="{% url 'client:anthropo_metrics' %}" title="Страница антропометрии" 
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+                <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Антропометрия</span>
+            </a>
+        {% endif %}
     </div>
     <div class="col-2">
     </div>

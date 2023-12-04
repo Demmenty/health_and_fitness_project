@@ -10,7 +10,12 @@ from consults.forms import RequestViewForm
 from consults.models import Request
 from expert.decorators import expert_required
 from metrics.forms import ColorsForm
-from metrics.models import Colors, DailyData
+from metrics.models import (
+    Anthropometry,
+    AnthropometryPhotoAccess as PhotoAccess,
+    Colors,
+    DailyData,
+)
 from metrics.utils import create_levels_forms
 from nutrition.models import FatSecretEntry
 from users.models import User
@@ -200,6 +205,25 @@ def metrics_colors(request):
 
     template = "expert/metrics_colors.html"
     data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_anthropo_metrics(request, client_id):
+    """Render the client's anthropometry page for the expert"""
+
+    client = get_object_or_404(User, id=client_id)
+
+    metrics = Anthropometry.objects.filter(client=client).order_by("id")
+    photoaccess, _ = PhotoAccess.objects.get_or_create(client=client)
+
+    template = "expert/client_anthropo_metrics.html"
+    data = {
+        "client": client,
+        "metrics": metrics,
+        "photoaccess": photoaccess,
+    }
     return render(request, template, data)
 
 

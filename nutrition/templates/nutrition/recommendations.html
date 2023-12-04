@@ -11,7 +11,7 @@
     <div class="card-body bg-white d-flex flex-column gap-2">
         {% if user.is_expert %}
             <form method="post" id="recommedations-form" class="d-flex flex-column gap-2"
-                action="{% url 'metrics:save_nutrition_recommendations' client.id %}">
+                action="{% url 'nutrition:save_recommendations' client.id %}">
                 {% csrf_token %}
                 {% for field in form %}
                     {% if field.name != "comment" %}

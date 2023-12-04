@@ -1,13 +1,22 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseNotFound,
+    JsonResponse,
+)
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
+from expert.decorators import expert_required
 from home.utils import get_client
 from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
-from nutrition.models import FatSecretEntry
+from nutrition.forms import RecommendationForm
+from nutrition.models import FatSecretEntry, Recommendation
+from users.models import User
 
 fs_cache = FSCacheManager()
 
@@ -196,3 +205,25 @@ def get_monthly_top_food(request):
         "no_metric": monthly_food["no_metric"],
     }
     return JsonResponse(data)
+
+
+@expert_required
+@require_http_methods(["POST"])
+def save_recommendations(request, client_id: int):
+    """
+    Save the nutrition recommendations for a client.
+
+    Args:
+        client_id (int): The ID of the client.
+    """
+
+    client = get_object_or_404(User, id=client_id)
+    instance = Recommendation.objects.filter(client=client).first()
+
+    form = RecommendationForm(request.POST, instance=instance)
+    if form.is_valid():
+        form.instance.client = client
+        form.save()
+        return HttpResponse("Рекомендации сохранены")
+
+    return HttpResponseBadRequest("Ошибка при сохранении данных")

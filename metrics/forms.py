@@ -25,8 +25,6 @@ from users.models import User
 class DailyDataForm(ModelForm):
     """Form for daily data of client's body metrics."""
 
-    header = "Внесение измерений"
-
     class Meta:
         model = DailyData
         fields = (
@@ -310,10 +308,11 @@ class LevelsForm(ModelForm):
 
 
 class AnthropometryForm(ModelForm):
+    """Form for adding anthropometry metrics by client"""
+
     class Meta:
         model = Anthropometry
-        fields = [
-            "date",
+        fields = (
             "shoulder",
             "chest",
             "waist",
@@ -324,59 +323,53 @@ class AnthropometryForm(ModelForm):
             "photo_1",
             "photo_2",
             "photo_3",
-        ]
+        )
         widgets = {
-            "date": DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date",
-                }
-            ),
             "shoulder": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "100",
                 }
             ),
             "chest": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "200",
                 }
             ),
             "waist": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "200",
                 }
             ),
             "belly": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "200",
                 }
             ),
             "buttocks": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "200",
                 }
             ),
             "hip": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "100",
                 }
             ),
             "shin": NumberInput(
                 attrs={
-                    "class": "form-control d-inline",
+                    "class": "form-control text-center",
                     "min": "0",
                     "max": "100",
                 }
@@ -400,11 +393,13 @@ class AnthropometryForm(ModelForm):
 
 
 class AnthropometryPhotoAccessForm(ModelForm):
+    """Form for changing anthropometry photo access"""
+
     class Meta:
         model = AnthropometryPhotoAccess
-        fields = ("photo_access",)
+        fields = ("is_allowed",)
         widgets = {
-            "photo_access": CheckboxInput(
+            "is_allowed": CheckboxInput(
                 attrs={
                     "class": "form-check-input ms-3",
                 }

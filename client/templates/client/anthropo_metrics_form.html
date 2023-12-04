@@ -1,0 +1,47 @@
+{% extends 'client/layout.html' %}
+{% load static %}
+
+{% block title %}
+	<title>{{ user.username|capfirst }}: антропометрия</title>
+{% endblock %}
+
+{% block content %}
+<section id="anthropometry-form-section" class="mb-3">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">Внесение измерений</h5>
+			</div>
+            <div class="card-body">
+                <form id="anthropo-metrics-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group row mb-2">
+                        <div class="col-sm-4 col-form-label d-none d-sm-block">Дата:</div>
+                        <div class="col-sm-8 align-self-center text-center">
+                            {% now "j E Y" %}
+                        </div>
+                    </div>
+                    {% for field in form %}
+                        <div class="form-group row mb-2">
+                            <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
+                            <div class="col-sm-8">{{ field }}</div>
+                            {% for error in field.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <a href="https://youtu.be/aMCsYWVZYVg" target="_blank" title="Открыть видео"
+                        class="btn-link d-block text-secondary text-hover-primary my-3">
+                        <img src="{% static 'client/img/question-circle.svg' %}" class="filter-primary" width="18">
+                        <span>как делать измерения - инструкция</span>
+                    </a>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'client:anthropo_metrics' %}" class="btn btn-outline-primary">Назад</a>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

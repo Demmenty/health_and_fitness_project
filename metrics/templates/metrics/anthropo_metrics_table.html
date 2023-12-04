@@ -1,0 +1,130 @@
+{% load static %}
+
+<div id="anthropo-metrics" class="card shadow-sm mx-auto">
+    <div class="card-header bg-primary text-light text-center">
+        <h5 class="mb-0">Таблица антропометрических измерений</h5>
+    </div>
+    <div class="card-body p-0">
+        {% if not metrics %}
+            <p class="text-center my-4">Измерения отсутствуют</p>
+        {% else %}
+            <table class="table table-bordered align-middle 
+                text-center d-block d-sm-table overflow-auto w-100 mb-0">
+                <thead class="table-light">
+                    <tr class="d-none d-md-table-row">
+                        <th class="d-none d-md-table-cell">Дата</th>
+                        <th>Плечо</th>
+                        <th>Грудь</th>
+                        <th>Талия</th>
+                        <th>Живот</th>
+                        <th>Ягодицы</th>
+                        <th>Бедро</th>
+                        <th>Голень</th>
+                        {% if not request.user.is_expert or photoaccess.is_allowed %}
+                            <th>Фото</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for metric in metrics %}
+                        <tr class="d-md-none table-light">
+                            <th colspan="8" class="text-start text-sm-center ps-3 ps-sm-0">
+                                {{ metric.date|date:"j E Y" }}
+                            </th>
+                        </tr>
+                        <tr class="d-md-none">
+                            <td>Плечо</td>
+                            <td>Грудь</td>
+                            <td>Талия</td>
+                            <td>Живот</td>
+                            <td>Ягод.</td>
+                            <td>Бедро</td>
+                            <td>Голень</td>
+                            {% if not request.user.is_expert or photoaccess.is_allowed %}
+                                <td>Фото</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td class="d-none d-md-table-cell">{{ metric.date|date:"j E Y" }}</td>
+                            <td>{{ metric.shoulder|default_if_none:"-" }}</td>
+                            <td>{{ metric.chest|default_if_none:"-" }}</td>
+                            <td>{{ metric.waist|default_if_none:"-" }}</td>
+                            <td>{{ metric.belly|default_if_none:"-" }}</td>
+                            <td>{{ metric.buttocks|default_if_none:"-" }}</td>
+                            <td>{{ metric.hip|default_if_none:"-" }}</td>
+                            <td>{{ metric.shin|default_if_none:"-" }}</td>
+                            {% if not request.user.is_expert or photoaccess.is_allowed %}
+                                <td>
+                                    {% if metric.photo_1 %}
+                                        <button id="metric-{{ metric.id }}-photo-1-btn" class="btn-img photo-btn filter-hover-primary">
+                                            <img src="{% static 'metrics/img/camera.svg' %}" title="показать фото" width="20">
+                                        </button>
+                                        <div id="metric-{{ metric.id }}-photo-1-card" style="display: none"
+                                            class="card photo-card draggable w-fit border-0 shadow">
+                                            <div class="card-header draggable-point d-flex justify-content-between 
+                                                align-items-center bg-auxiliary gap-2">
+                                                <div class="col-1"></div>
+                                                <h6 class="mb-0 text-nowrap col-auto">
+                                                    {{ metric.date|date:"j E Y" }}
+                                                    <br>
+                                                    {{ metric.photo_1.field.verbose_name|lower }}
+                                                </h6>
+                                                <button type="button" class="col-1 btn-close"></button>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <img src="{{ metric.photo_1.url }}" class="rounded w-100">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if metric.photo_2 %}
+                                        <button id="metric-{{ metric.id }}-photo-2-btn" class="btn-img photo-btn filter-hover-primary">
+                                            <img src="{% static 'metrics/img/camera.svg' %}" title="показать фото" width="20">
+                                        </button>
+                                        <div id="metric-{{ metric.id }}-photo-2-card" style="display: none"
+                                            class="card photo-card draggable w-fit border-0 shadow">
+                                            <div class="card-header draggable-point d-flex justify-content-between 
+                                                align-items-center bg-auxiliary gap-2">
+                                                <div class="col-1"></div>
+                                                <h6 class="mb-0 text-nowrap col-auto">
+                                                    {{ metric.date|date:"j E Y" }}
+                                                    <br>
+                                                    {{ metric.photo_2.field.verbose_name|lower }}
+                                                </h6>
+                                                <button type="button" class="col-1 btn-close"></button>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <img src="{{ metric.photo_2.url }}" class="rounded w-100">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if metric.photo_3 %}
+                                        <button id="metric-{{ metric.id }}-photo-3-btn" class="btn-img photo-btn filter-hover-primary">
+                                            <img src="{% static 'metrics/img/camera.svg' %}" title="показать фото" width="20">
+                                        </button>
+                                        <div id="metric-{{ metric.id }}-photo-3-card" style="display: none"
+                                            class="card photo-card draggable w-fit border-0 shadow">
+                                            <div class="card-header draggable-point d-flex justify-content-between 
+                                                align-items-center bg-auxiliary gap-2">
+                                                <div class="col-1"></div>
+                                                <h6 class="mb-0 text-nowrap col-auto">
+                                                    {{ metric.date|date:"j E Y" }}
+                                                    <br>
+                                                    {{ metric.photo_3.field.verbose_name|lower }}
+                                                </h6>
+                                                <button type="button" class="col-1 btn-close"></button>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <img src="{{ metric.photo_3.url }}" class="rounded w-100">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if not metric.photo_1 and not metric.photo_2 and not metric.photo_3 %}-{% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>

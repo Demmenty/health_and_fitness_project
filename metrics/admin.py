@@ -32,6 +32,16 @@ class LevelsAdmin(admin.ModelAdmin):
     list_filter = ("client", "parameter")
 
 
+@admin.register(Anthropometry)
+class AnthropometryAdmin(admin.ModelAdmin):
+    list_display = (
+        "__str__",
+        "client",
+        "date",
+    )
+    exclude = ("photo_1", "photo_2", "photo_3")
+    list_filter = ("client",)
+
+
 admin.site.register(Colors)
-admin.site.register(Anthropometry)
 admin.site.register(AnthropometryPhotoAccess)

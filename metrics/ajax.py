@@ -8,11 +8,10 @@ from django.http import (
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
+from client.decorators import client_required
 from expert.decorators import expert_required
 from metrics.forms import LevelsForm
-from metrics.models import Colors, Levels
-from nutrition.forms import RecommendationForm
-from nutrition.models import Recommendation
+from metrics.models import AnthropometryPhotoAccess as PhotoAccess, Colors, Levels
 from users.models import User
 
 
@@ -71,23 +70,25 @@ def save_levels(request, client_id: int):
     return HttpResponseBadRequest("Данные некорректны")
 
 
-@expert_required
+@client_required
 @require_http_methods(["POST"])
-def save_nutrition_recommendations(request, client_id: int):
+def edit_photoaccess(request):
     """
-    Save the nutrition recommendations for a client.
+    Edit the access to clinet's anthropometry photos for the expert.
 
     Args:
-        client_id (int): The ID of the client.
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The response indicating the success of the operation.
     """
 
-    client = get_object_or_404(User, id=client_id)
-    instance = Recommendation.objects.filter(client=client).first()
+    is_allowed = request.POST.get("is_allowed") == "true"
 
-    form = RecommendationForm(request.POST, instance=instance)
-    if form.is_valid():
-        form.instance.client = client
-        form.save()
-        return HttpResponse("Рекомендации сохранены")
+    client = request.user
+    instance, _ = PhotoAccess.objects.get_or_create(client=client)
 
-    return HttpResponseBadRequest("Ошибка при сохранении данных")
+    instance.is_allowed = is_allowed
+    instance.save()
+
+    return HttpResponse("ok")

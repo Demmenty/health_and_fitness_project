@@ -16,8 +16,12 @@ from client.forms import (
     UserInfoForm,
 )
 from client.models import Contacts, Health
-from metrics.forms import DailyDataForm
-from metrics.models import DailyData
+from metrics.forms import AnthropometryForm, DailyDataForm
+from metrics.models import (
+    Anthropometry,
+    AnthropometryPhotoAccess as PhotoAccess,
+    DailyData,
+)
 from nutrition.models import FatSecretEntry
 
 
@@ -186,6 +190,46 @@ def metrics_add(request):
     data = {
         "daily_metrics_form": form,
     }
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET"])
+def anthropo_metrics(request):
+    """Render the client's anthropometry page"""
+
+    client = request.user
+
+    metrics = Anthropometry.objects.filter(client=client).order_by("id")
+    photoaccess, _ = PhotoAccess.objects.get_or_create(client=client)
+
+    template = "client/anthropo_metrics.html"
+    data = {
+        "metrics": metrics,
+        "photoaccess": photoaccess,
+    }
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def anthropo_metrics_new(request):
+    """View function for creating a new anthropometry entry"""
+
+    client = request.user
+
+    if request.method == "GET":
+        form = AnthropometryForm()
+
+    if request.method == "POST":
+        form = AnthropometryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.client = client
+            form.save()
+            return redirect("client:anthropo_metrics")
+
+    template = "client/anthropo_metrics_form.html"
+    data = {"form": form}
     return render(request, template, data)
 
 

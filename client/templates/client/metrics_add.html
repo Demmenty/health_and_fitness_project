@@ -15,10 +15,10 @@
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 696px;">
             <div class="card-header bg-primary text-light text-center">
-                <h5 class="mb-0">{{ daily_metrics_form.header }}</h5>
+                <h5 class="mb-0">Внесение измерений</h5>
 			</div>
             <div class="card-body">
-                <form id="metrics-form" method="post">
+                <form id="metrics-form" method="POST">
                     {% csrf_token %}
                     <div class="d-none">{{ daily_metrics_form.date }}</div>
                     <div class="form-group row mb-2">

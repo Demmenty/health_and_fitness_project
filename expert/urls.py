@@ -4,6 +4,8 @@ from expert import views
 
 app_name = "expert"
 
+# TODO client_id -> id
+
 urlpatterns = [
     path("", views.clients, name="clients"),
     path("consult_requests", views.consult_requests, name="consult_requests"),
@@ -29,6 +31,11 @@ urlpatterns = [
         name="client_metrics",
     ),
     path("metrics/colors", views.metrics_colors, name="metrics_colors"),
+    path(
+        "client/<int:client_id>/metrics/anthropo",
+        views.client_anthropo_metrics,
+        name="client_anthropo_metrics",
+    ),
     path(
         "client/<int:client_id>/nutrition",
         views.client_nutrition,

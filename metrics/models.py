@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from django.db import models
 from django.forms.models import model_to_dict
-
+from decimal import Decimal
 from metrics.managers import DailyDataManager
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
@@ -138,7 +138,7 @@ class DailyData(models.Model):
         if count_today_nutrition:
             for parameter in all_parameters:
                 values = [
-                    getattr(metric, parameter)
+                    Decimal(getattr(metric, parameter))
                     for metric in metrics
                     if getattr(metric, parameter) is not None
                 ]
@@ -155,12 +155,11 @@ class DailyData(models.Model):
             )
             for parameter in all_parameters:
                 values = [
-                    getattr(metric, parameter)
+                    Decimal(getattr(metric, parameter))
                     for metric in metrics
                     if metric.date != today or parameter not in nutrition_parameters
                     if getattr(metric, parameter) is not None
                 ]
-                print("values", values)
                 if values:
                     metrics_avg[parameter] = sum(values) / len(values)
 
@@ -353,10 +352,11 @@ class Levels(models.Model):
         return result
 
 
+# TODO AnthropoMetrics
 class Anthropometry(models.Model):
-    """Модель для данных антропометрических измерений"""
+    """Anthropometry measurements of the client"""
 
-    date = models.DateField("Дата", default=date.today)
+    date = models.DateField("Дата", auto_now_add=True)
     client = models.ForeignKey(User, on_delete=models.CASCADE)
     shoulder = models.DecimalField(
         "Плечо", max_digits=4, decimal_places=1, null=True, blank=True
@@ -381,49 +381,45 @@ class Anthropometry(models.Model):
     )
     photo_1 = models.ImageField(
         "Фото спереди",
-        upload_to="anthropometry/img/clients/%Y/%d.%m",
-        max_length=255,
+        upload_to="clients/anthropo_metrics/%Y/%d.%m",
         null=True,
         blank=True,
     )
     photo_2 = models.ImageField(
         "Фото сзади",
-        upload_to="anthropometry/img/clients/%Y/%d.%m",
-        max_length=255,
+        upload_to="clients/anthropo_metrics/%Y/%d.%m",
         null=True,
         blank=True,
     )
     photo_3 = models.ImageField(
         "Фото сбоку",
-        upload_to="anthropometry/img/clients/%Y/%d.%m",
-        max_length=255,
+        upload_to="clients/anthropo_metrics/%Y/%d.%m",
         null=True,
         blank=True,
     )
 
     def __str__(self):
-        return f"Антропометрия {self.id}: {self.user}"
+        return f"Антропометрия №{self.id}"
 
     class Meta:
         ordering = ["-date"]
-        # при запросе должна быть сортировка по убыванию даты
         get_latest_by = "date"
         verbose_name = "Антропометрия"
-        verbose_name_plural = "Антропометрии"
+        verbose_name_plural = "Антропометрия"
 
 
 class AnthropometryPhotoAccess(models.Model):
-    """Модель для хранения разрешения на просмотр фото к антропометрии эксперту"""
+    """Access to the client's photos for the expert"""
 
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo_access = models.BooleanField("Доступ эксперта к фото", default=False)
+    is_allowed = models.BooleanField("Доступ эксперта к фото", default=False)
 
     def __str__(self):
-        if self.photo_access:
-            return f"{self.user} разрешил доступ к своим фото"
+        if self.is_allowed:
+            return f"{self.client} разрешил доступ к своим фото"
         else:
-            return f"{self.user} не разрешил доступ к своим фото"
+            return f"{self.client} не разрешил доступ к своим фото"
 
     class Meta:
         verbose_name = "Доступ к фото"
-        verbose_name_plural = "Доступы к фото"
+        verbose_name_plural = "Доступ к фото"

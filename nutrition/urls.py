@@ -35,4 +35,9 @@ urlpatterns = [
         ajax.update_food_servings,
         name="update_food_servings",
     ),
+    path(
+        "recommendations/<int:client_id>/save",
+        ajax.save_recommendations,
+        name="save_recommendations",
+    ),
 ]

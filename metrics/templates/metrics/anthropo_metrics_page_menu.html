@@ -1,0 +1,55 @@
+{% load static %}
+
+<div class="page-menu mx-auto mb-4">
+    <div class="page-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
+        <h5 class="mb-0 mx-2 text-nowrap">{% now "j E" %}</h5>
+    </div>
+    <div class="page-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
+        {% if request.user.is_expert %}
+            <button title="Только для клиента" disabled class="btn-link text-nowrap align-middle disabled">
+                <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Измерение</span>
+            </button>
+        {% else %}
+            <a href="{% url 'client:anthropo_metrics_new' %}" title="Добавить измерения"
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+                <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Измерение</span>
+            </a>
+        {% endif %}
+        {% if request.user.is_expert %}
+            <button id="photo-access-btn" disabled 
+                title="{% if photoaccess.is_allowed %} Клиент разрешил доступ {% else %} Клиент запретил доступ{% endif %}" 
+                class="btn-link text-nowrap align-middle disabled {% if photoaccess.is_allowed %} allowed {% endif %}">
+                <img src="{% static 'metrics/img/check-circle.svg' %}" class="check-circle" width="20">
+                <img src="{% static 'metrics/img/x-circle.svg' %}" class="x-circle" width="20">
+                <span>Доступ к фото</span>
+            </button>
+        {% else %}
+            <button id="photo-access-btn" title="Переключить доступ для эксперта"
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary 
+                {% if photoaccess.is_allowed %} allowed {% endif %}"
+                data-url="{% url 'metrics:edit_photoaccess' %}">
+                <img src="{% static 'metrics/img/check-circle.svg' %}" class="check-circle" width="20">
+                <img src="{% static 'metrics/img/x-circle.svg' %}" class="x-circle" width="20">
+                <span>Доступ к фото</span>
+                {% csrf_token %}
+            </button>
+        {% endif %}
+        {% if request.user.is_expert %}
+            <a href="{% url 'expert:client_metrics' client.id %}" title="Дневные измерения" 
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+                <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Дневные измерения</span>
+            </a>
+        {% else %}
+            <a href="{% url 'client:metrics' %}" title="Дневные измерения" 
+                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+                <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
+                <span class="d-none d-sm-inline">Дневные измерения</span>
+            </a>
+        {% endif %}
+    </div>
+    <div class="col-2">
+    </div>
+</div>

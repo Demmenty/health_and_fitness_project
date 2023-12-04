@@ -12,16 +12,16 @@
 {% endblock %}
 
 {% block content %}
-{% include 'metrics/period_select.html' %}
+{% include 'metrics/daily_metrics_period_select.html' %}
 {% nutrition_recommendations %}
 <section id="metrics-menu-section">
     <div class="container">
-        {% include 'metrics/page_menu.html' %}
+        {% include 'metrics/daily_metrics_page_menu.html' %}
     </div>
 </section>
 <section id="metrics-section" class="mb-4">
     <div class="container">
-        {% include 'metrics/metrics_table.html' %}
+        {% include 'metrics/daily_metrics_table.html' %}
     </div>
 </section>
 <section id="metrics-levels-section" style="display: none;">
