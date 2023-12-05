@@ -24,7 +24,6 @@ const chatPartnerID = chatMsgForm.find("#id_recipient").val();
 const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
 
 const newMsgObserver = new IntersectionObserver(handleNewMsgIntersection);
-const lazyImgObserver = new IntersectionObserver(handleLazyImgIntersection);
 
 const messageTemplates = {
     [userID]: chat.find("#message-template-user"),
@@ -627,23 +626,6 @@ function addDragEffect() {
  */
 function removeDragEffect() {
     $(this).removeClass("drag-over");
-}
-
-/**
- * Handles the intersection of lazy-loaded images.
- * Loads the image if it is visible.
- *
- * @param {Array} entries - The entries to be processed.
- */
-async function handleLazyImgIntersection(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const image = $(entry.target);
-            lazyImgObserver.unobserve(image[0]);
-            image.attr("src", image.attr("data-src"));
-            image.removeClass("lazy").removeAttr("data-src");
-        }
-    });
 }
 
 // AUDIO
