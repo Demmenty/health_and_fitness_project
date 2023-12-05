@@ -14,7 +14,7 @@
 <section id="clients-control-section">
     <div class="container">
         <div class="d-flex justify-content-end gap-3">
-            <a id="client-registration-link" href="{% url 'expert:client_registration' %}" class="btn btn-primary float-end mb-5">
+            <a id="client-registration-link" href="{% url 'expert:client_new' %}" class="btn btn-primary float-end mb-5">
                 <img src="{% static 'expert/img/person-plus-fill.svg' %}" type="image/svg+xml" width="20">
                 <span class="ms-1">Новый клиент</span>
             </a>
@@ -46,7 +46,7 @@
                                 </a>
                             </div>
                             <div class="d-flex flex-wrap justify-content-around gap-2 mb-3">
-                                <a href="{% url 'expert:client_metrics' client.id %}"
+                                <a href="{% url 'expert:client_daily_metrics' client.id %}"
                                     class="btn-link fw-500 text-dark-emphasis text-hover-primary">
                                     Измерения
                                 </a>

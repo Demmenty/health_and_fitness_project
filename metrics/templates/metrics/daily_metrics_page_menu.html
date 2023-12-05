@@ -12,7 +12,7 @@
                 <span class="d-none d-sm-inline">Измерение</span>
             </button>
         {% else %}
-            <a href="{% url 'client:metrics_add' %}" title="Добавить измерения" 
+            <a href="{% url 'client:daily_metrics_edit' %}" title="Добавить измерения" 
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Измерение</span>
@@ -21,14 +21,14 @@
         {% if request.user.is_expert %}
             <button id="colouring-btn" title="Окрашивание измерений"
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary"
-                data-get-url="{% url 'metrics:get_сolouring' %}?client={{ client.id }}">
+                data-get-url="{% url 'metrics:levels_colors_get' %}?client={{ client.id }}">
                 <img src="{% static 'metrics/img/palette.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Окрашивание</span>
             </button>
         {% else %}
             <button id="colouring-btn" title="Окрашивание измерений" 
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary"
-                data-get-url="{% url 'metrics:get_сolouring' %}">
+                data-get-url="{% url 'metrics:levels_colors_get' %}">
                 <img src="{% static 'metrics/img/palette.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Окрашивание</span>
             </button>

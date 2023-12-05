@@ -1,12 +1,12 @@
 from metrics.forms import LevelsForm
-from metrics.models import DailyData, Levels
+from metrics.models import Daily as DailyMetrics, Levels
 from users.models import User
 
 
 def create_levels_forms(client: User) -> list[LevelsForm]:
     """
     Generate a list of metrics LevelsForm based on the client
-    for each metric parameter in DailyData.
+    for each metric parameter in DailyMetrics.
 
     Args:
         client (User): The user client.
@@ -17,7 +17,7 @@ def create_levels_forms(client: User) -> list[LevelsForm]:
     levels_forms = []
     instances = Levels.objects.filter(client=client)
 
-    for parameter in DailyData.Parameters:
+    for parameter in DailyMetrics.Parameters:
         instance = instances.filter(parameter=parameter).first()
         if instance:
             form = LevelsForm(instance=instance)

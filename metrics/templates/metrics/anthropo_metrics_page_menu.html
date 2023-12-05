@@ -29,7 +29,7 @@
             <button id="photo-access-btn" title="Переключить доступ для эксперта"
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary 
                 {% if photoaccess.is_allowed %} allowed {% endif %}"
-                data-url="{% url 'metrics:edit_photoaccess' %}">
+                data-url="{% url 'metrics:photoaccess_edit' %}">
                 <img src="{% static 'metrics/img/check-circle.svg' %}" class="check-circle" width="20">
                 <img src="{% static 'metrics/img/x-circle.svg' %}" class="x-circle" width="20">
                 <span>Доступ к фото</span>
@@ -37,13 +37,13 @@
             </button>
         {% endif %}
         {% if request.user.is_expert %}
-            <a href="{% url 'expert:client_metrics' client.id %}" title="Дневные измерения" 
+            <a href="{% url 'expert:client_daily_metrics' client.id %}" title="Дневные измерения" 
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Дневные измерения</span>
             </a>
         {% else %}
-            <a href="{% url 'client:metrics' %}" title="Дневные измерения" 
+            <a href="{% url 'client:daily_metrics' %}" title="Дневные измерения" 
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Дневные измерения</span>

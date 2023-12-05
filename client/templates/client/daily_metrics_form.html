@@ -3,7 +3,7 @@
 {% load custom_filters %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'client/css/metrics_add.css' %}">
+    <link rel="stylesheet" href="{% static 'client/css/daily_metrics_form.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -61,7 +61,7 @@
                         {% endfor %}
                     </div>
                     <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-                    <a href="{% url 'client:metrics' %}" class="btn btn-outline-primary">Назад</a>
+                    <a href="{% url 'client:daily_metrics' %}" class="btn btn-outline-primary">Назад</a>
                 </form>
             </div>
         </div>
@@ -86,5 +86,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'client/js/metrics_add.js' %}"></script>
+    <script src="{% static 'client/js/daily_metrics_form.js' %}"></script>
 {% endblock %}

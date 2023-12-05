@@ -5,9 +5,8 @@ from django.db.models import Manager
 from users.models import User
 
 
-# TODO refactor
-class DailyDataManager(Manager):
-    """Manager for handling entries of DailyData model."""
+class DailyMetricsManager(Manager):
+    """Manager for handling entries of DailyMetrics model."""
 
     def get_by_date_range(self, client: User, start: date, end: date) -> tuple:
         """
@@ -19,7 +18,7 @@ class DailyDataManager(Manager):
             start (date): The start date of the range.
             end (date): The end date of the range.
         Returns:
-            tuple[DailyData]: A tuple of DailyData objects.
+            tuple[DailyMetrics]: A tuple of DailyMetrics objects.
         """
         days = (end - start).days + 1
         if days < 1:
@@ -46,7 +45,7 @@ class DailyDataManager(Manager):
             client (User): The client object.
             days (int): The number of days to get.
         Returns:
-            tuple[DailyData]: A tuple of DailyData objects.
+            tuple[DailyMetrics]: A tuple of DailyMetrics objects.
         """
         dates = [date.today() - timedelta(days=i) for i in range(days)]
 

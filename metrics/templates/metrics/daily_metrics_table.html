@@ -124,7 +124,7 @@
                                     <img src="{% static 'metrics/img/chat.svg' %}" title="комментария нет">
                                 {% endif %}
                                 {% if not request.user.is_expert %}
-                                    <a href="{% url 'client:metrics_add' %}?date={{ day.date|date:'Y-m-d' }}" 
+                                    <a href="{% url 'client:daily_metrics_edit' %}?date={{ day.date|date:'Y-m-d' }}" 
                                         class="filter-hover-primary pointer">
                                         <img src="{% static 'metrics/img/pencil-square.svg' %}" title="редактировать">
                                     </a>

@@ -12,21 +12,15 @@ from django.forms import (
 )
 
 from client.utils import create_log_entry
-from metrics.models import (
-    Anthropometry,
-    AnthropometryPhotoAccess,
-    Colors,
-    DailyData,
-    Levels,
-)
+from metrics.models import Anthropo, Colors, Daily, Levels, PhotoAccess
 from users.models import User
 
 
-class DailyDataForm(ModelForm):
+class DailyMetricsForm(ModelForm):
     """Form for daily data of client's body metrics."""
 
     class Meta:
-        model = DailyData
+        model = Daily
         fields = (
             "date",
             "feel",
@@ -144,7 +138,7 @@ class DailyDataForm(ModelForm):
         if isinstance(metrics_date, str):
             metrics_date = date.fromisoformat(metrics_date)
 
-        instance = DailyData.objects.filter(date=metrics_date, client=client).first()
+        instance = Daily.objects.filter(date=metrics_date, client=client).first()
         form = (
             cls(instance=instance) if instance else cls(initial={"date": metrics_date})
         )
@@ -192,6 +186,91 @@ class DailyDataForm(ModelForm):
         )
 
         super().save(*args, **kwargs)
+
+
+class AnthropoMetricsForm(ModelForm):
+    """Form for adding anthropometry metrics by client"""
+
+    class Meta:
+        model = Anthropo
+        fields = (
+            "shoulder",
+            "chest",
+            "waist",
+            "belly",
+            "buttocks",
+            "hip",
+            "shin",
+            "photo_1",
+            "photo_2",
+            "photo_3",
+        )
+        widgets = {
+            "shoulder": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "100",
+                }
+            ),
+            "chest": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "200",
+                }
+            ),
+            "waist": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "200",
+                }
+            ),
+            "belly": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "200",
+                }
+            ),
+            "buttocks": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "200",
+                }
+            ),
+            "hip": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "100",
+                }
+            ),
+            "shin": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                    "min": "0",
+                    "max": "100",
+                }
+            ),
+            "photo_1": ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "photo_2": ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "photo_3": ClearableFileInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+        }
 
 
 class ColorsForm(ModelForm):
@@ -307,96 +386,11 @@ class LevelsForm(ModelForm):
         }
 
 
-class AnthropometryForm(ModelForm):
-    """Form for adding anthropometry metrics by client"""
+class PhotoAccessForm(ModelForm):
+    """Form for changing photo access to client's metrics"""
 
     class Meta:
-        model = Anthropometry
-        fields = (
-            "shoulder",
-            "chest",
-            "waist",
-            "belly",
-            "buttocks",
-            "hip",
-            "shin",
-            "photo_1",
-            "photo_2",
-            "photo_3",
-        )
-        widgets = {
-            "shoulder": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "100",
-                }
-            ),
-            "chest": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "200",
-                }
-            ),
-            "waist": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "200",
-                }
-            ),
-            "belly": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "200",
-                }
-            ),
-            "buttocks": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "200",
-                }
-            ),
-            "hip": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "100",
-                }
-            ),
-            "shin": NumberInput(
-                attrs={
-                    "class": "form-control text-center",
-                    "min": "0",
-                    "max": "100",
-                }
-            ),
-            "photo_1": ClearableFileInput(
-                attrs={
-                    "class": "form-control",
-                }
-            ),
-            "photo_2": ClearableFileInput(
-                attrs={
-                    "class": "form-control",
-                }
-            ),
-            "photo_3": ClearableFileInput(
-                attrs={
-                    "class": "form-control",
-                }
-            ),
-        }
-
-
-class AnthropometryPhotoAccessForm(ModelForm):
-    """Form for changing anthropometry photo access"""
-
-    class Meta:
-        model = AnthropometryPhotoAccess
+        model = PhotoAccess
         fields = ("is_allowed",)
         widgets = {
             "is_allowed": CheckboxInput(

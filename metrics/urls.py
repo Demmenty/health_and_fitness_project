@@ -5,19 +5,7 @@ from metrics import ajax
 app_name = "metrics"
 
 urlpatterns = [
-    path(
-        "daily/colouring/get",
-        ajax.get_сolouring,
-        name="get_сolouring",
-    ),
-    path(
-        "daily/levels/<int:client_id>/save",
-        ajax.save_levels,
-        name="save_levels",
-    ),
-    path(
-        "anthropo/photoaccess/edit",
-        ajax.edit_photoaccess,
-        name="edit_photoaccess",
-    ),
+    path("levels_colors/get/", ajax.levels_colors_get, name="levels_colors_get"),
+    path("levels/<int:id>/save/", ajax.levels_save, name="levels_save"),
+    path("photoaccess/edit/", ajax.photoaccess_edit, name="photoaccess_edit"),
 ]

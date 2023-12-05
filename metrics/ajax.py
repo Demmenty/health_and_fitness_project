@@ -11,13 +11,13 @@ from django.views.decorators.http import require_http_methods
 from client.decorators import client_required
 from expert.decorators import expert_required
 from metrics.forms import LevelsForm
-from metrics.models import AnthropometryPhotoAccess as PhotoAccess, Colors, Levels
+from metrics.models import Colors, Levels, PhotoAccess
 from users.models import User
 
 
 @login_required
 @require_http_methods(["GET"])
-def get_сolouring(request):
+def levels_colors_get(request):
     """
     Get the data for a colouring the client's metrics:
     parameters levels and colors which were set by the expert.
@@ -32,31 +32,31 @@ def get_сolouring(request):
         client = request.user
 
     colors = Colors.get_colors()
-    client_levels = Levels.get_levels_as_dict(client=client)
-    if not client_levels:
+    levels = Levels.get_levels_as_dict(client=client)
+    if not levels:
         return HttpResponseNotFound("Настройки не найдены")
 
     data = {
         "colors": colors,
-        "parameters": client_levels,
+        "parameters": levels,
     }
     return JsonResponse(data)
 
 
 @expert_required
 @require_http_methods(["POST"])
-def save_levels(request, client_id: int):
+def levels_save(request, id: int):
     """
     Handles the saving of client metrics levels. Experts only.
 
     Args:
         request: HttpRequest object representing the incoming request.
-        client_id: Integer representing the client ID.
+        id: Integer representing the client ID.
     Returns:
         HttpResponse: Response indicating the success or failure of the operation.
     """
 
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
     form = LevelsForm(request.POST)
 
     if form.is_valid():
@@ -72,7 +72,7 @@ def save_levels(request, client_id: int):
 
 @client_required
 @require_http_methods(["POST"])
-def edit_photoaccess(request):
+def photoaccess_edit(request):
     """
     Edit the access to clinet's anthropometry photos for the expert.
 

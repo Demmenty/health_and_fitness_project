@@ -3,7 +3,7 @@
 {% load nutrition_recommendations %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'expert/css/client_metrics.css' %}">
+    <link rel="stylesheet" href="{% static 'expert/css/client_daily_metrics.css' %}">
     <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
 {% endblock %}
 
@@ -48,7 +48,7 @@
                         <li class="list-group-item pointer py-1 toggler" data-detail-id="algorithm">
                             Алгоритм
                         </li>
-                        <a href="{% url 'expert:metrics_colors' %}?next={{ request.path }}" class="list-group-item py-1">
+                        <a href="{% url 'expert:metrics_colors_edit' %}?next={{ request.path }}" class="list-group-item py-1">
                             Настройка цветов
                         </a>
                     </ul>
@@ -56,7 +56,7 @@
                 {% for form in levels_forms %}
                     <div id="{{ form.parameter.value }}" class="detail" 
                         {% if forloop.counter != 1 %} style="display: none" {% endif %}>
-                        <form method="POST" action="{% url 'metrics:save_levels' client.id %}" 
+                        <form method="POST" action="{% url 'metrics:levels_save' client.id %}" 
                             class="levels-form d-flex flex-column  rounded text-center h-100">
                             {% if form.instance.pk %}
                                 <h5 class="mb-0">{{ form.instance.get_parameter_display }}</h5>
@@ -167,5 +167,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'expert/js/client_metrics.js' %}"></script>
+    <script src="{% static 'expert/js/client_daily_metrics.js' %}"></script>
 {% endblock %}

@@ -6,6 +6,15 @@ from django.db import models
 from users.utils import prepare_avatar
 
 
+def avatars_path(instance, filename):
+    """
+    Return the path for the user's avatars.
+    Example: "users/1/avatar/filename.jpg"
+    """
+
+    return f"users/{instance.id}/avatar/{filename}"
+
+
 class User(AbstractUser):
     """
     Model of a user.
@@ -25,7 +34,7 @@ class User(AbstractUser):
         error_messages={"unique": "Пользователь с такой почтой уже существует."},
     )
     avatar = models.ImageField(
-        "Аватар", upload_to="users/avatars", blank=True, null=True
+        "Аватар", upload_to=avatars_path, blank=True, null=True
     )
     sex = models.CharField("Пол", max_length=1, choices=Sex.choices, null=True)
     birthday = models.DateField("День рождения", null=True)

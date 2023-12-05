@@ -16,11 +16,11 @@ from client.forms import (
     UserInfoForm,
 )
 from client.models import Contacts, Health
-from metrics.forms import AnthropometryForm, DailyDataForm
+from metrics.forms import AnthropoMetricsForm, DailyMetricsForm
 from metrics.models import (
-    Anthropometry,
-    AnthropometryPhotoAccess as PhotoAccess,
-    DailyData,
+    Anthropo as AnthropoMetrics,
+    Daily as DailyMetrics,
+    PhotoAccess,
 )
 from nutrition.models import FatSecretEntry
 
@@ -70,7 +70,7 @@ def health(request, page: int):
             form.save()
             return redirect(next_page_url)
 
-    template = "client/health_form.html"
+    template = "client/health.html"
     data = {
         "form": form,
         "page": page,
@@ -82,7 +82,7 @@ def health(request, page: int):
 @client_required
 @require_http_methods(["GET", "POST"])
 def info(request):
-    """Handle the client's main information"""
+    """Handle the client's main information form"""
 
     if request.method == "GET":
         form = UserInfoForm(instance=request.user)
@@ -132,9 +132,9 @@ def contacts(request):
 
 @client_required
 @require_http_methods(["GET"])
-def metrics(request):
+def daily_metrics(request):
     """
-    Render the metrics page for a client
+    Render the daily metrics page for a client
     within a specified date range or number of days.
     """
 
@@ -146,15 +146,15 @@ def metrics(request):
     if start and end:
         start = date.fromisoformat(start)
         end = date.fromisoformat(end)
-        metrics = DailyData.objects.get_by_date_range(client, start, end)
+        metrics = DailyMetrics.objects.get_by_date_range(client, start, end)
     else:
         days = int(request.GET.get("days", 7))
-        metrics = DailyData.objects.get_by_days(client, days)
+        metrics = DailyMetrics.objects.get_by_days(client, days)
 
-    metrics = DailyData.update_nutrition_from_fs(metrics)
-    metrics_avg = DailyData.get_avg(metrics, count_today_nutrition=False)
+    metrics = DailyMetrics.update_nutrition_from_fs(metrics)
+    metrics_avg = DailyMetrics.get_avg(metrics, count_today_nutrition=False)
 
-    template = "client/metrics.html"
+    template = "client/daily_metrics.html"
     data = {
         "start_date": start or metrics[0].date,
         "end_date": end or metrics[-1].date,
@@ -166,27 +166,32 @@ def metrics(request):
 
 @client_required
 @require_http_methods(["GET", "POST"])
-def metrics_add(request):
-    """Handle the client's metrics form"""
+def daily_metrics_edit(request):
+    """
+    Handle the client's daily metrics form.
+    GET: Displays the form with existing metrics data.
+    POST: Saves or updates the metrics data.
+    """
 
     client = request.user
 
     if request.method == "GET":
         metrics_date = request.GET.get("date", date.today())
-        form = DailyDataForm.get_form(client, metrics_date)
+        form = DailyMetricsForm.get_form(client, metrics_date)
 
     if request.method == "POST":
-        form = DailyDataForm(request.POST)
+        form = DailyMetricsForm(request.POST)
         if form.is_valid():
-            instance = DailyData.objects.filter(
-                date=form.cleaned_data["date"], client=client
+            metrics_date = form.cleaned_data["date"]
+            instance = DailyMetrics.objects.filter(
+                date=metrics_date, client=client
             ).first()
-            form = DailyDataForm(request.POST, instance=instance)
+            form = DailyMetricsForm(request.POST, instance=instance)
             form.instance.client = client
             form.save()
-            return redirect("client:metrics")
+            return redirect("client:daily_metrics")
 
-    template = "client/metrics_add.html"
+    template = "client/daily_metrics_form.html"
     data = {
         "daily_metrics_form": form,
     }
@@ -200,7 +205,7 @@ def anthropo_metrics(request):
 
     client = request.user
 
-    metrics = Anthropometry.objects.filter(client=client).order_by("id")
+    metrics = AnthropoMetrics.objects.filter(client=client).order_by("id")
     photoaccess, _ = PhotoAccess.objects.get_or_create(client=client)
 
     template = "client/anthropo_metrics.html"
@@ -219,10 +224,10 @@ def anthropo_metrics_new(request):
     client = request.user
 
     if request.method == "GET":
-        form = AnthropometryForm()
+        form = AnthropoMetricsForm()
 
     if request.method == "POST":
-        form = AnthropometryForm(request.POST, request.FILES)
+        form = AnthropoMetricsForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.client = client
             form.save()

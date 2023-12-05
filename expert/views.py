@@ -11,10 +11,10 @@ from consults.models import Request
 from expert.decorators import expert_required
 from metrics.forms import ColorsForm
 from metrics.models import (
-    Anthropometry,
-    AnthropometryPhotoAccess as PhotoAccess,
+    Anthropo as AnthropoMetrics,
     Colors,
-    DailyData,
+    Daily as DailyMetrics,
+    PhotoAccess,
 )
 from metrics.utils import create_levels_forms
 from nutrition.models import FatSecretEntry
@@ -62,7 +62,7 @@ def consult_requests(request):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_registration(request):
+def client_new(request):
     """Render the client registration page for the expert"""
 
     template = "expert/client_new.html"
@@ -71,15 +71,15 @@ def client_registration(request):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_profile(request, client_id):
+def client_profile(request, id):
     """
     Render the client profile page for the expert.
 
     Args:
-        client_id (int): The ID of the client to render.
+        id (int): The ID of the client to render.
     """
 
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
 
     template = "expert/client_profile.html"
     data = {"client": client}
@@ -88,16 +88,16 @@ def client_profile(request, client_id):
 
 @expert_required
 @require_http_methods(["GET", "POST"])
-def client_health(request, client_id):
+def client_health(request, id):
     """
     Render the client health form page for the expert.
     Saves the evaluation result.
 
     Args:
-        client_id (int): The ID of the client to render.
+        id (int): The ID of the client to render.
     """
 
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
     health_data = Health.objects.filter(client=client).first()
 
     if not health_data or not health_data.is_filled:
@@ -112,7 +112,7 @@ def client_health(request, client_id):
         result_form = HealthFormResult(request.POST, instance=health_data)
         if result_form.is_valid():
             result_form.save()
-            return redirect("expert:client_profile", client_id)
+            return redirect("expert:client_profile", id)
 
     template = "expert/client_health.html"
     health_forms = [form(instance=health_data) for form in HEALTH_FORMS.values()]
@@ -127,15 +127,15 @@ def client_health(request, client_id):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_contacts(request, client_id):
+def client_contacts(request, id):
     """
     Render the client contacts page for the expert.
 
     Args:
-        client_id (int): The ID of the client.
+        id (int): The ID of the client.
     """
 
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
     contacts = Contacts.objects.filter(client=client).first()
     contacts_form = ContactsForm(instance=contacts)
 
@@ -149,13 +149,16 @@ def client_contacts(request, client_id):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_metrics(request, client_id):
+def client_daily_metrics(request, id):
     """
-    Render metrics page of a client for the expert
+    Render the daily metrics page of a client for the expert
     within a specified date range or number of days.
+
+    Args:
+        id (int): The ID of the client.
     """
 
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
 
     start = request.GET.get("start")
     end = request.GET.get("end")
@@ -164,17 +167,17 @@ def client_metrics(request, client_id):
     if start and end:
         start = date.fromisoformat(start)
         end = date.fromisoformat(end)
-        metrics = DailyData.objects.get_by_date_range(client, start, end)
+        metrics = DailyMetrics.objects.get_by_date_range(client, start, end)
     else:
-        metrics = DailyData.objects.get_by_days(client, days)
+        metrics = DailyMetrics.objects.get_by_days(client, days)
 
-    metrics = DailyData.update_nutrition_from_fs(metrics)
-    metrics_avg = DailyData.get_avg(metrics, count_today_nutrition=False)
+    metrics = DailyMetrics.update_nutrition_from_fs(metrics)
+    metrics_avg = DailyMetrics.get_avg(metrics, count_today_nutrition=False)
 
     levels_forms = create_levels_forms(client)
     levels_colors = Colors.objects.first()
 
-    template = "expert/client_metrics.html"
+    template = "expert/client_daily_metrics.html"
     data = {
         "client": client,
         "start_date": start or metrics[0].date,
@@ -188,9 +191,33 @@ def client_metrics(request, client_id):
 
 
 @expert_required
+@require_http_methods(["GET"])
+def client_anthropo_metrics(request, id):
+    """
+    Render the client's anthropometry page for the expert.
+
+    Args:
+        id (int): The ID of the client.
+    """
+
+    client = get_object_or_404(User, id=id)
+
+    metrics = AnthropoMetrics.objects.filter(client=client).order_by("id")
+    photoaccess, _ = PhotoAccess.objects.get_or_create(client=client)
+
+    template = "expert/client_anthropo_metrics.html"
+    data = {
+        "client": client,
+        "metrics": metrics,
+        "photoaccess": photoaccess,
+    }
+    return render(request, template, data)
+
+
+@expert_required
 @require_http_methods(["GET", "POST"])
-def metrics_colors(request):
-    """Handle the metrics colors form view for the expert"""
+def metrics_colors_edit(request):
+    """Handle the metrics colors form for the expert"""
 
     instance = Colors.objects.first()
     form = ColorsForm(instance=instance)
@@ -210,29 +237,15 @@ def metrics_colors(request):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_anthropo_metrics(request, client_id):
-    """Render the client's anthropometry page for the expert"""
+def client_nutrition(request, id):
+    """
+    Render the client's nutrition page for the expert.
+    
+    Args:
+        id (int): The ID of the client.
+    """
 
-    client = get_object_or_404(User, id=client_id)
-
-    metrics = Anthropometry.objects.filter(client=client).order_by("id")
-    photoaccess, _ = PhotoAccess.objects.get_or_create(client=client)
-
-    template = "expert/client_anthropo_metrics.html"
-    data = {
-        "client": client,
-        "metrics": metrics,
-        "photoaccess": photoaccess,
-    }
-    return render(request, template, data)
-
-
-@expert_required
-@require_http_methods(["GET"])
-def client_nutrition(request, client_id):
-    """Render the client's nutrition page for the expert"""
-
-    client = get_object_or_404(User, id=client_id)
+    client = get_object_or_404(User, id=id)
 
     fs_linked = FatSecretEntry.objects.filter(client=client).exists()
 

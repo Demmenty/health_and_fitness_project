@@ -1,15 +1,17 @@
 from datetime import date, datetime
+from decimal import Decimal
 
 from django.db import models
 from django.forms.models import model_to_dict
-from decimal import Decimal
-from metrics.managers import DailyDataManager
+
+from metrics.managers import DailyMetricsManager
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
 from users.models import User
 
+# TODO resize big anthropo photos before uploading
 
-class DailyData(models.Model):
+class Daily(models.Model):
     """Daily measurements of the client"""
 
     class Parameters(models.TextChoices):
@@ -24,7 +26,7 @@ class DailyData(models.Model):
         FAT = "fat", "Жиры"
         CARBS = "carbohydrate", "Углеводы"
 
-    objects = DailyDataManager()
+    objects = DailyMetricsManager()
 
     date = models.DateField("Дата измерения", default=date.today)
     client = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -116,13 +118,13 @@ class DailyData(models.Model):
 
     @classmethod
     def get_avg(
-        cls, metrics: tuple["DailyData"], count_today_nutrition: bool = True
+        cls, metrics: tuple["Daily"], count_today_nutrition: bool = True
     ) -> dict:
         """
         Calculate the average value for each field in the given list of metrics.
 
         Parameters:
-            metrics (list["DailyData"]): A list of DailyData objects representing the metrics.
+            metrics (list["DailyMetrics"]): A list of DailyMetrics objects representing the metrics.
             count_today_nutrition (bool, optional):
                 A flag indicating whether to include today's nutrition data in the calculation.
                 Defaults to True.
@@ -166,15 +168,15 @@ class DailyData(models.Model):
         return metrics_avg
 
     @classmethod
-    def update_nutrition_from_fs(cls, metrics: list["DailyData"]) -> list["DailyData"]:
+    def update_nutrition_from_fs(cls, metrics: list["Daily"]) -> list["Daily"]:
         """
         Update the nutrition data of the given list of metrics from the client's FatSecret account.
 
         Args:
-            metrics (list[DailyData]): A list of DailyData objects to be updated.
+            metrics (list[DailyMetrics]): A list of DailyMetrics objects to be updated.
 
         Returns:
-            list[DailyData]: The updated list of DailyData objects.
+            list[DailyMetrics]: The updated list of DailyMetrics objects.
         """
 
         if not metrics:
@@ -209,6 +211,71 @@ class DailyData(models.Model):
                     day.save()
 
         return metrics
+
+
+def anthropometry_photo_path(instance, filename):
+    """
+    Return the path for the anthropometry photos of the client.
+    Example: "clients/1/anthropometry/2023/filename.jpg"
+    """
+
+    return f"clients/{instance.client.id}/anthropometry/{instance.date.year}/{filename}"
+
+
+class Anthropo(models.Model):
+    """Anthropometry measurements of the client"""
+
+    date = models.DateField("Дата", auto_now_add=True)
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    shoulder = models.DecimalField(
+        "Плечо", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    chest = models.DecimalField(
+        "Грудь", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    waist = models.DecimalField(
+        "Талия", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    belly = models.DecimalField(
+        "Живот", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    buttocks = models.DecimalField(
+        "Ягодицы", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    hip = models.DecimalField(
+        "Бедро", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    shin = models.DecimalField(
+        "Голень", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+
+    photo_1 = models.ImageField(
+        "Фото спереди",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+    photo_2 = models.ImageField(
+        "Фото сзади",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+    photo_3 = models.ImageField(
+        "Фото сбоку",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"Антропометрия №{self.id}"
+
+    class Meta:
+        ordering = ["-date"]
+        get_latest_by = "date"
+        verbose_name = "Антропометрия"
+        verbose_name_plural = "Антропометрия"
 
 
 class Colors(models.Model):
@@ -260,9 +327,6 @@ class Colors(models.Model):
         return model_to_dict(cls.objects.get(), exclude=["id"])
 
 
-Colors.objects.get_or_create()
-
-
 class Levels(models.Model):
     """Settings of the parameter's levels for color indication."""
 
@@ -270,7 +334,7 @@ class Levels(models.Model):
     parameter = models.CharField(
         "Параметр",
         max_length=14,
-        choices=DailyData.Parameters.choices,
+        choices=Daily.Parameters.choices,
     )
     lvl1_min = models.PositiveSmallIntegerField(
         "Уровень 1: нижняя граница",
@@ -352,63 +416,7 @@ class Levels(models.Model):
         return result
 
 
-# TODO AnthropoMetrics
-class Anthropometry(models.Model):
-    """Anthropometry measurements of the client"""
-
-    date = models.DateField("Дата", auto_now_add=True)
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
-    shoulder = models.DecimalField(
-        "Плечо", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    chest = models.DecimalField(
-        "Грудь", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    waist = models.DecimalField(
-        "Талия", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    belly = models.DecimalField(
-        "Живот", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    buttocks = models.DecimalField(
-        "Ягодицы", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    hip = models.DecimalField(
-        "Бедро", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    shin = models.DecimalField(
-        "Голень", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    photo_1 = models.ImageField(
-        "Фото спереди",
-        upload_to="clients/anthropo_metrics/%Y/%d.%m",
-        null=True,
-        blank=True,
-    )
-    photo_2 = models.ImageField(
-        "Фото сзади",
-        upload_to="clients/anthropo_metrics/%Y/%d.%m",
-        null=True,
-        blank=True,
-    )
-    photo_3 = models.ImageField(
-        "Фото сбоку",
-        upload_to="clients/anthropo_metrics/%Y/%d.%m",
-        null=True,
-        blank=True,
-    )
-
-    def __str__(self):
-        return f"Антропометрия №{self.id}"
-
-    class Meta:
-        ordering = ["-date"]
-        get_latest_by = "date"
-        verbose_name = "Антропометрия"
-        verbose_name_plural = "Антропометрия"
-
-
-class AnthropometryPhotoAccess(models.Model):
+class PhotoAccess(models.Model):
     """Access to the client's photos for the expert"""
 
     client = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -423,3 +431,6 @@ class AnthropometryPhotoAccess(models.Model):
     class Meta:
         verbose_name = "Доступ к фото"
         verbose_name_plural = "Доступ к фото"
+
+
+Colors.objects.get_or_create()

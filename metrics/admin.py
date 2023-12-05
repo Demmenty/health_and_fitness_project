@@ -1,16 +1,10 @@
 from django.contrib import admin
 
-from metrics.models import (
-    Anthropometry,
-    AnthropometryPhotoAccess,
-    Colors,
-    DailyData,
-    Levels,
-)
+from metrics.models import Anthropo, Colors, Daily, Levels, PhotoAccess
 
 
-@admin.register(DailyData)
-class DailyDataAdmin(admin.ModelAdmin):
+@admin.register(Daily)
+class DailyMetricsAdmin(admin.ModelAdmin):
     ordering = ("-date",)
     list_display = (
         "__str__",
@@ -32,8 +26,8 @@ class LevelsAdmin(admin.ModelAdmin):
     list_filter = ("client", "parameter")
 
 
-@admin.register(Anthropometry)
-class AnthropometryAdmin(admin.ModelAdmin):
+@admin.register(Anthropo)
+class AnthropoMetricsAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",
         "client",
@@ -44,4 +38,4 @@ class AnthropometryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Colors)
-admin.site.register(AnthropometryPhotoAccess)
+admin.site.register(PhotoAccess)
