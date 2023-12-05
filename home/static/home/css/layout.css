@@ -61,7 +61,7 @@ footer {
     color: black;
 }
 .contact_ico {
-    height: 25px;
+    height: 25px !important;
     filter: invert(1);
 }
 .contact_ico:hover {

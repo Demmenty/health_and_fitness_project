@@ -12,13 +12,24 @@ main {
     }
 }
 
+img:not(.lazy) {
+    height: auto;
+    opacity: 0;
+    animation: fade-in 0.3s ease-in-out forwards;
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 /* welcome_section */
 #welcome_section {
     height: 76vh;
-    background-image: 
-        url(/static/home/img/home_trapeze.svg),
-        url(/static/home/img/man_lowpoly.jpg);
-    background-color: #e9ebfe;
+    background-image: linear-gradient(103deg, #f7fdff 26%, #fff, #e9ebfe 85%);
     background-size: cover;
     background-position-x: center;
     background-position-y: center;
@@ -81,14 +92,6 @@ main {
 @media (min-width: 576px) {
     [name='logo_title'] {
         letter-spacing: 8px;
-    }
-}
-#welcome_section [name='logo_title'] {
-    visibility: hidden;
-}
-@media (min-width: 576px) {
-    #welcome_section [name='logo_title'] {
-        visibility: visible;
     }
 }
 
@@ -790,7 +793,6 @@ main {
     text-shadow: 0px 0px 10px #2a356a;
 }
 #hero_section1 {
-    background-image: url(/static/home/img/health_invest_background.jpg);
     background-color: #5876fe;
     background-size: cover;
     background-position-y: center;
@@ -1691,7 +1693,6 @@ main {
     background-image: linear-gradient(90deg, #657ff7 1%, #ffffff00 100%);
 }
 #img_couple {
-    background-image: url(/static/home/img/fitness_couple.png);
     background-size: 39rem;
     background-position: bottom center;
     background-repeat: no-repeat;
@@ -1937,4 +1938,41 @@ main {
         max-width: 636px;
         margin-top: 4rem;
     }
+}
+
+/* consultation */
+#consultation_section_text ul li::marker {
+    content: '► ';
+    color: #657ff7;
+}
+#consultation_section_text ul {
+    font-size: 1.25rem;
+}
+@media (min-width: 1200px) {
+    #consultation_section_text ul {
+        font-size: 1.5rem;
+    } 
+}
+#consultation-form .helptext {
+    margin-left: 14px;
+    color: #00000000;
+    display: block;
+    white-space: pre-wrap;
+    transition: all 1s ease;
+    text-align: end;
+    font-size: smaller;
+}
+#consultation-form .form-control {
+    font-size: 1.3rem !important;
+}
+#consultation-form .form-control:focus + .helptext {
+    color: grey;
+}
+#consultation-form p {
+    margin-bottom: 0.5rem;
+}
+#consultation_error {
+    transition: all 1s ease;
+    color: #ffffff00;
+    text-align: center;
 }

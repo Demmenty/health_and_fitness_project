@@ -3,7 +3,6 @@
 
 {% block stylesheet %}
   <link rel="stylesheet" href="{% static 'home/css/main.css' %}">
-  <link rel="stylesheet" href="{% static 'home/css/consult_request.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -11,9 +10,10 @@
 {% endblock %}
 
 {% block content %}
-<section id="welcome_section">
+<section id="welcome_section" class="lazy-bg" 
+  data-bg-image="{% static 'home/img/home_trapeze.svg' %}, {% static 'home/img/man_lowpoly.jpg' %}">
   <div class="container">
-    <h2 class="logo-title align-self-start mt-4 pt-lg-1" name="logo_title">HEALTH & FITNESS</h2>
+    <h2 class="logo-title mx-auto mx-md-0 align-self-start mt-4 pt-lg-1" name="logo_title">HEALTH & FITNESS</h2>
     <div class="d-flex flex-column align-items-center align-self-center align-self-md-end mb-4 mb-sm-5"
       id="welcome_section_block">
       <h2 class="text-center d-none d-lg-block mb-4 mb-lg-5">
@@ -46,7 +46,8 @@
   </div>
   <div id="photo_and_about_container">
     <div id="specialist_photo_container">
-      <img src="{% static 'home/img/Roman_the_specialist.png' %}">
+      <img src="" data-src="{% static 'home/img/Roman_the_specialist.png' %}" 
+        class="lazy" width="400" height="554">
     </div>
     <div id="about_me_text">
       <div class="container">
@@ -78,16 +79,16 @@
     <div class="container">
       <div id="certificates_row" class="d-none d-md-flex">
         <a href="{% static 'home/img/certificates/trainer_diploma.jpg' %}" target="_blank">
-          <img src="{% static 'home/img/certificates/trainer_diploma_thumbnail.jpg' %}">
+          <img src="" data-src="{% static 'home/img/certificates/trainer_diploma_thumbnail.jpg' %}" class="lazy">
         </a>
         <a href="{% static 'home/img/certificates/trainer.jpg' %}" target="_blank">
-          <img src="{% static 'home/img/certificates/trainer_thumbnail.jpg' %}">
+          <img src="" data-src="{% static 'home/img/certificates/trainer_thumbnail.jpg' %}" class="lazy">
         </a>
         <a href="{% static 'home/img/certificates/nutrition.jpg' %}" target="_blank">
-          <img src="{% static 'home/img/certificates/nutrition_thumbnail.jpg' %}">
+          <img src="" data-src="{% static 'home/img/certificates/nutrition_thumbnail.jpg' %}" class="lazy">
         </a>
         <a href="{% static 'home/img/certificates/psychology_diploma.jpg' %}" target="_blank">
-          <img src="{% static 'home/img/certificates/psychology_diploma_thumbnail.jpg' %}">
+          <img src="" data-src="{% static 'home/img/certificates/psychology_diploma_thumbnail.jpg' %}" class="lazy">
         </a>
       </div>
       <div id="certificates_carousel" class="carousel slide d-md-none" data-bs-ride="carousel">
@@ -104,22 +105,22 @@
         <div class="carousel-inner">
           <div class="carousel-item active">
             <a href="{% static 'home/img/certificates/trainer.jpg' %}" target="_blank">
-              <img src="{% static 'home/img/certificates/trainer.jpg' %}">
+              <img src="" data-src="{% static 'home/img/certificates/trainer.jpg' %}" class="lazy">
             </a>
           </div>
           <div class="carousel-item">
             <a href="{% static 'home/img/certificates/trainer_diploma.jpg' %}" target="_blank">
-              <img src="{% static 'home/img/certificates/trainer_diploma.jpg' %}">
+              <img src="" data-src="{% static 'home/img/certificates/trainer_diploma.jpg' %}" class="lazy">
             </a>
           </div>
           <div class="carousel-item">
             <a href="{% static 'home/img/certificates/nutrition.jpg' %}" target="_blank">
-              <img src="{% static 'home/img/certificates/nutrition.jpg' %}">
+              <img src="" data-src="{% static 'home/img/certificates/nutrition.jpg' %}" class="lazy">
             </a>
           </div>
           <div class="carousel-item">
             <a href="{% static 'home/img/certificates/psychology_diploma.jpg' %}" target="_blank">
-              <img src="{% static 'home/img/certificates/psychology_diploma.jpg' %}">
+              <img src="" data-src="{% static 'home/img/certificates/psychology_diploma.jpg' %}" class="lazy">
             </a>
           </div>
         </div>
@@ -144,7 +145,7 @@
     <h2 class="logo-title text-center pb-5" name="logo_title">HEALTH & FITNESS</h2>
     <div class="why_section_block" id="why_section_block1">
       <p class="why_section_txt pin pin_left" id="why_section_txt1">
-        <img src="{% static 'home/img/why_section_img1_health_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img1_health_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img1_mini">
         Множество распространённых болезней человек приобрёл в современном обществе тотальной гиподинамии и обилия
         калорийной, бедной нутриентами пищи.<br>
@@ -152,45 +153,45 @@
         обследований, лечения и, возможно, даже операций.
         Заботиться о здоровье дома и в зале приятнее, чем исправлять его в больнице.
       </p>
-      <img src="{% static 'home/img/why_section_img1_health.svg' %}" width="" class="why_section_img"
-        id="why_section_img1">
+      <img src="" data-src="{% static 'home/img/why_section_img1_health.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img1" width="181" height="213">
     </div>
     <div class="why_section_block" id="why_section_block2">
       <p class="why_section_txt pin pin_right" id="why_section_txt2">
-        <img src="{% static 'home/img/why_section_img2_success_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img2_success_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img2_mini">
         Современные научные исследования доказывают, что красивые, стройные и ухоженные люди <span
           class="text-primary"><b>больше зарабатывают</b></span>, чаще <span class="text-primary"><b>получают
             работу</b></span> и лучше формируют <span class="text-primary"><b>социальные связи</b></span>.
       </p>
-      <img src="{% static 'home/img/why_section_img2_success.svg' %}" width="" class="why_section_img"
-        id="why_section_img2">
+      <img src="" data-src="{% static 'home/img/why_section_img2_success.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img2" width="182" height="159">
     </div>
     <div class="why_section_block" id="why_section_block3">
       <p class="why_section_txt pin pin_left" id="why_section_txt3">
-        <img src="{% static 'home/img/why_section_img3_care_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img3_care_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img3_mini">
         Человеку свойственно заботиться о своих ближних. Иногда человек старается заботиться о многих.
         Но часто человек забывает <span class="text-primary"><b>заботиться о своём теле и здоровье</b></span>.
         Предлагаем вам об этом вспомнить и позволить нам помочь.
       </p>
-      <img src="{% static 'home/img/why_section_img3_care.svg' %}" width="" class="why_section_img"
-        id="why_section_img3">
+      <img src="" data-src="{% static 'home/img/why_section_img3_care.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img3" width="182" height="209">
     </div>
     <div class="why_section_block" id="why_section_block4">
       <p class="why_section_txt pin pin_right" id="why_section_txt4">
-        <img src="{% static 'home/img/why_section_img4_resource_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img4_resource_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img4_mini">
         Часто люди путают фитнес со спортом. Мы не разделяем такой подход.<br>
         В спорте люди тратят ресурс здоровья на борьбу друг с другом. Мы же боремся со старением, болезнями и
         неосознанностью, достигая <span class="text-primary"><b>повышения ресурса здоровья.</b>
       </p>
-      <img src="{% static 'home/img/why_section_img4_resource.svg' %}" width="" class="why_section_img"
-        id="why_section_img4">
+      <img src="" data-src="{% static 'home/img/why_section_img4_resource.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img4" width="182" height="261">
     </div>
     <div class="why_section_block" id="why_section_block5">
       <p class="why_section_txt pin pin_left" id="why_section_txt5">
-        <img src="{% static 'home/img/why_section_img5_piggybank_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img5_piggybank_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img5_mini">
         Распространённая ошибка - начать путь к здоровью купив лишь абонемент в зал и опираясь на популярные мнения в
         интернете.<br>
@@ -200,24 +201,24 @@
         особенный и требует персональной работы.<br>
         <span class="text-primary"><b>Сэкономьте деньги, силы и время</b></span>, избежав этих ошибок.
       </p>
-      <img src="{% static 'home/img/why_section_img5_piggybank.svg' %}" width="" class="why_section_img"
-        id="why_section_img5">
+      <img src="" data-src="{% static 'home/img/why_section_img5_piggybank.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img5" width="181" height="208">
     </div>
     <div class="why_section_block" id="why_section_block6">
       <p class="why_section_txt pin pin_right" id="why_section_txt6">
-        <img src="{% static 'home/img/why_section_img6_society_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img6_society_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img6_mini">
         Ощутите себя частью <span class="text-primary"><b>общества осознанных людей</b></span>, понимающих ценность
         себя и своей жизни.
       </p>
-      <img src="{% static 'home/img/why_section_img6_society.svg' %}" width="" class="why_section_img"
-        id="why_section_img6">
+      <img src="" data-src="{% static 'home/img/why_section_img6_society.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img6" width="182" height="213">
     </div>
     <div class="why_section_block" id="why_section_block7">
-      <img src="{% static 'home/img/why_section_img7_new.svg' %}" width="" class="why_section_img"
-        id="why_section_img7">
+      <img src="" data-src="{% static 'home/img/why_section_img7_new.svg' %}" width="" class="why_section_img lazy"
+        id="why_section_img7" width="182" height="215">
       <p class="why_section_txt pin pin_right" id="why_section_txt7">
-        <img src="{% static 'home/img/why_section_img7_new_mini.svg' %}" width="" class="why_section_img_mini"
+        <img src="" data-src="{% static 'home/img/why_section_img7_new_mini.svg' %}" width="" class="why_section_img_mini lazy"
           id="why_section_img7_mini">
         <span class="text-primary"><b>Попробуйте что-то новое</b></span>.<br>
         Если вы только решили заниматься здоровьем, начать с нами - отличный вариант!<br>
@@ -228,7 +229,8 @@
   </div>
 </section>
 
-<section class="hero_section" id="hero_section1">
+<section class="hero_section lazy-bg" id="hero_section1"
+  data-bg-image="{% static 'home/img/health_invest_background.jpg' %}">
   <div class="h-100 gradient_blue">
     <div class="container justify-content-center justify-content-lg-end d-flex h-100">
       <h2 class="hero-text">
@@ -245,12 +247,12 @@
     <h2 class="logo-title text-center pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">HEALTH & FITNESS</h2>
     <!-- 1 -->
     <div class="d-flex" id="what_section_block1">
-      <img src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm align-self-start me-2 me-xl-3">
-      <img src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md">
+      <img src="" data-src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm lazy align-self-start me-2 me-xl-3">
+      <img src="" data-src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md lazy">
     </div>
     <!-- 2 -->
     <div class="d-flex what_section_block" id="what_section_block2">
-      <img src="{% static 'home/img/what_section_gear_lg_health.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_health.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
       <div class="what_section_txt">
         <div class="dumbbell_bottom">
@@ -283,14 +285,14 @@
           </p>
         </div>
       </div>
-      <img src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md">
-      <img src="{% static 'home/img/what_section_gear_lg_recovery.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md lazy">
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_recovery.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
     </div>
     <!-- 4 -->
     <div class="d-flex what_section_block" id="what_section_block4">
-      <img src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md d-sm-none d-xl-block">
-      <img src="{% static 'home/img/what_section_gear_lg_goal.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md lazy d-sm-none d-xl-block">
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_goal.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
       <div class="what_section_txt">
         <div class="dumbbell_bottom">
@@ -321,14 +323,14 @@
           </p>
         </div>
       </div>
-      <img src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm">
-      <img src="{% static 'home/img/what_section_gear_lg_monitor.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm lazy">
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_monitor.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
     </div>
     <!-- 6 -->
     <div class="d-flex what_section_block" id="what_section_block6">
-      <img src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm">
-      <img src="{% static 'home/img/what_section_gear_lg_training.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm lazy">
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_training.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
       <div class="what_section_txt">
         <div class="dumbbell_bottom">
@@ -373,13 +375,13 @@
           </p>
         </div>
       </div>
-      <img src="{% static 'home/img/what_section_gear_lg_instruments.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_instruments.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
     </div>
     <!-- 8 -->
     <div class="d-flex what_section_block" id="what_section_block8">
-      <img src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md">
-      <img src="{% static 'home/img/what_section_gear_lg_nutrition.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md lazy">
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_nutrition.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
       <div class="what_section_txt">
         <div class="dumbbell_bottom">
@@ -420,13 +422,13 @@
           </p>
         </div>
       </div>
-      <img src="{% static 'home/img/what_section_gear_lg_consult.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_consult.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
-      <img src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm">
+      <img src="" data-src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm lazy">
     </div>
     <!-- 10 -->
     <div class="d-flex what_section_block" id="what_section_block10">
-      <img src="{% static 'home/img/what_section_gear_lg_study.svg' %}" class="gear_lg"
+      <img src="" data-src="{% static 'home/img/what_section_gear_lg_study.svg' %}" class="gear_lg lazy"
         onclick="openWhatSectionBlock(event)">
       <div class="what_section_txt">
         <div class="dumbbell_bottom">
@@ -446,14 +448,14 @@
     </div>
     <!-- 11 -->
     <div class="d-flex justify-content-start" id="what_section_block11">
-      <img src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md me-2 me-xl-3">
-      <img src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm me-2 align-self-end">
+      <img src="" data-src="{% static 'home/img/what_section_gear_md.svg' %}" class="gear_md lazy me-2 me-xl-3">
+      <img src="" data-src="{% static 'home/img/what_section_gear_sm.svg' %}" class="gear_sm lazy me-2 align-self-end">
     </div>
   </div>
 </section>
 
 <section class="hero_section" id="hero_section2">
-  <div class="h-100" id="img_couple">
+  <div id="img_couple" class="lazy-bg h-100" data-bg-image="{% static 'home/img/fitness_couple.png' %}">
     <div class="container d-flex h-100">
       <h2 class="hero-text">
         Красивое тело - лишь приятный побочный эффект.<br>
@@ -463,7 +465,7 @@
   </div>
 </section>
 
-<section id="consultation-section">
+<section id="consultation_section">
   <div class="container">
     <div class="d-flex flex-column flex-md-row py-5">
       <div class="w-100 w-md-50 pe-5 mb-4" id="consultation_section_text">
@@ -508,6 +510,8 @@
 {% endblock %}
 
 {% block script %}
+  <script src="{% static 'home/js/lazy_backgrounds.js' %}"></script>
+  <script src="{% static 'home/js/lazy_images.js' %}"></script>
   <script src="{% static 'home/js/main.js' %}"></script>
   <script src="{% static 'home/js/consult_request.js' %}"></script>
 {% endblock %}
