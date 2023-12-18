@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from users.utils import prepare_avatar
+from home.utils import resize_uploaded_image
 
 
 def avatars_path(instance, filename):
@@ -33,9 +33,7 @@ class User(AbstractUser):
         unique=True,
         error_messages={"unique": "Пользователь с такой почтой уже существует."},
     )
-    avatar = models.ImageField(
-        "Аватар", upload_to=avatars_path, blank=True, null=True
-    )
+    avatar = models.ImageField("Аватар", upload_to=avatars_path, blank=True, null=True)
     sex = models.CharField("Пол", max_length=1, choices=Sex.choices, null=True)
     birthday = models.DateField("День рождения", null=True)
     height = models.PositiveSmallIntegerField(
@@ -46,8 +44,8 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.is_expert:
-            return f"Эксперт {self.username}"
-        return f"Клиент {self.username}"
+            return f"Эксперт {self.username.capitalize()}"
+        return self.username.capitalize()
 
     def get_age(self) -> int | None:
         """Return the age of the client or None if no birthday"""
@@ -71,13 +69,19 @@ class User(AbstractUser):
         )
 
         if new_avatar_uploaded:
-            self.avatar = prepare_avatar(self.avatar, self.avatar.name)
+            self.avatar = resize_uploaded_image(
+                self.avatar, self.avatar.name, square=True, size=(150, 150)
+            )
 
         super().save(*args, **kwargs)
 
     @classmethod
     def get_expert(cls):
         return User.objects.get(is_expert=True)
+
+    @property
+    def is_client(self):
+        return not self.is_expert
 
     class Meta:
         verbose_name = "Пользователь"

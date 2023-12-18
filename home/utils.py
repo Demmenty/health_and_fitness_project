@@ -1,28 +1,12 @@
 from datetime import date, datetime, time, timedelta
+from io import BytesIO
 from typing import Union
 
-from django.http import HttpRequest
-
-from users.models import User
-
-
-def get_client(request: HttpRequest) -> User | None:
-    """
-    Returns the client from the given HttpRequest based on the user type.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        Optional[User]: The client information if found, None otherwise.
-    """
-
-    if request.user.is_expert:
-        return request.GET.get("client")
-    return request.user
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
 
 
-def is_ajax(request: HttpRequest) -> bool:
+def is_ajax(request) -> bool:
     """
     Check if a request is an AJAX request.
 
@@ -94,3 +78,72 @@ def convert_to_datetime(input_date: Union[datetime, date, str]) -> datetime:
     elif isinstance(input_date, date):
         return datetime.combine(input_date, time())
     return input_date
+
+
+def crop_to_square(image: Image) -> Image:
+    """
+    Crops an image to a square shape.
+
+    Args:
+        image (Image): The input image to be cropped.
+
+    Returns:
+        The cropped image, which is a square version of the input image.
+    """
+
+    width, height = image.size
+
+    if width == height:
+        return image
+
+    if width > height:
+        top, bottom = 0, height
+        left, right = (width - height) // 2, (width + height) // 2
+    else:
+        left, right = 0, width
+        top, bottom = (height - width) // 2, (height + width) // 2
+
+    return image.crop((left, top, right, bottom))
+
+
+def resize_uploaded_image(
+    image: InMemoryUploadedFile,
+    name: str,
+    square: bool = False,
+    size: tuple[int, int] = None,
+) -> InMemoryUploadedFile:
+    """
+    Resizes and/or crops an uploaded image.
+
+    Args:
+        image (InMemoryUploadedFile): An object representing the original image.
+        name (str): The name of the image file.
+        square (bool, optional): Whether to crop the image to a square shape. Defaults to False.
+        resize (tuple[int, int], optional): The size of the resized image. Defaults to None.
+
+    Returns:
+        An InMemoryUploadedFile object representing the edited image.
+    """
+
+    image = Image.open(image)
+    image = image.convert("RGB")
+
+    if square:
+        image = crop_to_square(image)
+    if size:
+        image = image.resize(size)
+
+    edited_image_stream = BytesIO()
+    image.save(edited_image_stream, format="JPEG")
+
+    edited_image_data = edited_image_stream.getvalue()
+    edited_image = InMemoryUploadedFile(
+        edited_image_stream,
+        None,
+        name,
+        "image/jpeg",
+        len(edited_image_data),
+        None,
+    )
+
+    return edited_image
