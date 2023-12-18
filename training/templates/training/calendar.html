@@ -1,0 +1,43 @@
+<div id="calendar" class="card shadow-sm mx-auto" style="display: none"
+    data-url-schedule="{% url 'training:get_schedule' day|date:'Y' day|date:'n' %}?client_id={{ client.id }}">
+    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
+        <span id="prev-year-btn" class="prev-arrow" title="Предыдущий год"> ⟨ </span>
+        <h5 id="year-label" class="header mb-0">{{ day|date:"Y" }}</h5>
+        <span id="next-year-btn" class="next-arrow" title="Следующий год"> ⟩ </span>
+    </div>
+    <div class="card-body p-2 p-sm-3">
+        <table class="months-table text-center w-100">
+            <tbody>
+                <tr class="months-row">
+                    {% with day|date:"n" as month %}
+                    <td class="month {% if month == '1' %}active{% endif %}" value="1">Янв</td>
+                    <td class="month {% if month == '2' %}active{% endif %}" value="2">Фев</td>
+                    <td class="month {% if month == '3' %}active{% endif %}" value="3">Мар</td>
+                    <td class="month {% if month == '4' %}active{% endif %}" value="4">Апр</td>
+                    <td class="month {% if month == '5' %}active{% endif %}" value="5">Май</td>
+                    <td class="month {% if month == '6' %}active{% endif %}" value="6">Июн</td>
+                    <td class="month {% if month == '7' %}active{% endif %}" value="7">Июл</td>
+                    <td class="month {% if month == '8' %}active{% endif %}" value="8">Авг</td>
+                    <td class="month {% if month == '9' %}active{% endif %}" value="9">Сен</td>
+                    <td class="month {% if month == '10' %}active{% endif %}" value="10">Окт</td>
+                    <td class="month {% if month == '11' %}active{% endif %}" value="11">Ноя</td>
+                    <td class="month {% if month == '12' %}active{% endif %}" value="12">Дек</td>
+                    {% endwith %}
+                </tr>
+            </tbody>
+        </table>
+        <table class="weekdays-table text-center w-100">
+            <td class="weekday">ВС</td>
+            <td class="weekday">ПН</td>
+            <td class="weekday">ВТ</td>
+            <td class="weekday">СР</td>
+            <td class="weekday">ЧТ</td>
+            <td class="weekday">ПТ</td>
+            <td class="weekday">СБ</td>
+        </table>
+        <table class="dates-table text-center w-100">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

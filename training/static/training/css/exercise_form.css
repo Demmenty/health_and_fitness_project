@@ -1,0 +1,35 @@
+summary::marker {
+    color: #657ff7;
+}
+
+#dummy {
+    max-width: 26rem;
+}
+#dummy .area.filtered,
+#dummy .area:hover {
+    filter: invert(47%) sepia(76%) saturate(470%) hue-rotate(193deg) brightness(117%);
+}
+
+.input-group-vertical {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+    flex-direction: column;
+}
+.input-group-vertical>:first-child {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.input-group-vertical>:not(:first-child) {
+    margin-top: calc(var(--bs-border-width) * -1);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.input-group-vertical>.form-control, 
+.input-group-vertical>.form-select {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+}

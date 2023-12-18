@@ -1,0 +1,146 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'training/css/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'training/css/trainings.css' %}">
+{% endblock %}
+
+{% block title %}
+    <title>{{ client.username|capfirst }}: тренировки</title>
+{% endblock %}
+
+{% block content %}
+<section id="training-menu-section" class="mb-4">
+    <div class="container">
+        {% include 'training/page_menu.html' %}
+    </div>
+</section>
+<section id="training-calendar-section" class="mb-4">
+    <div class="container">
+        {% include 'training/calendar.html' %}
+    </div>
+</section>
+<section id="trainings-section">
+    <div class="container">
+        <div id="trainings-list" class="row g-4">
+            {% for training in trainings %}
+            {% with training.form.instance.id as training_id %}
+                <div class="training-card col-12 col-md-6 col-xxl-4 mx-auto">
+                    <div class="card shadow-sm h-fit">
+                        <div class="card-header bg-primary text-light text-center">
+                            <h5 class="header mb-0">Тренировка {{ training.form.instance.get_type_display|lower }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'training:save' training_id %}" 
+                                delete-action="{% url 'training:delete' training_id %}" 
+                                class="training-form d-flex flex-column gap-3">
+                                {% csrf_token %}
+                                <input type="hidden" name="training_id" value="{{ training_id }}">
+                                {{ training.exercise_formset.management_form }}
+                                {% if training.exercise_formset.forms %}
+                                    <div class="exercises-list d-flex flex-column gap-3">
+                                        {% for form in training.exercise_formset %}
+                                            <details class="exercise-record">
+                                                <summary class="d-flex gap-2 justify-content-between bg-aux border rounded p-2">
+                                                    <span class="exercise-name">{{ form.instance.exercise.name }}</span>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <a href="{% url 'training:exercise_detail' form.instance.exercise.id %}?client_id={{ client.id }}" 
+                                                            title="Описание" class="filter-hover-primary">
+                                                            <img src="{% static 'training/img/question-circle.svg' %}" width="19" class="exercise-info-btn">
+                                                        </a>
+                                                        <button type="button" title="Дополнительные опции" data-bs-toggle="dropdown" aria-expanded="false" 
+                                                            class="exercise-options-btn btn-img filter-hover-primary">
+                                                            <img src="{% static 'training/img/three-dots-vertical.svg' %}" width="21">
+                                                        </button>
+                                                        <ul class="exercise-options dropdown-menu">
+                                                            <li class="dropdown-item comment-option pointer">Комментарий</li>
+                                                            <li class="dropdown-item up-option pointer">Переместить выше</li>
+                                                            <li class="dropdown-item down-option pointer">Переместить ниже</li>
+                                                            <li class="dropdown-item delete-option pointer">Удалить</li>
+                                                        </ul>
+                                                    </div>
+                                                </summary>
+                                                <div class="exercise-record-form d-flex flex-column pt-2 border border-top-0 rounded-bottom">
+                                                    {% for field in form %}
+                                                        {% if field.field.widget.input_type == 'hidden' or field.name in 'DELETE, ORDER' %}
+                                                            <div class="{{ field.name }} d-none">
+                                                                {{ field }}
+                                                            </div>
+                                                        {% elif field.field.widget.input_type == 'number' %}
+                                                            <div class="{{ field.name }} px-2 mb-2">
+                                                                <div class="form-group d-flex align-items-center">
+                                                                    <div class="col-5">{{ field.label_tag }}</div>
+                                                                    <div class="col-7 d-flex flex-row gap-1">
+                                                                        <button type="button" title="-1" 
+                                                                            class="btn-img edit-number-btn minus filter-grey filter-hover-primary">
+                                                                            <img src="{% static 'training/img/dash-square.svg' %}" width="18">
+                                                                        </button>
+                                                                        {{ field }}
+                                                                        <button type="button" title="+1" 
+                                                                            class="btn-img edit-number-btn plus filter-grey filter-hover-primary">
+                                                                            <img src="{% static 'training/img/plus-square.svg' %}" width="18">
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <div class="{{ form.is_done.name }} mb-2 px-2">
+                                                        <div class="form-switch d-flex align-items-center ps-0">
+                                                            <div class="col-5">{{ form.is_done.label_tag }}</div>
+                                                            <div class="col-7">{{ form.is_done }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{{ form.comment.name }}" {% if not form.comment.value %} style="display: none" {% endif %}>
+                                                        {{ form.comment }}
+                                                    </div>
+                                                </div>
+                                            </details>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <a href="{% url 'training:exercise_select' training_id %}?client_id={{ client.id }}" 
+                                    type="button" class="add-exercise-btn btn btn-outline-primary">
+                                    Выбор упражнений
+                                </a>
+                                <div class="d-flex flex-column gap-2">
+                                    {% for field in training.form %}
+                                        {% if field.field.widget.input_type == 'hidden' %}
+                                            {{ field }}
+                                        {% elif field.name == 'comment' %}
+                                            <div class="{{ field.name }}">{{ field }}</div>
+                                        {% else %}
+                                            <div class="{{ field.name }}">
+                                                <div class="form-group align-items-center row">
+                                                    <div class="col">{{ field.label }}</div>
+                                                    <div class="col-7">{{ field }}</div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="delete-training-btn btn btn-danger">Удалить</button>
+                                    <button type="submit" class="save-training-btn btn btn-primary">Сохранить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% if not trainings %}
+        <div id="cat" class="{% if user.is_expert %} no-footer {% endif %}">
+            <img src="{% static 'training/img/cat_with_yarn.svg' %}" class="w-100">
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'training/js/trainings.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends layout %}
+{% load static %}
+{% load custom_filters %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'training/css/exercise_detail.css' %}">
+{% endblock %}
+
+{% block title %}
+    <title>{{ exercise.name|capfirst }}</title>
+{% endblock %}
+
+{% block content %}
+<section id="exercise-detail-section">
+    <div class="container">
+        <div id="exercise-card" class="card shadow-sm mx-auto" style="max-width: 936px;">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="name mb-0">{{ exercise.name|capfirst }}</h5>
+            </div>
+            <div class="card-body d-flex flex-column gap-3">
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-3">
+                    <div class="d-flex flex-column order-2 order-sm-1 gap-3">
+                        <div id="exercise-author" class="input-group">
+                            <label class="input-group-text bg-aux">Автор</label>
+                            <span class="form-control border">{{ exercise.author }}</span>
+                        </div>
+                        <div id="exercise-type" class="input-group">
+                            <label class="input-group-text bg-aux">Тип</label>
+                            <span class="form-control border">{{ exercise.get_type_display }}</span>
+                        </div>
+                    </div>
+                    <div class="mx-auto mx-sm-0 order-1 order-sm-2">
+                        {% if exercise.icon %}
+                            <img src="{{ exercise.icon.url }}" width="87" class="border rounded">
+                        {% else %}
+                            <img src="{% static 'training/img/question-square.svg' %}" width="87" class="filter-gray">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="input-group-vertical">
+                    <label class="input-group-text bg-aux w-100">Инструментарий</label>
+                    <div class="d-flex flex-column flex-sm-row flex-wrap form-control column-gap-3 row-gap-1">
+                        {{ exercise.tools.all|join:" " }}
+                    </div>
+                </div>
+                <div class="input-group-vertical">
+                    <label class="input-group-text bg-aux w-100">Техника выполнения</label>
+                    <div class="form-control">
+                        <span class="space-prewrap">{{ exercise.description }}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-lg-row gap-3">
+                    {% if exercise.muscles %}
+                        <div class="input-group-vertical">
+                            <label class="input-group-text bg-aux w-100">Целевые мышцы</label>
+                            <div class="form-control">
+                                <span class="space-prewrap">{{ exercise.muscles }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="areas input-group-vertical" data-areas="{{ exercise.areas.all|join:' ' }}">
+                        <label class="input-group-text bg-aux w-100">Зоны воздействия</label>
+                        <div class="form-control">
+                            {% for area in exercise.areas.all %}
+                                <span><span class="text-primary">✔</span> {{ area.name_ru }}</span><br>
+                            {% endfor %}
+                            <div class="dummy d-flex mx-auto mt-3 gap-2">
+                                {% if client.sex == "F" %}
+                                    {% include 'training/dummy/female.html' %}
+                                {% else %}
+                                    {% include 'training/dummy/male.html' %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if exercise.mistakes %}
+                    <div class="input-group-vertical">
+                        <label class="input-group-text bg-aux w-100">Распространеные ошибки</label>
+                        <div class="form-control">
+                            <span class="space-prewrap">{{ exercise.mistakes }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if exercise.image1 or exercise.image2 %}
+                    <div class="d-flex flex-column gap-2">
+                        <label class="input-group-text bg-aux w-100">Изображения</label>
+                        <div class="row g-2">
+                            {% if exercise.image1 %}
+                                <div class="col-lg-6 mx-auto">
+                                    <img src="" data-src="{{ exercise.image1.url }}" class="lazy rounded border w-100">
+                                </div>
+                            {% endif %}
+                            {% if exercise.image2 %}
+                                <div class="col-lg-6 mx-auto">
+                                    <img src="" data-src="{{ exercise.image2.url }}" class="lazy rounded border w-100">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if exercise.video or exercise.video_url %}
+                    <div class="d-flex flex-column gap-2">
+                        <label class="input-group-text bg-aux w-100">Видео</label>
+                        {% if exercise.video %}
+                            <a id="exercise-video-uploaded" href="{{ exercise.video.url }}" target="_blank" class="rounded w-100">
+                                {{ exercise.video }}
+                            </a>
+                        {% endif %}
+                        {% if exercise.video_url %}
+                            <a id="exercise-video-link" href="{{ exercise.video_url }}" target="_blank" class="rounded w-100">
+                                {{ exercise.video_url }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-primary back-close-btn">Назад</button>
+                    {% if user.is_expert or user == exercise.author %}
+                        <a href="{% url 'training:exercise_form' %}?client_id={{ client.id }}&id={{ exercise.id }}" 
+                            class="btn btn-primary">
+                            Редактировать
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'training/js/exercise_detail.js' %}"></script>
+    <script src="{% static 'home/js/backclose_btn.js' %}"></script>
+{% endblock %}

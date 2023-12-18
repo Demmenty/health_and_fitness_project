@@ -1,0 +1,144 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'training/css/exercise_select.css' %}">
+{% endblock %}
+
+{% block title %}
+    <title>{{ client.username|capfirst }}: выбор упражнений</title>
+{% endblock %}
+
+{% block content %}
+<section id="exercise-selection-section" class="mb-5">
+    <div class="container">
+        <div class="card shadow-sm mx-auto">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">
+                    Тренировка {{ training.get_type_display|lower }}, выбор упражнений
+                </h5>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-between h-100 gap-3">
+                <div class="row g-3">
+                    <div class="col-xl-3">
+                        <input id="search-input" type="text" class="form-control mb-2 py-1" placeholder="Поиск по названию">
+                        <div id="filters" class="d-flex flex-column gap-2">
+                            <details id="filter-author" class="field-filter" data-name="author">
+                                <summary class="bg-aux border rounded py-1 px-2">Автор</summary>
+                                <ul class="list-unstyled mt-2 mb-0">
+                                    <li class="py-1 px-2">
+                                        {% with expert_id=client.get_expert.id %}
+                                        <input type="checkbox" id="filter-author-{{ expert_id }}" name="author"
+                                            value="{{ expert_id }}" class="form-check-input">
+                                        <label for="filter-author-{{ expert_id }}">Эксперт</label>
+                                        {% endwith %}
+                                    </li>
+                                    <li class="py-1 px-2">
+                                        <input type="checkbox" id="filter-author-{{ client.id }}" name="author"
+                                            value="{{ client.id }}" class="form-check-input">
+                                        <label for="filter-author-{{ client.id }}">
+                                            {{ client.username|capfirst}}
+                                        </label>
+                                    </li>
+                                </ul>
+                            </details>
+                            <details id="filter-tool" class="field-filter" data-name="tool">
+                                <summary class="bg-aux border rounded py-1 px-2">Инструментарий</summary>
+                                <ul class="list-unstyled mt-2 mb-0">
+                                    {% for tool in tools %}
+                                    <li class="py-1 px-2">
+                                        <input type="checkbox" id="filter-tool-{{ tool }}" name="tool"
+                                            value="{{ tool }}" class="form-check-input">
+                                        <label for="filter-tool-{{ tool }}">{{ tool }}</label>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                            <details id="filter-area" class="field-filter" data-name="area">
+                                <summary class="bg-aux border rounded py-1 px-2">Зоны воздействия</summary>
+                                <ul class="list-unstyled mt-2 mb-0">
+                                    {% for area in areas %}
+                                    <li class="py-1 px-2">
+                                        <input type="checkbox" id="filter-area-{{ area }}" name="area"
+                                            value="{{ area }}" class="form-check-input">
+                                        <label for="filter-area-{{ area }}">{{ area.name_ru }}</label>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                            <details id="filter-selected" class="selected-filter" data-name="author">
+                                <summary class="bg-aux border rounded py-1 px-2">Выбранные</summary>
+                                <ul class="list-unstyled mt-2 mb-0">
+                                    <li class="py-1 px-2">
+                                        <input type="checkbox" id="filter-selected-true" name="selected"
+                                            value="true" class="form-check-input">
+                                        <label for="filter-selected-true">Выбранные</label>
+                                    </li>
+                                    <li class="py-1 px-2">
+                                        <input type="checkbox" id="filter-selected-false" name="selected"
+                                            value="false" class="form-check-input">
+                                        <label for="filter-selected-false">Не выбранные</label>
+                                    </li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="border rounded position-relative" style="min-height: 34px;">
+                            <span class="position-absolute text-secondary z-0 py-1 px-2">
+                                Нет доступных упражнений
+                            </span>
+                            <form id="exercises-form" method="POST" class="position-relative">
+                                {% csrf_token %}
+                                <ul class="list-unstyled rounded bg-white mb-0">
+                                    {% for exercise in exercises %}
+                                    <li class="exercise-item gap-2 py-1 px-2" data-name="{{ exercise.name|lower }}"
+                                        data-author="{{ exercise.author.id }}"
+                                        data-tool="{{ exercise.tools.all|join:', ' }}"
+                                        data-area="{{ exercise.areas.all|join:', ' }}">
+                                        <span class="name">{{ exercise.name }}</span>
+                                        <a href="{% url 'training:exercise_detail' exercise.id %}?client_id={{ client.id }}"
+                                            title="Описание" class="filter-hover-primary ms-auto">
+                                            <img src="{% static 'training/img/question-circle.svg' %}" width="20">
+                                        </a>
+                                        <input type="checkbox" name="exercises" value="{{ exercise.id }}"
+                                            class="form-check-input" {% if exercise.is_selected %} checked {% endif %}>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-xl-5">
+                        <div id="dummy" class="d-flex flex-row justify-content-center mx-auto">
+                            {% if client.sex == "F" %}
+                                {% include 'training/dummy/female.html' %}
+                            {% else %}
+                                {% include 'training/dummy/male.html' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 gap-md-3 mt-3">
+                        <a href="{% url 'training:trainings' %}?client_id={{ client.id }}&day={{ training.date|date:'Y-m-d' }}"
+                            class="btn btn-outline-primary">
+                            К тренировке
+                        </a>
+                        <button id="clear-filters" type="button" class="btn btn-outline-primary me-auto" style="display: none;">
+                            Сбросить фильтры
+                        </button>
+                        <a href="{% url 'training:exercise_form' %}?client_id={{ client.id }}"
+                            class="btn btn-outline-primary ms-md-auto">
+                            Новое упражнение
+                        </a>
+                        <button id="submit-exercises-btn" type="submit" class="btn btn-primary">Сохранить выбор</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'training/js/exercise_select.js' %}"></script>
+{% endblock %}

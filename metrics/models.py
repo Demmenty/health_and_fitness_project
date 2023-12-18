@@ -11,6 +11,7 @@ from users.models import User
 
 # TODO resize big anthropo photos before uploading
 
+
 class Daily(models.Model):
     """Daily measurements of the client"""
 

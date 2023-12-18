@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "expert.apps.ExpertConfig",
     "metrics.apps.MetricsConfig",
     "nutrition.apps.NutritionConfig",
+    "training.apps.TrainingConfig",
     "chat.apps.ChatConfig",
     "django_cleanup",
 ]
@@ -66,6 +67,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "home.context_processors.layout_context",
+                "home.context_processors.client_context",
             ],
         },
     },
@@ -130,6 +133,7 @@ STATICFILES_DIRS = [
     (BASE_DIR / "expert" / "static"),
     (BASE_DIR / "metrics" / "static"),
     (BASE_DIR / "nutrition" / "static"),
+    (BASE_DIR / "training" / "static"),
     (BASE_DIR / "chat" / "static"),
 ]
 

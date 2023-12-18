@@ -12,6 +12,7 @@ urlpatterns = [
     path("expert/", include("expert.urls", namespace="expert")),
     path("metrics/", include("metrics.urls", namespace="metrics")),
     path("nutrition/", include("nutrition.urls", namespace="nutrition")),
+    path("training/", include("training.urls", namespace="training")),
     path("chat/", include("chat.urls", namespace="chat")),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

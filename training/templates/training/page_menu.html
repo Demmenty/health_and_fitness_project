@@ -1,0 +1,38 @@
+{% load static %}
+
+<div class="page-menu mx-auto">
+    <div class="page-menu-date bg-primary text-white col-auto col-lg-2 m-lg-0 shadow-sm py-2 px-3">
+        <h5 id="training-day" class="mb-0 mx-2 text-nowrap" 
+            data-year='{{ day|date:"Y" }}' data-month='{{ day|date:"n" }}' data-day='{{ day|date:"j" }}'>
+            {{ day|date:"j E" }}
+        </h5>
+    </div>
+    <div class="page-menu-btns bg-white col-auto shadow-sm gap-2 gap-md-4 py-2 px-3">
+        <button id="calendar-btn" title="Показать календарь" 
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+            <img src="{% static 'training/img/calendar3.svg' %}" width="20" class="mb-1">
+            <span class="d-none d-sm-inline">Календарь</span>
+        </button>
+        <button id="add-training-btn" title="Создать тренировку" data-bs-toggle="dropdown" aria-expanded="false" 
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+            <img src="{% static 'training/img/plus-square.svg' %}" width="20" class="mb-1">
+            <span>Тренировка</span>
+        </button>
+        <ul id="new-training-select" class="dropdown-menu">
+            {% for type in training_types %}
+                <li class="dropdown-item pointer p-0">
+                    <form method="POST" action="{% url 'training:new' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="client_id" value="{{ client.id }}">
+                        <input type="hidden" name="day" value="{{ day|date:'Y-m-d' }}">
+                        <input type="hidden" name="type" value="{{ type.0 }}">
+                        <input type="submit" value="{{ type.1 }}" 
+                            class="btn-link text-black text-start py-1 px-3 w-100">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-2">
+    </div>
+</div>

@@ -1,0 +1,178 @@
+{% extends layout %}
+{% load static %}
+{% load custom_filters %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'training/css/exercise_form.css' %}">
+{% endblock %}
+
+{% block title %}
+    {% if form.instance.id %}
+        <title>Редактирования упражнения</title>
+    {% else %}
+        <title>Создание упражнения</title>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<section id="exercise-form-section" class="mb-3">
+    <div class="container">
+        <div id="exercise-card" class="card shadow-sm mx-auto" style="max-width: 936px;">
+            <div class="card-header bg-primary text-light text-center">
+                {% if form.instance.id %}
+                    <h5 class="mb-0">Редактирования упражнения</h5>
+                {% else %}
+                    <h5 class="mb-0">Создание упражнения</h5>
+                {% endif %}
+			</div>
+            <div class="card-body">
+                <form id="exercise-form" method="POST" action="{% url 'training:exercise_save' %}" 
+                    enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column gap-3">
+                        <input type="hidden" name="id" value="{{ form.instance.id|default_if_none:'' }}">
+                        <div class="row g-3">
+                            <div id="name" class="col-lg-8">
+                                <div class="input-group-vertical">
+                                    <label class="input-group-text bg-aux">{{ form.name.label }}</label>
+                                    {{ form.name }}
+                                </div>
+                                {% for error in form.name.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                            <div id="type" class="col-lg-4">
+                                <div class="input-group-vertical">
+                                    <label class="input-group-text bg-aux">{{ form.type.label }}</label>
+                                    {{ form.type }}
+                                </div>
+                                {% for error in form.type.errors %}
+                                    <small class="text-danger">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div id="tools">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux w-100">{{ form.tools.label }}</label>
+                                <div class="d-flex flex-column flex-sm-row flex-wrap form-control column-gap-3 row-gap-1">
+                                    {% for checkbox in form.tools %}
+                                        {{ checkbox }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% for error in form.tools.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="areas">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux w-100">{{ form.areas.label }}</label>
+                                <div class="d-flex flex-wrap form-control gap-3">
+                                    <div class="d-flex flex-column row-gap-1 ms-2 mt-2">
+                                        {% for checkbox in form.areas %}
+                                            <label id="{{ checkbox.choice_label }}">
+                                                {{ checkbox.tag }} {{ area_map|get_value:checkbox.choice_label }}
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                    <div id="dummy" class="d-flex gap-2 m-auto me-lg-0">
+                                        {% if user.sex == "F" %}
+                                            {% include 'training/dummy/female.html' %}
+                                        {% else %}
+                                            {% include 'training/dummy/male.html' %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% for error in form.areas.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="description">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux w-100">{{ form.description.label }}</label>
+                                {{ form.description }}
+                            </div>
+                            {% for error in form.description.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="muscles">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux w-100">{{ form.muscles.label }}</label>
+                                {{ form.muscles }}
+                            </div>
+                            {% for error in form.muscles.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="mistakes">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux w-100">{{ form.mistakes.label }}</label>
+                                {{ form.mistakes }}
+                            </div>
+                            {% for error in form.mistakes.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="icon">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux">{{ form.icon.label }}</label>
+                                {{ form.icon }}
+                            </div>
+                            {% for error in form.icon.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="image">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux">{{ form.image1.label }}</label>
+                                {{ form.image1 }}
+                            </div>
+                            {% for error in form.image1.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="image2">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux">{{ form.image2.label }}</label>
+                                {{ form.image2 }}
+                            </div>
+                            {% for error in form.image2.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="video">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux">{{ form.video.label }}</label>
+                                {{ form.video }}
+                            </div>
+                            {% for error in form.video.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                        <div id="video_url">
+                            <div class="input-group-vertical">
+                                <label class="input-group-text bg-aux">{{ form.video_url.label }}</label>
+                                {{ form.video_url }}
+                            </div>
+                            {% for error in form.video_url.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-outline-primary back-close-btn">Назад</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'training/js/exercise_form.js' %}"></script>
+    <script src="{% static 'home/js/backclose_btn.js' %}"></script>
+{% endblock %}

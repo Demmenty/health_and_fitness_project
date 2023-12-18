@@ -1,0 +1,41 @@
+.filter-grey {
+    filter: invert(95%) sepia(9%) saturate(99%) hue-rotate(169deg) brightness(94%) contrast(93%);
+}
+
+summary {
+    list-style: none;
+}
+summary::-webkit-details-marker {
+    display:none;
+}
+
+#cat {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 16rem;
+    max-width: 20rem;
+    bottom: 19rem;
+}
+@media (min-width: 576px) {
+    #cat {
+        left: unset;
+        transform: none;
+        bottom: 11rem;
+    }
+}
+#cat.no-footer {
+    bottom: 2rem !important;
+}
+
+.exercise-record[open] summary {
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important; 
+}
+.training-form input[type=number] {
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+

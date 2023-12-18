@@ -91,3 +91,8 @@ def remove_attr(field, attr):
     if attr in field.field.widget.attrs:
         del field.field.widget.attrs[attr]
     return field
+
+
+@register.filter("get_value")
+def get_value(dictionary, key):
+    return dictionary.get(key, "")

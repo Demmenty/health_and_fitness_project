@@ -1,0 +1,39 @@
+.filter-gray {
+    filter: invert(87%) sepia(10%) hue-rotate(169deg);
+}
+
+#exercise-author label,
+#exercise-type label {
+    width: 4.5rem;
+}
+
+.dummy {
+    max-width: 20rem;
+}
+.dummy .area.selected {
+    filter: sepia(71%) saturate(3354%) hue-rotate(178deg) blur(2px);
+}
+
+.input-group-vertical {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+    flex-direction: column;
+}
+.input-group-vertical>:first-child {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.input-group-vertical>:not(:first-child) {
+    margin-top: calc(var(--bs-border-width) * -1);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.input-group-vertical>.form-control, 
+.input-group-vertical>.form-select {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+}

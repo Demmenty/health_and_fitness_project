@@ -1,0 +1,19 @@
+<input type="{{ widget.type }}" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+
+{% if widget.is_initial %}
+    <details class="ms-2 mt-2 w-fit">
+        <summary>Файл на данный момент</summary>
+        <div class="d-flex flex-column mt-2">
+            <a href="{{ widget.value.url }}" target="_blank">
+                <img data-src="{{ widget.value.url }}" class="lazy border rounded w-100">
+            </a>
+            {% if not widget.required %}
+                <label>
+                    <input type="checkbox" id="{{ widget.checkbox_id }}" name="{{ widget.checkbox_name }}" 
+                        {% if widget.attrs.disabled %} disabled {% endif %}>
+                    Удалить
+                </label>
+            {% endif %}
+        </div>
+    </details>
+{% endif %}
