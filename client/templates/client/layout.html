@@ -40,19 +40,22 @@
                     </li>
                     <li>
                         <a href="{% url 'client:daily_metrics' %}" class="nav-link px-2 px-lg-3 
-                        {% if url in 'client:metrics, client:metrics_add, client:anthropo_metrics, client:anthropo_metrics_new' %} 
-                            active 
-                        {% endif %}">
+                            {% if 'metrics' in url %} active {% endif %}">
                             Измерения
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'client:nutrition' %}" class="nav-link px-2 px-lg-3
-                        {% if url in 'client:nutrition, client:link_fatsecret' %} active {% endif %}">
+                            {% if 'nutrition' in url %} active {% endif %}">
                             Питание
                         </a>
                     </li>
-                    <li><a href="" class="nav-link px-2 px-lg-3">Тренировки</a></li>
+                    <li>
+                        <a href="{% url 'training:trainings' %}" class="nav-link px-2 px-lg-3 
+                            {% if 'training' in url %} active {% endif %}">
+                            Тренировки
+                        </a>
+                    </li>
                     {% endwith %}
                 </ul>
                 <div class="col-lg-3 text-nowrap text-end">

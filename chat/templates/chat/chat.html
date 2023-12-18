@@ -13,7 +13,7 @@
     data-url-count-new="{% url 'chat:count_new_msgs' %}"
     data-url-set-seen="{% url 'chat:set_seen' %}">
   </params>
-  <div class="card-header draggable-point d-flex align-items-center bg-auxiliary gap-2 justify-content-between">
+  <div class="card-header draggable-point d-flex align-items-center bg-aux gap-2 justify-content-between">
     <div class="col-1"></div>
     <h6 class="mb-0 text-nowrap col-auto">Чат</h6>
     <button type="button" class="col-1 btn-close" title="Закрыть чат"></button>
@@ -51,7 +51,7 @@
         class="filter-secondary filter-hover-primary">
     </button>
   </div>
-  <div class="card-footer bg-auxiliary px-2">
+  <div class="card-footer bg-aux px-2">
     <form id="message-form" method="POST" action="{% url 'chat:save_msg' %}" enctype="multipart/form-data">
       {% csrf_token %}
       {{ message_form.sender }}

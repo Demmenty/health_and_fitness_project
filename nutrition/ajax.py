@@ -11,12 +11,12 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from expert.decorators import expert_required
-from home.utils import get_client
 from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
 from nutrition.forms import RecommendationForm
 from nutrition.models import FatSecretEntry, Recommendation
 from users.models import User
+from users.utils import get_client
 
 fs_cache = FSCacheManager()
 

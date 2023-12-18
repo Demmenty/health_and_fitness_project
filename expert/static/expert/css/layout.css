@@ -35,6 +35,10 @@ body {
     white-space: nowrap;
     overflow: hidden;
 }
+.space-prewrap {
+    white-space: pre-wrap;
+}
+
 
 /* colors */
 .filter-secondary {
@@ -55,19 +59,21 @@ body {
 .bg-primary {
     background-color: #657ff7 !important;
 }
-.bg-auxiliary {
-    background-color: #d8e0ff !important;
+.bg-aux {
+    background-color: #e8f0fe !important;
 }
-
-.btn-auxiliary {
-    --bs-btn-bg: #d8e0ff;
-    --bs-btn-border-color: #d8e0ff;
-    --bs-btn-hover-bg: #b0bbe6;
-    --bs-btn-hover-border-color: #b0bbe6;
-    --bs-btn-active-bg: #d8e0ff;
-    --bs-btn-active-border-color: #b0bbe6;
-    --bs-btn-disabled-bg: #b0bbe6;
-    --bs-btn-disabled-border-color: #b0bbe6;
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: #657ff7;
+}
+.btn-aux {
+    --bs-btn-bg: #d9e3ff;
+    --bs-btn-border-color: #d9e3ff;
+    --bs-btn-hover-bg: #c3d0f4;
+    --bs-btn-hover-border-color: #c3d0f4;
+    --bs-btn-active-bg: #d9e3ff;
+    --bs-btn-active-border-color: #c3d0f4;
+    --bs-btn-disabled-bg: #c3d0f4;
+    --bs-btn-disabled-border-color: #c3d0f4;
 }
 .btn-primary {
     --bs-btn-bg: #657ff7;
@@ -106,6 +112,10 @@ body {
 }
 .form-control::placeholder {
     color: #21252980;
+}
+.form-check-input:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
 }
 
 /* buttons */

@@ -38,25 +38,27 @@
                     <ul class="nav col-12 col-lg-auto justify-content-center mb-1 mb-lg-0">
                         {% with request.resolver_match.view_name as url %}
                         <li class="d-none d-sm-block">
-                            <a href="{% url 'expert:client_profile' client.id %}" class="nav-link px-2 px-lg-3 
+                            <a href="{% url 'expert:client_profile' client.id %}?client_id={{ client.id }}" 
+                            class="nav-link px-2 px-lg-3 
                             {% if url in 'expert:client_profile, expert:client_contacts, expert:client_health' %} active {% endif %}">
                                 Профиль
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'expert:client_daily_metrics' client.id %}" class="nav-link px-2 px-lg-3 
-                            {% if url in 'expert:client_metrics, expert:client_anthropo_metrics' %} active {% endif %}">
+                            <a href="{% url 'expert:client_daily_metrics' client.id %}?client_id={{ client.id }}" 
+                                class="nav-link px-2 px-lg-3 {% if 'metrics' in url %} active {% endif %}">
                                 Измерения
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'expert:client_nutrition' client.id %}" class="nav-link px-2 px-lg-3
-                            {% if url in 'expert:client_nutrition' %} active {% endif %}">
+                            <a href="{% url 'expert:client_nutrition' client.id %}?client_id={{ client.id }}" 
+                                class="nav-link px-2 px-lg-3 {% if 'nutrition' in url %} active {% endif %}">
                                 Питание
                             </a>
                         </li>
                         <li>
-                            <a href="" class="nav-link px-2 px-lg-3">
+                            <a href="{% url 'training:trainings' %}?client_id={{ client.id }}" 
+                                class="nav-link px-2 px-lg-3 {% if 'training' in url %} active {% endif %}">
                                 Тренировки
                             </a>
                         </li>

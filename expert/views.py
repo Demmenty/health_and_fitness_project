@@ -240,7 +240,7 @@ def metrics_colors_edit(request):
 def client_nutrition(request, id):
     """
     Render the client's nutrition page for the expert.
-    
+
     Args:
         id (int): The ID of the client.
     """

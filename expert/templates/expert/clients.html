@@ -1,4 +1,4 @@
-{% extends 'expert/layout.html' %}
+{% extends layout %}
 {% load static %}
 {% load custom_filters %}
 
@@ -54,7 +54,7 @@
                                     class="btn-link fw-500 text-dark-emphasis text-hover-primary">
                                     Питание
                                 </a>
-                                <a href="" 
+                                <a href="{% url 'training:trainings' %}?client_id={{ client.id }}" 
                                     class="btn-link fw-500 text-dark-emphasis text-hover-primary">
                                     Тренировки
                                 </a>

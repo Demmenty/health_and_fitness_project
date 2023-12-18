@@ -1,4 +1,4 @@
-{% extends 'expert/layout.html' %}
+{% extends layout %}
 {% load static %}
 {% load nutrition_recommendations %}
 
@@ -24,7 +24,7 @@
     <div class="container">
         {% if fatsecret_linked %}
             <div id="day-nutrition" class="card shadow-sm mx-auto mb-4" 
-                data-get-url="{% url 'nutrition:get_daily_food' %}?client={{ client.id }}">
+                data-get-url="{% url 'nutrition:get_daily_food' %}?client_id={{ client.id }}">
                 <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
                     <span class="prev-arrow" title="Предыдущий день"> &lang; </span> 
                     <h5 class="header mb-0">Сегодня</h5>
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div id="month-nutrition" class="card shadow-sm mx-auto" 
-                data-get-url="{% url 'nutrition:get_monthly' %}?client={{ client.id }}">
+                data-get-url="{% url 'nutrition:get_monthly' %}?client_id={{ client.id }}">
                 <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
                     <span class="prev-arrow" title="Предыдущий месяц"> &lang; </span> 
                     <h5 class="header text-capitalize mb-0">Текущий месяц</h5>
@@ -163,7 +163,7 @@
 </div>
 
 <section id="monthtop-section" class="mt-4" style="display: none;" 
-    data-get-url="{% url 'nutrition:get_monthly_top_food' %}?client={{ client.id }}" data-month="">
+    data-get-url="{% url 'nutrition:get_monthly_top_food' %}?client_id={{ client.id }}" data-month="">
     <div class="container">
         <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
             <div id="top-by-calories" class="card shadow-sm w-100">
@@ -174,7 +174,7 @@
                     <table class="table table-hover text-center m-0">
                         <thead class="table-light align-middle">
                             <tr>
-                                <th class="trancate">Продукт</th>
+                                <th class="trancate text-start">Продукт</th>
                                 <th class="trancate">Количество</th>
                                 <th class="trancate">Ккал</th>
                             </tr>
@@ -191,7 +191,7 @@
                     <table class="table table-hover text-center m-0">
                         <thead class="table-light align-middle">
                             <tr>
-                                <th class="trancate">Продукт</th>
+                                <th class="trancate text-start">Продукт</th>
                                 <th class="trancate">Количество</th>
                                 <th class="trancate">Ккал</th>
                             </tr>
@@ -215,7 +215,7 @@
                     Некоторые продукты не удалось посчитать.<br>
                     Укажите их массу или объем, пожалуйста.
                 </p>
-                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:update_food_servings' %}">
+                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:update_food_servings' %}?client_id={{ client.id }}">
                     {% csrf_token %}
                     <div class="food-list d-flex flex-column gap-3">
                     </div>
