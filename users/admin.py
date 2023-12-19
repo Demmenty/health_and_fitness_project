@@ -7,7 +7,6 @@ from users.models import User
 admin.site.unregister(Group)
 
 
-# TODO !
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (
@@ -41,7 +40,9 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "is_expert",
                     "is_active",
+                    "is_staff",
                     "is_superuser",
+                    "user_permissions",
                 ),
             },
         ),

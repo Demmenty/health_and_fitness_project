@@ -59,7 +59,7 @@
                     {% endwith %}
                 </ul>
                 <div class="col-lg-3 text-nowrap text-end">
-                    {% if user.is_staff or user.is_superuser %}
+                    {% if user.is_staff %}
                         <a href="{% url 'admin:index' %}" class="btn btn-primary me-2">Админ панель</a>
                     {% endif %}
                     <form method="POST" action="{% url 'users:logout' %}" class="d-inline">

@@ -104,7 +104,7 @@
                         {% endwith %}
                     </ul>
                     <div class="col-sm-3 d-flex flex-nowrap align-items-center justify-content-end gap-2">
-                        {% if user.is_staff or user.is_superuser %}
+                        {% if user.is_staff %}
                             <a href="{% url 'admin:index' %}" class="btn btn-primary me-2">Админ панель</a>
                         {% endif %}
                         <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
