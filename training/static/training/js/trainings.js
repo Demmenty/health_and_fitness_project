@@ -23,11 +23,12 @@ $(document).ready(function() {
     calendar.find("#prev-year-btn").on("click", showAnotherYear);
     calendar.find(".month").on("click", showAnotherMonth);
 
-    trainingForms.on("submit", preventDefault);
-    trainingForms.on("submit", () => saveTraining($(this)));
+    trainingForms.on("submit", function(event) { 
+        event.preventDefault();
+        saveTraining($(this)) 
+    });
     trainingForms.find(".delete-training-btn").on("click", deleteTraining);
 
-    exerciseOptions.find("li").on("click", preventDefault);
     exerciseOptions.find(".comment-option").on("click", openExerciseComment);
     exerciseOptions.find(".up-option").on("click", moveExercise);
     exerciseOptions.find(".down-option").on("click", moveExercise);
@@ -250,7 +251,9 @@ function editNumber() {
 /**
  * Opens the exercise record comment section.
  */
-function openExerciseComment() {
+function openExerciseComment(event) {
+    event.preventDefault();
+    
     const exerciseRecord = $(this).closest(".exercise-record");
     const comment = exerciseRecord.find(".comment");
 
@@ -263,7 +266,9 @@ function openExerciseComment() {
  * Moves the exercise up or down in the list.
  * (Ordering will remain after saving the training form)
  */
-function moveExercise() {
+function moveExercise(event) {
+    event.preventDefault();
+
     const isUp = $(this).hasClass("up-option");
     const exerciseRecord = $(this).closest(".exercise-record");
     const nearbyExerciseRecord = isUp ? exerciseRecord.prev() : exerciseRecord.next();
@@ -286,7 +291,6 @@ function moveExercise() {
     }
 }
 
-
 /**
  * Deletes an exercise record.
  * Success - reload the page.
@@ -300,8 +304,9 @@ async function deleteExerciseRecord(event) {
     const trainingForm = exerciseRecord.closest(".training-form");
 
     deleteInput.prop("checked", true);
+    exerciseRecord.hide();
 
-    saveTrainingFormWithReload(trainingForm);
+    saveTraining(trainingForm);
 }
 
 // UTILS
@@ -333,8 +338,4 @@ function getFirstWeekDay(month, year) {
     const firstWeekDay = firstDate.getDay();
 
     return firstWeekDay;
-}
-
-function preventDefault(event) {
-    event.preventDefault();
 }

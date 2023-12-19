@@ -2,20 +2,20 @@
 {% load static %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'training/css/exercise_select.css' %}">
+    <link rel="stylesheet" href="{% static 'training/css/exercise_replace.css' %}">
 {% endblock %}
 
 {% block title %}
-    <title>{{ client.username|capfirst }}: выбор упражнений</title>
+    <title>{{ client.username|capfirst }}: замена упражнения</title>
 {% endblock %}
 
 {% block content %}
-<section id="exercise-selection-section" class="mb-5">
+<section id="exercise-replace-section" class="mb-5">
     <div class="container">
         <div class="card shadow-sm mx-auto">
             <div class="card-header bg-primary text-light text-center">
                 <h5 class="mb-0">
-                    Тренировка {{ training.get_type_display|lower }}, выбор упражнений
+                    Тренировка {{ exercise_record.training.get_type_display|lower }}, замена упражнения
                 </h5>
             </div>
             <div class="card-body d-flex flex-column justify-content-between h-100 gap-3">
@@ -60,13 +60,14 @@
                                     {% for area in areas %}
                                     <li class="py-1 px-2">
                                         <input type="checkbox" id="filter-area-{{ area }}" name="area"
-                                            value="{{ area }}" class="form-check-input">
+                                            value="{{ area }}" class="form-check-input"
+                                            {% if area in exercise_record.exercise.areas.all %} checked {% endif %}>
                                         <label for="filter-area-{{ area }}">{{ area.name_ru }}</label>
                                     </li>
                                     {% endfor %}
                                 </ul>
                             </details>
-                            <details id="filter-selected" class="selected-filter">
+                            <details id="filter-selected" class="selected-filter" open>
                                 <summary class="bg-aux border rounded py-1 px-2">Выбранные</summary>
                                 <ul class="list-unstyled mt-2 mb-0">
                                     <li class="py-1 px-2">
@@ -76,17 +77,30 @@
                                     </li>
                                     <li class="py-1 px-2">
                                         <input type="checkbox" id="filter-selected-false" name="selected"
-                                            value="false" class="form-check-input">
+                                            value="false" class="form-check-input" checked>
                                         <label for="filter-selected-false">Не выбранные</label>
                                     </li>
                                 </ul>
                             </details>
                         </div>
                     </div>
-                    <div class="col-xl-4">
+                    <div class="col-xl-4 d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center border rounded gap-2 py-1 px-2">
+                            <span class="name">{{ exercise_record.exercise.name }}</span>
+                            <a href="{% url 'training:exercise_detail' exercise_record.exercise.id %}?client_id={{ client.id }}"
+                                title="Описание" class="filter-hover-primary ms-auto">
+                                <img src="{% static 'training/img/question-circle.svg' %}" width="16">
+                            </a>
+                            <input type="radio" class="form-check-input" disabled checked>
+                        </div>
+
+                        <div class="d-flex justify-content-center py-1 mx-auto">
+                            <img src="{% static 'training/img/arrow-down-up.svg' %}" width="17">
+                        </div>
+
                         <div class="border rounded position-relative" style="min-height: 34px;">
                             <span class="position-absolute text-secondary z-0 py-1 px-2">
-                                Нет доступных упражнений
+                                Нет подходящих упражнений
                             </span>
                             <form id="exercises-form" method="POST" class="position-relative">
                                 {% csrf_token %}
@@ -99,10 +113,13 @@
                                         <span class="name">{{ exercise.name }}</span>
                                         <a href="{% url 'training:exercise_detail' exercise.id %}?client_id={{ client.id }}"
                                             title="Описание" class="filter-hover-primary ms-auto">
-                                            <img src="{% static 'training/img/question-circle.svg' %}" width="20">
+                                            <img src="{% static 'training/img/question-circle.svg' %}" width="16">
                                         </a>
-                                        <input type="checkbox" name="exercises" value="{{ exercise.id }}"
-                                            class="form-check-input" {% if exercise in training.exercises.all %} checked {% endif %}>
+                                        {% if exercise in training.exercises.all %}
+                                            <input type="radio" class="form-check-input" disabled checked>
+                                        {% else %}
+                                            <input type="radio" name="exercise" value="{{ exercise.id }}" class="form-check-input">
+                                        {% endif %}
                                     </li>
                                     {% endfor %}
                                 </ul>
@@ -130,7 +147,7 @@
                             class="btn btn-outline-primary ms-md-auto">
                             Новое упражнение
                         </a>
-                        <button id="submit-exercises-btn" type="submit" class="btn btn-primary">Сохранить выбор</button>
+                        <button id="submit-exercises-btn" type="submit" class="btn btn-primary">Готово</button>
                     </div>
                 </div>
             </div>
@@ -140,5 +157,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'training/js/exercise_select.js' %}"></script>
+    <script src="{% static 'training/js/exercise_replace.js' %}"></script>
 {% endblock %}

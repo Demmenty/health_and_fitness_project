@@ -30,7 +30,9 @@
                 <div class="training-card col-12 col-md-6 col-xxl-4 mx-auto">
                     <div class="card shadow-sm h-fit">
                         <div class="card-header bg-primary text-light text-center">
-                            <h5 class="header mb-0">Тренировка {{ training.form.instance.get_type_display|lower }}</h5>
+                            <h5 class="header mb-0">
+                                Тренировка {{ training.form.instance.get_type_display|lower }}
+                            </h5>
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{% url 'training:save' training_id %}" 
@@ -42,11 +44,12 @@
                                 {% if training.exercise_formset.forms %}
                                     <div class="exercises-list d-flex flex-column gap-3">
                                         {% for form in training.exercise_formset %}
+                                        {% with form.instance.exercise as exercise %}
                                             <details class="exercise-record">
                                                 <summary class="d-flex gap-2 justify-content-between bg-aux border rounded p-2">
-                                                    <span class="exercise-name">{{ form.instance.exercise.name }}</span>
+                                                    <span class="exercise-name">{{ exercise.name }}</span>
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <a href="{% url 'training:exercise_detail' form.instance.exercise.id %}?client_id={{ client.id }}" 
+                                                        <a href="{% url 'training:exercise_detail' exercise.id %}?client_id={{ client.id }}" 
                                                             title="Описание" class="filter-hover-primary">
                                                             <img src="{% static 'training/img/question-circle.svg' %}" width="19" class="exercise-info-btn">
                                                         </a>
@@ -54,7 +57,13 @@
                                                             class="exercise-options-btn btn-img filter-hover-primary">
                                                             <img src="{% static 'training/img/three-dots-vertical.svg' %}" width="21">
                                                         </button>
-                                                        <ul class="exercise-options dropdown-menu">
+                                                        <ul class="exercise-options dropdown-menu py-1">
+                                                            <a href="{% url 'training:exercise_replace' form.instance.id %}?client_id={{ client.id }}"
+                                                                class="btn-link text-black">
+                                                            <li class="dropdown-item replace-option pointer">
+                                                                    Заменить
+                                                                </li>
+                                                            </a>
                                                             <li class="dropdown-item comment-option pointer">Комментарий</li>
                                                             <li class="dropdown-item up-option pointer">Переместить выше</li>
                                                             <li class="dropdown-item down-option pointer">Переместить ниже</li>
@@ -98,11 +107,12 @@
                                                     </div>
                                                 </div>
                                             </details>
+                                        {% endwith %}
                                         {% endfor %}
                                     </div>
                                 {% endif %}
                                 <a href="{% url 'training:exercise_select' training_id %}?client_id={{ client.id }}" 
-                                    type="button" class="add-exercise-btn btn btn-outline-primary">
+                                    class="add-exercise-btn btn btn-outline-primary">
                                     Выбор упражнений
                                 </a>
                                 <div class="d-flex flex-column gap-2">

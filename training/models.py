@@ -191,6 +191,23 @@ class ExerciseRecord(models.Model):
     comment = models.TextField("Комментарий", null=True, blank=True)
     is_done = models.BooleanField("Выполнено", default=False)
 
+    def clear_data(self) -> None:
+        """ Clears exercise data in the record (sets, reps, etc) """
+
+        self.weight = None
+        self.repetitions = None
+        self.sets = None
+        self.load = None
+        self.time = None
+        self.pulse_avg = None
+        self.high_load_time = None
+        self.high_load_pulse = None
+        self.low_load_time = None
+        self.low_load_pulse = None
+        self.cycles = None
+        self.comment = None
+        self.is_done = False
+
     class Meta:
         ordering = ("order", "pk")
         verbose_name = "Запись о выполнении упражнения"

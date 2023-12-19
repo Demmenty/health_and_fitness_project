@@ -1,0 +1,38 @@
+summary {
+    list-style: none;
+}
+summary::-webkit-details-marker {
+    display:none;
+}
+
+#exercises-form {
+    max-height: 30rem;
+    overflow-y: auto;
+}
+@media (min-width: 1200px) {
+    #exercises-form {
+        max-height: 41rem;
+    }
+}
+input[type=radio] {
+    margin-top: 2px;
+    min-width: 17px;
+    min-height: 17px;
+    max-width: 17px;
+    max-height: 17px;
+}
+.exercise-item {
+    display: flex;
+    align-items: center;
+}
+
+#dummy {
+    max-width: 30rem;
+}
+#dummy .area.selected {
+    filter: sepia(57%) saturate(2000%) hue-rotate(176deg);
+}
+#dummy .area.filtered,
+#dummy .area:hover {
+    filter: invert(47%) sepia(76%) saturate(470%) hue-rotate(193deg) brightness(117%);
+}

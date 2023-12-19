@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
 from training.forms import EXERCISE_RECORD_FORMSETS, TRAINING_FORMS, ExerciseForm
-from training.models import EXERCISE_TYPE_MAP, Area, Exercise, Tool, Training
+from training.models import EXERCISE_TYPE_MAP, Area, Exercise, Tool, Training, ExerciseRecord
 from training.utils import redirect_to_training
 from users.utils import get_client, get_client_id
 
@@ -75,10 +75,6 @@ def exercise_select(request, id):
     if request.method == "GET":
         allowed_exercise_type = EXERCISE_TYPE_MAP[training.type]
         exercises = Exercise.objects.filter(type=allowed_exercise_type)
-
-        for exercise in exercises:
-            exercise.is_selected = exercise in training.exercises.all()
-
         tools = Tool.objects.all()
         areas = Area.objects.all()
 
@@ -95,6 +91,56 @@ def exercise_select(request, id):
         checked_exercise_ids = request.POST.getlist("exercises")
 
         training.exercises.set(checked_exercise_ids)
+
+        return redirect_to_training(training)
+    
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def exercise_replace(request, id):
+    """
+    View function for replacing an exercise in a training.
+
+    Args:
+        request: The HTTP request object.
+        id: The ID of the exercise record to be replaced.
+
+    Returns:
+        GET: A rendered HTML template for selecting another suitable exercise.
+        POST: Replaces the exercise in the exercise record (if selected) with cleared data.
+            Redirects to the training page of this record after.
+    """
+
+    exercise_record = get_object_or_404(ExerciseRecord, id=id)
+    training = exercise_record.training
+
+    if training.client != request.user and not request.user.is_expert:
+        return HttpResponseForbidden("Вы не можете редактировать эту тренировку")
+
+    if request.method == "GET":
+        allowed_exercise_type = EXERCISE_TYPE_MAP[training.type]
+        exercises = Exercise.objects.filter(type=allowed_exercise_type)
+        tools = Tool.objects.all()
+        areas = Area.objects.all()
+
+        template = "training/exercise_replace.html"
+        data = {
+            "tools": tools,
+            "areas": areas,
+            "training": training,
+            "exercises": exercises,
+            "exercise_record": exercise_record,
+        }
+        return render(request, template, data)
+    
+    if request.method == "POST":
+        exercise_id = request.POST.get("exercise")
+
+        if exercise_id:
+            exercise = get_object_or_404(Exercise, id=exercise_id)
+            exercise_record.exercise = exercise
+            exercise_record.clear_data()
+            exercise_record.save()
 
         return redirect_to_training(training)
 
