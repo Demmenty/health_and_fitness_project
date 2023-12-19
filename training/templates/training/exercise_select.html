@@ -99,7 +99,7 @@
                                         <span class="name">{{ exercise.name }}</span>
                                         <a href="{% url 'training:exercise_detail' exercise.id %}?client_id={{ client.id }}"
                                             title="Описание" class="filter-hover-primary ms-auto">
-                                            <img src="{% static 'training/img/question-circle.svg' %}" width="20">
+                                            <img src="{% static 'training/img/question-circle.svg' %}" width="17">
                                         </a>
                                         <input type="checkbox" name="exercises" value="{{ exercise.id }}"
                                             class="form-check-input" {% if exercise in training.exercises.all %} checked {% endif %}>
