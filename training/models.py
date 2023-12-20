@@ -192,7 +192,7 @@ class ExerciseRecord(models.Model):
     is_done = models.BooleanField("Выполнено", default=False)
 
     def clear_data(self) -> None:
-        """ Clears exercise data in the record (sets, reps, etc) """
+        """Clears exercise data in the record (sets, reps, etc)"""
 
         self.weight = None
         self.repetitions = None
@@ -212,22 +212,3 @@ class ExerciseRecord(models.Model):
         ordering = ("order", "pk")
         verbose_name = "Запись о выполнении упражнения"
         verbose_name_plural = "Записи о выполнении упражнений"
-
-
-# TODO
-# media preparation
-
-# class AreaTranslation(models.Model):
-#     area = models.ForeignKey("training.Area", on_delete=models.CASCADE, related_name="translations")
-#     language = models.CharField(max_length=10)
-#     name = models.CharField(_("Name"), max_length=255)
-
-#     class Meta:
-#         unique_together = [["area", "language"]]
-
-#     def __str__(self):
-#         return self.name
-
-# area = Area.objects.get(pk=1)
-# english_name = area.name
-# russian_name = area.translations.get(language="ru").name

@@ -65,12 +65,12 @@ body {
     --bs-dropdown-link-active-bg: #657ff7;
 }
 .btn-aux {
-    --bs-btn-bg: #d9e3ff;
-    --bs-btn-border-color: #d9e3ff;
+    --bs-btn-bg: #e8f0fe;
+    --bs-btn-border-color: #dee2e6;
     --bs-btn-hover-bg: #c3d0f4;
     --bs-btn-hover-border-color: #c3d0f4;
-    --bs-btn-active-bg: #d9e3ff;
-    --bs-btn-active-border-color: #c3d0f4;
+    --bs-btn-active-bg: #c3d0f4;
+    --bs-btn-active-border-color: #dee2e6;
     --bs-btn-disabled-bg: #c3d0f4;
     --bs-btn-disabled-border-color: #c3d0f4;
 }

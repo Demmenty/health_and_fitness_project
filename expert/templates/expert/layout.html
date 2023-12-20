@@ -1,6 +1,7 @@
 {% load static %}
 {% if client %}
     {% load chat %}
+    {% load expert_notes %}
 {% endif %}
 
 <!DOCTYPE html>
@@ -20,6 +21,7 @@
     {% if client %}
         <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}">
         <link rel="stylesheet" href="{% static 'chat/css/chat_btn_fixed.css' %}">
+        <link rel="stylesheet" href="{% static 'expert/css/notes.css' %}">
     {% endif %}
     {% block stylesheet %}{% endblock %}
     {% block title %}{% endblock %}
@@ -119,6 +121,7 @@
     <main>
         {% include 'home/alerts.html' %}
         {% if client %}
+            {% expert_notes %}
             {% chat partner_id=client.id %}
         {% endif %}
         {% block content %}
@@ -133,6 +136,7 @@
 {% if client %}
     <script src="{% static 'home/js/draggable.js' %}"></script>
     <script src="{% static 'chat/js/chat.js' %}"></script>
+    <script src="{% static 'expert/js/notes.js' %}"></script>
 {% endif %}
 {% block script %}{% endblock %}
 

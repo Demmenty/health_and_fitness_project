@@ -1,6 +1,5 @@
 from django import template
 from django.db.models import Count
-from django.template.context import RequestContext
 
 from chat.forms import MessageForm
 from chat.models import Message
@@ -10,7 +9,7 @@ register = template.Library()
 
 
 @register.inclusion_tag("chat/chat.html", takes_context=True)
-def chat(context: RequestContext, partner_id: int | None = None) -> dict:
+def chat(context, partner_id: int | None = None) -> dict:
     """Renders the chat between client and expert"""
 
     user, partner = get_chat_participants(context.request, partner_id)
@@ -22,7 +21,6 @@ def chat(context: RequestContext, partner_id: int | None = None) -> dict:
     ).aggregate(count=Count("id"))["count"]
 
     data = {
-        "user": user,
         "partner": partner,
         "message_form": message_form,
         "new_msgs_count": new_msgs_count,

@@ -31,7 +31,6 @@ const messageTemplates = {
 }
 
 // TODO:
-// adjustChatBtnPosition
 // make resize by sides
 // btn for fuulscreen chat and back
 // open image full screen when clicked

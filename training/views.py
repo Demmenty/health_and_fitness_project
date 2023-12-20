@@ -6,7 +6,14 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
 from training.forms import EXERCISE_RECORD_FORMSETS, TRAINING_FORMS, ExerciseForm
-from training.models import EXERCISE_TYPE_MAP, Area, Exercise, Tool, Training, ExerciseRecord
+from training.models import (
+    EXERCISE_TYPE_MAP,
+    Area,
+    Exercise,
+    ExerciseRecord,
+    Tool,
+    Training,
+)
 from training.utils import redirect_to_training
 from users.utils import get_client, get_client_id
 
@@ -93,7 +100,7 @@ def exercise_select(request, id):
         training.exercises.set(checked_exercise_ids)
 
         return redirect_to_training(training)
-    
+
 
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -132,7 +139,7 @@ def exercise_replace(request, id):
             "exercise_record": exercise_record,
         }
         return render(request, template, data)
-    
+
     if request.method == "POST":
         exercise_id = request.POST.get("exercise")
 
