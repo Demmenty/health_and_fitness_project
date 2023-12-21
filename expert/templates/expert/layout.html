@@ -88,13 +88,13 @@
                         {% with request.resolver_match.view_name as url %}
                         <li>
                             <a href="{% url 'expert:clients' %}" class="nav-link px-2 px-lg-3 
-                            {% if url == 'expert:clients' %} active {% endif %}">
+                            {% if 'clients' in url %} active {% endif %}">
                                 Клиенты
                             </a>
                         </li>
                         <li>
                             <a href="{% url 'expert:consult_requests' %}" class="nav-link px-2 px-lg-3 
-                            {% if url == 'expert:consult_requests' %} active {% endif %}">
+                            {% if consult in url %} active {% endif %}">
                                 Заявки
                                 {% if new_requests.count > 0 %}
                                     <span id="new-requests-badge" class="badge rounded-pill bg-primary">

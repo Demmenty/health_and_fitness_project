@@ -6,6 +6,9 @@ app_name = "expert"
 
 urlpatterns = [
     path("", views.clients, name="clients"),
+    path("archived/", views.archived_clients, name="archived_clients"),
+    path("client/<int:id>/archive", views.client_archive, name="client_archive"),
+    path("client/<int:id>/unarchive", views.client_unarchive, name="client_unarchive"),
     path("consult_requests/", views.consult_requests, name="consult_requests"),
     path("client/new/", views.client_new, name="client_new"),
     path("note/main/save/", ajax.main_note_save, name="main_note_save"),

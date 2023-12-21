@@ -41,6 +41,9 @@ body {
 
 
 /* colors */
+.filter-white {
+    filter: invert(1);
+}
 .filter-secondary {
     filter: invert(54%) sepia(5%) saturate(776%) hue-rotate(167deg) brightness(100%);
 }

@@ -26,7 +26,7 @@ from users.models import User
 def clients(request):
     """Render the clients page for the expert"""
 
-    clients = User.objects.filter(is_expert=False)
+    clients = User.objects.filter(is_expert=False, is_active=True)
     new_requests = Request.objects.filter(seen=False)
 
     for client in clients:
@@ -41,6 +41,46 @@ def clients(request):
         "new_requests": new_requests,
     }
     return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def archived_clients(request):
+    """Render the archived clients page for the expert"""
+
+    clients = User.objects.filter(is_expert=False, is_active=False)
+    new_requests = Request.objects.filter(seen=False)
+
+    template = "expert/clients.html"
+    data = {
+        "clients": clients,
+        "new_requests": new_requests,
+    }
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_archive(request, id):
+    """Archive a client's account by making it inactive"""
+
+    client = get_object_or_404(User, id=id)
+    client.is_active = False
+    client.save()
+
+    return redirect("expert:clients")
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_unarchive(request, id):
+    """Unarchive a client's account by making it active"""
+
+    client = get_object_or_404(User, id=id)
+    client.is_active = True
+    client.save()
+
+    return redirect("expert:archived_clients")
 
 
 @expert_required

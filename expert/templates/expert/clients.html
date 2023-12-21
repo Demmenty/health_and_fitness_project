@@ -13,21 +13,49 @@
 {% block content %}
 <section id="clients-control-section">
     <div class="container">
-        <div class="d-flex justify-content-end gap-3">
-            <a id="client-registration-link" href="{% url 'expert:client_new' %}" class="btn btn-primary float-end mb-5">
-                <img src="{% static 'expert/img/person-plus-fill.svg' %}" type="image/svg+xml" width="20">
-                <span class="ms-1">Новый клиент</span>
-            </a>
-        </div>
+        {% with request.resolver_match.view_name as url %}
+        {% if url == 'expert:clients' %}
+            <div class="d-flex justify-content-end gap-3">
+                <a href="{% url 'expert:client_new' %}" class="btn btn-primary float-end mb-5">
+                    <img src="{% static 'expert/img/person-plus-fill.svg' %}" class="filter-white" width="20">
+                    <span class="ms-1">Новый клиент</span>
+                </a>
+                <a href="{% url 'expert:archived_clients' %}" class="btn btn-secondary float-end mb-5">
+                    <span class="ms-1">Архив</span>
+                </a>
+            </div>
+        {% elif url == 'expert:archived_clients' %}
+            <div class="d-flex justify-content-end gap-3">
+                <a href="{% url 'expert:clients' %}" class="btn btn-primary float-end mb-5">
+                    <span class="ms-1">Активные клиенты</span>
+                </a>
+            </div>
+        {% endif %}
+        {% endwith %}
         <div id="clients-container" class="row g-5">
             {% for client in clients %}
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="card shadow-sm w-100 h-fit mb-4">
-                        <div class="card-header bg-primary text-light">
+                        <div class="card-header d-flex text-light {% if client.is_active %} bg-primary {% else %} bg-secondary {% endif %}">
                             <a href="{% url 'expert:client_profile' client.id %}" title="Профиль"
                                class="btn-link text-light w-fit d-block">
                                 <h5 class="mb-0">{{ client.username|capfirst }}</h5>
                             </a>
+                            <button type="button" title="Опции" data-bs-toggle="dropdown" aria-expanded="false" 
+                                class="btn-img ms-auto filter-white">
+                                <img src="{% static 'expert/img/three-dots-vertical.svg' %}" width="21">
+                            </button>
+                            <ul class="dropdown-menu py-1">
+                                {% if client.is_active %}
+                                    <a href="{% url 'expert:client_archive' client.id %}" class="btn-link text-black">
+                                        <li class="dropdown-item pointer">Отправить в архив</li>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'expert:client_unarchive' client.id %}" class="btn-link text-black">
+                                        <li class="dropdown-item pointer">Убрать из архива</li>
+                                    </a>
+                                {% endif %}
+                            </ul>
                         </div>
                         <div class="card-body pt-4">
                             <div id="avatar" class="rounded-circle h-fit mb-3" style="max-width: 80px;">
