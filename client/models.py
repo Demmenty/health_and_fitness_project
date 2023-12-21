@@ -1,6 +1,25 @@
 from django.db import models
 from django.utils.timezone import now
 
+from users.models import User
+
+
+class Note(models.Model):
+    """Client's personal note"""
+
+    client = models.OneToOneField(User, verbose_name="Клиент", on_delete=models.CASCADE)
+    general = models.TextField("Общее", null=True, blank=True)
+    measurements = models.TextField("Измерения", null=True, blank=True)
+    nutrition = models.TextField("Питание", null=True, blank=True)
+    workout = models.TextField("Тренировки", null=True, blank=True)
+
+    def __str__(self):
+        return "Заметка"
+
+    class Meta:
+        verbose_name = "Заметка"
+        verbose_name_plural = "Заметки"
+
 
 class Health(models.Model):
     """Health information about the client and readiness to workout"""

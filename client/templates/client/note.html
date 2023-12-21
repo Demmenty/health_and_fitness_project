@@ -1,0 +1,54 @@
+{% load static %}
+
+<button id="note-btn" class="btn-img rounded-circle bg-white shadow" title="Заметка">
+    <img src="{% static 'client/img/journal-text.svg' %}" width="50" 
+        class="filter-secondary filter-hover-primary">
+</button>
+
+<div id="note" class="card draggable shadow" style="display: none;">
+    <div class="card-header draggable-point d-flex align-items-center bg-aux gap-2 justify-content-between">
+        <div class="col-1"></div>
+        <h6 class="mb-0 text-nowrap col-auto">Личная заметка</h6>
+        <button type="button" class="col-1 btn-close" title="Закрыть"></button>
+    </div>
+    <div class="card-body">
+        <form id="note-form" method="post" action="{% url 'client:note_save' %}">
+            {% csrf_token %}
+            <ul class="nav nav-tabs pointer">
+                <li class="nav-item">
+                    <span class="nav-link trancate py-1 active" data-target="general">
+                        <span class="d-sm-none">Общ.</span>
+                        <span class="d-none d-sm-inline">Общее</span>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link trancate py-1" data-target="measurements">
+                        <span class="d-sm-none">Изм.</span>
+                        <span class="d-none d-sm-inline">Измерения</span>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link trancate py-1" data-target="nutrition">
+                        <span class="d-sm-none">Пит.</span>
+                        <span class="d-none d-sm-inline">Питание</span>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link trancate py-1" data-target="workout">
+                        <span class="d-sm-none">Трен.</span>
+                        <span class="d-none d-sm-inline">Тренировки</span>
+                    </span>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane general active">{{ form.general }}</div>
+                <div class="tab-pane measurements">{{ form.measurements }}</div>
+                <div class="tab-pane nutrition">{{ form.nutrition }}</div>
+                <div class="tab-pane workout">{{ form.workout }}</div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <input type="submit" class="btn btn-aux" value="Сохранить">
+            </div>
+        </form>
+    </div>
+</div>

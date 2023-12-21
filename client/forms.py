@@ -1,11 +1,57 @@
-from django import forms
+from django.forms import (
+    CheckboxInput,
+    ClearableFileInput,
+    DateInput,
+    EmailInput,
+    HiddenInput,
+    ModelForm,
+    NumberInput,
+    RadioSelect,
+    Select,
+    Textarea,
+    TextInput,
+)
 
-from client.models import Contacts, Health
+from client.models import Contacts, Health, Note
 from client.utils import create_change_log_entry, create_log_entry
 from users.models import User
 
 
-class UserInfoForm(forms.ModelForm):
+class NoteForm(ModelForm):
+    """Form for the client's personal note."""
+
+    class Meta:
+        model = Note
+        fields = ("general", "measurements", "nutrition", "workout")
+        widgets = {
+            "general": Textarea(
+                attrs={
+                    "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 20,
+                }
+            ),
+            "measurements": Textarea(
+                attrs={
+                    "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 20,
+                }
+            ),
+            "nutrition": Textarea(
+                attrs={
+                    "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 20,
+                }
+            ),
+            "workout": Textarea(
+                attrs={
+                    "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 20,
+                }
+            ),
+        }
+
+
+class UserInfoForm(ModelForm):
     """Form for the user main information."""
 
     class Meta:
@@ -20,40 +66,40 @@ class UserInfoForm(forms.ModelForm):
             "avatar",
         )
         widgets = {
-            "username": forms.TextInput(
+            "username": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "first_name": forms.TextInput(
+            "first_name": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "last_name": forms.TextInput(
+            "last_name": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "avatar": forms.ClearableFileInput(
+            "avatar": ClearableFileInput(
                 attrs={
                     "class": "form-control",
                     "accept": "image/*",
                 }
             ),
-            "sex": forms.Select(
+            "sex": Select(
                 attrs={
                     "class": "form-select",
                 }
             ),
-            "birthday": forms.DateInput(
+            "birthday": DateInput(
                 format="%Y-%m-%d",
                 attrs={
                     "class": "form-control",
                     "type": "date",
                 },
             ),
-            "height": forms.NumberInput(
+            "height": NumberInput(
                 attrs={
                     "class": "form-control",
                     "min": "0",
@@ -70,14 +116,14 @@ class UserInfoForm(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class UserEmailForm(forms.ModelForm):
+class UserEmailForm(ModelForm):
     """Form for the user email."""
 
     class Meta:
         model = User
         fields = ("email",)
         widgets = {
-            "email": forms.EmailInput(
+            "email": EmailInput(
                 attrs={
                     "class": "form-control",
                 }
@@ -92,7 +138,7 @@ class UserEmailForm(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormPage0(forms.ModelForm):
+class HealthFormPage0(ModelForm):
     """Form for starting the health questionnaire."""
 
     header = "Анкета здоровья"
@@ -111,7 +157,7 @@ class HealthFormPage0(forms.ModelForm):
         model = Health
         fields = ("confirmation",)
         widgets = {
-            "confirmation": forms.CheckboxInput(
+            "confirmation": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
@@ -130,7 +176,7 @@ class HealthFormPage0(forms.ModelForm):
         return self.is_bound and not self.errors
 
 
-class HealthFormPage1(forms.ModelForm):
+class HealthFormPage1(ModelForm):
     """
     Form for section 1 of the health questionnaire:
     The presence of potentially dangerous subjective feelings.
@@ -151,42 +197,42 @@ class HealthFormPage1(forms.ModelForm):
             "restriction_reasons",
         )
         widgets = {
-            "palpitation": forms.CheckboxInput(
+            "palpitation": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "dyspnea": forms.CheckboxInput(
+            "dyspnea": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "fainting": forms.CheckboxInput(
+            "fainting": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "chest_pain": forms.CheckboxInput(
+            "chest_pain": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "chest_pain": forms.CheckboxInput(
+            "chest_pain": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "ankles_swelling": forms.CheckboxInput(
+            "ankles_swelling": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "leg_cramps": forms.CheckboxInput(
+            "leg_cramps": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "restriction_reasons": forms.CheckboxInput(
+            "restriction_reasons": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
@@ -202,7 +248,7 @@ class HealthFormPage1(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormPage2(forms.ModelForm):
+class HealthFormPage2(ModelForm):
     """
     Form for section 2 of the health questionnaire:
     The presence of diagnosed health conditions.
@@ -223,37 +269,37 @@ class HealthFormPage2(forms.ModelForm):
             "kidney_disease",
         )
         widgets = {
-            "heart_attack": forms.CheckboxInput(
+            "heart_attack": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "cardiac_surgery": forms.CheckboxInput(
+            "cardiac_surgery": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "pacemaker": forms.CheckboxInput(
+            "pacemaker": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "arrhythmia": forms.CheckboxInput(
+            "arrhythmia": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "heart_defect": forms.CheckboxInput(
+            "heart_defect": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "diabetes": forms.CheckboxInput(
+            "diabetes": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "kidney_disease": forms.CheckboxInput(
+            "kidney_disease": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
@@ -269,7 +315,7 @@ class HealthFormPage2(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormPage3(forms.ModelForm):
+class HealthFormPage3(ModelForm):
     """
     Form for section 3 of the health questionnaire:
     Additional health information.
@@ -310,144 +356,144 @@ class HealthFormPage3(forms.ModelForm):
             "birth_complications",
         )
         widgets = {
-            "known_blood_pressure": forms.CheckboxInput(
+            "known_blood_pressure": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "blood_pressure": forms.TextInput(
+            "blood_pressure": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_glucose_changes": forms.CheckboxInput(
+            "has_glucose_changes": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "glucose_level": forms.TextInput(
+            "glucose_level": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_urinary_diseases": forms.CheckboxInput(
+            "has_urinary_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "urinary_diseases": forms.TextInput(
+            "urinary_diseases": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_respiratory_diseases": forms.CheckboxInput(
+            "has_respiratory_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "respiratory_diseases": forms.TextInput(
+            "respiratory_diseases": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_digestive_diseases": forms.CheckboxInput(
+            "has_digestive_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "digestive_diseases": forms.TextInput(
+            "digestive_diseases": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_oncological_diseases": forms.CheckboxInput(
+            "has_oncological_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "oncological_diseases": forms.TextInput(
+            "oncological_diseases": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_vascular_diseases": forms.CheckboxInput(
+            "has_vascular_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "vascular_diseases": forms.TextInput(
+            "vascular_diseases": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_trauma_or_surgeries": forms.CheckboxInput(
+            "has_trauma_or_surgeries": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "trauma_or_surgeries": forms.TextInput(
+            "trauma_or_surgeries": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_osteoporosis_and_joint_problems": forms.CheckboxInput(
+            "has_osteoporosis_and_joint_problems": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "osteoporosis_and_joint_problems": forms.TextInput(
+            "osteoporosis_and_joint_problems": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_other_diseases": forms.CheckboxInput(
+            "has_other_diseases": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "other_diseases": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 4,
-                }
-            ),
-            "use_medications": forms.CheckboxInput(
-                attrs={
-                    "class": "form-check-input",
-                }
-            ),
-            "medications": forms.Textarea(
+            "other_diseases": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
                 }
             ),
-            "follow_diet": forms.CheckboxInput(
+            "use_medications": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "current_diet": forms.TextInput(
+            "medications": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                }
+            ),
+            "follow_diet": CheckboxInput(
+                attrs={
+                    "class": "form-check-input",
+                }
+            ),
+            "current_diet": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "is_pregnant": forms.CheckboxInput(
+            "is_pregnant": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "pregnancy_stage": forms.TextInput(
+            "pregnancy_stage": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "had_birth_in_last_six_months": forms.CheckboxInput(
+            "had_birth_in_last_six_months": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "birth_complications": forms.Textarea(
+            "birth_complications": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
@@ -464,7 +510,7 @@ class HealthFormPage3(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormPage4(forms.ModelForm):
+class HealthFormPage4(ModelForm):
     """
     Form for section 4 of the health questionnaire:
     Physical activity.
@@ -484,38 +530,38 @@ class HealthFormPage4(forms.ModelForm):
             "signs_of_underrecovery_or_overtraining",
         )
         widgets = {
-            "has_regular_training": forms.CheckboxInput(
+            "has_regular_training": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "had_physical_activity": forms.CheckboxInput(
+            "had_physical_activity": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "previous_physical_activity": forms.Textarea(
+            "previous_physical_activity": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
                 }
             ),
-            "current_physical_activity": forms.RadioSelect(
+            "current_physical_activity": RadioSelect(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "current_physical_activity_period": forms.TextInput(
+            "current_physical_activity_period": TextInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "has_signs_of_underrecovery_or_overtraining": forms.CheckboxInput(
+            "has_signs_of_underrecovery_or_overtraining": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "signs_of_underrecovery_or_overtraining": forms.Textarea(
+            "signs_of_underrecovery_or_overtraining": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
@@ -532,7 +578,7 @@ class HealthFormPage4(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormPage5(forms.ModelForm):
+class HealthFormPage5(ModelForm):
     """
     Form for section 5 of the health questionnaire:
     Other issues and individual requirements.
@@ -549,23 +595,23 @@ class HealthFormPage5(forms.ModelForm):
             "other_issues",
         )
         widgets = {
-            "has_work_rest_schedule_issues": forms.CheckboxInput(
+            "has_work_rest_schedule_issues": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "work_rest_schedule_issues": forms.Textarea(
+            "work_rest_schedule_issues": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
                 }
             ),
-            "has_other_issues": forms.CheckboxInput(
+            "has_other_issues": CheckboxInput(
                 attrs={
                     "class": "form-check-input",
                 }
             ),
-            "other_issues": forms.Textarea(
+            "other_issues": Textarea(
                 attrs={
                     "class": "form-control",
                     "rows": 4,
@@ -589,7 +635,7 @@ class HealthFormPage5(forms.ModelForm):
         super().save(*args, **kwargs)
 
 
-class HealthFormResult(forms.ModelForm):
+class HealthFormResult(ModelForm):
     """
     Form for the result of the health questionnaire for expert:
     Readiness for physical activity.
@@ -602,8 +648,8 @@ class HealthFormResult(forms.ModelForm):
             "client",
         )
         widgets = {
-            "client": forms.HiddenInput(),
-            "workout_readiness": forms.Select(
+            "client": HiddenInput(),
+            "workout_readiness": Select(
                 attrs={
                     "class": "form-select",
                 }
@@ -623,7 +669,7 @@ HEALTH_FORMS = {
 }
 
 
-class ContactsForm(forms.ModelForm):
+class ContactsForm(ModelForm):
     """Form for contacts of client."""
 
     header = "Контакты"
@@ -640,43 +686,43 @@ class ContactsForm(forms.ModelForm):
             "preferred_contact",
         )
         widgets = {
-            "telegram": forms.TextInput(
+            "telegram": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://t.me/your_telegram_username",
                 }
             ),
-            "whatsapp": forms.TextInput(
+            "whatsapp": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://wa.me/your_whatsapp_number",
                 }
             ),
-            "discord": forms.TextInput(
+            "discord": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "discord.gg/your_discord_server or username",
                 }
             ),
-            "skype": forms.TextInput(
+            "skype": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://join.skype.com/my_code",
                 }
             ),
-            "vkontakte": forms.TextInput(
+            "vkontakte": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://vk.com/your_vk_username_or_id",
                 }
             ),
-            "facebook": forms.TextInput(
+            "facebook": TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://www.facebook.com/your_facebook_username.id",
                 }
             ),
-            "preferred_contact": forms.Select(
+            "preferred_contact": Select(
                 attrs={
                     "class": "form-select",
                 }

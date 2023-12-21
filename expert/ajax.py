@@ -10,11 +10,11 @@ from expert.models import ClientMainNote, ClientMonthlyNote
 @expert_required
 @require_http_methods(["POST"])
 def main_note_save(request):
-    """ Saves the expert's main note about a client """
+    """Saves the expert's main note about a client"""
 
     client_id = request.POST.get("client")
-    instance, _ = ClientMainNote.objects.get_or_create(client_id=client_id)
-    form = ClientMainNoteForm(request.POST, instance=instance)
+    note, _ = ClientMainNote.objects.get_or_create(client_id=client_id)
+    form = ClientMainNoteForm(request.POST, instance=note)
 
     if form.is_valid():
         form.save()

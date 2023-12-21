@@ -1,0 +1,30 @@
+#note-btn {
+    position: absolute;
+    z-index: 2;
+    right: 6rem;
+    top: -30px;
+    border: 3px solid #b9b9b9;
+}
+#note-btn img {
+    padding: 10px;
+}
+
+#note {
+    bottom: 0;
+    max-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+@media (min-width: 576px) {
+    #note {
+        top: 20%;
+        left: 1.5rem;
+        bottom: unset;
+        max-width: fit-content;
+    }
+}
+#note textarea:focus,
+#note textarea:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
