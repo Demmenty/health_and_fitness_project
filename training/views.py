@@ -103,6 +103,23 @@ def exercise_select(request, id):
 
 
 @login_required
+@require_http_methods(["GET"])
+def copy_previous(request, id):
+    """Copies the records from the previous training to the current training"""
+
+    training = get_object_or_404(Training, id=id)
+
+    if training.client != request.user and not request.user.is_expert:
+        return HttpResponseForbidden("Вы не можете редактировать эту тренировку")
+
+    previous_training = training.get_previous()
+    if previous_training:
+        training.copy_records(from_training=previous_training)
+
+    return redirect_to_training(training)
+
+
+@login_required
 @require_http_methods(["GET", "POST"])
 def exercise_replace(request, id):
     """

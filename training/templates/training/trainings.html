@@ -36,8 +36,7 @@
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{% url 'training:save' training_id %}" 
-                                delete-action="{% url 'training:delete' training_id %}" 
-                                class="training-form d-flex flex-column gap-3">
+                                class="training-form d-flex flex-column gap-3" delete-action="{% url 'training:delete' training_id %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="training_id" value="{{ training_id }}">
                                 {{ training.exercise_formset.management_form }}
@@ -109,6 +108,15 @@
                                         {% endwith %}
                                         {% endfor %}
                                     </div>
+                                {% else %}
+                                    {% with previous=training.form.instance.get_previous %}
+                                    {% if previous and previous.exercises.all %}
+                                        <a href="{% url 'training:copy_previous' training_id %}?client_id={{ client.id }}" 
+                                            class="btn btn-outline-primary">
+                                            Копировать предыдущую
+                                        </a>
+                                    {% endif %}
+                                    {% endwith %}
                                 {% endif %}
                                 <a href="{% url 'training:exercise_select' training_id %}?client_id={{ client.id }}" 
                                     class="add-exercise-btn btn btn-outline-primary">

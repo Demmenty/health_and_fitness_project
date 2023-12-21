@@ -11,6 +11,7 @@ urlpatterns = [
     path("<int:id>/save/", ajax.training_save, name="save"),
     path("<int:id>/delete/", ajax.training_delete, name="delete"),
     path("<int:id>/exercise_select/", views.exercise_select, name="exercise_select"),
+    path("<int:id>/copy_previous/", views.copy_previous, name="copy_previous"),
     path("get_schedule/<int:year>/<int:month>/", ajax.get_schedule, name="get_schedule"),
     # exercise records
     path(

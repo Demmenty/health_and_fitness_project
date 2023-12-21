@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.db import models
 
 from home.utils import resize_uploaded_image
@@ -113,7 +115,6 @@ class Training(models.Model):
     exercises = models.ManyToManyField(
         Exercise, through="ExerciseRecord", verbose_name="Упражнения", blank=True
     )
-
     date = models.DateField("Дата тренировки")
     client = models.ForeignKey(User, verbose_name="Клиент", on_delete=models.CASCADE)
     type = models.CharField(
@@ -127,6 +128,38 @@ class Training(models.Model):
 
     def __str__(self):
         return f"Тренировка клиента {self.client}"
+
+    def get_previous(self) -> Optional["Training"]:
+        """Returns the previous client's training of the same type"""
+
+        return Training.objects.filter(
+            client=self.client, type=self.type, date__lt=self.date
+        ).last()
+
+    def copy_records(self, from_training: "Training") -> None:
+        """
+        Copy records from one Training instance to another.
+        All fields except 'comment' and 'is_done' are copied.
+        """
+
+        records = self.exercises.through.objects.filter(training=from_training)
+        for record in records:
+            self.exercises.through.objects.create(
+                training=self,
+                exercise=record.exercise,
+                order=record.order,
+                weight=record.weight,
+                repetitions=record.repetitions,
+                sets=record.sets,
+                load=record.load,
+                time=record.time,
+                pulse_avg=record.pulse_avg,
+                high_load_time=record.high_load_time,
+                high_load_pulse=record.high_load_pulse,
+                low_load_time=record.low_load_time,
+                low_load_pulse=record.low_load_pulse,
+                cycles=record.cycles,
+            )
 
     @classmethod
     def get_schedule(cls, client_id: int, year: int, month: int) -> dict:
@@ -166,7 +199,6 @@ class ExerciseRecord(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     training = models.ForeignKey(Training, on_delete=models.CASCADE)
     order = models.SmallIntegerField("Порядок", default=1)
-
     weight = models.DecimalField(
         "Вес", max_digits=4, decimal_places=1, null=True, blank=True
     )
