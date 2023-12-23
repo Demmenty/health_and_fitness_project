@@ -51,7 +51,7 @@ class NoteForm(ModelForm):
         }
 
 
-class UserInfoForm(ModelForm):
+class ProfileForm(ModelForm):
     """Form for the user main information."""
 
     class Meta:

@@ -36,12 +36,12 @@
                     {% with request.resolver_match.view_name as url %}
                     <li>
                         <a href="{% url 'client:profile' %}" class="nav-link px-2 px-lg-3 
-                        {% if url in 'client:profile, client:health, client:contacts, client:info' %} active {% endif %}">
+                        {% if url in 'client:profile, client:profile_edit, client:health, client:contacts' %} active {% endif %}">
                             Профиль
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'client:daily_metrics' %}" class="nav-link px-2 px-lg-3 
+                        <a href="{% url 'metrics:daily' %}" class="nav-link px-2 px-lg-3 
                             {% if 'metrics' in url %} active {% endif %}">
                             Измерения
                         </a>

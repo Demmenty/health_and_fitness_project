@@ -105,7 +105,7 @@
                                         <img src="{% static 'metrics/img/chat-text.svg' %}" class="filter-hover-primary">
                                     </button>
                                     <div id="comment-{{ forloop.counter }}" data-number="{{ forloop.counter }}"
-                                        class="comment draggable border-0 card shadow" style="display: none;">
+                                        class="comment draggable card shadow" style="display: none;">
                                         <div class="card-header draggable-point d-flex align-items-center 
                                             justify-content-between bg-aux gap-2">
                                             <div class="col-1"></div>
@@ -124,7 +124,7 @@
                                     <img src="{% static 'metrics/img/chat.svg' %}" title="комментария нет">
                                 {% endif %}
                                 {% if not request.user.is_expert %}
-                                    <a href="{% url 'client:daily_metrics_edit' %}?date={{ day.date|date:'Y-m-d' }}" 
+                                    <a href="{% url 'metrics:daily_edit' %}?date={{ day.date|date:'Y-m-d' }}" 
                                         class="filter-hover-primary pointer">
                                         <img src="{% static 'metrics/img/pencil-square.svg' %}" title="редактировать">
                                     </a>

@@ -3,7 +3,7 @@
 {% load custom_filters %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'client/css/daily_metrics_form.css' %}">
+    <link rel="stylesheet" href="{% static 'metrics/css/daily_form.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -20,21 +20,21 @@
             <div class="card-body">
                 <form id="metrics-form" method="POST">
                     {% csrf_token %}
-                    <div class="d-none">{{ daily_metrics_form.date }}</div>
+                    <div class="d-none">{{ form.date }}</div>
                     <div class="form-group row mb-2">
                         <div class="col-sm-4 col-form-label">Дата</div>
                         <div class="col-sm-8">
-                            <div id="day-input" data-day="{{ daily_metrics_form.date.value|date:'Y-m-d' }}">
+                            <div id="day-input" data-day="{{ form.date.value|date:'Y-m-d' }}">
                                 <span class="prev-arrow" title="Предыдущий день"> &lang; </span> 
                                 <button type="button" title="Выбрать дату" class="btn-link"
                                     data-bs-toggle="modal" data-bs-target="#select-date-modal">
-                                    {{ daily_metrics_form.date.value }}
+                                    {{ form.date.value }}
                                 </button>
                                 <span class="next-arrow" title="Следующий день"> &rang; </span>
                             </div>
                         </div>
                     </div>
-                    {% for field in daily_metrics_form %}
+                    {% for field in form %}
                         {% if field.name not in 'date, comment' %}
                             <div class="form-group row mb-2">
                                 <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
@@ -48,20 +48,20 @@
                     <div class="form-group row mb-4">
                         <p class="col-sm-4"></p>
                         <small id="fs-connect-status" class="col-sm-8 text-center mb-0" 
-                            data-get-nutrition-url="{% url 'nutrition:get_daily' daily_metrics_form.date.value %}">
+                            data-get-nutrition-url="{% url 'nutrition:get_daily' form.date.value %}">
                             <span class="spinner-border text-primary spinner-border-sm"></span>
                             <span class="text-primary me-1">подключение к FatSecret</span>
                         </small>
                     </div>
                     <div class="form-group row mb-4">
-                        <label class="form-label">{{ daily_metrics_form.comment.label }}</label>
-                        <div class="">{{ daily_metrics_form.comment }}</div>
-                        {% for error in daily_metrics_form.comment.errors %}
+                        <label class="form-label">{{ form.comment.label }}</label>
+                        <div class="">{{ form.comment }}</div>
+                        {% for error in form.comment.errors %}
                             <small class="text-danger">• {{ error|striptags }}</small><br>
                         {% endfor %}
                     </div>
                     <button type="submit" class="btn btn-primary float-end">Сохранить</button>
-                    <a href="{% url 'client:daily_metrics' %}" class="btn btn-outline-primary">Назад</a>
+                    <a href="{% url 'metrics:daily' %}" class="btn btn-outline-primary">Назад</a>
                 </form>
             </div>
         </div>
@@ -76,7 +76,7 @@
             </div>
             <div class="modal-body">
                 <form method="get" class="d-flex gap-3 my-3 mx-sm-5">
-                    {{ daily_metrics_form.date }}
+                    {{ form.date }}
                     <button type="submit" class="btn btn-primary">Ок</button>
                 </form>
             </div>
@@ -86,5 +86,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'client/js/daily_metrics_form.js' %}"></script>
+    <script src="{% static 'metrics/js/daily_form.js' %}"></script>
 {% endblock %}

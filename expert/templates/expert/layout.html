@@ -47,7 +47,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'expert:client_daily_metrics' client.id %}?client_id={{ client.id }}" 
+                            <a href="{% url 'metrics:daily' %}?client_id={{ client.id }}" 
                                 class="nav-link px-2 px-lg-3 {% if 'metrics' in url %} active {% endif %}">
                                 Измерения
                             </a>

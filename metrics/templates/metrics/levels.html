@@ -1,29 +1,3 @@
-{% extends layout %}
-{% load static %}
-{% load nutrition_recommendations %}
-
-{% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'expert/css/client_daily_metrics.css' %}">
-    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
-{% endblock %}
-
-{% block title %}
-	<title>{{ client|capfirst }}: измерения</title>
-{% endblock %}
-
-{% block content %}
-{% include 'metrics/daily_metrics_period_select.html' %}
-{% nutrition_recommendations %}
-<section id="metrics-menu-section">
-    <div class="container">
-        {% include 'metrics/daily_metrics_page_menu.html' %}
-    </div>
-</section>
-<section id="metrics-section" class="mb-4">
-    <div class="container">
-        {% include 'metrics/daily_metrics_table.html' %}
-    </div>
-</section>
 <section id="metrics-levels-section" style="display: none;">
     <div class="container">
         <div class="card shadow-sm mx-auto w-fit">
@@ -48,7 +22,7 @@
                         <li class="list-group-item pointer py-1 toggler" data-detail-id="algorithm">
                             Алгоритм
                         </li>
-                        <a href="{% url 'expert:metrics_colors_edit' %}?next={{ request.path }}" class="list-group-item py-1">
+                        <a href="{% url 'metrics:colors' %}?next={{ request.path }}" class="list-group-item py-1">
                             Настройка цветов
                         </a>
                     </ul>
@@ -164,8 +138,3 @@
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block script %}
-    <script src="{% static 'expert/js/client_daily_metrics.js' %}"></script>
-{% endblock %}

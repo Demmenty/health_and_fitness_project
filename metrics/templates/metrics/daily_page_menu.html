@@ -12,7 +12,7 @@
                 <span class="d-none d-sm-inline">Измерение</span>
             </button>
         {% else %}
-            <a href="{% url 'client:daily_metrics_edit' %}" title="Добавить измерения" 
+            <a href="{% url 'metrics:daily_edit' %}" title="Добавить измерения" 
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Измерение</span>
@@ -38,19 +38,11 @@
             <img src="{% static 'metrics/img/file-ruled.svg' %}" width="20">
             <span class="d-none d-sm-inline">Кбжу</span>
         </button>
-        {% if request.user.is_expert %}
-            <a href="{% url 'expert:client_anthropo_metrics' client.id %}" title="Страница антропометрии" 
-                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
-                <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
-                <span class="d-none d-sm-inline">Антропометрия</span>
-            </a>
-        {% else %}
-            <a href="{% url 'client:anthropo_metrics' %}" title="Страница антропометрии" 
-                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
-                <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
-                <span class="d-none d-sm-inline">Антропометрия</span>
-            </a>
-        {% endif %}
+        <a href="{% url 'metrics:anthropo' %}?client_id={{ client.id }}" title="Страница антропометрии" 
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+            <img src="{% static 'metrics/img/person-lines-fill.svg' %}" width="20">
+            <span class="d-none d-sm-inline">Антропометрия</span>
+        </a>
     </div>
     <div class="col-2">
     </div>

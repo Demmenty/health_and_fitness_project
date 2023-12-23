@@ -1,0 +1,59 @@
+{% extends layout %}
+{% load static %}
+{% load nutrition_recommendations %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'metrics/css/daily.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: измерения</title>
+{% endblock %}
+
+{% block content %}
+    {% nutrition_recommendations %}
+    <div id="select-period-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog shadow">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center bg-primary">
+                    <h5 class="modal-title text-white">Выбор периода измерений</h5>
+                </div>
+                <div class="modal-body px-2 px-sm-3">
+                    <form method="get">
+                        <div class="d-flex flex-row justify-content-around justify-content-sm-center gap-sm-4 mb-4">
+                            <div>
+                                <label for="id_start" class="form-label text-center w-100">Старт</label>
+                                <input type="date" id="id_start" name="start"
+                                    class="form-control text-center ps-0" value="{{ start_date|date:'Y-m-d' }}">
+                            </div>
+                            <div>
+                                <label for="id_end" class="form-label text-center w-100">Конец</label>
+                                <input type="date" id="id_end"  name="end"
+                                    class="form-control text-center ps-0" value="{{ end_date|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary float-end">Получить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="metrics-menu-section">
+        <div class="container">
+            {% include 'metrics/daily_page_menu.html' %}
+        </div>
+    </section>
+    <section id="metrics-section" class="mb-4">
+        <div class="container">
+            {% include 'metrics/daily_table.html' %}
+        </div>
+    </section>
+    {% if user.is_expert %}
+        {% include 'metrics/levels.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'metrics/js/daily.js' %}"></script>
+{% endblock %}

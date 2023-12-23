@@ -11,7 +11,7 @@
                 <span class="d-none d-sm-inline">Измерение</span>
             </button>
         {% else %}
-            <a href="{% url 'client:anthropo_metrics_new' %}" title="Добавить измерения"
+            <a href="{% url 'metrics:anthropo_add' %}" title="Добавить измерения"
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary">
                 <img src="{% static 'metrics/img/plus-square.svg' %}" width="20">
                 <span class="d-none d-sm-inline">Измерение</span>
@@ -36,19 +36,11 @@
                 {% csrf_token %}
             </button>
         {% endif %}
-        {% if request.user.is_expert %}
-            <a href="{% url 'expert:client_daily_metrics' client.id %}" title="Дневные измерения" 
-                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
-                <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
-                <span class="d-none d-sm-inline">Дневные измерения</span>
-            </a>
-        {% else %}
-            <a href="{% url 'client:daily_metrics' %}" title="Дневные измерения" 
-                class="btn-link text-nowrap align-middle text-black filter-hover-primary">
-                <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
-                <span class="d-none d-sm-inline">Дневные измерения</span>
-            </a>
-        {% endif %}
+        <a href="{% url 'metrics:daily' %}?client_id={{ client.id }}" title="Дневные измерения" 
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+            <img src="{% static 'metrics/img/person-heart.svg' %}" width="20">
+            <span class="d-none d-sm-inline">Дневные измерения</span>
+        </a>
     </div>
     <div class="col-2">
     </div>

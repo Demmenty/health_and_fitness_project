@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- TODO add reactive example -->
 <section id="metrics-colors-section">
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
@@ -22,12 +21,16 @@
                     </p>
                     {% for field in form %}
                         <div class="d-flex align-items-center justify-content-around">
-                            <label for="{{ field.id_for_label }}" class="col-6">{{ field.label }} ({{ field.help_text }})</label>
+                            <label for="{{ field.id_for_label }}" class="col-6">
+                                {{ field.label }} ({{ field.help_text }})
+                            </label>
                             {{ field }}
                         </div>
                     {% endfor %}
                     <div class="d-flex justify-content-between mt-3">
-						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+						<button type="button" onclick="history.back();" class="btn btn-outline-primary">
+                            Назад
+                        </button>
                         <input type="submit" class="btn btn-primary" value="Сохранить">
 					</div>
                 </form>
