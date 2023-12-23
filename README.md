@@ -21,10 +21,11 @@ https://healthfitness-demmenty.pythonanywhere.com
 Django, SQLite, HTML, CSS, Javascript, Jquery, Bootstrap.
 
 ## Installation
-
+```
 python manage.py migrate
 python manage.py loaddata .\fixtures\metrics_colors.json
 python manage.py loaddata .\fixtures\training_areas.json
 python manage.py loaddata .\fixtures\training_tools.json
 python manage.py createexpert
 python manage.py runserver
+```
