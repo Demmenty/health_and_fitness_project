@@ -20,5 +20,5 @@ def redirect_to_training(training: "Training"):
         "client_id": training.client.id,
         "day": training.date,
     }
-    training_page = f"{reverse('training:trainings')}?{urlencode(params)}"
-    return redirect(training_page)
+    url = reverse("training:trainings") + f"?{urlencode(params)}"
+    return redirect(url)

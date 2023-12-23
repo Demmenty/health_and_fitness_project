@@ -19,7 +19,7 @@ def nutrition(request):
 
     fs_linked = FatSecretEntry.objects.filter(client_id=client_id).exists()
     if not fs_linked:
-        return redirect("nutrition:no_fatsecret")
+        return redirect(reverse("nutrition:no_fatsecret") + f"?client_id={client_id}")
 
     template = "nutrition/nutrition.html"
     return render(request, template)

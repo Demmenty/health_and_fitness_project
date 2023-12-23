@@ -68,9 +68,6 @@
                     </ul>
                     <div class="col-lg-3 d-flex flex-nowrap align-items-center justify-content-end gap-2">
                         <a href="{% url 'expert:clients' %}" class="btn btn-primary">Кабинет</a>
-                        {% if user.is_staff or user.is_superuser %}
-                            <a href="{% url 'admin:index' %}" class="btn btn-primary">Админ панель</a>
-                        {% endif %}
                         <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
                             {% csrf_token %}
                             <input type="Submit" class="btn btn-primary" title="Выход" value="Выход">
@@ -78,13 +75,13 @@
                     </div>
                 </div>
             {% else %}
-                <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center justify-content-sm-between">
-                    <div class="col-sm-3">
+                <div class="d-flex flex-wrap gap-1 align-items-center justify-content-center justify-content-md-between">
+                    <div class="col-md-3">
                         <a href="/" class="d-inline-flex align-middle">
                             <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="90">
                         </a>
                     </div>
-                    <ul class="nav col-12 col-sm-auto justify-content-center">
+                    <ul class="nav col-12 col-md-auto justify-content-center">
                         {% with request.resolver_match.view_name as url %}
                         <li>
                             <a href="{% url 'expert:clients' %}" class="nav-link px-2 px-lg-3 
@@ -105,9 +102,9 @@
                         </li>
                         {% endwith %}
                     </ul>
-                    <div class="col-sm-3 d-flex flex-nowrap align-items-center justify-content-end gap-2">
+                    <div class="col-md-3 d-flex flex-nowrap align-items-center justify-content-end gap-2">
                         {% if user.is_staff %}
-                            <a href="{% url 'admin:index' %}" class="btn btn-primary me-2">Админ панель</a>
+                            <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap me-2">Админ панель</a>
                         {% endif %}
                         <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
                             {% csrf_token %}
