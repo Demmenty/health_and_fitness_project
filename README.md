@@ -22,10 +22,11 @@ Django, SQLite, HTML, CSS, Javascript, Jquery, Bootstrap.
 
 ## Installation
 ```
+pip install -r requirements.txt
 python manage.py migrate
-python manage.py loaddata .\fixtures\metrics_colors.json
-python manage.py loaddata .\fixtures\training_areas.json
-python manage.py loaddata .\fixtures\training_tools.json
+python manage.py loaddata ./fixtures/metrics_colors.json
+python manage.py loaddata ./fixtures/training_areas.json
+python manage.py loaddata ./fixtures/training_tools.json
 python manage.py createexpert
 python manage.py runserver
 ```
