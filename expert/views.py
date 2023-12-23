@@ -7,7 +7,6 @@ from client.models import Contacts, Health, Log
 from consults.forms import RequestViewForm
 from consults.models import Request
 from expert.decorators import expert_required
-from nutrition.models import FatSecretEntry
 from users.models import User
 
 
@@ -143,23 +142,6 @@ def client_contacts(request, id):
     data = {
         "client": client,
         "contacts_form": contacts_form,
-    }
-    return render(request, template, data)
-
-
-@expert_required
-@require_http_methods(["GET"])
-def client_nutrition(request, id):
-    """Render the client's nutrition page for the expert"""
-
-    client = get_object_or_404(User, id=id)
-
-    fs_linked = FatSecretEntry.objects.filter(client=client).exists()
-
-    template = "expert/client_nutrition.html"
-    data = {
-        "client": client,
-        "fatsecret_linked": fs_linked,
     }
     return render(request, template, data)
 

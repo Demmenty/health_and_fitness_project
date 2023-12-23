@@ -1,10 +1,37 @@
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from client.decorators import client_required
 from config.settings import DOMAIN_NAME
 from nutrition.fatsecret import FSManager
+from nutrition.models import FatSecretEntry
+from users.utils import get_client_id
+
+
+@login_required
+@require_http_methods(["GET"])
+def nutrition(request):
+    """Render the client's nutrition page"""
+
+    client_id = get_client_id(request)
+
+    fs_linked = FatSecretEntry.objects.filter(client_id=client_id).exists()
+    if not fs_linked:
+        return redirect("nutrition:no_fatsecret")
+
+    template = "nutrition/nutrition.html"
+    return render(request, template)
+
+
+@login_required
+@require_http_methods(["GET"])
+def no_fatsecret(request):
+    """Render the page when no FatSecret account is linked"""
+
+    template = "nutrition/no_fatsecret.html"
+    return render(request, template)
 
 
 @client_required
@@ -37,7 +64,7 @@ def link_fatsecret(request):
         fs.load_session(request.user.id)
         tokens = fs.session.authenticate(oauth_verifier)
         fs.save_tokens(client_tokens=tokens, client=request.user)
-        return redirect("client:nutrition")
+        return redirect("nutrition:nutrition")
 
     except KeyError as error:
         print("Link fatsecret error:", error)

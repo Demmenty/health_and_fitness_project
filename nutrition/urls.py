@@ -5,6 +5,12 @@ from nutrition import ajax, views
 app_name = "nutrition"
 
 urlpatterns = [
+    path("", views.nutrition, name="nutrition"),
+    path(
+        "no_fatsecret/",
+        views.no_fatsecret,
+        name="no_fatsecret",
+    ),
     path(
         "link_fatsecret/",
         views.link_fatsecret,

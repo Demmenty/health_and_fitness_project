@@ -13,7 +13,6 @@ urlpatterns = [
     path("client/<int:id>/unarchive", views.client_unarchive, name="client_unarchive"),
     path("client/<int:id>/health/", views.client_health, name="client_health"),
     path("client/<int:id>/contacts/", views.client_contacts, name="client_contacts"),
-    path("client/<int:id>/nutrition/", views.client_nutrition, name="client_nutrition"),
     path("note/main/save/", ajax.main_note_save, name="main_note_save"),
     path("note/monthly/get/", ajax.monthly_note_get, name="monthly_note_get"),
     path("note/monthly/save/", ajax.monthly_note_save, name="monthly_note_save"),

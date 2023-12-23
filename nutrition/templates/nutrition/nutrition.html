@@ -4,11 +4,11 @@
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'home/css/page_menu.css' %}">
-    <link rel="stylesheet" href="{% static 'client/css/nutrition.css' %}">
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition.css' %}">
 {% endblock %}
 
 {% block title %}
-	<title>{{ user.username|capfirst }}: питание</title>
+	<title>{{ client|capfirst }}: питание</title>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@
 <section id="nutrition-section">
     <div class="container">
         <div id="day-nutrition" class="card shadow-sm mx-auto mb-4" 
-            data-get-url="{% url 'nutrition:get_daily_food' %}">
+            data-get-url="{% url 'nutrition:get_daily_food' %}?client_id={{ client.id }}">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
                 <span class="prev-arrow" title="Предыдущий день"> &lang; </span> 
                 <h5 class="header mb-0">Сегодня</h5>
@@ -92,7 +92,7 @@
             </div>
         </div>
         <div id="month-nutrition" class="card shadow-sm mx-auto" 
-            data-get-url="{% url 'nutrition:get_monthly' %}">
+            data-get-url="{% url 'nutrition:get_monthly' %}?client_id={{ client.id }}">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-light text-center p-0">
                 <span class="prev-arrow" title="Предыдущий месяц"> &lang; </span> 
                 <h5 class="header text-capitalize mb-0">Текущий месяц</h5>
@@ -146,13 +146,15 @@
 
 <div id="cat-loader" class="mt-4" style="display: none;">
     <div class="d-flex flex-column align-items-center gap-3">
-        <img src="{% static 'client/img/cat_with_coffee.gif' %}" width="150px">
-        <p class="text-secondary text-center"><i>идет расчет топ 10 продуктов месяца...</i></p>
+        <img src="{% static 'nutrition/img/cat_with_coffee.gif' %}" width="150px">
+        <p class="text-secondary text-center">
+            <i>идет расчет топ 10 продуктов месяца...</i>
+        </p>
     </div>
 </div>
 
 <section id="monthtop-section" class="mt-4" style="display: none;" 
-    data-get-url="{% url 'nutrition:get_monthly_top_food' %}" data-month="">
+    data-get-url="{% url 'nutrition:get_monthly_top_food' %}?client_id={{ client.id }}" data-month="">
     <div class="container">
         <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
             <div id="top-by-calories" class="card shadow-sm w-100">
@@ -204,7 +206,7 @@
                     Некоторые продукты не удалось посчитать.<br>
                     Укажите их массу или объем, пожалуйста.
                 </p>
-                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:update_food_servings' %}">
+                <form id="food-metrics-form" method="POST" action="{% url 'nutrition:update_food_servings' %}?client_id={{ client.id }}">
                     {% csrf_token %}
                     <div class="food-list d-flex flex-column gap-3">
                     </div>
@@ -218,5 +220,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'client/js/nutrition.js' %}"></script>
+    <script src="{% static 'nutrition/js/nutrition.js' %}"></script>
 {% endblock %}

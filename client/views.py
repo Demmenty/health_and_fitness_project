@@ -13,7 +13,6 @@ from client.forms import (
     UserEmailForm,
 )
 from client.models import Contacts, Health
-from nutrition.models import FatSecretEntry
 
 
 @client_required
@@ -119,27 +118,3 @@ def contacts(request):
         "help_img_folder": help_img_folder,
     }
     return render(request, template, data)
-
-
-@client_required
-@require_http_methods(["GET"])
-def nutrition(request):
-    """Render the client's nutrition page"""
-
-    client = request.user
-
-    fatsecret_linked = FatSecretEntry.objects.filter(client=client).exists()
-    if not fatsecret_linked:
-        return redirect("client:link_fatsecret")
-
-    template = "client/nutrition.html"
-    return render(request, template)
-
-
-@client_required
-@require_http_methods(["GET"])
-def link_fatsecret(request):
-    """Render the page offering to link Fatsecret."""
-
-    template = "client/link_fatsecret.html"
-    return render(request, template)
