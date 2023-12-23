@@ -15,18 +15,20 @@
     <div class="container">
         {% with request.resolver_match.view_name as url %}
         {% if url == 'expert:clients' %}
-            <div class="d-flex justify-content-end gap-3">
+            <div class="d-flex gap-3 mb-4 justify-content-center justify-content-md-end">
                 <a href="{% url 'expert:client_new' %}" class="btn btn-primary float-end mb-5">
                     <img src="{% static 'expert/img/person-plus-fill.svg' %}" class="filter-white" width="20">
                     <span class="ms-1">Новый клиент</span>
                 </a>
                 <a href="{% url 'expert:archived_clients' %}" class="btn btn-secondary float-end mb-5">
+                    <img src="{% static 'expert/img/archive-fill.svg' %}" class="filter-white" width="19">
                     <span class="ms-1">Архив</span>
                 </a>
             </div>
         {% elif url == 'expert:archived_clients' %}
             <div class="d-flex justify-content-end gap-3">
                 <a href="{% url 'expert:clients' %}" class="btn btn-primary float-end mb-5">
+                    <img src="{% static 'expert/img/people-fill.svg' %}" class="filter-white" width="20">
                     <span class="ms-1">Активные клиенты</span>
                 </a>
             </div>
