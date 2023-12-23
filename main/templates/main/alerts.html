@@ -1,0 +1,23 @@
+{% load static %}
+
+<div class="alert success-alert bg-white shadow border rounded px-3 py-2" role="alert" id="success-alert">
+    <div class="alert-content d-flex align-items-center">
+        <img class="icon-check" src="{% static 'main/img/check-circle.svg' %}">
+        <div class="alert-message mx-3">
+            <h6 class="m-0">Успех</h6>
+            <span class="text text-secondary"></span>
+        </div>
+        <button type="button" class="btn-close"></button>
+    </div>
+</div>
+
+<div class="alert danger-alert bg-white shadow border rounded px-3 py-2" role="alert" id="danger-alert">
+    <div class="alert-content d-flex align-items-center">
+        <img class="icon-check" src="{% static 'main/img/exclamation-circle.svg' %}">
+        <div class="alert-message mx-3">
+            <h6 class="m-0">Ошибка</h6>
+            <span class="text text-secondary"></span>
+        </div>
+        <button type="button" class="btn-close"></button>
+    </div>
+</div>

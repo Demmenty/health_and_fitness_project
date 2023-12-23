@@ -1,0 +1,5 @@
+INSTALL
+
+python manage.py migrate
+python manage.py createexpert
+python manage.py runserver

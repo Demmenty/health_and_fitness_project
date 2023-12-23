@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "home.apps.HomeConfig",
+    "main.apps.MainConfig",
     "consults.apps.ConsultsConfig",
     "users.apps.UsersConfig",
     "client.apps.ClientConfig",
@@ -67,8 +67,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "home.context_processors.layout_context",
-                "home.context_processors.client_context",
+                "main.context_processors.layout_context",
+                "main.context_processors.client_context",
             ],
         },
     },
@@ -127,7 +127,7 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [
-    (BASE_DIR / "home" / "static"),
+    (BASE_DIR / "main" / "static"),
     (BASE_DIR / "users" / "static"),
     (BASE_DIR / "client" / "static"),
     (BASE_DIR / "expert" / "static"),

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 from expert.decorators import expert_required
-from home.utils import is_ajax
+from main.utils import is_ajax
 from users.forms import (
     ClientRegistrationForm,
     PasswordChangeForm,
@@ -87,7 +87,7 @@ def logout_user(request):
     """
     logout(request)
 
-    return redirect("home:main")
+    return redirect("main:home")
 
 
 class PasswordReset(auth_views.PasswordResetView):
@@ -143,9 +143,9 @@ def csrf_failure(request, reason=""):
         reason (optional): The reason for the CSRF failure.
     Returns:
         If the request is an AJAX request, returns an HttpResponseForbidden with the message "CSRF проверка не пройдена".
-        Otherwise, redirects the user to the "home:main" URL.
+        Otherwise, redirects the user to the "main:home" URL.
     """
     if is_ajax(request):
         return HttpResponseForbidden("CSRF проверка не пройдена")
 
-    return redirect("home:main")
+    return redirect("main:home")

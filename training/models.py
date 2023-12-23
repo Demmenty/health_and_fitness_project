@@ -2,10 +2,8 @@ from typing import Optional
 
 from django.db import models
 
-from home.utils import resize_uploaded_image
+from main.utils import resize_uploaded_image
 from users.models import User
-
-EXPERT = User.get_expert()
 
 # Map training type to exercise type
 EXERCISE_TYPE_MAP = {
@@ -15,8 +13,9 @@ EXERCISE_TYPE_MAP = {
     "interval": "endurance",
 }
 
+EXPERT_ID = 1
 
-# CONSTANT (loads from fixtures)
+
 class Area(models.Model):
     """Exercise area"""
 
@@ -58,7 +57,7 @@ class Exercise(models.Model):
         ENDURANCE = "endurance", "Выносливость"
 
     author = models.ForeignKey(
-        User, verbose_name="Автор", on_delete=models.CASCADE, default=EXPERT.id
+        User, verbose_name="Автор", on_delete=models.CASCADE, default=EXPERT_ID
     )
     name = models.CharField("Название", max_length=255, unique=True)
     type = models.CharField(

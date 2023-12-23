@@ -9,12 +9,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'home/img/logo.svg' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'main/img/logo.svg' %}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'home/css/alerts.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat_btn_absolute.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}">
@@ -29,7 +29,7 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-lg-3 mb-2 mb-lg-0">
                     <a href="/" class="d-inline-flex align-middle">
-                        <img id="logo" src="{% static 'home/img/logo_text.svg' %}" type="image/svg+xml" width="90">
+                        <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="90">
                     </a>
                 </div>
                 <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0">
@@ -73,7 +73,7 @@
         </div>
     </header>
     <main>
-        {% include 'home/alerts.html' %}
+        {% include 'main/alerts.html' %}
         {% block content %}
         {% endblock %}
     </main>
@@ -92,27 +92,27 @@
                     <div class="d-flex align-items-center">
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://t.me/parrrabollla" target="_blank">
-                                <img src="{% static 'home/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                                <img src="{% static 'main/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
                             </a>
                         </div>
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://wa.me/79603280691" target="_blank">
-                                <img src="{% static 'home/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
+                                <img src="{% static 'main/img/whatsapp.svg' %}" class="contact_ico" alt="whatsapp" title="whatsapp">
                             </a>
                         </div>
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://discord.gg/CDrXhVA" target="_blank">
-                                <img src="{% static 'home/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
+                                <img src="{% static 'main/img/discord.svg' %}" class="contact_ico" alt="discord" title="discord">
                             </a>
                         </div>
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://join.skype.com/invite/ANfPTptWeOxA" target="_blank">
-                                <img src="{% static 'home/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
+                                <img src="{% static 'main/img/skype.svg' %}" class="contact_ico" alt="skype" title="skype">
                             </a>
                         </div>
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://vk.com/id37037617" target="_blank">
-                                <img src="{% static 'home/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                                <img src="{% static 'main/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
                             </a>
                         </div>
                     </div>
@@ -131,12 +131,12 @@
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://t.me/demmenty" target="_blank">
-                                <img src="{% static 'home/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
+                                <img src="{% static 'main/img/telegram.svg' %}" class="contact_ico" alt="telegram" title="telegram">
                             </a>
                         </div>
                         <div class="p-2 d-flex justify-content-end">
                             <a href="https://vk.com/id93683216" target="_blank">
-                                <img src="{% static 'home/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
+                                <img src="{% static 'main/img/vk.svg' %}" class="contact_ico" alt="vkontakte" title="vkontakte">
                             </a>
                         </div>
                     </div>
@@ -148,9 +148,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'home/js/alerts.js' %}"></script>
-<script src="{% static 'home/js/lazy_images.js' %}"></script>
-<script src="{% static 'home/js/draggable.js' %}"></script>
+<script src="{% static 'main/js/alerts.js' %}"></script>
+<script src="{% static 'main/js/lazy_images.js' %}"></script>
+<script src="{% static 'main/js/draggable.js' %}"></script>
 <script src="{% static 'chat/js/chat.js' %}"></script>
 <script src="{% static 'client/js/note.js' %}"></script>
 {% block script %}{% endblock %}

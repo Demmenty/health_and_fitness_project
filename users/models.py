@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from home.utils import resize_uploaded_image
+from main.utils import resize_uploaded_image
 
 
 def avatars_path(instance, filename):

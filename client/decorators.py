@@ -3,7 +3,7 @@ from functools import wraps
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 
-from home.utils import is_ajax
+from main.utils import is_ajax
 
 
 def client_required(view_func):
@@ -22,7 +22,7 @@ def client_required(view_func):
         if not request.user.is_authenticated or request.user.is_expert:
             if is_ajax(request):
                 return HttpResponseForbidden("Недостаточно прав!")
-            return redirect("home:main")
+            return redirect("main:home")
 
         return view_func(request, *args, **kwargs)
 

@@ -12,6 +12,55 @@ from users.models import User
 # TODO resize big anthropo photos before uploading
 
 
+class Colors(models.Model):
+    """Colors for all metric parameters' indication based on levels."""
+
+    lvl1 = models.CharField(
+        "Уровень 1", max_length=7, default="#66e5a2", help_text="идеально"
+    )
+    lvl2 = models.CharField(
+        "Уровень 2",
+        max_length=7,
+        default="#b2ff99",
+        help_text="хорошо",
+    )
+    lvl3 = models.CharField(
+        "Уровень 3",
+        max_length=7,
+        default="#fffa88",
+        help_text="неплохо",
+    )
+    lvl4 = models.CharField(
+        "Уровень 4",
+        max_length=7,
+        default="#ffd278",
+        help_text="плохо",
+    )
+    lvl5 = models.CharField(
+        "Уровень 5",
+        max_length=7,
+        default="#ff998b",
+        help_text="критично",
+    )
+
+    def __str__(self):
+        return f"Цвета измерений клиентов"
+
+    class Meta:
+        verbose_name = "Цвета измерений"
+        verbose_name_plural = "Цвета измерений"
+
+    @classmethod
+    def get_colors(cls) -> dict:
+        """
+        Retrieves the colors data as dict.
+
+        Returns:
+            dict: The colors data.
+        """
+        return model_to_dict(cls.objects.get(), exclude=["id"])
+
+
 class Daily(models.Model):
     """Daily measurements of the client"""
 
@@ -214,120 +263,6 @@ class Daily(models.Model):
         return metrics
 
 
-def anthropometry_photo_path(instance, filename):
-    """
-    Return the path for the anthropometry photos of the client.
-    Example: "clients/1/anthropometry/2023/filename.jpg"
-    """
-
-    return f"clients/{instance.client.id}/anthropometry/{instance.date.year}/{filename}"
-
-
-class Anthropo(models.Model):
-    """Anthropometry measurements of the client"""
-
-    date = models.DateField("Дата", auto_now_add=True)
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
-    shoulder = models.DecimalField(
-        "Плечо", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    chest = models.DecimalField(
-        "Грудь", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    waist = models.DecimalField(
-        "Талия", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    belly = models.DecimalField(
-        "Живот", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    buttocks = models.DecimalField(
-        "Ягодицы", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    hip = models.DecimalField(
-        "Бедро", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-    shin = models.DecimalField(
-        "Голень", max_digits=4, decimal_places=1, null=True, blank=True
-    )
-
-    photo_1 = models.ImageField(
-        "Фото спереди",
-        upload_to=anthropometry_photo_path,
-        null=True,
-        blank=True,
-    )
-    photo_2 = models.ImageField(
-        "Фото сзади",
-        upload_to=anthropometry_photo_path,
-        null=True,
-        blank=True,
-    )
-    photo_3 = models.ImageField(
-        "Фото сбоку",
-        upload_to=anthropometry_photo_path,
-        null=True,
-        blank=True,
-    )
-
-    def __str__(self):
-        return f"Антропометрия №{self.id}"
-
-    class Meta:
-        ordering = ["-date"]
-        get_latest_by = "date"
-        verbose_name = "Антропометрия"
-        verbose_name_plural = "Антропометрия"
-
-
-class Colors(models.Model):
-    """Colors for all metric parameters' indication based on levels."""
-
-    lvl1 = models.CharField(
-        "Уровень 1", max_length=7, default="#66e5a2", help_text="идеально"
-    )
-    lvl2 = models.CharField(
-        "Уровень 2",
-        max_length=7,
-        default="#b2ff99",
-        help_text="хорошо",
-    )
-    lvl3 = models.CharField(
-        "Уровень 3",
-        max_length=7,
-        default="#fffa88",
-        help_text="неплохо",
-    )
-    lvl4 = models.CharField(
-        "Уровень 4",
-        max_length=7,
-        default="#ffd278",
-        help_text="плохо",
-    )
-    lvl5 = models.CharField(
-        "Уровень 5",
-        max_length=7,
-        default="#ff998b",
-        help_text="критично",
-    )
-
-    def __str__(self):
-        return f"Цвета измерений клиентов"
-
-    class Meta:
-        verbose_name = "Цвета измерений"
-        verbose_name_plural = "Цвета измерений"
-
-    @classmethod
-    def get_colors(cls) -> dict:
-        """
-        Retrieves the colors data as dict.
-
-        Returns:
-            dict: The colors data.
-        """
-        return model_to_dict(cls.objects.get(), exclude=["id"])
-
-
 class Levels(models.Model):
     """Settings of the parameter's levels for color indication."""
 
@@ -417,6 +352,71 @@ class Levels(models.Model):
         return result
 
 
+def anthropometry_photo_path(instance, filename):
+    """
+    Return the path for the anthropometry photos of the client.
+    Example: "clients/1/anthropometry/2023/filename.jpg"
+    """
+
+    return f"clients/{instance.client.id}/anthropometry/{instance.date.year}/{filename}"
+
+
+class Anthropo(models.Model):
+    """Anthropometry measurements of the client"""
+
+    date = models.DateField("Дата", auto_now_add=True)
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    shoulder = models.DecimalField(
+        "Плечо", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    chest = models.DecimalField(
+        "Грудь", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    waist = models.DecimalField(
+        "Талия", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    belly = models.DecimalField(
+        "Живот", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    buttocks = models.DecimalField(
+        "Ягодицы", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    hip = models.DecimalField(
+        "Бедро", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+    shin = models.DecimalField(
+        "Голень", max_digits=4, decimal_places=1, null=True, blank=True
+    )
+
+    photo_1 = models.ImageField(
+        "Фото спереди",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+    photo_2 = models.ImageField(
+        "Фото сзади",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+    photo_3 = models.ImageField(
+        "Фото сбоку",
+        upload_to=anthropometry_photo_path,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"Антропометрия №{self.id}"
+
+    class Meta:
+        ordering = ["-date"]
+        get_latest_by = "date"
+        verbose_name = "Антропометрия"
+        verbose_name_plural = "Антропометрия"
+
+
 class PhotoAccess(models.Model):
     """Access to the client's photos for the expert"""
 
@@ -432,6 +432,3 @@ class PhotoAccess(models.Model):
     class Meta:
         verbose_name = "Доступ к фото"
         verbose_name_plural = "Доступ к фото"
-
-
-Colors.objects.get_or_create()

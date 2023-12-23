@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
+        "is_expert",
         "is_active",
         "is_superuser",
     )

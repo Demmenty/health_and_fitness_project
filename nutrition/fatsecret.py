@@ -5,7 +5,7 @@ from typing import Union
 from fatsecret import Fatsecret
 
 from config.settings import FS_CONSUMER_KEY, FS_CONSUMER_SECRET
-from home.utils import convert_epoch_to_date, convert_to_datetime
+from main.utils import convert_epoch_to_date, convert_to_datetime
 from nutrition.cache import FSCacheManager
 from nutrition.dataclasses import FoodDetails, Serving
 from nutrition.models import FatSecretEntry
