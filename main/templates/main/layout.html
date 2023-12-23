@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <header class="border-bottom shadow position-relative py-3">
+    <header class="border-bottom shadow bg-white position-relative py-3">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-lg-3 mb-2 mb-lg-0">
@@ -28,10 +28,26 @@
                     </a>
                 </div>
                 <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0">
-                    <li><a href="#about_specialist_section" class="nav-link px-2 px-xl-3">О специалисте</a></li>
-                    <li><a href="#why_section" class="nav-link px-2 px-xl-3">О проекте</a></li>
-                    <li><a href="#what_section" class="nav-link px-2 px-xl-3">Услуги</a></li>
-                    <li><a href="#consultation_section" class="nav-link px-2 px-xl-3">Консультация</a></li>
+                    <li>
+                        <a href="{% url 'main:home' %}#about_specialist_section" class="nav-link px-2 px-xl-3">
+                            О специалисте
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'main:home' %}#why_section" class="nav-link px-2 px-xl-3">
+                            О проекте
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'main:home' %}#what_section" class="nav-link px-2 px-xl-3">
+                            Услуги
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'main:home' %}#consultation_section" class="nav-link px-2 px-xl-3">
+                            Консультация
+                        </a>
+                    </li>
                 </ul>
                 <div class="col-lg-3 text-nowrap text-end">
                     {% if user.is_authenticated %}
