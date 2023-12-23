@@ -4,7 +4,12 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #F3F5F9;
+}
 .nav-link {
     font-weight: 500;
     color: #495057;
