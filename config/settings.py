@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 DOMAIN_NAME = config("DOMAIN_NAME")
 
@@ -15,7 +15,7 @@ ALLOWED_HOSTS = [DOMAIN_NAME]
 
 # CSRF
 
-CSRF_TRUSTED_ORIGINS = [DOMAIN_NAME]
+CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN_NAME}", f"http://{DOMAIN_NAME}"]
 
 CSRF_FAILURE_VIEW = "users.views.csrf_failure"
 
