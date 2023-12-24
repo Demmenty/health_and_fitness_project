@@ -121,9 +121,13 @@ async function applyTrainingDateColors() {
             type: "GET", 
         });
 
+        const dateCellMap = {};
+        calendarDatesTable.find('td').each(function() {
+            dateCellMap[$(this).text()] = $(this);
+        });
+
         for (const [day, trainings] of Object.entries(schedule)) {
-            const dateCell = calendarDatesTable.find(`td:contains(${day})`);
-            trainings.forEach(training => dateCell.addClass(training));
+            trainings.forEach(training => dateCellMap[day].addClass(training));
         }
     }
     catch(error) {
