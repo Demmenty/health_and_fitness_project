@@ -8,14 +8,11 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-DOMAIN_NAME = config("DOMAIN_NAME")
+DOMAIN = config("DOMAIN")
 
-ALLOWED_HOSTS = [DOMAIN_NAME, "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [DOMAIN, "localhost", "127.0.0.1"]
 
-
-# CSRF
-
-CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN_NAME}", f"http://{DOMAIN_NAME}"]
+CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}", f"http://{DOMAIN}"]
 
 CSRF_FAILURE_VIEW = "users.views.csrf_failure"
 

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from client.decorators import client_required
-from config.settings import DOMAIN_NAME
+from config.settings import DOMAIN
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
 from users.utils import get_client_id
@@ -48,7 +48,7 @@ def link_fatsecret(request):
     """
 
     oauth_verifier = request.GET.get("oauth_verifier")
-    callback_url = DOMAIN_NAME + reverse("nutrition:link_fatsecret")
+    callback_url = DOMAIN + reverse("nutrition:link_fatsecret")
 
     fs = FSManager()
 
