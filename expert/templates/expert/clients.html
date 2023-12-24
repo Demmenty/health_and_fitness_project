@@ -99,7 +99,7 @@
                                 <details>
                                     <summary class="mb-2">последняя активность</summary>
                                     <p class="ms-3">
-                                        Последний вход: {{ client.last_login|date:"d.m" }}
+                                        Последний вход: {{ client.last_login|date:"d.m.Y" }}
                                     </p>
                                     {% for log in client.logs %}
                                         <p class="ms-3">

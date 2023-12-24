@@ -170,8 +170,10 @@
                     {{ start_date|date:'d b y' }} ↔ {{ end_date|date:'d b y' }}
                 </button>
             </div>
-            <form id="select-days-form" method="get" class="d-flex align-items-center gap-2">
+            <form id="select-days-form" method="get"
+                class="d-flex align-items-center gap-2">
                 <label for="id_days" class="fw-500">Дни:</label>
+                <input type="hidden" name="client_id" value="{{ client.id }}">
                 <input type="number" id="id_days" name="days" min="1" value="{{ metrics|length }}"
                     class="form-control pe-1 py-0 text-center">
                 <button type="submit" class="btn btn-primary py-0 px-1" title="Получить измерения">✓</button>
