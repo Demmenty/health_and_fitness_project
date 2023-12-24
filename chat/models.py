@@ -23,7 +23,7 @@ class Message(models.Model):
         related_name="recipient",
     )
 
-    text = models.TextField("Текст", blank=True)
+    text = models.TextField("Текст", null=True, blank=True)
     image = models.ImageField(
         "Изображение", upload_to="chat/image", null=True, blank=True
     )
