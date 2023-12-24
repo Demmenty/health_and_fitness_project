@@ -10,7 +10,7 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 DOMAIN_NAME = config("DOMAIN_NAME")
 
-ALLOWED_HOSTS = [DOMAIN_NAME]
+ALLOWED_HOSTS = [DOMAIN_NAME, "localhost", "127.0.0.1"]
 
 
 # CSRF
