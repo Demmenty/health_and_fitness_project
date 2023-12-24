@@ -95,16 +95,19 @@
                                     {{ client.new_messages_count|add_ending:"новое сообщение,новых сообщений,новых сообщений" }}
                                 </p>
                             {% endif %}
-                            {% if client.logs %}
-                            <details>
-                                <summary class="mb-2">последняя активность</summary>
-                                {% for log in client.logs %}
+                            {% if client.last_login %}
+                                <details>
+                                    <summary class="mb-2">последняя активность</summary>
                                     <p class="ms-3">
-                                        {{ log.action_time|date:"d.m" }}: {{ log.modelname }}<br>
-                                        <small>{{ log.description }}</small>
+                                        Последний вход: {{ client.last_login|date:"d.m" }}
                                     </p>
-                                {% endfor %}
-                                <!-- TODO link to the full logs page -->
+                                    {% for log in client.logs %}
+                                        <p class="ms-3">
+                                            {{ log.action_time|date:"d.m" }}: {{ log.modelname }}<br>
+                                            <small>{{ log.description }}</small>
+                                        </p>
+                                    {% endfor %}
+                                    <!-- TODO link to the full logs page -->
                                 </details>
                             {% endif %}
                         </div>

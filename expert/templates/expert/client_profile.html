@@ -68,6 +68,10 @@
                         <td class="label">Тариф:</td>
                         <td class="text-center">индивидуальный</td>
                     </tr>
+                    <tr>
+                        <td class="label">Дата регистрации:</td>
+                        <td class="text-center">{{ client.date_joined|date:"d E Y" }}</td>
+                    </tr>
                 </table>
                 <div class="d-flex justify-content-center gap-4">
                     <a href="{% url 'expert:client_contacts' client.id %}" title="Контакты" class="filter-hover-primary">
