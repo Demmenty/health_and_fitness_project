@@ -33,7 +33,9 @@ class User(AbstractUser):
         unique=True,
         error_messages={"unique": "Пользователь с такой почтой уже существует."},
     )
-    avatar = models.ImageField("Аватар", upload_to=avatars_path, blank=True, null=True)
+    avatar = models.ImageField(
+        "Аватар", upload_to=avatars_path, max_length=200, blank=True, null=True
+    )
     sex = models.CharField("Пол", max_length=1, choices=Sex.choices, null=True)
     birthday = models.DateField("День рождения", null=True)
     height = models.PositiveSmallIntegerField(
