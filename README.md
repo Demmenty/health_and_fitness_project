@@ -14,7 +14,7 @@ Main features:
 
 ## Demo
 
-https://healthfitness-demmenty.pythonanywhere.com
+https://www.fullstack-fitness.com/
 
 ## Technologies
 
@@ -22,15 +22,34 @@ Django, SQLite, HTML, CSS, Javascript, Jquery, Bootstrap.
 
 ## Installation
 
-create .env file with your settings according to .env.example
+- create .env file with your settings according to .env.example
 
+- create virtual environment and activate it
+```
+python -m venv venv
+venv\Scripts\activate
+```
+
+- install requirements
 ```
 pip install -r requirements.txt
+```
+
+- run migrations, load fixtures and collect static files
+```
 python manage.py migrate
 python manage.py loaddata ./fixtures/metrics_colors.json
 python manage.py loaddata ./fixtures/training_areas.json
 python manage.py loaddata ./fixtures/training_tools.json
 python manage.py collectstatic
+```
+
+- create superuser-expert because it is mandatory
+```
 python manage.py createexpert
+```
+
+- run server
+```
 python manage.py runserver
 ```
