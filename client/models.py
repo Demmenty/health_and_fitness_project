@@ -368,8 +368,8 @@ class Contacts(models.Model):
         return f"Контакты: {self.client}"
 
     class Meta:
-        verbose_name = "Контакты клиента"
-        verbose_name_plural = "Контакты клиентов"
+        verbose_name = "Контакты"
+        verbose_name_plural = "Контакты"
 
 
 class Log(models.Model):
