@@ -613,19 +613,31 @@ async function showMonthTop() {
 
 /**
  * Updates the monthly top food tables with the data retrieved from the server.
- *
  */
 async function updateMonthTop() {
-    const monthTop = await getMonthlyTopFoodRequest(nutritionMonth);
-    const { top_by_amount, top_by_calories, no_metric } = monthTop;
-
-    if (!$.isEmptyObject(no_metric)) {
-        updateFoodMetricsForm(no_metric);
-        foodMetricsModal.show();
+    try {
+        const monthTop = await getMonthlyTopFoodRequest(nutritionMonth);
+        const { top_by_amount, top_by_calories, no_metric } = monthTop;
+    
+        if (!$.isEmptyObject(no_metric)) {
+            updateFoodMetricsForm(no_metric);
+            foodMetricsModal.show();
+        }
+    
+        updateMonthTopTable(top_by_amount, topByAmountTable)
+        updateMonthTopTable(top_by_calories, topByCaloriesTable);
     }
+    catch (error) {
+        console.error('updateMonthTop error', error);
 
-    updateMonthTopTable(top_by_amount, topByAmountTable)
-    updateMonthTopTable(top_by_calories, topByCaloriesTable);
+        if (error.responseText == "Error 12: User is performing too many actions: please try again later") {
+            await new Promise(resolve => setTimeout(resolve, 30000));
+            await updateMonthTop();
+        } 
+        else {
+            showDangerAlert(`${error.status} ${error.responseText}`);
+        }
+    }
 }
 
 /**

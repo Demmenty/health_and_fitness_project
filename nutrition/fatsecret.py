@@ -292,12 +292,9 @@ class FSManager:
         food_details = fs_cache.get_food_details(food_id)
 
         if food_details is None:
-            try:
-                fs_food_details = self.session.food_get(food_id)
-                food_details = parse_food_details(fs_food_details)
-                fs_cache.save_food_details(food_id, food_details)
-            except Exception:
-                food_details = None
+            fs_food_details = self.session.food_get(food_id)
+            food_details = parse_food_details(fs_food_details)
+            fs_cache.save_food_details(food_id, food_details)
 
         return food_details
 
