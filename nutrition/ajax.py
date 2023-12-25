@@ -5,10 +5,12 @@ from django.http import (
     HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
+    HttpResponseServerError,
     JsonResponse,
 )
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
+from fatsecret.fatsecret import GeneralError as FatsecretGeneralError
 
 from expert.decorators import expert_required
 from nutrition.cache import FSCacheManager
@@ -195,7 +197,11 @@ def get_monthly_top_food(request):
 
     fs = FSManager(client_entry)
 
-    monthly_food = fs.get_monthly_food(month)
+    try:
+        monthly_food = fs.get_monthly_food(month)
+    except FatsecretGeneralError as e:
+        return HttpResponseServerError(str(e))
+
     top_by_amount = fs.calc_monthly_top(monthly_food, "amount")
     top_by_calories = fs.calc_monthly_top(monthly_food, "calories")
 
