@@ -1,8 +1,8 @@
 {% extends layout %}
 {% load static %}
-{% load custom_filters %}
 
 {% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client/css/questionnaires.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/client_health.css' %}">
 {% endblock %}
 
@@ -15,14 +15,14 @@
 направляющую на страницу с историей активности с фильтром по модели Health -->
 <section id="client-health-section">
     <div class="container">
-        {% if not health_data or not health_data.is_filled %}
+        {% if not instance or not instance.is_filled %}
             <div id="health-form-card" class="card shadow-sm mx-auto" style="max-width: 30rem;">
                 <div class="card-header bg-primary text-light text-center">
                     <h5 class="mb-0">Анкета здоровья</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-center mt-4 mb-5">
-                        Данные о здоровье не заполнены.
+                    <p class="text-center my-4">
+                        Данные не заполнены.
                     </p>
                     <div class="d-flex justify-content-between">
 						<button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
             </div>
-            {% for form in health_forms|slice:"1:" %}
+            {% for form in forms|slice:"1:" %}
                 <div id="health-form-part-{{ forloop.counter }}" class="card shadow-sm mx-auto mb-4" style="max-width: 936px;">
                     <div class="card-header bg-primary text-light text-center">
                         <h5 class="mb-0">{{ form.header }}</h5>
@@ -136,19 +136,19 @@
                                 <div id="{{ field.name }}">
                                     {% if field.field.widget.input_type == 'checkbox' %}
                                         <div class="form-check">
-                                            {{ field|append_attr:"disabled" }}
+                                            {{ field }}
                                             {{ field.label_tag }}
                                         </div>
                                     {% elif field.field.widget.input_type == 'radio' %}
                                         <p>{{ field.label }}</p>
                                         {% for radio in field|slice:"1:" %}
-                                            <div class="form-check disabled">
+                                            <div class="form-check">
                                                 {{ radio }}
                                             </div>
                                         {% endfor %}
                                     {% else %}
                                         {{ field.label_tag }}
-                                        {{ field|append_attr:"readonly" }}
+                                        {{ field }}
                                     {% endif %}
                                     <div class="helptext text-secondary ms-4">{{ field.help_text }}</div>
                                 </div>

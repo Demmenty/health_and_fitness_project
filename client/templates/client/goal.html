@@ -1,0 +1,105 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client/css/questionnaires.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: анкета цели</title>
+{% endblock %}
+
+{% block content %}
+{% with user.is_expert as is_expert %}
+<section id="client-goal-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 696px;">
+            <div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Цель</h5>
+			</div>
+            <div class="card-body">
+                {% if is_expert and not form.instance.id %}
+                    <p class="text-center my-4">
+                        Данные не заполнены.
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                    </div>
+                {% else %}
+                    <form method="post" class="d-flex flex-column gap-4 mt-3">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            {% if field.name == "importance" %}
+                                <div id="importance" class="form-group">
+                                    <div>{{ field.label_tag }}</div>
+                                    <output class="d-block fw-bold fs-2 text-primary text-center" id="importanceoutput">
+                                        {{ field.value|default:"?" }}
+                                    </output>
+                                    <div>{{ field }}</div>
+                                    <small class="helptext text-secondary">{{ field.help_text }}</small>
+                                    <p class="text-muted align-self-start mb-0">
+                                        <span class="fw-bold">0</span>
+                                        = совершенно не важна, меня заставили
+                                    </p>
+                                    <p class="text-muted align-self-start mb-0">
+                                        <span class="fw-bold">10</span>
+                                        = в моей жизни нет ничего важнее!
+                                    </p>
+                                    {% for error in field.errors %}
+                                        <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% elif field.name == "readiness" %}
+                                <div id="readiness" class="form-group">
+                                    <div>{{ field.label_tag }}</div>
+                                    <output class="d-block fw-bold fs-2 text-primary text-center" id="readinessoutput">
+                                        {{ field.value|default:"?" }}
+                                    </output>
+                                    <div>{{ field }}</div>
+                                    {% for choice in form.instance.ReadinessToChange.choices %}
+                                        {% if choice.0 == field.value %}
+                                            <p id="choice_{{ forloop.counter}}"
+                                                class="text-muted align-self-start readiness-choice">
+                                                {{ choice.1 }}
+                                            </p>
+                                        {% else %}
+                                            <p id="choice_{{ forloop.counter}}" style="display: none;" 
+                                                class="text-muted align-self-start readiness-choice">
+                                                {{ choice.1 }}
+                                            </p>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <small class="helptext text-secondary">{{ field.help_text }}</small>
+                                    {% for error in field.errors %}
+                                        <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div id="{{ field.name }}" class="form-group">
+                                    <div>{{ field.label_tag }}</div>
+                                    <div>{{ field }}</div>
+                                    <small class="helptext text-secondary">{{ field.help_text }}</small>
+                                    {% for error in field.errors %}
+                                        <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor%}
+                        <div class="d-flex justify-content-between">
+                            <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                            {% if not is_expert %}
+                                <input type="submit" class="btn btn-primary" value="Сохранить">
+                            {% endif %}
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endwith %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'client/js/goal.js' %}"></script>
+{% endblock %}

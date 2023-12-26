@@ -83,7 +83,8 @@
                     <a href="{% url 'expert:client_contacts' client.id %}" title="Контакты" class="filter-hover-primary">
                         <img src="{% static 'expert/img/envelope.svg' %}" width="20">
                     </a>
-                    <a href="{% url 'expert:client_health' client.id %}" title="Данные о здоровье" class="filter-hover-primary">
+                    <a href="{% url 'expert:client_questionnaires' %}?client_id={{ client.id }}" 
+                        title="Анкеты" class="filter-hover-primary">
                         <img src="{% static 'expert/img/postcard-heart.svg' %}" width="20">
                     </a>
                 </div>

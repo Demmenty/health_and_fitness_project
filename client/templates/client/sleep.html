@@ -1,0 +1,54 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client/css/questionnaires.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: анкета сна</title>
+{% endblock %}
+
+{% block content %}
+{% with user.is_expert as is_expert %}
+<section id="client-sleep-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+            <div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Сон</h5>
+			</div>
+            <div class="card-body">
+                {% if is_expert and not form.instance.id %}
+                    <p class="text-center my-4">
+                        Данные не заполнены.
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                    </div>
+                {% else %}
+                    <form method="post" class="d-flex flex-column gap-3 mt-3">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div id="{{ field.name }}" class="form-group">
+                                <div>{{ field.label_tag }}</div>
+                                <div>{{ field }}</div>
+                                <small class="helptext text-secondary">{{ field.help_text }}</small>
+                                {% for error in field.errors %}
+                                    <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endfor%}
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                            {% if not is_expert %}
+                                <input type="submit" class="btn btn-primary" value="Сохранить">
+                            {% endif %}
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endwith %}
+{% endblock %}

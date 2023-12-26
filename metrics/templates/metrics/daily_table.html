@@ -61,7 +61,7 @@
                     {% for day in metrics %}
                     <tr>
                         <td title="Дата измерения">
-                            {{ day.date|date:"j.m" }}
+                            {{ day.date|date:"D j.m" }}
                         </td>
                         <td class="td_feel" value="{{ day.feel }}" title="Самочувствие">
                             {{ day.feel|default:"" }}
