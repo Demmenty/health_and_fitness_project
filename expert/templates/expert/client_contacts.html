@@ -1,6 +1,5 @@
 {% extends layout %}
 {% load static %}
-{% load custom_filters %}
 
 {% block title %}
 	<title>{{ client|capfirst }}: контакты</title>
@@ -11,21 +10,17 @@
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 936px;">
 			<div class="card-header bg-primary text-light text-center">
-                <h5 class="mb-0">{{ contacts_form.header }}</h5>
+                <h5 class="mb-0">{{ form.header }}</h5>
 			</div>
 			<div class="card-body d-flex flex-column mt-3 gap-3">
                 <div id="email">
                     <label for="id_email">Почта:</label>
-                    <input type="text" name="email" value="{{ client.email }}" readonly class="form-control" id="id_email">
+                    <input type="text" name="email" value="{{ client.email }}" disabled class="form-control" id="id_email">
                 </div>
-                {% for field in contacts_form %}
+                {% for field in form %}
                     <div id="{{ field.name }}">
                         {{ field.label_tag }}
-                        {% if field.field.widget.input_type == 'select' %}
-                            {{ field|append_attr:"disabled" }}
-                        {% else %}
-                            {{ field|append_attr:"readonly"|remove_attr:"placeholder" }}
-                        {% endif %}
+                        {{ field }}
                     </div>
                 {% endfor %}
                 <div class="d-flex justify-content-between mt-4">

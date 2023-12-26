@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block title %}
-	<title>{{ user.username|capfirst }}: контакты</title>
+	<title>{{ client|capfirst }}: контакты</title>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 936px;">
 			<div class="card-header bg-primary text-light text-center">
-                <h5 class="mb-0">{{ contacts_form.header }}</h5>
+                <h5 class="mb-0">{{ form.header }}</h5>
 			</div>
 			<div class="card-body">
                 <form id="contacts-form" method="post" class="d-flex flex-column gap-4 mt-3">
@@ -28,7 +28,7 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    {% for field in contacts_form %}
+                    {% for field in form %}
                         <div id="{{ field.name }}">
                             {{ field.label_tag }}
                             {% if field.name != 'preferred_contact' %}
