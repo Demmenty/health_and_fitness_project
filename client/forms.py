@@ -425,6 +425,22 @@ class WeightForm(ModelForm):
             ),
         }
 
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client)
+        else:
+            create_log_entry(
+                form=self,
+                description="Клиент заполнил анкету",
+                client=client,
+            )
+
+        super().save(*args, **kwargs)
+
 
 class SleepForm(ModelForm):
     """Form for the client's sleep data."""
@@ -453,6 +469,22 @@ class SleepForm(ModelForm):
                 }
             ),
         }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client)
+        else:
+            create_log_entry(
+                form=self,
+                description="Клиент заполнил анкету",
+                client=client,
+            )
+
+        super().save(*args, **kwargs)
 
 
 class FoodForm(ModelForm):
@@ -504,6 +536,22 @@ class FoodForm(ModelForm):
                 }
             ),
         }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client)
+        else:
+            create_log_entry(
+                form=self,
+                description="Клиент заполнил анкету",
+                client=client,
+            )
+
+        super().save(*args, **kwargs)
 
 
 class GoalForm(ModelForm):
@@ -565,6 +613,22 @@ class GoalForm(ModelForm):
                 }
             ),
         }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client)
+        else:
+            create_log_entry(
+                form=self,
+                description="Клиент заполнил анкету",
+                client=client,
+            )
+
+        super().save(*args, **kwargs)
 
 
 class HealthFormPage0(ModelForm):
