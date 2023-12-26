@@ -195,26 +195,26 @@ def health(request, page: int):
 def contacts(request):
     """Handle the client's contacts forms"""
 
-    contacts = Contacts.objects.filter(client=request.user).first()
+    instance = Contacts.objects.filter(client=request.user).first()
 
     if request.method == "GET":
         email_form = UserEmailForm(instance=request.user)
-        contacts_form = ContactsForm(instance=contacts)
+        form = ContactsForm(instance=instance)
 
     if request.method == "POST":
         email_form = UserEmailForm(request.POST, instance=request.user)
-        contacts_form = ContactsForm(request.POST, instance=contacts)
+        form = ContactsForm(request.POST, instance=instance)
 
-        if email_form.is_valid() and contacts_form.is_valid():
-            contacts_form.instance.client = request.user
-            contacts_form.save()
+        if email_form.is_valid() and form.is_valid():
+            form.instance.client = request.user
+            form.save()
             email_form.save()
             return redirect("client:profile")
 
     template = "client/contacts.html"
     help_img_folder = "/static/client/img/contacts-help/"
     data = {
-        "contacts_form": contacts_form,
+        "form": form,
         "email_form": email_form,
         "help_img_folder": help_img_folder,
     }

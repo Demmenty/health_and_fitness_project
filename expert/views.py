@@ -69,14 +69,11 @@ def client_new(request):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_profile(request, id):
+def client_profile(request):
     """Render the client profile page for the expert."""
 
-    client = get_object_or_404(User, id=id)
-
     template = "expert/client_profile.html"
-    data = {"client": client}
-    return render(request, template, data)
+    return render(request, template)
 
 
 @expert_required
@@ -214,18 +211,17 @@ def client_health(request):
 
 @expert_required
 @require_http_methods(["GET"])
-def client_contacts(request, id):
+def client_contacts(request):
     """Render the client contacts page for the expert"""
 
-    client = get_object_or_404(User, id=id)
-    contacts = Contacts.objects.filter(client=client).first()
-    contacts_form = ContactsForm(instance=contacts)
+    client_id = get_client_id(request)
+    instance = Contacts.objects.filter(client_id=client_id).first()
+    form = ContactsForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
 
     template = "expert/client_contacts.html"
-    data = {
-        "client": client,
-        "contacts_form": contacts_form,
-    }
+    data = {"form": form}
     return render(request, template, data)
 
 

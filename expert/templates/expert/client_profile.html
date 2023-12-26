@@ -80,7 +80,8 @@
                     </tr>
                 </table>
                 <div class="d-flex justify-content-center gap-4">
-                    <a href="{% url 'expert:client_contacts' client.id %}" title="Контакты" class="filter-hover-primary">
+                    <a href="{% url 'expert:client_contacts' %}?client_id={{ client.id }}"
+                        title="Контакты" class="filter-hover-primary">
                         <img src="{% static 'expert/img/envelope.svg' %}" width="20">
                     </a>
                     <a href="{% url 'expert:client_questionnaires' %}?client_id={{ client.id }}" 
