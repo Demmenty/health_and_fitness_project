@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from client.decorators import client_required
+from client.utils import create_log_entry
 from config.settings import DOMAIN
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
@@ -47,6 +48,7 @@ def link_fatsecret(request):
        with FatSecret using the oauth_verifier and saves the tokens for future access.
     """
 
+    client = request.user
     oauth_verifier = request.GET.get("oauth_verifier")
     callback_url = DOMAIN + reverse("nutrition:link_fatsecret")
 
@@ -55,15 +57,21 @@ def link_fatsecret(request):
     # Step 1: Redirect the user to the FatSecret authorization URL
     if oauth_verifier is None:
         auth_url = fs.session.get_authorize_url(callback_url)
-        fs.save_session(request.user.id)
+        fs.save_session(client.id)
         return redirect(auth_url)
 
     # Step 2: Authenticate the user with FatSecret and save the tokens
     # (session must be the same!)
     try:
-        fs.load_session(request.user.id)
+        fs.load_session(client.id)
         tokens = fs.session.authenticate(oauth_verifier)
-        fs.save_tokens(client_tokens=tokens, client=request.user)
+        fs.save_tokens(client_tokens=tokens, client=client)
+        create_log_entry(
+            modelname="Данные FatSecret",
+            description="Аккаунт успешно подключен!",
+            client=client,
+            link=reverse("nutrition:nutrition") + f"?client_id={client.id}",
+        )
         return redirect("nutrition:nutrition")
 
     except KeyError as error:

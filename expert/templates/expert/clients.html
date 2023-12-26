@@ -105,6 +105,11 @@
                                         <p class="ms-3">
                                             {{ log.action_time|date:"d.m" }}: {{ log.modelname }}<br>
                                             <small>{{ log.description }}</small>
+                                            {% if log.link %}
+                                                <a href="{{ log.link }}" title="Подробнее" class="filter-hover-primary">
+                                                    <img src="{% static 'expert/img/question-circle.svg' %}" width="12">
+                                                </a>
+                                            {% endif %}
                                         </p>
                                     {% endfor %}
                                     <!-- TODO link to the full logs page -->

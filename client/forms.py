@@ -11,6 +11,7 @@ from django.forms import (
     Textarea,
     TextInput,
 )
+from django.urls import reverse
 
 from client.models import Contacts, Food, Goal, Health, Note, Sleep, Weight
 from client.utils import create_change_log_entry, create_log_entry
@@ -111,7 +112,9 @@ class ProfileForm(ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance)
+        client = self.instance
+        link = reverse("expert:client_profile") + f"?client_id={client.id}"
+        create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -133,7 +136,9 @@ class UserEmailForm(ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance)
+        client = self.instance
+        link = reverse("expert:client_profile") + f"?client_id={client.id}"
+        create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -176,14 +181,16 @@ class WeightForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_weight") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -221,14 +228,16 @@ class SleepForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_sleep") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -288,14 +297,16 @@ class FoodForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_food") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -365,14 +376,16 @@ class GoalForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_goal") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -483,7 +496,9 @@ class HealthFormPage1(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         if self.instance.is_filled:
-            create_change_log_entry(form=self, client=self.instance.client)
+            client = self.instance.client
+            link = reverse("expert:client_health") + f"?client_id={client.id}"
+            create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -550,7 +565,9 @@ class HealthFormPage2(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         if self.instance.is_filled:
-            create_change_log_entry(form=self, client=self.instance.client)
+            client = self.instance.client
+            link = reverse("expert:client_health") + f"?client_id={client.id}"
+            create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -745,7 +762,9 @@ class HealthFormPage3(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         if self.instance.is_filled:
-            create_change_log_entry(form=self, client=self.instance.client)
+            client = self.instance.client
+            link = reverse("expert:client_health") + f"?client_id={client.id}"
+            create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -819,7 +838,9 @@ class HealthFormPage4(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         if self.instance.is_filled:
-            create_change_log_entry(form=self, client=self.instance.client)
+            client = self.instance.client
+            link = reverse("expert:client_health") + f"?client_id={client.id}"
+            create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)
 
@@ -869,13 +890,17 @@ class HealthFormPage5(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_health") + f"?client_id={client.id}"
 
         if self.instance.is_filled:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             self.instance.is_filled = True
             create_log_entry(
-                form=self, description="Клиент заполнил анкету", client=client
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент заполнил анкету",
+                client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -978,6 +1003,8 @@ class ContactsForm(ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance.client)
+        client = self.instance.client
+        link = reverse("expert:client_contacts") + f"?client_id={client.id}"
+        create_change_log_entry(form=self, client=client, link=link)
 
         super().save(*args, **kwargs)

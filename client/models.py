@@ -486,12 +486,13 @@ class Contacts(models.Model):
 class Log(models.Model):
     """Change log of the client's information"""
 
-    action_time = models.DateField("Дата изменения", default=now, editable=False)
-    modelname = models.CharField("Модель данных", max_length=255)
-    description = models.CharField("Описание", max_length=255)
     client = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, verbose_name="Клиент"
     )
+    action_time = models.DateField("Дата изменения", default=now, editable=False)
+    modelname = models.CharField("Модель данных", max_length=255)
+    description = models.CharField("Описание", max_length=255)
+    link = models.URLField("Ссылка", max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Изменение №{self.pk}"
