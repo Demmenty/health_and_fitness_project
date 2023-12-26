@@ -11,7 +11,9 @@ from django.forms import (
     URLInput,
     inlineformset_factory,
 )
+from django.urls import reverse
 
+from client.utils import create_log_entry
 from training.models import Exercise, ExerciseRecord, Training
 
 
@@ -104,6 +106,25 @@ class ExerciseForm(ModelForm):
                 }
             ),
         }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a log about the changes if author is client."""
+
+        super().save(*args, **kwargs)
+
+        author = self.instance.author
+
+        if not author.is_expert:
+            link = (
+                reverse("training:exercise_detail", kwargs={"id": self.instance.id})
+                + f"?client_id={author.id}"
+            )
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description=f'Добавлено новое: "{self.instance.name}"',
+                client=author,
+                link=link,
+            )
 
 
 class StrengthTrainingForm(ModelForm):

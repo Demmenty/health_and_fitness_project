@@ -10,8 +10,9 @@ from django.forms import (
     Textarea,
     TextInput,
 )
+from django.urls import reverse
 
-from client.utils import create_log_entry
+from client.utils import create_change_log_entry, create_log_entry
 from metrics.models import Anthropo, Colors, Daily, Levels, PhotoAccess
 from users.models import User
 
@@ -179,13 +180,17 @@ class DailyMetricsForm(ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry."""
 
-        create_log_entry(
-            form=self,
-            description=f"Внесены измерения за {self.instance.date}",
-            client=self.instance.client,
-        )
-
         super().save(*args, **kwargs)
+
+        client = self.instance.client
+        link = reverse("metrics:daily") + f"?client_id={client.id}"
+
+        create_log_entry(
+            modelname=self.Meta.model._meta.verbose_name,
+            description=f"Внесены измерения за {self.instance.date}",
+            client=client,
+            link=link,
+        )
 
 
 class AnthropoMetricsForm(ModelForm):
@@ -271,6 +276,24 @@ class AnthropoMetricsForm(ModelForm):
                 }
             ),
         }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        super().save(*args, **kwargs)
+
+        client = self.instance.client
+        link = reverse("metrics:anthropo") + f"?client_id={client.id}"
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description=f"Внесены измерения за {self.instance.date}",
+                client=client,
+                link=link,
+            )
 
 
 class ColorsForm(ModelForm):
