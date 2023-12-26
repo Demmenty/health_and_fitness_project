@@ -639,6 +639,182 @@ class GoalForm(ModelForm):
         super().save(*args, **kwargs)
 
 
+class WeightForm(ModelForm):
+    """Form for the client's start weight data."""
+
+    class Meta:
+        model = Weight
+        fields = (
+            "weight_current",
+            "weight_min",
+            "weight_max",
+            "weight_avg",
+        )
+        widgets = {
+            "weight_current": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_min": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_max": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_avg": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+        }
+
+
+class SleepForm(ModelForm):
+    """Form for the client's sleep data."""
+
+    class Meta:
+        model = Sleep
+        fields = (
+            "time_asleep",
+            "time_wakeup",
+            "problems",
+        )
+        widgets = {
+            "time_asleep": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "time_wakeup": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "problems": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+        }
+
+
+class FoodForm(ModelForm):
+    """Form for the client's start food data."""
+
+    class Meta:
+        model = Food
+        fields = (
+            "daily_meal_amount",
+            "daily_snack_amount",
+            "common",
+            "weekly",
+            "yearly",
+            "favorite",
+        )
+        widgets = {
+            "daily_meal_amount": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "daily_snack_amount": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "common": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "weekly": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "yearly": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "favorite": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+        }
+
+
+class GoalForm(ModelForm):
+    """Form for the client's goal."""
+
+    class Meta:
+        model = Goal
+        fields = (
+            "description",
+            "measure",
+            "attempts",
+            "obstacles",
+            "importance",
+            "maxtime",
+            "readiness",
+        )
+        widgets = {
+            "description": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "measure": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "attempts": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "obstacles": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "importance": NumberInput(
+                attrs={
+                    "class": "form-range",
+                    "type": "range",
+                    "min": "0",
+                    "max": "10",
+                    "oninput": "importanceoutput.value=value",
+                }
+            ),
+            "maxtime": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "readiness": NumberInput(
+                attrs={
+                    "class": "form-range",
+                    "type": "range",
+                    "min": "1",
+                    "max": "6",
+                    "oninput": "readinessoutput.value=value",
+                }
+            ),
+        }
+
+
 class HealthFormPage0(ModelForm):
     """Form for starting the health questionnaire."""
 
