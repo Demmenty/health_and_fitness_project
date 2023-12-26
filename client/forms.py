@@ -677,14 +677,16 @@ class WeightForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_weight") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -722,14 +724,16 @@ class SleepForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_sleep") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -789,14 +793,16 @@ class FoodForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_food") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
@@ -866,14 +872,16 @@ class GoalForm(ModelForm):
         """Save the instance and create a Log entry about the changes."""
 
         client = self.instance.client
+        link = reverse("expert:client_goal") + f"?client_id={client.id}"
 
         if self.instance.id:
-            create_change_log_entry(form=self, client=client)
+            create_change_log_entry(form=self, client=client, link=link)
         else:
             create_log_entry(
-                form=self,
+                modelname=self.Meta.model._meta.verbose_name,
                 description="Клиент заполнил анкету",
                 client=client,
+                link=link,
             )
 
         super().save(*args, **kwargs)
