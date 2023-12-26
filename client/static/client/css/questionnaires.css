@@ -1,0 +1,7 @@
+.border-hover-primary:hover {
+    border-color: #cbd3ff !important;
+}
+
+.form-control[disabled] {
+    background-color: #f8f9fa;
+}

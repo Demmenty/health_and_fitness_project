@@ -9,10 +9,14 @@ from client.forms import (
     HEALTH_FORMS,
     LAST_HEALTH_FORM_PAGE,
     ContactsForm,
+    FoodForm,
+    GoalForm,
     ProfileForm,
+    SleepForm,
     UserEmailForm,
+    WeightForm,
 )
-from client.models import Contacts, Health
+from client.models import Contacts, Food, Goal, Health, Sleep, Weight
 
 
 @client_required
@@ -45,6 +49,103 @@ def profile_edit(request):
 
 
 @client_required
+@require_http_methods(["GET"])
+def questionnaires(request):
+    """Render the client's questionnaires selection page"""
+
+    template = "client/questionnaires.html"
+    return render(request, template)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def weight(request):
+    """Handle the client's weight form submission and rendering"""
+
+    instance = Weight.objects.filter(client=request.user).first()
+
+    if request.method == "GET":
+        form = WeightForm(instance=instance)
+
+    if request.method == "POST":
+        form = WeightForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
+            return redirect("client:questionnaires")
+
+    template = "client/weight.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def sleep(request):
+    """Handle the client's sleep form submission and rendering"""
+
+    instance = Sleep.objects.filter(client=request.user).first()
+
+    if request.method == "GET":
+        form = SleepForm(instance=instance)
+
+    if request.method == "POST":
+        form = SleepForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
+            return redirect("client:questionnaires")
+
+    template = "client/sleep.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def food(request):
+    """Handle the client's food form submission and rendering"""
+
+    instance = Food.objects.filter(client=request.user).first()
+
+    if request.method == "GET":
+        form = FoodForm(instance=instance)
+
+    if request.method == "POST":
+        form = FoodForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
+            return redirect("client:questionnaires")
+
+    template = "client/food.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def goal(request):
+    """Handle the client's goal form submission and rendering"""
+
+    instance = Goal.objects.filter(client=request.user).first()
+
+    if request.method == "GET":
+        form = GoalForm(instance=instance)
+
+    if request.method == "POST":
+        form = GoalForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
+            return redirect("client:questionnaires")
+
+    template = "client/goal.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@client_required
 @require_http_methods(["GET", "POST"])
 def health(request, page: int):
     """
@@ -59,7 +160,7 @@ def health(request, page: int):
         raise Http404
 
     if page == LAST_HEALTH_FORM_PAGE:
-        next_page_url = reverse_lazy("client:profile")
+        next_page_url = reverse_lazy("client:questionnaires")
     else:
         next_page_url = reverse_lazy("client:health", kwargs={"page": page + 1})
 
@@ -68,7 +169,7 @@ def health(request, page: int):
     if page == FIRST_HEALTH_FORM_PAGE and instance:
         return redirect(next_page_url)
     elif page != FIRST_HEALTH_FORM_PAGE and not instance:
-        return redirect("client:profile")
+        return redirect("client:questionnaires")
 
     if request.method == "GET":
         form = form_class(instance=instance)

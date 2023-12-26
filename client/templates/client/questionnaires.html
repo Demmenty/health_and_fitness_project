@@ -1,0 +1,86 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client/css/questionnaires.css' %}">
+{% endblock %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: анкеты</title>
+{% endblock %}
+
+{% block content %}
+{% with user.is_expert as is_expert %}
+<section id="questionnaires-selection-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
+            <div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Анкеты</h5>
+			</div>
+            <div class="card-body d-flex flex-column gap-3">
+                <a title="Анкета здоровья" class="text-black text-decoration-none"
+                    {% if is_expert %} href="{% url 'expert:client_health' %}?client_id={{ client.id }}"
+                    {% else %} href="{% url 'client:health' page=0 %}" {% endif %}>
+                    <div class="border border-hover-primary rounded px-3 py-2">
+                        <span>Здоровье</span>
+                        {% if client.health.is_filled %}
+                            <div class="float-end filter-primary">
+                                <img src="{% static 'client/img/check-circle.svg' %}" width="23">
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <a title="Анкета веса" class="text-black text-decoration-none"
+                    {% if is_expert %} href="{% url 'expert:client_weight' %}?client_id={{ client.id }}"
+                    {% else %} href="{% url 'client:weight' %}" {% endif %}>
+                    <div class="border border-hover-primary rounded px-3 py-2">
+                        <span>Вес</span>
+                        {% if client.weight.id %}
+                            <div class="float-end filter-primary">
+                                <img src="{% static 'client/img/check-circle.svg' %}" width="23">
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <a title="Анкета сна" class="text-black text-decoration-none"
+                    {% if is_expert %} href="{% url 'expert:client_sleep' %}?client_id={{ client.id }}"
+                    {% else %} href="{% url 'client:sleep' %}" {% endif %}>
+                    <div class="border border-hover-primary rounded px-3 py-2">
+                        <span>Сон</span>
+                        {% if client.sleep.id %}
+                            <div class="float-end filter-primary">
+                                <img src="{% static 'client/img/check-circle.svg' %}" width="23">
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <a title="Анкета питания" class="text-black text-decoration-none"
+                    {% if is_expert %} href="{% url 'expert:client_food' %}?client_id={{ client.id }}"
+                    {% else %} href="{% url 'client:food' %}" {% endif %}>
+                    <div class="border border-hover-primary rounded px-3 py-2">
+                        <span>Питание</span>
+                        {% if client.food.id %}
+                            <div class="float-end filter-primary">
+                                <img src="{% static 'client/img/check-circle.svg' %}" width="23">
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <a title="Анкета целей" class="text-black text-decoration-none"
+                    {% if is_expert %} href="{% url 'expert:client_goal' %}?client_id={{ client.id }}"
+                    {% else %} href="{% url 'client:goal' %}" {% endif %}>
+                    <div class="border border-hover-primary rounded px-3 py-2">
+                        <span>Цель</span>
+                        {% if client.goal.id %}
+                            <div class="float-end filter-primary">
+                                <img src="{% static 'client/img/check-circle.svg' %}" width="23">
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endwith %}
+{% endblock %}

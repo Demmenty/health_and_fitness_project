@@ -14,11 +14,121 @@ class Note(models.Model):
     workout = models.TextField("Тренировки", null=True, blank=True)
 
     def __str__(self):
-        return "Заметка"
+        return f"Личная заметка №{self.id}"
 
     class Meta:
         verbose_name = "Заметка"
-        verbose_name_plural = "Заметки"
+        verbose_name_plural = "Личные заметки"
+
+
+class Weight(models.Model):
+    """Client start weight data"""
+
+    client = models.OneToOneField(User, verbose_name="Клиент", on_delete=models.CASCADE)
+    weight_current = models.PositiveSmallIntegerField("Текущий вес")
+    weight_min = models.PositiveSmallIntegerField("Минимальный вес за последние 5 лет")
+    weight_max = models.PositiveSmallIntegerField("Максимальный вес за последние 5 лет")
+    weight_avg = models.PositiveSmallIntegerField(
+        "Средний вес между 20-25 годами",
+        null=True,
+        blank=True,
+        help_text="указывать, если сейчас 30 лет и более",
+    )
+
+    def __str__(self):
+        return f"Данные о весе №{self.id}"
+
+    class Meta:
+        verbose_name = "Данные о весе"
+        verbose_name_plural = "Вес"
+
+
+class Sleep(models.Model):
+    """Client sleep data"""
+
+    client = models.OneToOneField(User, verbose_name="Клиент", on_delete=models.CASCADE)
+    time_asleep = models.CharField("Время укладывания", max_length=255)
+    time_wakeup = models.CharField("Время вставания", max_length=255)
+    problems = models.TextField(
+        "Как часто нарушается сон и на какое время", default="", blank=True
+    )
+
+    def __str__(self):
+        return f"Данные о сне №{self.id}"
+
+    class Meta:
+        verbose_name = "Данные о сне"
+        verbose_name_plural = "Сон"
+
+
+class Food(models.Model):
+    """Client start food data"""
+
+    client = models.OneToOneField(User, verbose_name="Клиент", on_delete=models.CASCADE)
+    daily_meal_amount = models.CharField(
+        "Количество полноценных приёмов пищи в сутки", max_length=255
+    )
+    daily_snack_amount = models.CharField("Количество перекусов в сутки", max_length=255)
+    common = models.TextField(
+        "5 видов пищи, которую вы едите наиболее часто и регулярно"
+    )
+    weekly = models.TextField("5 видов пищи, которую вы едите примерно раз в неделю")
+    yearly = models.TextField("5 видов пищи, которую вы едите несколько раз в год")
+    favorite = models.TextField(
+        "5 видов пищи, которую вы считаете самой вкусной, желанной и любимой"
+    )
+
+    def __str__(self):
+        return f"Данные о питании №{self.id}"
+
+    class Meta:
+        verbose_name = "Данные о питании"
+        verbose_name_plural = "Питание"
+
+
+class Goal(models.Model):
+    """Client goal data"""
+
+    class ReadinessToChange(models.TextChoices):
+        CHOICE_1 = (
+            "1",
+            "Не вижу необходимости в серьёзных переменах, хочу лишь слегка скорректировать образ жизни.",
+        )
+        CHOICE_2 = "2", "Готов к переменам в образе жизни, скоро начну их воплощать."
+        CHOICE_3 = "3", "Хочу изменить свой образ жизни, но не уверен, что смогу."
+        CHOICE_4 = "4", "Начал менять образ жизни в течение последнего полугода."
+        CHOICE_5 = (
+            "5",
+            "Работаю над изменением образа жизни, но чувствую, что нуждаюсь в помощи, чтобы продвинуться дальше.",
+        )
+        CHOICE_6 = (
+            "6",
+            "Активно работаю над собой, продвигаюсь, но хочу делать это ещё лучше.",
+        )
+
+    client = models.OneToOneField(User, verbose_name="Клиент", on_delete=models.CASCADE)
+    description = models.TextField("Ваша цель")
+    measure = models.TextField(
+        "Какой показатель поможет нам эту цель измерить? (например, килограммы)"
+    )
+    attempts = models.TextField(
+        "Были ли ранее попытки достичь этой цели? Опишите их и назовите количество"
+    )
+    obstacles = models.TextField("Главные препятствия к достижению вашей цели")
+    importance = models.PositiveSmallIntegerField("Насколько важна указанная цель")
+    maxtime = models.TextField(
+        "Какое максимальное количество времени можно уделить достижению цели"
+    )
+    readiness = models.CharField(
+        "Готовность к изменениям", choices=ReadinessToChange.choices, max_length=1
+    )
+
+    def __str__(self):
+        return f"Данные о целях №{self.id}"
+
+    class Meta:
+        verbose_name = "Данные о целях"
+        verbose_name_plural = "Цели"
 
 
 class Health(models.Model):
@@ -242,6 +352,7 @@ class Health(models.Model):
         blank=True,
         null=True,
     )
+    daily_steps = models.CharField("Среднее количество шагов в сутки", max_length=255)
     has_signs_of_underrecovery_or_overtraining = models.BooleanField(
         "Имеются ли признаки, которые позволяют заподозрить недовосстановление или перетренированность?",
         default=False,
@@ -292,11 +403,11 @@ class Health(models.Model):
     )
 
     def __str__(self):
-        return f"Информация о здоровье: {self.client}"
+        return f"Данные здоровья №{self.id}"
 
     class Meta:
-        verbose_name = "Информация о здоровье"
-        verbose_name_plural = "Информация о здоровье"
+        verbose_name = "Данные о здоровье"
+        verbose_name_plural = "Здоровье"
 
 
 class Contacts(models.Model):
@@ -365,7 +476,7 @@ class Contacts(models.Model):
     )
 
     def __str__(self):
-        return f"Контакты: {self.client}"
+        return f"Контакты №{self.id}"
 
     class Meta:
         verbose_name = "Контакты"

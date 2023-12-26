@@ -1,13 +1,23 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from chat.models import Message
-from client.forms import HEALTH_FORMS, ContactsForm, HealthFormResult
-from client.models import Contacts, Health, Log
+from client.forms import (
+    HEALTH_FORMS,
+    ContactsForm,
+    FoodForm,
+    GoalForm,
+    HealthFormResult,
+    SleepForm,
+    WeightForm,
+)
+from client.models import Contacts, Food, Goal, Health, Log, Sleep, Weight
 from consults.forms import RequestViewForm
 from consults.models import Request
 from expert.decorators import expert_required
 from users.models import User
+from users.utils import get_client_id
 
 
 @expert_required
@@ -94,36 +104,109 @@ def client_unarchive(request, id):
 
 
 @expert_required
+@require_http_methods(["GET"])
+def client_questionnaires(request):
+    """Render the client's questionnaires selection page"""
+
+    template = "client/questionnaires.html"
+    return render(request, template)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_weight(request):
+    """Render the client's weight form"""
+
+    client_id = get_client_id(request)
+    instance = Weight.objects.filter(client_id=client_id).first()
+    form = WeightForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
+
+    template = "client/weight.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_sleep(request):
+    """Render the client's sleep form"""
+
+    client_id = get_client_id(request)
+    instance = Sleep.objects.filter(client_id=client_id).first()
+    form = SleepForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
+
+    template = "client/sleep.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_food(request):
+    """Render the client's food form"""
+
+    client_id = get_client_id(request)
+    instance = Food.objects.filter(client_id=client_id).first()
+    form = FoodForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
+
+    template = "client/food.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_goal(request):
+    """Render the client's goal form"""
+
+    client_id = get_client_id(request)
+    instance = Goal.objects.filter(client_id=client_id).first()
+    form = GoalForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
+
+    template = "client/goal.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
 @require_http_methods(["GET", "POST"])
-def client_health(request, id):
+def client_health(request):
     """
     GET: Render the client health form page for the expert.
     POST: Saves the health evaluation result.
     """
 
-    client = get_object_or_404(User, id=id)
-    health_data = Health.objects.filter(client=client).first()
-
-    if not health_data or not health_data.is_filled:
-        template = "expert/client_health.html"
-        data = {"client": client}
-        return render(request, template, data)
+    client_id = get_client_id(request)
+    instance = Health.objects.filter(client_id=client_id).first()
 
     if request.method == "GET":
-        result_form = HealthFormResult(instance=health_data)
+        result_form = HealthFormResult(instance=instance)
 
     if request.method == "POST":
-        result_form = HealthFormResult(request.POST, instance=health_data)
+        result_form = HealthFormResult(request.POST, instance=instance)
         if result_form.is_valid():
             result_form.save()
-            return redirect("expert:client_profile", id)
+            return redirect(
+                reverse("expert:client_questionnaires") + f"?client_id={client_id}"
+            )
+
+    forms = [form(instance=instance) for form in HEALTH_FORMS.values()]
+    for form in forms:
+        for field in form.fields.values():
+            field.widget.attrs["disabled"] = True
 
     template = "expert/client_health.html"
-    health_forms = [form(instance=health_data) for form in HEALTH_FORMS.values()]
     data = {
-        "client": client,
-        "health_data": health_data,
-        "health_forms": health_forms,
+        "instance": instance,
+        "forms": forms,
         "result_form": result_form,
     }
     return render(request, template, data)

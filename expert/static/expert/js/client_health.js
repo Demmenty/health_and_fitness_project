@@ -7,7 +7,10 @@ const loadParameters = {
 }
 
 $(document).ready(function() {
-    $(".disabled input").attr("disabled", true);
+    if (!evalTable.length) {
+        return;
+    }
+
     calculateWorkoutReadiness();
     evalTable.find('td').on('click', selectEvaluationParameter);
 })

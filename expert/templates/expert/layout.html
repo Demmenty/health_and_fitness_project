@@ -42,7 +42,7 @@
                         <li class="d-none d-sm-block">
                             <a href="{% url 'expert:client_profile' client.id %}?client_id={{ client.id }}" 
                             class="nav-link px-2 px-lg-3 
-                            {% if url in 'expert:client_profile, expert:client_contacts, expert:client_health' %} active {% endif %}">
+                            {% if 'profile' in url %} active {% endif %}">
                                 Профиль
                             </a>
                         </li>
