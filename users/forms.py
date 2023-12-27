@@ -9,6 +9,7 @@ from django.contrib.auth.forms import (
 )
 
 from users.models import User
+from users.utils import email_exists
 
 
 class UserLoginForm(AuthenticationForm):
@@ -82,6 +83,17 @@ class PasswordResetForm(PasswordResetForm):
             attrs={"autocomplete": "email", "class": "form-control"}
         ),
     )
+
+    def is_valid(self):
+        valid = super().is_valid()
+
+        if valid:
+            email = self.cleaned_data.get("email")
+            if not email_exists(email):
+                self.add_error("email", "Email не найден.")
+                valid = False
+
+        return valid
 
 
 class SetPasswordForm(SetPasswordForm):

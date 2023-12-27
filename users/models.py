@@ -66,11 +66,13 @@ class User(AbstractUser):
         return age
 
     def save(self, *args, **kwargs):
-        new_avatar_uploaded = (
+        self.email = self.email.lower()
+
+        is_new_avatar_uploaded = (
             self.avatar and self.avatar != self.__class__.objects.get(pk=self.pk).avatar
         )
 
-        if new_avatar_uploaded:
+        if is_new_avatar_uploaded:
             self.avatar = resize_uploaded_image(
                 self.avatar, self.avatar.name, square=True, size=(150, 150)
             )

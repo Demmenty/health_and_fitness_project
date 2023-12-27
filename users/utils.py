@@ -26,3 +26,17 @@ def get_client(request) -> User | None:
         return User.objects.filter(id=id).first()
 
     return request.user
+
+
+def email_exists(email: str) -> bool:
+    """
+    Check if an email exists in the database.
+
+    Args:
+        email (str): The email to check.
+
+    Returns:
+        bool: True if the email exists in the User model with is_active=True, False otherwise.
+    """
+
+    return User.objects.filter(email=email.lower(), is_active=True).exists()
