@@ -1,19 +1,19 @@
 /* chat-window */
 #chat {
-    bottom: 0;
-    max-height: 100vh;
+    margin-top: env(safe-area-inset-top);
     width: 100%;
     overflow: hidden;
+    bottom: 0;
 }
 @media (min-width: 576px) {
     #chat {
         left: 0;
-        width: 28rem;
+        width: 31rem;
     }
 }
 #chat-history {
     min-height: 16rem;
-    max-height: calc(100vh - 8rem);
+    max-height: calc(100vh - 8rem - env(safe-area-inset-top));
     overflow-y: auto;
 }
 
