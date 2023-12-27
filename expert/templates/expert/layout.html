@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{% static 'main/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'expert/css/layout.css' %}?update=1">
     {% if client %}
-        <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}?update=1">
+        <link rel="stylesheet" href="{% static 'chat/css/chat_card.css' %}?update=1">
         <link rel="stylesheet" href="{% static 'chat/css/chat_btn_fixed.css' %}">
         <link rel="stylesheet" href="{% static 'expert/css/notes.css' %}">
     {% endif %}
@@ -119,7 +119,8 @@
         {% include 'main/alerts.html' %}
         {% if client %}
             {% expert_notes %}
-            {% chat partner_id=client.id %}
+            {% chat_card partner_id=client.id %}
+            {% chat_button partner_id=client.id %}
         {% endif %}
         {% block content %}
         {% endblock %}
@@ -132,7 +133,7 @@
 <script src="{% static 'main/js/lazy_images.js' %}"></script>
 {% if client %}
     <script src="{% static 'main/js/draggable.js' %}?update=1"></script>
-    <script src="{% static 'chat/js/chat.js' %}?update=1"></script>
+    <script src="{% static 'chat/js/chat_card.js' %}"></script>
     <script src="{% static 'expert/js/notes.js' %}"></script>
 {% endif %}
 {% block script %}{% endblock %}

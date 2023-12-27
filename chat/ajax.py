@@ -1,13 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
-from django.db.models import Count
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from chat.forms import MessageForm
 from chat.models import Message
-from chat.utils import get_chat_participants
+from users.models import EXPERT
 
 
 @login_required
@@ -72,12 +71,12 @@ def get_last_msgs(request):
         HttpResponse: The JSON response containing the serialized messages.
     """
 
-    partner_id = request.GET.get("partner_id")
     limit = int(request.GET.get("limit", 10))
 
-    user, partner = get_chat_participants(request, partner_id)
+    user = request.user
+    partner_id = request.GET.get("partner_id") if user.is_expert else EXPERT.id
 
-    messages = Message.objects.filter_by_participants(user, partner)
+    messages = Message.objects.filter_by_participants(user.id, partner_id)
     last_messages = messages.order_by("-created_at")[:limit]
 
     data = serialize("json", last_messages)
@@ -101,16 +100,18 @@ def get_old_msgs(request):
         HttpResponse: The JSON response containing the serialized messages.
     """
 
-    partner_id = request.GET.get("partner_id")
     message_id = request.GET.get("message_id")
+    if not message_id:
+        return HttpResponseBadRequest(
+            "message_id to retrieve older messages from is required"
+        )
+
     limit = int(request.GET.get("limit", 10))
 
-    if not message_id:
-        return HttpResponseBadRequest("message_id is required")
+    user = request.user
+    partner_id = request.GET.get("partner_id") if user.is_expert else EXPERT.id
 
-    user, partner = get_chat_participants(request, partner_id)
-
-    messages = Message.objects.filter_by_participants(user, partner)
+    messages = Message.objects.filter_by_participants(user.id, partner_id)
     older_msgs = messages.filter(id__lt=message_id).order_by("-created_at")[:limit]
 
     data = serialize("json", older_msgs)
@@ -134,15 +135,13 @@ def get_new_msgs(request):
         HttpResponse: The JSON response containing the serialized messages.
     """
 
-    partner_id = request.GET.get("partner_id")
-    message_id = request.GET.get("message_id")
-
-    user, partner = get_chat_participants(request, partner_id)
-
-    messages = Message.objects.filter_by_participants(user, partner).order_by(
+    user = request.user
+    partner_id = request.GET.get("partner_id") if user.is_expert else EXPERT.id
+    messages = Message.objects.filter_by_participants(user.id, partner_id).order_by(
         "created_at"
     )
 
+    message_id = request.GET.get("message_id")
     if message_id:
         messages = messages.filter(id__gt=message_id).order_by("created_at")
 
@@ -167,12 +166,9 @@ def count_new_msgs(request):
         JsonResponse: A JSON response containing the amount of new messages.
     """
 
-    partner_id = request.GET.get("partner_id")
+    user = request.user
+    partner_id = request.GET.get("partner_id") if user.is_expert else EXPERT.id
 
-    user, partner = get_chat_participants(request, partner_id)
+    new_msgs = Message.objects.filter(sender_id=partner_id, recipient=user, seen=False)
 
-    new_msgs_count = Message.objects.filter(
-        sender=partner, recipient=user, seen=False
-    ).aggregate(count=Count("id"))["count"]
-
-    return JsonResponse({"count": new_msgs_count})
+    return JsonResponse({"count": new_msgs.count()})
