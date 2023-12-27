@@ -50,7 +50,7 @@ def link_fatsecret(request):
 
     client = request.user
     oauth_verifier = request.GET.get("oauth_verifier")
-    callback_url = DOMAIN + reverse("nutrition:link_fatsecret")
+    callback_url = "http://" + DOMAIN + reverse("nutrition:link_fatsecret")
 
     fs = FSManager()
 
