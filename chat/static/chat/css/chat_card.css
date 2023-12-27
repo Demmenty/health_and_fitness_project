@@ -36,6 +36,12 @@
     height: auto;
     object-fit: contain;
 }
+@media (min-width: 576px) {
+    #chat .message-image img {
+        max-width: 33rem;
+    }
+}
+
 #chat .message-image img.lazy {
     box-shadow: inset 0px 0px 13px 2px #6a717980;
     background-image: url("/static/chat/img/hourglass.svg");

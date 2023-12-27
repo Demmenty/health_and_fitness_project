@@ -55,6 +55,11 @@ body {
     height: auto;
     object-fit: contain;
 }
+@media (min-width: 576px) {
+    #chat .message-image img {
+        max-width: 33rem;
+    }
+}
 #chat-scroll-btn {
     bottom: 0.5rem;
     right: 1rem;
