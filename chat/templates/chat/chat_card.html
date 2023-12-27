@@ -1,12 +1,7 @@
 {% load static %}
 
-<button id="chat-btn" class="btn-img rounded-circle bg-white shadow" title="Чат">
-  <span class="badge position-absolute translate-middle rounded-pill bg-primary">{% if new_msgs_count > 0 %}{{ new_msgs_count }}{% endif %}</span>
-  <img src="{% static 'chat/img/chat.png' %}" width="50" class="filter-secondary filter-hover-primary">
-</button>
-
 <div id="chat" class="card draggable shadow" data-first-open="true" style="display: none;">
-  <params
+  <params data-url-chat="{% url 'chat:chat' %}"
     data-url-get-last="{% url 'chat:get_last_msgs' %}"
     data-url-get-old="{% url 'chat:get_old_msgs' %}" 
     data-url-get-new="{% url 'chat:get_new_msgs' %}"
@@ -46,9 +41,9 @@
       </template>
     </div>
     <button id="chat-scroll-btn" type="button" title="Вниз" style="display: none;" 
-      class="btn-img rounded-circle position-absolute shadow-sm bg-white">
-      <img src="{% static 'chat/img/arrow-down-circle.svg' %}" width="25" 
-        class="filter-secondary filter-hover-primary">
+      class="btn-img border rounded-circle position-absolute shadow-sm bg-white">
+        <img src="{% static 'chat/img/arrow-down-short.svg' %}" width="25" 
+          class="filter-secondary filter-hover-primary">
     </button>
   </div>
   <div class="card-footer bg-aux px-2">

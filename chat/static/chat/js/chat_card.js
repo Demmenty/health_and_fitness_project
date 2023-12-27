@@ -41,6 +41,9 @@ $(document).ready(function () {
     chatBtn.on('click', toggleChat);
     chat.find(".btn-close").on("click", toggleChat);
     chatMsgText.on("input change", adjustChatHeight);
+    chatBtn.on('mousedown', function(event) {
+        if (event.which === 2) openChatAsNewTab();
+    })
 
     // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
@@ -192,6 +195,11 @@ function toggleChat() {
 }
 
 async function openChat() {
+    if (isMobileDevice()) {
+        openChatAsNewPage();
+        return;
+    }
+
     chatBtn.addClass('active');
     chat.show();
 
@@ -199,6 +207,16 @@ async function openChat() {
         chat.data("first-open", false);
         loadLastMessages();
     }
+}
+
+function openChatAsNewTab() {
+    const chatUrl = chatParams.data("url-chat") + "?partner_id=" + chatPartnerID;
+    window.open(chatUrl, '_blank');
+}
+
+function openChatAsNewPage() {
+    const chatUrl = chatParams.data("url-chat") + "?partner_id=" + chatPartnerID;
+    window.location.href = chatUrl;
 }
 
 function closeChat() {
@@ -955,4 +973,8 @@ function preventDefault(event) {
  */
 async function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function isMobileDevice() {
+    return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/);
 }

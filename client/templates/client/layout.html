@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{% static 'main/css/alerts.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat_btn_absolute.css' %}">
-    <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}?update=1">
+    <link rel="stylesheet" href="{% static 'chat/css/chat_card.css' %}">
     <link rel="stylesheet" href="{% static 'client/css/note.css' %}">
     {% block stylesheet %}{% endblock %}
     {% block title %}{% endblock %}
@@ -78,7 +78,8 @@
         {% endblock %}
     </main>
     <footer class="position-relative">
-        {% chat %}
+        {% chat_card %}
+        {% chat_button %}
         {% note %}
         <div class="container">
             <div class="d-flex gap-4 py-4 justify-content-between align-items-center align-items-sm-start align-items-md-center flex-column flex-sm-row flex-sm-wrap">
@@ -146,7 +147,7 @@
 <script src="{% static 'main/js/alerts.js' %}"></script>
 <script src="{% static 'main/js/lazy_images.js' %}"></script>
 <script src="{% static 'main/js/draggable.js' %}?update=1"></script>
-<script src="{% static 'chat/js/chat.js' %}?update=1"></script>
+<script src="{% static 'chat/js/chat_card.js' %}"></script>
 <script src="{% static 'client/js/note.js' %}"></script>
 {% block script %}{% endblock %}
 

@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'main/img/logo.svg' %}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'chat/css/chat_page.css' %}">
+    <title>Чат</title>
+</head>
+
+<body>
+    <div id="chat" class="card">
+        <params
+            data-url-get-last="{% url 'chat:get_last_msgs' %}"
+            data-url-get-old="{% url 'chat:get_old_msgs' %}" 
+            data-url-get-new="{% url 'chat:get_new_msgs' %}"
+            data-url-count-new="{% url 'chat:count_new_msgs' %}"
+            data-url-set-seen="{% url 'chat:set_seen' %}">
+        </params>
+        <div class="card-header d-flex justify-content-center bg-aux">
+            <h6 class="mb-0 text-nowrap col-auto">
+                {% if user.is_expert %}
+                    Чат с клиентом
+                {% else %}
+                    Чат с экспертом
+                {% endif %}
+            </h6>
+        </div>
+        <div class="card-body position-relative py-0 pe-0">
+            <div id="chat-history" class="d-flex flex-column">
+                <template id="message-template-user">
+                    <div id="" class="chat-message user-message d-flex flex-column align-items-end my-2 me-2 p-1" data-id="">
+                        <div class="chat-message-header d-flex flex-row gap-1">
+                            <small>Я</small>
+                            <small> • </small>
+                            <small class="created-at"></small>
+                        </div>
+                        <p class="message-text m-0"></p>
+                        <div class="message-audio"></div>
+                        <div class="message-image"></div>
+                    </div>
+                </template>
+                <template id="message-template-partner">
+                    <div id="" class="chat-message partner-message d-flex flex-column align-items-start my-2 me-2 p-1" data-id="">
+                        <div class="chat-message-header d-flex flex-row gap-1">
+                            <small>{{ partner.username|title }}</small>
+                            <small> • </small>
+                            <small class="created-at"></small>
+                        </div>
+                        <p class="message-text m-0"></p>
+                        <div class="message-audio"></div>
+                        <div class="message-image"></div>
+                    </div>
+                </template>
+            </div>
+            <button id="chat-scroll-btn" type="button" title="Вниз" style="display: none;" 
+                class="btn-img border rounded-circle position-absolute shadow-sm bg-white">
+                <img src="{% static 'chat/img/arrow-down-short.svg' %}" width="25" 
+                    class="filter-secondary filter-hover-primary">
+            </button>
+        </div>
+        <div class="card-footer bg-aux px-2">
+            <form id="message-form" method="POST" action="{% url 'chat:save_msg' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ message_form.sender }}
+                {{ message_form.recipient }}
+                <div style="display: none;">
+                    {{ message_form.image }}
+                    {{ message_form.audio }}
+                </div>
+                <div id="attach-files-preview" class="d-flex flex-column gap-1 mb-1">
+                    <div id="input-img-preview" style="display: none;">
+                        <img src="{% static 'chat/img/file-earmark-image.svg' %}" width="19"
+                            title="Прикрепляемое изображение" class="file-type filter-primary">
+                        <span class="trancate mx-2"></span>
+                        <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
+                            title="Удалить" class="filter-secondary filter-hover-primary pointer">
+                    </div>
+                    <div id="input-audio-preview" style="display: none;">
+                        <img src="{% static 'chat/img/file-earmark-music.svg' %}" width="19"
+                            title="Прикрепляемое аудио" class="file-type filter-primary">
+                        <div class="status"></div>
+                        <img src="{% static 'chat/img/stop-fill.svg' %}" id="stop-audio" width="22"
+                            title="Завершить запись" class="filter-secondary filter-hover-primary pointer">
+                        <img src="{% static 'chat/img/x.svg' %}" id="input-audio-delete" width="25"
+                            title="Удалить" class="filter-secondary filter-hover-primary pointer">
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <div class="d-flex flex-column justify-content-end gap-2 pb-1">
+                        <label id="input-img-label" for="id_image" title="Прикрепить изображение" class="btn-img align-self-center">
+                            <img src="{% static 'chat/img/card-image.svg' %}" width="22" class="filter-secondary filter-hover-primary">
+                        </label>
+                        <button type="button" id="audio-record-btn" title="Голосовое сообщение" class="btn-img">
+                            <img src="{% static 'chat/img/mic.svg' %}" width="25" class="filter-secondary filter-hover-primary">
+                        </button>
+                    </div>
+                    {{ message_form.text }}
+                    <div class="d-flex flex-column justify-content-end gap-2 pb-1">
+                        <button type="submit" title="Отправить сообщение (Enter)" class="btn-img">
+                            <img src="{% static 'chat/img/send-fill.svg' %}" width="23" class="filter-secondary filter-hover-primary">
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'main/js/lazy_images.js' %}"></script>
+<script src="{% static 'chat/js/chat_page.js' %}"></script>
+
+</html>
