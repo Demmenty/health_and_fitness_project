@@ -194,7 +194,6 @@ function toggleChat() {
 async function openChat() {
     chatBtn.addClass('active');
     chat.show();
-    chatMsgText.focus();
 
     if (chat.data("first-open")) {
         chat.data("first-open", false);
