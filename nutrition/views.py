@@ -67,7 +67,7 @@ def link_fatsecret(request):
         tokens = fs.session.authenticate(oauth_verifier)
         fs.save_tokens(client_tokens=tokens, client=client)
         create_log_entry(
-            modelname="Данные FatSecret",
+            modelname="FatSecret",
             description="Аккаунт успешно подключен!",
             client=client,
             link=reverse("nutrition:nutrition") + f"?client_id={client.id}",

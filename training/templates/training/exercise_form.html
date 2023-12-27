@@ -27,7 +27,7 @@
 			</div>
             <div class="card-body">
                 <form id="exercise-form" method="POST" action="{% url 'training:exercise_save' %}" 
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" data-url-delete="{% url 'training:exercise_delete' %}">
                     {% csrf_token %}
                     <div class="d-flex flex-column gap-3">
                         <input type="hidden" name="id" value="{{ form.instance.id|default_if_none:'' }}">
@@ -161,8 +161,11 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-3">
+                    <div class="d-flex justify-content-between gap-3 mt-3">
                         <button type="button" class="btn btn-outline-primary back-close-btn">Назад</button>
+                        {% if form.instance.id %}
+                            <button id="delete-exercise-btn" type="button" class="btn btn-danger ms-auto">Удалить</button>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                 </form>
@@ -173,6 +176,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'training/js/exercise_form.js' %}"></script>
+    <script src="{% static 'training/js/exercise_form.js' %}?update=1"></script>
     <script src="{% static 'main/js/backclose_btn.js' %}"></script>
 {% endblock %}

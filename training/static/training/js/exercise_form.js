@@ -1,6 +1,7 @@
 const exerciseForm = $("#exercise-form");
 const exerciseAreas = $("#areas");
 const dummy = $("#dummy");
+const deleteBtn = $("#delete-exercise-btn");
 
 $(document).ready(function() {
     addCheckboxStyle();
@@ -8,6 +9,7 @@ $(document).ready(function() {
     exerciseForm.on("submit", saveExercise);
     exerciseAreas.find("input").on("change", selectAreaCheckbox);
     dummy.find(".area").on("click", selectAreaOnDummy);
+    deleteBtn.on("click", deleteExercise);
 })
 
 /**
@@ -35,16 +37,16 @@ function updateDummyAreas() {
 async function saveExercise(event) {
     event.preventDefault();
 
-    const form = $(this);
-    const btn = form.find("button[type=submit]");
+    const submitBtn = exerciseForm.find("button[type=submit]");
 
-    btn.prop("disabled", true);
+    deleteBtn.prop("disabled", true);
+    submitBtn.prop("disabled", true);
 
     try {
         await $.ajax({
-            url: form.attr("action"),
-            type: form.attr("method"),
-            data: new FormData(form[0]),
+            url: exerciseForm.attr("action"),
+            type: exerciseForm.attr("method"),
+            data: new FormData(exerciseForm[0]),
             processData: false,
             contentType: false,
         });
@@ -56,7 +58,8 @@ async function saveExercise(event) {
         showDangerAlert(error);
     }
     finally {
-        btn.prop("disabled", false);
+        deleteBtn.prop("disabled", false);
+        submitBtn.prop("disabled", false);
     }
 }
 
@@ -83,4 +86,35 @@ function selectAreaOnDummy() {
 
     checkbox.trigger("click");
     dummyAreas.toggleClass("filtered", checkbox.prop("checked"));
+}
+
+
+async function deleteExercise() {
+    if (!confirm("Вы уверены, что хотите удалить упражнение?")) {
+        return;
+    }
+
+    const submitBtn = exerciseForm.find("button[type=submit]");
+
+    deleteBtn.prop("disabled", true);
+    submitBtn.prop("disabled", true);
+
+    try {
+        await $.ajax({
+            url: exerciseForm.data("url-delete"),
+            type: "POST",
+            data: {
+                csrfmiddlewaretoken: exerciseForm.find("input[name=csrfmiddlewaretoken]").val(),
+                id: exerciseForm.find("input[name=id]").val(),
+            },
+        });
+
+        showSuccessAlert("Упражнение удалено");
+        deleteBtn.remove();
+        submitBtn.remove();
+    }
+    catch (error) {
+        console.error("deleteExercise error:", error);
+        showDangerAlert(error);
+    }
 }

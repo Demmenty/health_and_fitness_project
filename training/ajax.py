@@ -97,7 +97,6 @@ def exercise_save(request):
     """Saves an exercise object"""
 
     id = request.POST.get("id")
-
     instance = get_object_or_404(Exercise, id=id) if id else None
 
     if instance and (instance.author != request.user and not request.user.is_expert):
@@ -112,3 +111,19 @@ def exercise_save(request):
         return HttpResponse("ok")
 
     return JsonResponse({"errors": form.errors}, status=400)
+
+
+@login_required
+@require_http_methods(["POST"])
+def exercise_delete(request):
+    """Deletes an exercise object"""
+
+    id = request.POST.get("id")
+    instance = get_object_or_404(Exercise, id=id)
+
+    if instance.author != request.user and not request.user.is_expert:
+        return HttpResponseForbidden("Вы не можете редактировать это упражнение")
+
+    instance.delete()
+
+    return HttpResponse("ok")

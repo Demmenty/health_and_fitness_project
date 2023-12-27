@@ -19,5 +19,6 @@ urlpatterns = [
     ),
     path("exercise/", views.exercise_form, name="exercise_form"),
     path("exercise/save/", ajax.exercise_save, name="exercise_save"),
+    path("exercise/delete/", ajax.exercise_delete, name="exercise_delete"),
     path("exercise/<int:id>/details/", views.exercise_detail, name="exercise_detail"),
 ]
