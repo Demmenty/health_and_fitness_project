@@ -38,7 +38,7 @@
 }
 @media (min-width: 576px) {
     #chat .message-image img {
-        max-width: 33rem;
+        max-width: 28rem;
     }
 }
 
