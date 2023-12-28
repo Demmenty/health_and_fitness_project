@@ -47,7 +47,7 @@ class RecommendationForm(ModelForm):
             "comment": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": "7",
+                    "rows": 10,
                 }
             ),
         }

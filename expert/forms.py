@@ -14,7 +14,7 @@ class ClientMainNoteForm(ModelForm):
             "text": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": 25,
+                    "rows": 19,
                 }
             ),
         }
@@ -41,21 +41,25 @@ class ClientMonthlyNoteForm(ModelForm):
             "general": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 15,
                 }
             ),
             "measurements": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 15,
                 }
             ),
             "nutrition": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 15,
                 }
             ),
             "workout": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
+                    "rows": 15,
                 }
             ),
         }

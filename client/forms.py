@@ -28,25 +28,25 @@ class NoteForm(ModelForm):
             "general": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
-                    "rows": 20,
+                    "rows": 19,
                 }
             ),
             "measurements": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
-                    "rows": 20,
+                    "rows": 19,
                 }
             ),
             "nutrition": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
-                    "rows": 20,
+                    "rows": 19,
                 }
             ),
             "workout": Textarea(
                 attrs={
                     "class": "form-control border-top-0 rounded-0 rounded-bottom",
-                    "rows": 20,
+                    "rows": 19,
                 }
             ),
         }
