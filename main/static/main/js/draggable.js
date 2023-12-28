@@ -48,6 +48,7 @@ function makeDraggable(elmnt) {
             elmnt.style.top = (newTop < 0 ? 0 : (newTop > maxHeight ? maxHeight : newTop)) + 'px';
             elmnt.style.left = (newLeft < 0 ? 0 : (newLeft > maxWidth ? maxWidth : newLeft)) + 'px';
             elmnt.style.bottom = 'unset';
+            elmnt.style.right = 'unset';
         }
 
         function closeDragElement() {

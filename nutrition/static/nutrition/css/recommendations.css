@@ -1,17 +1,13 @@
 #recommendations {
-    top: 3rem;
+    bottom: 0;
+    max-height: 100vh;
     width: 100%;
     overflow: hidden;
 }
 @media (min-width: 576px) {
     #recommendations {
-        top: 187px;
         left: 1.5rem;
-        max-width: 400px;
-    }
-}
-@media (min-width: 992px) {
-    #recommendations {
-        top: 81px;
+        bottom: 1.5rem;
+        width: fit-content;
     }
 }

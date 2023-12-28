@@ -14,7 +14,7 @@ class ClientMainNoteForm(ModelForm):
             "text": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": 19,
+                    "rows": 20,
                 }
             ),
         }
