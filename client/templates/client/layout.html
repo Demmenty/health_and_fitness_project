@@ -26,43 +26,78 @@
 <body>
     <header class="border-bottom bg-white shadow py-2">
         <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
-                <div class="col-lg-3 mb-2 mb-lg-0">
-                    <a href="/" class="d-inline-flex align-middle">
+            {% with request.resolver_match.view_name as url %}
+            <div class="d-flex align-items-center justify-content-between gap-3">
+                <div class="col-lg-3">
+                    <a href="/">
                         <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="90">
                     </a>
                 </div>
-                <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-lg-0">
-                    {% with request.resolver_match.view_name as url %}
-                    <li>
-                        <a href="{% url 'client:profile' %}" class="nav-link px-2 px-lg-3 
-                        {% if 'profile' in url %} active {% endif %}">
-                            Профиль
+                <div class="d-none d-lg-block">
+                    <ul class="nav justify-content-center">
+                        <li>
+                            <a href="{% url 'client:profile' %}" class="nav-link px-2 px-lg-3 
+                            {% if 'profile' in url %} active {% endif %}">
+                                Профиль
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'metrics:daily' %}" class="nav-link px-2 px-lg-3 
+                                {% if 'metrics' in url %} active {% endif %}">
+                                Измерения
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'nutrition:nutrition' %}" class="nav-link px-2 px-lg-3
+                                {% if 'nutrition' in url %} active {% endif %}">
+                                Питание
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'training:trainings' %}" class="nav-link px-2 px-lg-3 
+                                {% if 'training' in url %} active {% endif %}">
+                                Тренировки
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-lg-none">
+                    <div class="dropdown">
+                        <a href="#" class="d-block" data-bs-toggle="dropdown">
+                            {% if client.avatar %}
+                                <img src="{{ client.avatar.url }}" width="47" class="rounded-circle">
+                            {% else %}
+                                {% if client.sex == 'M' %}
+                                    <img src="{% static 'client/img/avatar_male.png' %}" width="47" class="rounded-circle">
+                                {% elif client.sex == 'F' %}
+                                    <img src="{% static 'client/img/avatar_female.png' %}" width="47" class="rounded-circle">
+                                {% else %}
+                                    <img src="{% static 'client/img/avatar.png' %}" width="47" class="rounded-circle">
+                                {% endif %}
+                            {% endif %}
                         </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'metrics:daily' %}" class="nav-link px-2 px-lg-3 
-                            {% if 'metrics' in url %} active {% endif %}">
-                            Измерения
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'nutrition:nutrition' %}" class="nav-link px-2 px-lg-3
-                            {% if 'nutrition' in url %} active {% endif %}">
-                            Питание
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'training:trainings' %}" class="nav-link px-2 px-lg-3 
-                            {% if 'training' in url %} active {% endif %}">
-                            Тренировки
-                        </a>
-                    </li>
-                    {% endwith %}
-                </ul>
-                <div class="col-lg-3 text-nowrap text-end">
+                        <ul class="dropdown-menu text-small shadow position-absolute"
+                            style="inset: 0px auto auto 0px; margin: 0px; transform: translate(-111px, 34px);" data-popper-placement="bottom-end">
+                            <li><a class="dropdown-item" href="{% url 'client:profile' %}">Профиль</a></li>
+                            <li><a class="dropdown-item" href="{% url 'metrics:daily' %}">Измерения</a></li>
+                            <li><a class="dropdown-item" href="{% url 'nutrition:nutrition' %}">Питание</a></li>
+                            <li><a class="dropdown-item" href="{% url 'training:trainings' %}">Тренировки</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Админ панель</a></li>
+                            {% endif %}
+                            <li>
+                                <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="Submit" class="dropdown-item" title="Выход" value="Выход">
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-none d-lg-block col-lg-3 text-end">
                     {% if user.is_staff %}
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary me-2">Админ панель</a>
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap me-2">Админ панель</a>
                     {% endif %}
                     <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
                         {% csrf_token %}
@@ -70,6 +105,7 @@
                     </form>
                 </div>
             </div>
+            {% endwith %}
         </div>
     </header>
     <main>
