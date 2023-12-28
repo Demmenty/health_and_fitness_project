@@ -17,11 +17,6 @@
     white-space: pre-line;
 }
 
-/* recommendations */
-#recommendations {
-    width: 350px;
-}
-
 /* metrics */
 #select-days-form button {
     width: 25px;
