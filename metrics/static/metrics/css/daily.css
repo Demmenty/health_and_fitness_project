@@ -1,15 +1,17 @@
 /* comments */
 .comment {
     left: 0;
+    bottom: 0;
+    max-height: 90vh;
     width: 100%;
-    bottom: 2rem;
     overflow: auto;
-    resize: both;
 }
 @media (min-width: 576px) {
     .comment {
         left: 1.5rem;
+        bottom: 1.5rem;
         width: 350px;
+        resize: both;
     }
 }
 .comment-text {
