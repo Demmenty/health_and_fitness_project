@@ -10,8 +10,7 @@
 }
 
 #note {
-    bottom: 0;
-    max-height: 100vh;
+    top: 3rem;
     width: 100%;
     overflow: hidden;
 }
@@ -20,6 +19,11 @@
         left: 1.5rem;
         bottom: 1.5rem;
         width: fit-content;
+    }
+}
+@media (min-width: 992px) {
+    #note {
+        top: 88px;
     }
 }
 #note textarea:focus,
