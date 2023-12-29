@@ -37,16 +37,6 @@ pip install -r requirements.txt
 
 - run migrations, load fixtures and collect static files
 ```
-pip install -r requirements.txt
-```
-
-- run migrations, load fixtures and collect static files
-```
-pip install -r requirements.txt
-```
-
-- run migrations, load fixtures and collect static files
-```
 python manage.py migrate
 python manage.py loaddata ./fixtures/metrics_colors.json
 python manage.py loaddata ./fixtures/training_areas.json
