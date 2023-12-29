@@ -1,15 +1,10 @@
 .alert {
     position: fixed;
-    top: 182px;
+    top: 60px;
     right: 12px;
     z-index: 100;
     transform: translateX(calc(100% + 30px));
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
-}
-@media (min-width: 992px) {
-    .alert {
-        top: 88px;
-    }
 }
 .alert.active {
     transform: translateX(0%);
