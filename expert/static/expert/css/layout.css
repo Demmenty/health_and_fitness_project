@@ -10,9 +10,7 @@ body {
     flex-direction: column;
     background: #F3F5F9;
 }
-.overflow-auto {
-    overflow: auto;
-}
+/* header */
 .nav-link {
     font-weight: 500;
     color: #495057;
@@ -27,6 +25,41 @@ body {
 #logo:hover {
     filter: brightness(0.8);
 }
+/* main */
+main {
+    position: relative;
+    min-height: calc(100vh - 59px);
+    padding-top: 1.5rem;
+    padding-bottom: 2.5rem;
+}
+@media (min-width: 576px) {
+    main {
+        min-height: calc(100vh - 59px);
+    }
+}
+
+/* common */
+table th {
+    font-weight: 500;
+}
+table th {
+    font-weight: 500;
+}
+.fw-500 {
+    font-weight: 500;
+}
+.pointer {
+    cursor: pointer;
+}
+.w-fit {
+    width: fit-content;
+}
+.h-fit {
+    height: fit-content;
+}
+.overflow-auto {
+    overflow: auto;
+}
 .fw-500 {
     font-weight: 500;
 }
@@ -39,8 +72,7 @@ body {
     white-space: pre-wrap;
 }
 
-
-/* colors */
+/* colors & buttons */
 .filter-white {
     filter: invert(1);
 }
@@ -108,7 +140,6 @@ body {
     --bs-btn-disabled-bg: #c23b6a;
     --bs-btn-disabled-border-color: #c23b6a;
 }
-
 .form-check-input:checked {
     background-color: #657ff7;
     border-color: #657ff7;
@@ -124,8 +155,6 @@ body {
     border-color: #dee2e6;
     box-shadow: none;
 }
-
-/* buttons */
 .btn-img {
     border: none;
     background: none;
@@ -150,55 +179,6 @@ button.disabled:hover {
     color: #252525;
     filter: invert(68%) sepia(64%) saturate(0%) hue-rotate(235deg) !important;
     cursor: default;
-}
-
-/* main */
-main {
-    margin-top: 1.5rem;
-    margin-bottom: 2.5rem;
-}
-
-/* footer */
-footer {
-    background-color: #657ff7;
-    border-top-color: #b9b9b9;
-    border-top-style: solid;
-    border-top-width: 3px;
-    margin-top: auto;
-}
-.mail_ref {
-    color: #b9b9b9;
-    text-decoration: none;
-}
-.mail_ref:hover {
-    color: black;
-}
-.contact_ico {
-    height: 25px;
-    filter: invert(1);
-}
-.contact_ico:hover {
-    filter: brightness();
-}
-
-/* common */
-table th {
-    font-weight: 500;
-}
-table th {
-    font-weight: 500;
-}
-.fw-500 {
-    font-weight: 500;
-}
-.pointer {
-    cursor: pointer;
-}
-.w-fit {
-    width: fit-content;
-}
-.h-fit {
-    height: fit-content;
 }
 
 /* cards */

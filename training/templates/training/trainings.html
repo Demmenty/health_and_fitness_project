@@ -4,7 +4,7 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'main/css/page_menu.css' %}">
     <link rel="stylesheet" href="{% static 'training/css/calendar.css' %}">
-    <link rel="stylesheet" href="{% static 'training/css/trainings.css' %}">
+    <link rel="stylesheet" href="{% static 'training/css/trainings.css' %}?update=1">
 {% endblock %}
 
 {% block title %}
@@ -150,9 +150,9 @@
             {% endfor %}
         </div>
         {% if not trainings %}
-        <div id="cat" class="{% if user.is_expert %} no-footer {% endif %}">
-            <img src="{% static 'training/img/cat_with_yarn.svg' %}" class="w-100">
-        </div>
+            <div id="cat" class="position-absolute">
+                <img src="{% static 'training/img/cat_with_yarn.svg' %}" class="w-100">
+            </div>
         {% endif %}
     </div>
 </section>

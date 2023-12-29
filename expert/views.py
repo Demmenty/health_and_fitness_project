@@ -26,7 +26,6 @@ def clients(request):
     """Render the clients page for the expert"""
 
     clients = User.objects.filter(is_expert=False, is_active=True)
-    new_requests = Request.objects.filter(seen=False)
 
     for client in clients:
         client.logs = Log.objects.filter(client=client).order_by("-id")[:10]
@@ -35,10 +34,7 @@ def clients(request):
         ).count()
 
     template = "expert/clients.html"
-    data = {
-        "clients": clients,
-        "new_requests": new_requests,
-    }
+    data = {"clients": clients}
     return render(request, template, data)
 
 
@@ -48,13 +44,9 @@ def archived_clients(request):
     """Render the archived clients page for the expert"""
 
     clients = User.objects.filter(is_expert=False, is_active=False)
-    new_requests = Request.objects.filter(seen=False)
 
     template = "expert/clients.html"
-    data = {
-        "clients": clients,
-        "new_requests": new_requests,
-    }
+    data = {"clients": clients}
     return render(request, template, data)
 
 

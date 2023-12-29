@@ -10,23 +10,14 @@ summary::-webkit-details-marker {
 }
 
 #cat {
-    position: absolute;
     z-index: -1;
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 16rem;
-    max-width: 20rem;
-    bottom: 19rem;
+    width: 11rem;
+    bottom: 1rem;
 }
 @media (min-width: 576px) {
     #cat {
-        left: unset;
-        transform: none;
-        bottom: 11rem;
+        width: 16rem;
     }
-}
-#cat.no-footer {
-    bottom: 2rem !important;
 }
 
 .exercise-record[open] summary {

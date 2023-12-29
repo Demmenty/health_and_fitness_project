@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'main/css/alerts.css' %}">
-    <link rel="stylesheet" href="{% static 'client/css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'client/css/layout.css' %}?update=1">
     <link rel="stylesheet" href="{% static 'chat/css/chat_btn_absolute.css' %}">
     <link rel="stylesheet" href="{% static 'chat/css/chat_card.css' %}?update=2">
     <link rel="stylesheet" href="{% static 'client/css/note.css' %}?update=2">
@@ -30,7 +30,7 @@
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <div class="col-lg-3">
                     <a href="/">
-                        <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="90">
+                        <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="80">
                     </a>
                 </div>
                 <div class="d-none d-lg-block">
@@ -63,21 +63,21 @@
                 </div>
                 <div class="d-lg-none">
                     <div class="dropdown">
-                        <a href="#" class="d-block" data-bs-toggle="dropdown">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
                             {% if client.avatar %}
-                                <img src="{{ client.avatar.url }}" width="47" class="rounded-circle">
+                                <img src="{{ client.avatar.url }}" width="42" class="rounded-circle">
                             {% else %}
                                 {% if client.sex == 'M' %}
-                                    <img src="{% static 'client/img/avatar_male.png' %}" width="47" class="rounded-circle">
+                                    <img src="{% static 'client/img/avatar_male.png' %}" width="42" class="rounded-circle">
                                 {% elif client.sex == 'F' %}
-                                    <img src="{% static 'client/img/avatar_female.png' %}" width="47" class="rounded-circle">
+                                    <img src="{% static 'client/img/avatar_female.png' %}" width="42" class="rounded-circle">
                                 {% else %}
-                                    <img src="{% static 'client/img/avatar.png' %}" width="47" class="rounded-circle">
+                                    <img src="{% static 'client/img/avatar.png' %}" width="42" class="rounded-circle">
                                 {% endif %}
                             {% endif %}
                         </a>
-                        <ul class="dropdown-menu text-small shadow position-absolute"
-                            style="inset: 0px auto auto 0px; margin: 0px; transform: translate(-111px, 34px);" data-popper-placement="bottom-end">
+                        <ul class="dropdown-menu text-small shadow position-absolute" data-popper-placement="bottom-end"
+                            style="inset: 0px auto auto 0px; margin: 0px; transform: translate(-111px, 34px);">
                             <li><a class="dropdown-item" href="{% url 'client:profile' %}">Профиль</a></li>
                             <li><a class="dropdown-item" href="{% url 'metrics:daily' %}">Измерения</a></li>
                             <li><a class="dropdown-item" href="{% url 'nutrition:nutrition' %}">Питание</a></li>
