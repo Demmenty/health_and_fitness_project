@@ -136,7 +136,257 @@ class UserEmailForm(ModelForm):
     def save(self, *args, **kwargs):
         """Save the instance and create a Log entry about the changes."""
 
-        create_change_log_entry(form=self, client=self.instance)
+        client = self.instance
+        link = reverse("expert:client_profile") + f"?client_id={client.id}"
+        create_change_log_entry(form=self, client=client, link=link)
+
+        super().save(*args, **kwargs)
+
+
+class WeightForm(ModelForm):
+    """Form for the client's start weight data."""
+
+    class Meta:
+        model = Weight
+        fields = (
+            "weight_current",
+            "weight_min",
+            "weight_max",
+            "weight_avg",
+        )
+        widgets = {
+            "weight_current": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_min": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_max": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+            "weight_avg": NumberInput(
+                attrs={
+                    "class": "form-control text-center",
+                }
+            ),
+        }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+        link = reverse("expert:client_weight") + f"?client_id={client.id}"
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент заполнил анкету",
+                client=client,
+                link=link,
+            )
+
+        super().save(*args, **kwargs)
+
+
+class SleepForm(ModelForm):
+    """Form for the client's sleep data."""
+
+    class Meta:
+        model = Sleep
+        fields = (
+            "time_asleep",
+            "time_wakeup",
+            "problems",
+        )
+        widgets = {
+            "time_asleep": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "time_wakeup": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "problems": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+        }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+        link = reverse("expert:client_sleep") + f"?client_id={client.id}"
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент заполнил анкету",
+                client=client,
+                link=link,
+            )
+
+        super().save(*args, **kwargs)
+
+
+class FoodForm(ModelForm):
+    """Form for the client's start food data."""
+
+    class Meta:
+        model = Food
+        fields = (
+            "daily_meal_amount",
+            "daily_snack_amount",
+            "common",
+            "weekly",
+            "yearly",
+            "favorite",
+        )
+        widgets = {
+            "daily_meal_amount": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "daily_snack_amount": TextInput(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "common": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "weekly": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "yearly": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+            "favorite": Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": "8",
+                }
+            ),
+        }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+        link = reverse("expert:client_food") + f"?client_id={client.id}"
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент заполнил анкету",
+                client=client,
+                link=link,
+            )
+
+        super().save(*args, **kwargs)
+
+
+class GoalForm(ModelForm):
+    """Form for the client's goal."""
+
+    class Meta:
+        model = Goal
+        fields = (
+            "description",
+            "measure",
+            "attempts",
+            "obstacles",
+            "importance",
+            "maxtime",
+            "readiness",
+        )
+        widgets = {
+            "description": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "measure": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "attempts": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "obstacles": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "importance": NumberInput(
+                attrs={
+                    "class": "form-range",
+                    "type": "range",
+                    "min": "0",
+                    "max": "10",
+                    "oninput": "importanceoutput.value=value",
+                }
+            ),
+            "maxtime": Textarea(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+            "readiness": NumberInput(
+                attrs={
+                    "class": "form-range",
+                    "type": "range",
+                    "min": "1",
+                    "max": "6",
+                    "oninput": "readinessoutput.value=value",
+                }
+            ),
+        }
+
+    def save(self, *args, **kwargs):
+        """Save the instance and create a Log entry about the changes."""
+
+        client = self.instance.client
+        link = reverse("expert:client_goal") + f"?client_id={client.id}"
+
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент заполнил анкету",
+                client=client,
+                link=link,
+            )
 
         super().save(*args, **kwargs)
 
