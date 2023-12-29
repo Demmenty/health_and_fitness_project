@@ -55,7 +55,7 @@ function handleRegistrationSuccess() {
     clientRegistrationForm.find("input").addClass("disabled");
     registrationStatus.removeClass('text-danger').addClass('text-info');
     registrationStatus.text(
-        "Клиент зарегистрирован.\n Не забудьте записать логин и пароль!"
+        "Клиент зарегистрирован.\n Логин и пароль отправлены ему на почту."
     );
     registrationSubmitBtn.remove();
     returnToClientsLink.removeClass('d-none');
