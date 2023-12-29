@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{% static 'expert/css/consult_requests.css' %}">
+    <link rel="stylesheet" href="{% static 'expert/css/consult_requests.css' %}?update=1">
 {% endblock %}
 
 {% block title %}
@@ -70,7 +70,9 @@
                 {% endwith %}
             {% endfor %} 
         </div>
-        <img src="{% static 'expert/img/cat_with_laptop.svg' %}" id="cat_with_laptop">
+        <div id="cat" class="position-absolute">
+            <img src="{% static 'expert/img/cat_with_laptop.svg' %}" class="w-100">
+        </div>
     </div>
 </section>
 {% endblock %}

@@ -1,22 +1,13 @@
 .request-card .helptext {
     display: none;
 }
-#cat_with_laptop {
-    position: fixed;
-    bottom: 0;
-    left: 0;
+#cat {
     z-index: -1;
-    padding: 15px;
-    width: 320px;
+    width: 12rem;
+    bottom: 1rem;
 }
 @media (min-width: 576px) {
-    #cat_with_laptop {
-        width: 460px;
-        left: 2rem;
-    }
-}
-@media (min-width: 992px) {
-    #cat_with_laptop {
-        left: auto;
+    #cat {
+        width: 16rem;
     }
 }
