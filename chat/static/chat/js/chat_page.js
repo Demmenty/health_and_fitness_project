@@ -202,7 +202,7 @@ function adjustChatHeight() {
         const headerHeight = chat.find(".card-header").outerHeight();
         const footerHeight = chat.find(".card-footer").outerHeight();
 
-        const allowance = headerHeight + footerHeight;
+        const allowance = headerHeight + footerHeight + 1;
         const historyHeight = `calc(100vh - ${allowance}px)`;
 
         chatHistory.css("max-height", historyHeight);
@@ -449,7 +449,7 @@ function renderMessage(message, lazy=true) {
 function renderNoMessagesStr() {
     return $("<p>", {
         id: "no-messages",
-        class: "text-center text-secondary my-4",
+        class: "text-center text-secondary my-4 me-3",
         text: "Нет сообщений",
     });
 }
@@ -790,6 +790,11 @@ async function handleMessageSending(event) {
 
     try {
         const response = await saveMessageRequest();
+
+        if (!Array.isArray(response)) {
+            throw "Что-то пошло не так. Скорее всего, сессия истекла.";
+        }
+
         const message = response[0];
         const scrolledToBottom = isChatScrolledToBottom(allowance=100);
 

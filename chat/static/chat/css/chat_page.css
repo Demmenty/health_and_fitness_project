@@ -36,8 +36,8 @@ body {
     height: 100vh;
 }
 #chat-history {
-    height: calc(100vh - 121px);
-    max-height: calc(100vh - 121px);
+    height: calc(100vh - 129px);
+    max-height: calc(100vh - 129px);
     overflow-y: auto;
 }
 #chat .partner-message.new {

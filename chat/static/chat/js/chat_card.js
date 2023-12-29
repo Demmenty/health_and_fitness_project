@@ -499,7 +499,7 @@ function renderMessage(message, lazy=true) {
 function renderNoMessagesStr() {
     return $("<p>", {
         id: "no-messages",
-        class: "text-center text-secondary my-4",
+        class: "text-center text-secondary my-4 me-3",
         text: "Нет сообщений",
     });
 }

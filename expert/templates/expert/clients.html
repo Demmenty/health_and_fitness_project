@@ -90,10 +90,12 @@
                                 </a>
                             </div>
                             {% if client.new_messages_count > 0 %}
-                                <p>
-                                    <img src="{% static 'expert/img/chat-text.svg' %}" width="18" class="filter-primary mb-1 me-1"> 
-                                    {{ client.new_messages_count|add_ending:"новое сообщение,новых сообщений,новых сообщений" }}
-                                </p>
+                                <a href="{% url 'chat:chat' %}?partner_id={{ client.id }}" title="Открыть чат" class="btn-link d-block mb-2">
+                                    <img src="{% static 'expert/img/chat-text.svg' %}" width="18" class="filter-primary me-1 mb-1">
+                                    <span class="text-black filter-hover-primary">
+                                        {{ client.new_messages_count|add_ending:"новое сообщение,новых сообщения,новых сообщений" }}
+                                    </span>
+                                </a>
                             {% endif %}
                             {% if client.last_login %}
                                 <details>
