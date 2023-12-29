@@ -1,0 +1,18 @@
+{% extends 'layouts/expertpage_layout.html' %}
+
+{% load draw_overview_content %}
+{% load static %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'client_overview/css/client_overview.css' %}?ver=3">
+{% endblock %}
+
+{% block title %}{{ client.username }}: обзор{% endblock %}
+
+{% block content %}
+  {% draw_overview_content client for_expert %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'client_overview/js/client_overview.js' %}?ver=4"></script>
+{% endblock %}

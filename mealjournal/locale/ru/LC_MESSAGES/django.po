@@ -1,0 +1,153 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-28 17:50+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+msgid "Breakfast"
+msgstr "Завтрак"
+
+msgid "Dinner"
+msgstr "Ужин"
+
+msgid "Lunch"
+msgstr "Обед"
+
+msgid "Other"
+msgstr "Другое"
+
+msgid "Tea (Brewed)"
+msgstr "Чай"
+
+msgid "Peaches"
+msgstr "Персики"
+
+msgid "Skinless Chicken Breast"
+msgstr "Куриная грудка (без кожи)"
+
+msgid "Russian Threaded Bread"
+msgstr "Батон нарезной"
+
+msgid "Nectarines"
+msgstr "Нектарины"
+
+msgid "Russian Stewed Zucchini"
+msgstr "Кабачки тушеные"
+
+msgid "Coffee with Milk"
+msgstr "Кофе с молоком"
+
+msgid "Presweetened with Sugar Coffee"
+msgstr "Кофе с сахаром"
+
+msgid "Coffee"
+msgstr "Кофе"
+
+msgid "Russian Grilled Skinless Chicken"
+msgstr "Курица жареная (без кожи)"
+
+msgid "Tomatoes"
+msgstr "Томаты"
+
+msgid "Braised Cabbage"
+msgstr "Тушеная капуста"
+
+msgid "Banana"
+msgstr "Бананы"
+
+msgid "Russian Boiled Smoked Sausage"
+msgstr "Колбаса варено-копченая"
+
+msgid "Russian Beef with Vegetables"
+msgstr "Говядина с овощами"
+
+msgid "Beet Soup (Borscht)"
+msgstr "Борщ"
+
+msgid "Russian Sour Soup"
+msgstr "Русский кислый суп"
+
+msgid "Fried Egg"
+msgstr "Яичница"
+
+msgid "Super"
+msgstr "Snickers"
+
+msgid "Russian Potato Knish with Chicken"
+msgstr "Картофель с курицей"
+
+msgid "Coffee with Milk and Sugar"
+msgstr "Кофе с молоком и сахаром"
+
+msgid "Russian Cooked Pasta"
+msgstr "Паста приготовленная"
+
+msgid "Mashed Potato"
+msgstr "Картофельное пюре"
+
+msgid "Russian Fried and Battered Zucchini"
+msgstr "Цуккини, жареные в кляре"
+
+msgid "Russian Boiled Rice"
+msgstr "Вареный рис"
+
+msgid "Russian Braised Beef"
+msgstr "Тушеная говядина"
+
+msgid "Cucumber (with Peel)"
+msgstr "Огурец с кожурой"
+
+msgid "Cappuccino"
+msgstr "Капучино"
+
+msgid "Pork Shashlik"
+msgstr "Шашлык из свинины"
+
+msgid "Russian Boiled Chicken"
+msgstr "Курица вареная"
+
+msgid "Strawberries"
+msgstr "Клубника"
+
+msgid "Pickle Soup"
+msgstr "Огуречный суп"
+
+msgid "Russian Pilaf with Chicken"
+msgstr "Плов с курицей"
+
+msgid "Russian Black Bread"
+msgstr "Хлеб черный"
+
+msgid "Russian Chicken Soup with Pasta"
+msgstr "Куриный суп с пастой"
+
+msgid "Bread"
+msgstr "Хлеб"
+
+msgid "Russian Borscht with Beef"
+msgstr "Борщ с говядиной"
+
+msgid "Red Tomatoes"
+msgstr "Томаты"
+
+msgid "Russian Vegetable Stew with Chicken"
+msgstr "Овощное рагу с курицей"
+
+msgid "Potato"
+msgstr "Картофель"

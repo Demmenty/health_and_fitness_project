@@ -1,0 +1,52 @@
+{% extends 'layouts/expert_overview_layout.html' %}
+{% load static %}
+
+{% block title %}Тотальный фитнес-контроль{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'common/css/block_primary.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/buttons_primary.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="new_client_section" class="pt-5 mt-5">
+    <div class="container">
+        <button type="button" class="btn btn-primary rounded-pill" id="new_client_btn">
+            <img src="{% static 'expert_overview/img/person-plus.svg' %}" width="20" class="mb-1" style="filter: invert(1);">
+            <span>Новый клиент</span>
+        </button>
+        <div class="block-primary mx-auto d-none" id="client_registration" style="max-width: 516px;">
+            <div class="block-header with-cross">
+                <span class="header">Регистрация клиента</span>
+                <button type="button" class="btn-close btn-close-white" title="Закрыть"></button>
+            </div>
+            <div class="block-content">
+                <form method="POST" action="{% url 'client_registration' %}" class="d-flex flex-column gap-3">
+                    {% csrf_token %}
+                    {{ client_registration_form.as_div }}
+                    <div class="form-check">
+                        <input class="form-check-input me-2" type="checkbox" id="show-password-checkbox">
+                        <label class="form-check-label" for="show-password-checkbox">Показать пароль</label>
+                    </div>
+                    <span class="text-primary text-center" id="registration_result" style="white-space: pre-wrap;">&nbsp;</span>
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="clients_list_section" class="mt-4">
+    <div class="container gap-3">
+        {% for client in clients %}
+            <form method="get" action="{% url 'overviewpage' %}">
+                <input type="hidden" value="{{ client.id }}" name="client_id">
+                <button type="submit" class="btn btn-outline-primary rounded-pill">{{ client.username }}</button>
+            </form><br>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'expert_overview/js/overview_page.js' %}?upd=1"></script>
+{% endblock %}

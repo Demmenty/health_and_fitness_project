@@ -1,0 +1,18 @@
+{% extends 'layouts/clientpage_layout.html' %}
+
+{% load draw_mealjournal_content %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'mealjournal/css/mealjournal.css' %}?ver=3">
+{% endblock %}
+
+{% block title %}Дневник питания{% endblock %}
+
+{% block content %}
+    {% draw_mealjournal_content client %}
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'mealjournal/js/mealjournal.js' %}?ver=3"></script>
+{% endblock %}

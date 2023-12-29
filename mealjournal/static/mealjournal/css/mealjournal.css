@@ -1,0 +1,205 @@
+/* общее */
+.no-data-msg {
+    text-align: center;
+    margin: 1.25rem 0;
+}
+@media (min-width: 992px) {
+    .d-lg-table-row-group {
+        display: table-row-group !important;
+    }
+}
+
+/* extra-menu */
+.extra-menu {
+    max-width: 21rem;
+}
+@media (min-width: 768px) {
+    .extra-menu {
+        max-width: 36rem;
+    }
+}
+
+/* сводка за день */
+#daybrief-table {
+    margin: 0;
+}
+#daybrief-table td,
+#daybrief-table th {
+    text-align: center;
+}
+.bar{
+    width: 100%;
+    background: #e4e4e4;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.bar-scale {
+    background: #657ff7;
+    width: 0;
+    height: 7px;
+    border-radius: 5px;
+}
+
+/* сводка за месяц */
+#monthbrief-table {
+    margin: 0;
+}
+#label-monthbrief {
+    text-transform: capitalize;
+}
+#monthbrief-table td,
+#monthbrief-table th {
+    text-align: center;
+}
+#monthbrief-table tbody tr:hover {
+    cursor: pointer;
+}
+
+/* окно продуктов без метрики */
+#without_metric_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.without_metric_row input[type="number"] {
+    text-align: center;
+    display: inline;
+}
+.without_metric_row select {
+    display: inline;
+    width: unset;
+}
+#without_metric_list .label {
+    color: #657ff7;
+    font-weight: bolder;
+    margin-right: 0.75rem;
+}
+#without_metric_list .input-metric-row {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0.5rem 0rem;
+    gap: 10px;
+}
+
+/* fs connection offer */
+.fatsecret_ref {
+    color: #36bd30;
+    text-decoration: none;
+    font-weight: 500;
+}
+.fatsecret_ref:hover {
+    color: #288023;
+}
+.container_fs_photo {
+    justify-content: end;
+}
+.fs_photo {
+    width: 144px;
+    margin-left: 1rem;
+    margin-bottom: 0px;
+    margin-top: 6px;
+}
+@media screen and (max-width: 341px) {
+    #fsapp_googleplay {
+        margin-top: 10px;
+    }
+}
+@media screen and (max-width: 546px) {
+    #fs_photo3, #fs_photo2, #fs_photo1 {
+        display: unset;
+        width: 33%;
+    }
+    .fs_photo {
+        width: -webkit-fill-available;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    #container_fs_connection {
+        flex-direction: column-reverse;
+    }
+    #container_fs_photo {
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+}
+@media screen and (max-width: 767.5px) {
+    #fs_photo2 {
+        display: none;
+    }
+    .fs_photo {
+        width: 187px;
+    }
+}
+@media screen and (max-width: 991px) {
+    .fs_photo {
+        width: 133px;
+    }
+}
+@media screen and (max-width: 1199px) {
+    #fs_photo3 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1399px) {
+    .fs_photo {
+        width: 159px;
+    }
+}
+
+/* кбжу рекомендации */
+#recommend_nutrition {
+    display: none;
+    backface-visibility: hidden;
+    position: fixed;
+    width: 18rem;
+    z-index: 10;
+    top: 52%;
+    right: 50%;
+    transform: translate(50%,-48%);
+}
+#recommend_nutrition_form {
+    align-items: center;
+}
+@media (min-width: 576px) {
+    #recommend_nutrition {
+        right: 30%;
+    }
+}
+
+/* загрузка */
+#cat-loader {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+}
+#cat-loader img {
+    height: 122px;
+    width: 152px;
+    align-self: center;
+}
+#cat-loader p {
+    text-align: center;
+    font-size: 1rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* топ за месяц */
+#top_section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.top_table {
+    box-shadow: 0 0 1px 1px #dee2e6;
+}
+@media (min-width: 992px) {
+    #top_section {
+        flex-direction: row;
+    }
+    #top_section .block-container {
+        width: 50%;
+    }
+}

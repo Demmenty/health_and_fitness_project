@@ -1,0 +1,181 @@
+{% extends 'layouts/expertpage_layout.html' %}
+{% load static %}
+
+{% block title %}{{ client.username }}: анкета знакомства{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client_overview/css/meet_questionary.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="block-container mt-2" id="meet_questionary_container">
+    <div class="block-header">
+        <span class="header">Анкета знакомства</span>
+    </div>
+    <div class="block-content">
+        <form method="" action="" class="" id="meet_questionary_form">
+    
+            <div class="title mb-3">
+                <span>Основная информация</span>
+            </div>
+    
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-nowrap col-md-5 me-md-3">{{ meet_questionary_form.sex.label }}</label>
+                <div name="sex" class="form-control text-center" id="id_sex">{{ meet_questionary.get_sex_display }}</div>
+            </div>
+            {% if meet_questionary.sex == "?" %}
+                <div class="d-flex flex-column align-items-center col-md-7 ps-md-3 ms-md-auto mt-2" id="sex_comment_container">
+                    {{ meet_questionary_form.sex_comment }}
+                </div>
+            {% endif %}
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-nowrap col-md-5 me-md-3">{{ meet_questionary_form.height.label }}</label>
+                {{ meet_questionary_form.height }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-nowrap col-md-5 me-md-3">{{ meet_questionary_form.weight.label }}</label>
+                {{ meet_questionary_form.weight }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.weight_min.label }}</label>
+                {{ meet_questionary_form.weight_min }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.weight_max.label }}</label>
+                {{ meet_questionary_form.weight_max }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.weight_avg.label }}</label>
+                {{ meet_questionary_form.weight_avg }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.daily_steps.label }}</label>
+                {{ meet_questionary_form.daily_steps }}
+            </div>
+            <br>
+            <br>
+    
+            <div class="title mb-3">
+                <span>Сон</span>
+            </div>
+    
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.sleep_time.label }}</label>
+                {{ meet_questionary_form.sleep_time }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.wakeup_time.label }}</label>
+                {{ meet_questionary_form.wakeup_time }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.sleep_problems.label }}</label>
+                {{ meet_questionary_form.sleep_problems }}
+            </div>
+            <br>
+            <br>
+    
+            <div class="title mb-3">
+                <span>Питание</span>
+            </div>
+    
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.daily_meals_amount.label }}</label>
+                {{ meet_questionary_form.daily_meals_amount }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.daily_snacks_amount.label }}</label>
+                {{ meet_questionary_form.daily_snacks_amount }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.common_meal.label }}</label>
+                {{ meet_questionary_form.common_meal }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.weekly_meal.label }}</label>
+                {{ meet_questionary_form.weekly_meal }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.yearly_meal.label }}</label>
+                {{ meet_questionary_form.yearly_meal }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.favorite_meal.label }}</label>
+                {{ meet_questionary_form.favorite_meal }}
+            </div>
+            <br>
+            <br>
+    
+            <div class="title mb-3">
+                <span>Цель</span>
+            </div>
+    
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <label class="text-center">{{ meet_questionary_form.goal.label }}</label>
+                {{ meet_questionary_form.goal }}
+            </div>
+            <br>
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <label class="text-center">{{ meet_questionary_form.goal_mark.label }}</label>
+                {{ meet_questionary_form.goal_mark }}
+            </div>
+            <br>
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <label class="text-center">{{ meet_questionary_form.goal_attempts.label }}</label>
+                {{ meet_questionary_form.goal_attempts }}
+            </div>
+            <br>
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+                <label class="text-center">{{ meet_questionary_form.goal_obstacle.label }}</label>
+                {{ meet_questionary_form.goal_obstacle }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start mt-md-2 col-md-5">{{ meet_questionary_form.goal_importance.label }}</label>
+                <div name="goal_importance" class="text-center col-md-7 ps-md-3 fs-2 text-royalblue fw-bold" id="id_goal_importance">
+                    {{ meet_questionary.goal_importance }}
+                </div>
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start col-md-5 me-md-3">{{ meet_questionary_form.goal_maxtime.label }}</label>
+                {{ meet_questionary_form.goal_maxtime }}
+            </div>
+            <br>
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start">
+                <label class="text-center text-md-start mt-md-2 col-md-5">{{ meet_questionary_form.readiness_to_change.label }}</label>
+                <div class="d-flex flex-column col-md-7 ps-md-3">
+                    <div name="readiness_to_change" class="text-center fs-2 text-royalblue fw-bold" id="id_readiness_to_change">
+                        {{ meet_questionary.readiness_to_change }}
+                    </div>
+                    {% for choice in readiness_choices %}
+                        {% if choice.0 == meet_questionary.readiness_to_change %}
+                            <p class="text-muted align-self-start readiness_choice" id="readiness_choice_{{ forloop.counter}}">
+                                <span class="text-royalblue me-2">&#9658;</span>
+                                {{ choice.1 }}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'client_overview/js/meet_questionary.js' %}"></script>
+{% endblock %}

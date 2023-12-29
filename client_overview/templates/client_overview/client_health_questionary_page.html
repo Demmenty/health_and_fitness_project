@@ -1,0 +1,618 @@
+{% extends 'layouts/clientpage_layout.html' %}
+{% load static %}
+
+{% block title %}Анкета здоровья{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client_overview/css/health_questionary.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- TODO вынести в template tag -->
+<div class="block-container mt-2" id="health_questionary_container">
+    <div class="block-header">
+        <span class="header">Анкета здоровья и физической формы</span>
+    </div>
+    <div class="block-content">
+        <form method="POST" action="">
+            {% csrf_token %}
+            {% if error %}
+                <p class="text-center text-danger">{{ error }}</p>
+            {% endif %}
+            <p class="text-secondary">Настоящая анкета предназначена для сбора информации о здоровье и физической форме клиента в целях определения средств и методов наиболее успешного и безопасного оказания данному клиенту физкультурно-оздоровительных услуг исполнителем соответствующих услуг.
+                Одновременно сведения, указанные клиентом в настоящей анкете, служат для определения возможности оказания физкультурно-оздоровительных услуг данному клиенту, а также для определения необходимости предварительного получения клиентом медицинского заключения о допуске к занятиям физической культурой.</p>
+            
+            <h6 class="text-center" id="fullname_label">{{ health_questionary_form.fullname.label }}</h6>
+            {{ health_questionary_form.fullname }}
+            <br>
+            
+            <h6 class="text-center" id="birthdate_label">{{ health_questionary_form.birth_date.label }}</h6>
+            <div class="birthdate_container">{{ health_questionary_form.birth_date }}</div>
+            <hr class="side_hr">
+            <br>
+            <br>
+            <h5 class="text-center">1.Наличие потенциально опасных субъективных ощущений</h5>
+            <h6 class="p-3 mb-0">Имеются ли в настоящее время:</h6>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter11.label }}</p>
+                <div class="boolanswers"> 
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter11" value="yes" class="simple_bool_radio" id="id_parameter11_1" 
+                        required="false" {% if health_questionary.parameter11 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter11" value="no" class="simple_bool_radio" id="id_parameter11_0" 
+                        required="false" {% if health_questionary.parameter11 == 'no' %} checked {% endif %}>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter11 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter12.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter12" value="yes" class="simple_bool_radio" id="id_parameter12_1"
+                        required="false" {% if health_questionary.parameter12 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter12" value="no" class="simple_bool_radio" id="id_parameter12_0" 
+                        required="false" {% if health_questionary.parameter12 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter12 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter13.label }}</p>
+                <div class="boolanswers"> 
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter13" value="yes" class="simple_bool_radio" id="id_parameter13_1" 
+                        required="false" {% if health_questionary.parameter13 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter13" value="no" class="simple_bool_radio" id="id_parameter13_0" 
+                        required="false" {% if health_questionary.parameter13 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter13 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter14.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter14" value="yes" class="simple_bool_radio" id="id_parameter14_1" 
+                        required="false" {% if health_questionary.parameter14 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">    
+                        <p>нет</p>
+                        <input type="radio" name="parameter14" value="no" class="simple_bool_radio" id="id_parameter14_0" 
+                        required="false" {% if health_questionary.parameter14 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter14 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter15.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter15" value="yes" class="simple_bool_radio" id="id_parameter15_1" 
+                        required="false" {% if health_questionary.parameter15 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">    
+                        <p>нет</p>
+                        <input type="radio" name="parameter15" value="no" class="simple_bool_radio" id="id_parameter15_0" 
+                        required="false" {% if health_questionary.parameter15 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter15 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter16.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter16" value="yes" class="simple_bool_radio" id="id_parameter16_1" 
+                        required="false" {% if health_questionary.parameter16 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">    
+                        <p>нет</p>
+                        <input type="radio" name="parameter16" value="no" class="simple_bool_radio" id="id_parameter16_0" 
+                        required="false" {% if health_questionary.parameter16 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter16 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter17.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter17" value="yes" class="simple_bool_radio" id="id_parameter17_1" 
+                        required="false" {% if health_questionary.parameter17 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">    
+                        <p>нет</p>
+                        <input type="radio" name="parameter17" value="no" class="simple_bool_radio" id="id_parameter17_0" 
+                        required="false" {% if health_questionary.parameter17 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter17 }}
+            </div>
+            <br>
+            <br>
+            <h5 class="text-center">2.Привычный уровень физической активности</h5>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter20.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter20" value="yes" class="simple_bool_radio" id="id_parameter20_1" required="false" {% if health_questionary.parameter20 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter20" value="no" class="simple_bool_radio" id="id_parameter20_0" required="false" {% if health_questionary.parameter20 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter20 }}
+            </div>
+            <br>
+            <br>
+            <h5 class="text-center">3.Наличие диагностированных заболеваний</h5>
+            <h6 class="p-3 mb-0">Были в прошлом или есть в настоящее время:</h6>
+    
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter31.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter31" value="yes" class="simple_bool_radio" id="id_parameter31_1" required="false" {% if health_questionary.parameter31 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter31" value="no" class="simple_bool_radio" id="id_parameter31_0" required="false" {% if health_questionary.parameter31 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter31 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter32.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter32" value="yes" class="simple_bool_radio" id="id_parameter32_1" required="false" {% if health_questionary.parameter32 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter32" value="no" class="simple_bool_radio" id="id_parameter32_0" required="false" {% if health_questionary.parameter32 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter32 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter33.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter33" value="yes" class="simple_bool_radio" id="id_parameter33_1" required="false" {% if health_questionary.parameter33 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter33" value="no" class="simple_bool_radio" id="id_parameter33_0" required="false" {% if health_questionary.parameter33 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter33 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter34.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter34" value="yes" class="simple_bool_radio" id="id_parameter34_1" required="false" {% if health_questionary.parameter34 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter34" value="no" class="simple_bool_radio" id="id_parameter34_0" required="false" {% if health_questionary.parameter34 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter34 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter35.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter35" value="yes" class="simple_bool_radio" id="id_parameter35_1" required="false" {% if health_questionary.parameter35 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter35" value="no" class="simple_bool_radio" id="id_parameter35_0" required="false" {% if health_questionary.parameter35 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter35 }}
+            </div>
+            <br>
+            <div class="boolquestion">  
+                <p class="question">{{ health_questionary_form.parameter36.label }}</p>
+                <div class="boolanswers">
+                    <div class="d-flex align-items-center">
+                        <p>да</p>
+                        <input type="radio" name="parameter36" value="yes" class="simple_bool_radio" id="id_parameter36_1" required="false" {% if health_questionary.parameter36 == 'yes' %} checked {% endif %}>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p>нет</p>
+                        <input type="radio" name="parameter36" value="no" class="simple_bool_radio" id="id_parameter36_0" required="false" {% if health_questionary.parameter36 == 'no' %} checked {% endif %}> 
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter36 }}
+            </div>
+            <br>
+            <br>
+            <h5 class="text-center">4.Дополнительная информация о состоянии здоровья</h5>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.norm_pressure.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="norm_pressure" value="" class="complex_bool_radio" id="id_norm_pressure_1" required="false" {% if health_questionary.norm_pressure and health_questionary.norm_pressure != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="norm_pressure" value="no" class="complex_bool_radio" id="id_norm_pressure_0" required="false" {% if health_questionary.norm_pressure == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.norm_pressure }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter42.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter42" value="" class="complex_bool_radio" id="id_parameter42_1" required="false" {% if health_questionary.parameter42 and health_questionary.parameter42 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter42" value="no" class="complex_bool_radio" id="id_parameter42_0" required="false" {% if health_questionary.parameter42 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter42 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter43.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter43" value="" class="complex_bool_radio" id="id_parameter43_1" required="false" {% if health_questionary.parameter43 and health_questionary.parameter43 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter43" value="no" class="complex_bool_radio" id="id_parameter43_0" required="false" {% if health_questionary.parameter43 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter43 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter44.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter44" value="" class="complex_bool_radio" id="id_parameter44_1" required="false" {% if health_questionary.parameter44 and health_questionary.parameter44 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter44" value="no" class="complex_bool_radio" id="id_parameter44_0" required="false" {% if health_questionary.parameter44 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter44 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter45.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter45" value="" class="complex_bool_radio" id="id_parameter45_1" required="false" {% if health_questionary.parameter45 and health_questionary.parameter45 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter45" value="no" class="complex_bool_radio" id="id_parameter45_0" required="false" {% if health_questionary.parameter45 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter45 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter46.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter46" value="" class="complex_bool_radio" id="id_parameter46_1" required="false" {% if health_questionary.parameter46 and health_questionary.parameter46 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter46" value="no" class="complex_bool_radio" id="id_parameter46_0" required="false" {% if health_questionary.parameter46 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter46 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter47.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter47" value="" class="complex_bool_radio" id="id_parameter47_1" required="false" {% if health_questionary.parameter47 and health_questionary.parameter47 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter47" value="no" class="complex_bool_radio" id="id_parameter47_0" required="false" {% if health_questionary.parameter47 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter47 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter48.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter48" value="" class="complex_bool_radio" id="id_parameter48_1" required="false" {% if health_questionary.parameter48 and health_questionary.parameter48 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter48" value="no" class="complex_bool_radio" id="id_parameter48_0" required="false" {% if health_questionary.parameter48 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter48 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter49.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter49" value="" class="complex_bool_radio" id="id_parameter49_1" required="false" {% if health_questionary.parameter49 and health_questionary.parameter49 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter49" value="no" class="complex_bool_radio" id="id_parameter49_0" required="false" {% if health_questionary.parameter49 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter49 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter410.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter410" value="" class="complex_bool_radio" id="id_parameter410_1" required="false" {% if health_questionary.parameter410 and health_questionary.parameter410 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter410" value="no" class="complex_bool_radio" id="id_parameter410_0" required="false" {% if health_questionary.parameter410 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter410 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter411.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter411" value="" class="complex_bool_radio" id="id_parameter411_1" required="false" {% if health_questionary.parameter411 and health_questionary.parameter411 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter411" value="no" class="complex_bool_radio" id="id_parameter411_0" required="false" {% if health_questionary.parameter411 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter411 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter412.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter412" value="" class="complex_bool_radio" id="id_parameter412_1" required="false" {% if health_questionary.parameter412 and health_questionary.parameter412 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter412" value="no" class="complex_bool_radio" id="id_parameter412_0" required="false" {% if health_questionary.parameter412 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter412 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter413.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter413" value="" class="complex_bool_radio" id="id_parameter413_1" required="false" {% if health_questionary.parameter413 and health_questionary.parameter413 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter413" value="no" class="complex_bool_radio" id="id_parameter413_0" required="false" {% if health_questionary.parameter413 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter413 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter414.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter414" value="" class="complex_bool_radio" id="id_parameter414_1" required="false" {% if health_questionary.parameter414 and health_questionary.parameter414 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter414" value="no" class="complex_bool_radio" id="id_parameter414_0" required="false" {% if health_questionary.parameter414 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter414 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter415.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter415" value="" class="complex_bool_radio" id="id_parameter415_1" required="false" {% if health_questionary.parameter415 and health_questionary.parameter415 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter415" value="no" class="complex_bool_radio" id="id_parameter415_0" required="false" {% if health_questionary.parameter415 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter415 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <p class="question">{{ health_questionary_form.parameter416.label }}</p>
+                <div class="radioanswer_line">
+                    <input type="radio" name="parameter416" value="high" class="par416_radio" id="id_parameter416_3" required="false" {% if health_questionary.parameter416 == 'high' %} checked {% endif %}>
+                    3 занятия в неделю или больше, занятия регулярные, нагрузки от значительных до предельных
+                </div>
+                <div class="radioanswer_line">
+                    <input type="radio" name="parameter416" value="medium" class="par416_radio" id="id_parameter416_2" required="false" {% if health_questionary.parameter416 == 'medium' %} checked {% endif %}>
+                    2–3 занятия в неделю, занятия достаточно регулярные, нагрузки от умеренных до значительных
+                </div>
+                <div class="radioanswer_line">
+                    <input type="radio" name="parameter416" value="low" class="par416_radio" id="id_parameter416_1" required="false" {% if health_questionary.parameter416 == 'low' %} checked {% endif %}>
+                    меньше 2 занятий в неделю, занятия нерегулярные, нагрузки от незначительных до умеренных
+                </div>
+                <div class="radioanswer_line">
+                    <input type="radio" name="parameter416" value="no" class="par416_radio" id="id_parameter416_0" required="false" {% if health_questionary.parameter416 == 'no' %} checked {% endif %}>
+                    нет
+                </div>
+                {{ health_questionary_form.parameter416 }}
+                <div class="openquestion_line">
+                    {{ health_questionary_form.parameter416_exp }}
+                </div>
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter417.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter417" value="" class="complex_bool_radio" id="id_parameter417_1" required="false" {% if health_questionary.parameter417 and health_questionary.parameter417 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter417" value="no" class="complex_bool_radio" id="id_parameter417_0" required="false" {% if health_questionary.parameter417 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter417 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter418.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter418" value="" class="complex_bool_radio" id="id_parameter418_1" required="false" {% if health_questionary.parameter418 and health_questionary.parameter418 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter418" value="no" class="complex_bool_radio" id="id_parameter418_0" required="false" {% if health_questionary.parameter418 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter418 }}
+            </div>
+            <br>
+            <div class="openquestion">
+                <div class="openquestion_line">
+                    <p class="question">{{ health_questionary_form.parameter419.label }}</p>
+                    <div class="boolanswers">
+                        <div class="d-flex align-items-center">
+                            <p>да</p>
+                            <input type="radio" name="parameter419" value="" class="complex_bool_radio" id="id_parameter419_1" required="false" {% if health_questionary.parameter419 and health_questionary.parameter419 != 'no' %} checked {% endif %}>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <p>нет</p>
+                            <input type="radio" name="parameter419" value="no" class="complex_bool_radio" id="id_parameter419_0" required="false" {% if health_questionary.parameter419 == 'no' %} checked {% endif %}>
+                        </div>
+                    </div>
+                </div>
+                {{ health_questionary_form.parameter419 }}
+            </div>
+            <br>
+            <div class="confirmquestion">
+                <p class="question">{{ health_questionary_form.confirm.label }}</p>{{ health_questionary_form.confirm }}
+            </div>
+            <br>
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'overviewpage' %}" class="btn btn-outline-primary">
+                    Назад
+                </a>
+                <button class="btn btn-primary" type="submit" id="submit_btn_health_questionary" disabled>Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'client_overview/js/health_questionary.js' %}"></script>
+{% endblock %}
