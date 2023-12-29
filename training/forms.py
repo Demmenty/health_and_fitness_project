@@ -284,57 +284,68 @@ class ExerciseRecordForm(ModelForm):
         widgets = {
             "weight": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "repetitions": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "sets": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "load": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "time": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "pulse_avg": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "high_load_time": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "high_load_pulse": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "low_load_time": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "low_load_pulse": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "cycles": NumberInput(
                 attrs={
-                    "class": "form-control pe-1",
+                    "class": "form-control",
+                    "min": 0,
                 }
             ),
             "comment": Textarea(

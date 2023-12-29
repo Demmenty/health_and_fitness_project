@@ -69,7 +69,7 @@
                                                         </ul>
                                                     </div>
                                                 </summary>
-                                                <div class="exercise-record-form d-flex flex-column pt-2 border border-top-0 rounded-bottom">
+                                                <div class="exercise-record-form d-flex flex-column gap-1 pt-2 border border-top-0 rounded-bottom">
                                                     {% for field in form %}
                                                         {% if field.field.widget.input_type == 'hidden' or field.name in 'DELETE, ORDER' %}
                                                             <div class="{{ field.name }} d-none">
@@ -77,17 +77,17 @@
                                                             </div>
                                                         {% elif field.field.widget.input_type == 'number' %}
                                                             <div class="{{ field.name }} px-2 mb-2">
-                                                                <div class="form-group d-flex align-items-center">
-                                                                    <div class="col-5">{{ field.label_tag }}</div>
-                                                                    <div class="col-7 d-flex flex-row gap-1">
+                                                                <div class="form-group">
+                                                                    <div class="text-center">{{ field.label_tag }}</div>
+                                                                    <div class="d-flex flex-row gap-3 mx-2">
                                                                         <button type="button" title="-1" 
                                                                             class="btn-img edit-number-btn minus filter-grey filter-hover-primary">
-                                                                            <img src="{% static 'training/img/dash-square.svg' %}" width="18">
+                                                                            <img src="{% static 'training/img/dash-square.svg' %}" width="22">
                                                                         </button>
                                                                         {{ field }}
                                                                         <button type="button" title="+1" 
                                                                             class="btn-img edit-number-btn plus filter-grey filter-hover-primary">
-                                                                            <img src="{% static 'training/img/plus-square.svg' %}" width="18">
+                                                                            <img src="{% static 'training/img/plus-square.svg' %}" width="22">
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -95,9 +95,9 @@
                                                         {% endif %}
                                                     {% endfor %}
                                                     <div class="{{ form.is_done.name }} mb-2 px-2">
-                                                        <div class="form-switch d-flex align-items-center ps-0">
-                                                            <div class="col-5">{{ form.is_done.label_tag }}</div>
-                                                            <div class="col-7">{{ form.is_done }}</div>
+                                                        <div class="form-switch ps-0">
+                                                            <div class="text-center">{{ form.is_done.label_tag }}</div>
+                                                            <div class="text-center">{{ form.is_done }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="{{ form.comment.name }}" {% if not form.comment.value %} style="display: none" {% endif %}>
@@ -159,5 +159,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'training/js/trainings.js' %}"></script>
+    <script src="{% static 'training/js/trainings.js' %}?update=1"></script>
 {% endblock %}
