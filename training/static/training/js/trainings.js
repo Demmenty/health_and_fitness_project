@@ -23,9 +23,13 @@ $(document).ready(function() {
     calendar.find("#prev-year-btn").on("click", showAnotherYear);
     calendar.find(".month").on("click", showAnotherMonth);
 
+    trainingForms.find("input, textarea").on("change", function() {
+        const form = $(this).closest(".training-form");
+        saveTraining(form, silently=true);
+    });
     trainingForms.on("submit", function(event) { 
         event.preventDefault();
-        saveTraining($(this)) 
+        saveTraining($(this), silently=false) 
     });
     trainingForms.find(".delete-training-btn").on("click", deleteTraining);
 
@@ -246,10 +250,12 @@ function editNumber() {
 
     if (isNaN(value) || value <= 0) {
         input.val(isPlus ? 1 : 0);
-        return;
+    }
+    else {
+        input.val(isPlus ? value + 1 : value - 1);
     }
 
-    input.val(isPlus ? value + 1 : value - 1);
+    input.trigger("change");
 }
 
 /**
