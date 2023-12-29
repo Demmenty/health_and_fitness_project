@@ -33,7 +33,7 @@
         <div class="container">
             {% with request.resolver_match.view_name as url %}
             <div class="d-flex align-items-center justify-content-between gap-2">
-                <div class="col-4 d-flex align-items-center gap-2">
+                <div class="col-3 d-flex align-items-center gap-3">
                     <a href="/">
                         <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="80">
                     </a>
@@ -49,19 +49,19 @@
                         <ul class="nav justify-content-center">
                             <li>
                                 <a href="{% url 'metrics:daily' %}?client_id={{ client.id }}" 
-                                    class="nav-link px-2 {% if 'metrics' in url %} active {% endif %}">
+                                    class="nav-link {% if 'metrics' in url %} active {% endif %}">
                                     Измерения
                                 </a>
                             </li>
                             <li>
                                 <a href="{% url 'nutrition:nutrition' %}?client_id={{ client.id }}" 
-                                    class="nav-link px-2 {% if 'nutrition' in url %} active {% endif %}">
+                                    class="nav-link {% if 'nutrition' in url %} active {% endif %}">
                                     Питание
                                 </a>
                             </li>
                             <li>
                                 <a href="{% url 'training:trainings' %}?client_id={{ client.id }}" 
-                                    class="nav-link px-2 {% if 'training' in url %} active {% endif %}">
+                                    class="nav-link {% if 'training' in url %} active {% endif %}">
                                     Тренировки
                                 </a>
                             </li>
@@ -69,14 +69,14 @@
                     {% else %}
                         <ul class="nav justify-content-center">
                             <li>
-                                <a href="{% url 'expert:clients' %}" class="nav-link px-2
-                                    {% if 'client' in url %} active {% endif %}">
+                                <a href="{% url 'expert:clients' %}" 
+                                    class="nav-link {% if 'client' in url %} active {% endif %}">
                                     Клиенты
                                 </a>
                             </li>
                             <li>
-                                <a href="{% url 'expert:consult_requests' %}" class="nav-link px-2
-                                    {% if 'consult' in url %} active {% endif %}">
+                                <a href="{% url 'expert:consult_requests' %}" 
+                                    class="nav-link {% if 'consult' in url %} active {% endif %}">
                                     Заявки {% new_requests_badge %}
                                 </a>
                             </li>
@@ -140,11 +140,11 @@
                         </ul>
                     </div>
                 </div>
-                <div class="d-none d-lg-flex justify-content-end col-4 gap-2">
+                <div class="d-none d-lg-flex justify-content-end col-3 gap-3">
                     {% if client %}
                         <a href="{% url 'expert:clients' %}" class="btn btn-primary">Клиенты</a>
                     {% else %}
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap me-2">Админ панель</a>
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap">Админ панель</a>
                     {% endif %}
                     <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
                         {% csrf_token %}

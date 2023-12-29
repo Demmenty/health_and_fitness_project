@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login, logout, views as auth_views
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 
+from config.settings import DOMAIN
 from expert.decorators import expert_required
 from main.utils import is_ajax
 from users.forms import (
@@ -21,22 +22,38 @@ from users.models import User
 def register_client(request):
     """
     Registers a new client with the provided data by expert.
+    Sends an email to the client with the registration information.
 
     Args:
         request: The HTTP request object containing the client registration data.
+
     Returns:
         If the registration form is valid, an empty HTTP response indicating success.
         If the registration form is invalid, a JSON response containing the form errors with a status code of 400.
     """
+
+    request.POST = QueryDict(request.POST.urlencode(), mutable=True)
+    request.POST["email"] = request.POST["email"].lower()
     form = ClientRegistrationForm(request.POST)
 
     if form.is_valid():
-        user = User.objects.create_user(
+        client = User.objects.create_user(
             username=form.cleaned_data["username"],
             email=form.cleaned_data["email"],
             password=form.cleaned_data["password1"],
         )
-        user.save()
+        client.save()
+        client.email_user(
+            subject=f"Регистрация на {DOMAIN}",
+            message=(
+                f"Добрый день,\n\n"
+                f"Ваш аккаунт на сервисе {DOMAIN} успешно зарегистрирован.\n\n"
+                f"Ваш логин: {form.cleaned_data['username']}\n"
+                f"Ваш пароль: {form.cleaned_data['password1']}\n\n"
+                f"С уважением,\n"
+                f"Команда Health & Fitness"
+            ),
+        )
         return HttpResponse("ОK")
     else:
         return JsonResponse(form.errors, status=400)
@@ -85,6 +102,7 @@ def logout_user(request):
     Return:
         None
     """
+
     logout(request)
 
     return redirect("main:home")
@@ -145,6 +163,7 @@ def csrf_failure(request, reason=""):
         If the request is an AJAX request, returns an HttpResponseForbidden with the message "CSRF проверка не пройдена".
         Otherwise, redirects the user to the "main:home" URL.
     """
+
     if is_ajax(request):
         return HttpResponseForbidden("CSRF проверка не пройдена")
 

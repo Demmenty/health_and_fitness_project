@@ -28,7 +28,7 @@
         <div class="container">
             {% with request.resolver_match.view_name as url %}
             <div class="d-flex align-items-center justify-content-between gap-3">
-                <div class="col-lg-3">
+                <div class="col-3">
                     <a href="/">
                         <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="80">
                     </a>
@@ -36,26 +36,26 @@
                 <div class="d-none d-lg-block">
                     <ul class="nav justify-content-center">
                         <li>
-                            <a href="{% url 'client:profile' %}" class="nav-link px-2 px-lg-3 
-                            {% if 'profile' in url %} active {% endif %}">
+                            <a href="{% url 'client:profile' %}" 
+                                class="nav-link {% if 'profile' in url %} active {% endif %}">
                                 Профиль
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'metrics:daily' %}" class="nav-link px-2 px-lg-3 
-                                {% if 'metrics' in url %} active {% endif %}">
+                            <a href="{% url 'metrics:daily' %}" 
+                                class="nav-link {% if 'metrics' in url %} active {% endif %}">
                                 Измерения
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'nutrition:nutrition' %}" class="nav-link px-2 px-lg-3
-                                {% if 'nutrition' in url %} active {% endif %}">
+                            <a href="{% url 'nutrition:nutrition' %}" 
+                                class="nav-link {% if 'nutrition' in url %} active {% endif %}">
                                 Питание
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'training:trainings' %}" class="nav-link px-2 px-lg-3 
-                                {% if 'training' in url %} active {% endif %}">
+                            <a href="{% url 'training:trainings' %}" 
+                                class="nav-link {% if 'training' in url %} active {% endif %}">
                                 Тренировки
                             </a>
                         </li>
@@ -95,9 +95,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="d-none d-lg-block col-lg-3 text-end">
+                <div class="d-none col-3 d-lg-flex justify-content-end gap-3">
                     {% if user.is_staff %}
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap me-2">Админ панель</a>
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary text-nowrap">Админ панель</a>
                     {% endif %}
                     <form method="POST" action="{% url 'users:logout' %}" class="d-inline">
                         {% csrf_token %}
