@@ -10,15 +10,13 @@ CACHE_DIR = BASE_DIR / "nutrition" / "cache"
 class FSCacheManager:
     """Functions for working with FatSecret cache."""
 
-    def __init__(self):
-        self.food_details = CACHE_DIR / "food_details.pickle"
-        self.daily_food = CACHE_DIR / "daily_food.pickle"
-        self.monthly_food = CACHE_DIR / "monthly_food.pickle"
-        self.monthly_entries = CACHE_DIR / "monthly_entries.pickle"
+    food_details = CACHE_DIR / "food_details.pickle"
+    daily_food = CACHE_DIR / "daily_food.pickle"
+    monthly_food = CACHE_DIR / "monthly_food.pickle"
+    monthly_entries = CACHE_DIR / "monthly_entries.pickle"
 
-        self.initialize_cache_files()
-
-    def initialize_cache_files(self):
+    @classmethod
+    def initialize_cache_files(cls):
         """
         Checks if the cache files exist.
         Create cache directory and files if they don't.
@@ -27,10 +25,10 @@ class FSCacheManager:
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
         cache_files = [
-            self.food_details,
-            self.daily_food,
-            self.monthly_food,
-            self.monthly_entries,
+            cls.food_details,
+            cls.daily_food,
+            cls.monthly_food,
+            cls.monthly_entries,
         ]
 
         for cache_file in cache_files:
@@ -275,3 +273,23 @@ class FSCacheManager:
 
         with open(self.monthly_food, "wb") as file:
             pickle.dump(cache, file)
+
+    @classmethod
+    def delete_client_cache(cls, client_id: int) -> None:
+        """
+        Delete the cache for a specific client.
+
+        Args:
+            client_id (int): The ID of the client.
+        """
+
+        cache_files = [cls.daily_food, cls.monthly_entries, cls.monthly_food]
+
+        for cache_file in cache_files:
+            with open(cache_file, "rb") as file:
+                cache: dict = pickle.load(file)
+
+            if client_id in cache:
+                del cache[client_id]
+                with open(cache_file, "wb") as file:
+                    pickle.dump(cache, file)

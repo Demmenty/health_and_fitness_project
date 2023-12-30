@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from main.utils import resize_uploaded_image
+from nutrition.cache import FSCacheManager
 
 
 def avatars_path(instance, filename):
@@ -78,6 +79,11 @@ class User(AbstractUser):
             )
 
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        FSCacheManager.delete_client_cache(client_id=self.id)
+
+        super().delete(*args, **kwargs)
 
     @classmethod
     def get_expert(cls):

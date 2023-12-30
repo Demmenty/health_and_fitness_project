@@ -93,6 +93,17 @@ def client_unarchive(request, id):
 
 
 @expert_required
+@require_http_methods(["POST"])
+def client_delete(request, id):
+    """Delete a client's account"""
+
+    client = get_object_or_404(User, id=id)
+    client.delete()
+
+    return redirect("expert:archived_clients")
+
+
+@expert_required
 @require_http_methods(["GET"])
 def client_questionnaires(request):
     """Render the client's questionnaires selection page"""
