@@ -1,0 +1,73 @@
+{% extends layout %}
+{% load static %}
+
+{% block title %}
+	<title>{{ client|capfirst }}: отзыв</title>
+{% endblock %}
+
+{% block content %}
+{% with user.is_expert as is_expert %}
+<section id="client-feedback-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 936px;">
+            <div class="card-header bg-primary text-light text-center">
+				<h5 class="mb-0">Отзыв</h5>
+			</div>
+            <div class="card-body">
+                <form method="post" class="d-flex flex-column gap-3">
+                    {% csrf_token %}
+                    {% if is_expert and not form.instance.id %}
+                        <p class="text-center my-3">
+                            Отзыв отсутствует
+                        </p>
+                    {% else %}
+                        <div id="created_at" class="form-group d-flex gap-2">
+                            <label>Дата:</label>
+                            <div>
+                                {% if form.instance.created_at.value %}
+                                    {{ form.created_at.value|date:"n E Y H:i" }}
+                                {% else %}
+                                    {% now "n E Y" %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% for field in form %}
+                            <div id="{{ field.name }}" class="form-group">
+                                <div>{{ field.label_tag }}</div>
+                                <div>{{ field }}</div>
+                                <small class="helptext text-secondary">{{ field.help_text }}</small>
+                                {% for error in field.errors %}
+                                    <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endfor%}
+                    {% endif %}
+                    {% if is_expert %}
+                        <div class="d-flex justify-content-center gap-2">
+                            <label>Ссылка для клиента:</label>
+                            <a id="client-link" href="{% url 'client:feedback' %}">
+                                {{ request.scheme }}://{{ request.get_host }}{% url 'client:feedback' %}
+                            </a>
+                            <button id="copy-btn" type="button" class="btn-img" title="Скопировать ссылку">
+                                <img src="{% static 'client/img/check2.svg' %}" width="18" class="copied mb-1" style="display: none;">
+                                <img src="{% static 'client/img/copy.svg' %}" width="18" class="not-copied mb-1">
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between">
+                        <button type="button" onclick="history.back();" class="btn btn-outline-primary">Назад</button>
+                        {% if not is_expert %}
+                            <input type="submit" class="btn btn-primary" value="Сохранить">
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endwith %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'client/js/feedback.js' %}"></script>
+{% endblock %}

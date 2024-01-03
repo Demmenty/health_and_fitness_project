@@ -1,6 +1,16 @@
 from django.contrib import admin
 
-from client.models import Contacts, Food, Goal, Health, Log, Note, Sleep, Weight
+from client.models import (
+    Contacts,
+    Feedback,
+    Food,
+    Goal,
+    Health,
+    Log,
+    Note,
+    Sleep,
+    Weight,
+)
 
 
 @admin.register(Log)
@@ -50,5 +60,11 @@ class FoodAdmin(admin.ModelAdmin):
 
 @admin.register(Goal)
 class GoalAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "client")
+    list_filter = ("client",)
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
     list_display = ("__str__", "client")
     list_filter = ("client",)

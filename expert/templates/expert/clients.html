@@ -48,6 +48,10 @@
                                 <img src="{% static 'expert/img/three-dots-vertical.svg' %}" width="21">
                             </button>
                             <ul class="dropdown-menu py-1">
+                                <a href="{% url 'expert:client_feedback' %}?client_id={{ client.id }}" class="btn-link text-black">
+                                    <li class="dropdown-item pointer">Посмотреть отзыв</li>
+                                </a>
+                                <hr class="dropdown-divider my-1">
                                 {% if client.is_active %}
                                     <a href="{% url 'expert:client_archive' client.id %}" class="btn-link text-black">
                                         <li class="dropdown-item pointer">Отправить в архив</li>

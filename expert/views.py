@@ -6,13 +6,14 @@ from chat.models import Message
 from client.forms import (
     HEALTH_FORMS,
     ContactsForm,
+    FeedbackForm,
     FoodForm,
     GoalForm,
     HealthFormResult,
     SleepForm,
     WeightForm,
 )
-from client.models import Contacts, Food, Goal, Health, Log, Sleep, Weight
+from client.models import Contacts, Feedback, Food, Goal, Health, Log, Sleep, Weight
 from consults.forms import RequestViewForm
 from consults.models import Request
 from expert.decorators import expert_required
@@ -224,6 +225,22 @@ def client_contacts(request):
         field.widget.attrs["disabled"] = True
 
     template = "expert/client_contacts.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@expert_required
+@require_http_methods(["GET"])
+def client_feedback(request):
+    """Render the client feedback page for the expert"""
+
+    client_id = get_client_id(request)
+    instance = Feedback.objects.filter(client_id=client_id).first()
+    form = FeedbackForm(instance=instance)
+    for field in form.fields.values():
+        field.widget.attrs["disabled"] = True
+
+    template = "client/feedback.html"
     data = {"form": form}
     return render(request, template, data)
 
