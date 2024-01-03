@@ -16,6 +16,19 @@ Main features:
 
 https://www.fullstack-fitness.com/
 
+<details>
+  <summary>Screenshots</summary>
+  
+> ![screen1](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/69d35cc4-3616-4d22-b3f1-6f9cfb387e79)
+> 
+> ![screen2](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/aa286b56-fd20-445a-a1ca-ac3d63f316a0)
+> 
+> ![screen3](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/874d27b8-9750-4c3f-a74e-0fcf7089df2d)
+> 
+> ![screen4](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/2c06aeaa-0e83-432b-852c-1c615d738160)
+
+</details>
+
 ## Technologies
 
 Django, SQLite, HTML, CSS, Javascript, Jquery, Bootstrap.
