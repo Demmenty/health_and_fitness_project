@@ -19,7 +19,7 @@ https://www.fullstack-fitness.com/
 <details>
   <summary>Screenshots</summary>
   
-> ![screen1](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/69d35cc4-3616-4d22-b3f1-6f9cfb387e79)
+> ![screen1](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/70f9d4df-24e6-4ff3-a504-8a0598290497)
 > 
 > ![screen2](https://github.com/Demmenty/health_and_fitness_project/assets/109406056/aa286b56-fd20-445a-a1ca-ac3d63f316a0)
 > 
