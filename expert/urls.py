@@ -11,6 +11,7 @@ urlpatterns = [
     path("client/profile", views.client_profile, name="client_profile"),
     path("client/<int:id>/archive", views.client_archive, name="client_archive"),
     path("client/<int:id>/unarchive", views.client_unarchive, name="client_unarchive"),
+    path("client/<int:id>/delete", views.client_delete, name="client_delete"),
     path(
         "client/questionnaires/",
         views.client_questionnaires,

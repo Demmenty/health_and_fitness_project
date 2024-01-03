@@ -1,14 +1,14 @@
-const trainingDay = $("#training-day");
-const currYear = trainingDay.data("year");
-const currMonth = trainingDay.data("month");
-const currDay = trainingDay.data("day");
-
 const calendarBtn = $("#calendar-btn");
 const calendar = $("#calendar");
 const calendarYearLabel = calendar.find("#year-label");
 const calendarDatesTable = calendar.find(".dates-table");
 const calendarMonthsTable = calendar.find(".months-table");
-const trainingScheduleURL = calendar.data("url-schedule");
+
+const trainingDay = $("#training-day");
+const currYear = trainingDay.data("year");
+const currMonth = trainingDay.data("month");
+const currDay = trainingDay.data("day");
+const clientID = calendar.data("client-id");
 
 const newTrainingSelect = $("#new-training-select");
 const trainingForms = $(".training-form");
@@ -70,7 +70,7 @@ function initСalendar() {
 
     updateDatesTable();
     markCurrentDate();
-    applyTrainingDateColors();
+    applyTrainingDateColors(year, month);
 
     function updateDatesTable() {
         calendarDatesTable.find("tbody").empty();
@@ -118,11 +118,14 @@ function initСalendar() {
 /**
  * Colors the training dates on the calendar according to their types.
  */
-async function applyTrainingDateColors() {
+async function applyTrainingDateColors(year, month) {
+    const url = `/training/get_schedule/${year}/${month}`;
+
     try {
         const schedule = await $.ajax({
-            url: trainingScheduleURL,   
-            type: "GET", 
+            url: url,   
+            type: "GET",
+            data: { client_id: clientID }
         });
 
         const dateCellMap = {};

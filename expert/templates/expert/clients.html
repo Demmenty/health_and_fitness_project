@@ -56,6 +56,11 @@
                                     <a href="{% url 'expert:client_unarchive' client.id %}" class="btn-link text-black">
                                         <li class="dropdown-item pointer">Убрать из архива</li>
                                     </a>
+                                    <hr class="dropdown-divider my-1">
+                                    <form method="POST" action="{% url 'expert:client_delete' client.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="Submit" class="delete-client-btn dropdown-item text-danger pointer" value="Удалить">
+                                    </form>
                                 {% endif %}
                             </ul>
                         </div>
@@ -124,4 +129,8 @@
          </div>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'expert/js/clients.js' %}"></script>
 {% endblock %}
