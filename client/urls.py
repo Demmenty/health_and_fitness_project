@@ -15,4 +15,5 @@ urlpatterns = [
     path("questionnaires/health/page/<int:page>/", views.health, name="health"),
     path("contacts/", views.contacts, name="contacts"),
     path("note/save/", ajax.note_save, name="note_save"),
+    path("feedback/", views.feedback, name="feedback"),
 ]

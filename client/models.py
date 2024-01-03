@@ -506,3 +506,28 @@ class Log(models.Model):
     class Meta:
         verbose_name = "История действий"
         verbose_name_plural = "Истории действий"
+
+
+class Feedback(models.Model):
+    """Client's feedback"""
+
+    client = models.OneToOneField(
+        "users.User", on_delete=models.SET_NULL, verbose_name="Клиент", null=True
+    )
+    clientname = models.CharField("Имя клиента", max_length=255)
+    name = models.CharField("Имя", max_length=255)
+    text = models.TextField("Текст", null=True, blank=True)
+    created_at = models.DateTimeField("Дата", default=now, editable=False)
+
+    def __str__(self):
+        return f"Отзыв №{self.id}"
+
+    def save(self, *args, **kwargs):
+        # to not forget the client if he will be deleted
+        self.clientname = self.client.username
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"

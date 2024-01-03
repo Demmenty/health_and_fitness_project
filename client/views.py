@@ -9,6 +9,7 @@ from client.forms import (
     HEALTH_FORMS,
     LAST_HEALTH_FORM_PAGE,
     ContactsForm,
+    FeedbackForm,
     FoodForm,
     GoalForm,
     ProfileForm,
@@ -16,7 +17,7 @@ from client.forms import (
     UserEmailForm,
     WeightForm,
 )
-from client.models import Contacts, Food, Goal, Health, Sleep, Weight
+from client.models import Contacts, Feedback, Food, Goal, Health, Sleep, Weight
 
 
 @client_required
@@ -218,4 +219,26 @@ def contacts(request):
         "email_form": email_form,
         "help_img_folder": help_img_folder,
     }
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def feedback(request):
+    """Handle the client's feedback form"""
+
+    instance = Feedback.objects.filter(client=request.user).first()
+
+    if request.method == "GET":
+        form = FeedbackForm(instance=instance)
+
+    if request.method == "POST":
+        form = FeedbackForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.instance.client = request.user
+            form.save()
+            return redirect("client:profile")
+
+    template = "client/feedback.html"
+    data = {"form": form}
     return render(request, template, data)
