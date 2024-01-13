@@ -51,14 +51,14 @@
                                 <a href="{% url 'expert:client_feedback' %}?client_id={{ client.id }}" class="btn-link text-black">
                                     <li class="dropdown-item pointer">Посмотреть отзыв</li>
                                 </a>
-                                <hr class="dropdown-divider my-1">
                                 {% if client.is_active %}
+                                    <hr class="dropdown-divider my-1">
                                     <a href="{% url 'expert:client_archive' client.id %}" class="btn-link text-black">
                                         <li class="dropdown-item pointer">Отправить в архив</li>
                                     </a>
                                 {% else %}
                                     <a href="{% url 'expert:client_unarchive' client.id %}" class="btn-link text-black">
-                                        <li class="dropdown-item pointer">Убрать из архива</li>
+                                        <li class="dropdown-item pointer">Восстановить</li>
                                     </a>
                                     <hr class="dropdown-divider my-1">
                                     <form method="POST" action="{% url 'expert:client_delete' client.id %}" class="d-inline">
