@@ -250,7 +250,7 @@ class Daily(models.Model):
 
             for day in metrics:
                 day_nutrition = monthly_nutrition.get(day.date)
-                if not day_nutrition or day_nutrition["calories"] == 0:
+                if not day_nutrition:
                     continue
 
                 if day.calories != day_nutrition["calories"]:

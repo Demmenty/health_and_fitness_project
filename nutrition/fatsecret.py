@@ -236,13 +236,13 @@ class FSManager:
         month = convert_to_datetime(month)
         monthly_entries = self.get_monthly_entries(month)
 
-        monthly_nutrition = {
+        return {
             convert_epoch_to_date(int(entry["date_int"])): {
                 param: float(entry.get(param, 0)) for param in NUTRITION_PARAMS
             }
             for entry in monthly_entries
+            if entry.get("calories") != "0"
         }
-        return monthly_nutrition
 
     def get_monthly_nutrition_list(
         self, month: Union[datetime, date, str] = datetime.now()
@@ -267,14 +267,14 @@ class FSManager:
         month = convert_to_datetime(month)
         monthly_entries = self.get_monthly_entries(month)
 
-        monthly_nutrition = [
+        return [
             {
                 "date": convert_epoch_to_date(int(entry["date_int"])),
                 **{param: float(entry.get(param, 0)) for param in NUTRITION_PARAMS},
             }
             for entry in monthly_entries
+            if entry.get("calories") != "0"
         ]
-        return monthly_nutrition
 
     def get_food_details(self, food_id: str) -> FoodDetails | None:
         """
