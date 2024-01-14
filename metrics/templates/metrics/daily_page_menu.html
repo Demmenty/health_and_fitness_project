@@ -18,6 +18,11 @@
                 <span class="d-none d-sm-inline">Измерение</span>
             </a>
         {% endif %}
+        <button id="show-table-btn" title="Показать в виде таблицы" style="display: none;"
+            class="btn-link text-nowrap align-middle text-black filter-hover-primary">
+            <img src="{% static 'metrics/img/table.svg' %}" width="20">
+            <span class="d-none d-sm-inline">Таблица</span>
+        </button>
         {% if request.user.is_expert %}
             <button id="colouring-btn" title="Окрашивание измерений"
                 class="btn-link text-nowrap align-middle text-black filter-hover-primary"

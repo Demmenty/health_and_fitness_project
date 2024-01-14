@@ -48,7 +48,191 @@
     </section>
     <section id="metrics-section" class="mb-4">
         <div class="container">
-            {% include 'metrics/daily_table.html' %}
+            <div class="card shadow-sm mx-auto">
+                <div class="card-header bg-primary text-light text-center">
+                    <h5 class="mb-0">Дневные измерения</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if not metrics %}
+                        <p class="text-center my-4">Нет измерений за указанный период.</p>
+                        {% if start_date > end_date %}
+                            <p class="text-center mb-4">Интересно, почему же...</p>
+                        {% endif %}
+                    {% else %}
+                        <div id="metrics-table-container" class="overflow-auto">
+                            <table id="metrics-table" class="table table-bordered table-responsive align-middle text-center w-100 mb-0">
+                                <thead class="table-light align-middle">
+                                    <tr> 
+                                        <th></th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Самочувствие">
+                                            <img src="{% static 'metrics/img/emoji-smile.svg' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Самочувствие</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Вес">
+                                            <img src="{% static 'metrics/img/feather.svg' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Вес</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Процент жира">
+                                            <img src="{% static 'metrics/img/fats-percent.png' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Процент жира</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Пульс">
+                                            <img src="{% static 'metrics/img/heart-pulse.svg' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Пульс</span>
+                                        </th>
+                                        {% if metrics_avg.pressure_upper and metrics_avg.pressure_lower %}
+                                            <th title="Давление">
+                                                <img src="{% static 'metrics/img/heart.svg' %}" width="20" class="d-lg-none">
+                                                <label class="d-none d-lg-inline">Давление</label>
+                                            </th>
+                                        {% endif%}
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Калории">
+                                            <img src="{% static 'metrics/img/fire.svg' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Калории</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Белки">
+                                            <img src="{% static 'metrics/img/protein.png' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Белки</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Жиры">
+                                            <img src="{% static 'metrics/img/fats.png' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Жиры</span>
+                                        </th>
+                                        <th title="Показать график" class="chart-parameter pointer text-hover-primary" data-parameter="Углеводы">
+                                            <img src="{% static 'metrics/img/carbo.png' %}" width="20" class="d-lg-none filter-hover-primary">
+                                            <span class="d-none d-lg-inline">Углеводы</span>
+                                        </th>
+                                        <td>&nbsp</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day in metrics %}
+                                    <tr>
+                                        <td class="td_date" title="Дата измерения" value="{{ day.date|date:'d-m' }}">
+                                            {{ day.date|date:"D j.m" }}
+                                        </td>
+                                        <td class="td_feel" value="{{ day.feel }}" title="Самочувствие">
+                                            {{ day.feel|default:"" }}
+                                        </td>
+                                        <td class="td_weight text-nowrap" value="{{ day.weight }}" title="Вес">
+                                            {{ day.weight|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_fat_percentage" value="{{ day.fat_percentage }}" title="Процент жира">
+                                            {{ day.fat_percentage|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_pulse" value="{{ day.pulse }}" title="Пульс">
+                                            {{ day.pulse|floatformat|default:"" }}
+                                        </td>
+                                        {% if metrics_avg.pressure_upper and metrics_avg.pressure_lower %}
+                                            {% if day.pressure_upper and day.pressure_lower %}
+                                                <td class="td_pressure" title="Артериальное давление"
+                                                    value="{{ day.pressure_upper }}/{{ day.pressure_lower }}">
+                                                    {{ day.pressure_upper|floatformat }}/{{ day.pressure_lower|floatformat }}
+                                                </td>
+                                            {% else %}
+                                                <td class="td_pressure" title="Артериальное давление" value=""></td>
+                                            {% endif %}
+                                        {% endif%}
+                                        <td class="td_calories" title="Калории" value="{{ day.calories }}">
+                                            {{ day.calories|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_protein" title="Белки" value="{{ day.protein }}">
+                                            {{ day.protein|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_fat" title="Жиры" value="{{ day.fat }}">
+                                            {{ day.fat|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_carbohydrate" title="Углеводы" value="{{ day.carbohydrate }}">
+                                            {{ day.carbohydrate|floatformat|default:"" }}
+                                        </td>
+                                        <td class="td_options">
+                                            <div class="d-flex flex-nowrap justify-content-around gap-2">
+                                                {% if day.comment %}
+                                                    <button id="comment-btn-{{ forloop.counter }}" title="показать комментарий"
+                                                        class="btn-img comment-btn" value="{{ day.date }}" data-number="{{ forloop.counter }}">
+                                                        <img src="{% static 'metrics/img/chat-text.svg' %}" class="filter-hover-primary">
+                                                    </button>
+                                                    <div id="comment-{{ forloop.counter }}" data-number="{{ forloop.counter }}"
+                                                        class="comment draggable card shadow" style="display: none;">
+                                                        <div class="card-header draggable-point d-flex align-items-center 
+                                                            justify-content-between bg-aux gap-2">
+                                                            <div class="col-1"></div>
+                                                            <h6 class="mb-0 text-nowrap col-auto">
+                                                                {{ day.date|date:"j E" }}
+                                                            </h6>
+                                                            <button type="button" class="col-1 btn-close"></button>
+                                                        </div>
+                                                        <div class="card-body bg-white pt-0 pb-4">
+                                                            <p class="comment-text mb-0">
+                                                                {{ day.comment|safe }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <img src="{% static 'metrics/img/chat.svg' %}" title="комментария нет">
+                                                {% endif %}
+                                                {% if not request.user.is_expert %}
+                                                    <a href="{% url 'metrics:daily_edit' %}?date={{ day.date|date:'Y-m-d' }}" 
+                                                        class="filter-hover-primary pointer">
+                                                        <img src="{% static 'metrics/img/pencil-square.svg' %}" title="редактировать">
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th class="text-nowrap" title="Средние значения">
+                                            <img src="{% static 'metrics/img/bar-chart-line.svg' %}" width="20" class="d-lg-none">
+                                            <label class="d-none d-lg-inline">Среднее:</label>
+                                        </th>
+                                        <th>{{ metrics_avg.feel|floatformat|default:"" }}</th>
+                                        <th class="text-nowrap">{{ metrics_avg.weight|floatformat|default:"" }}</th>
+                                        <th>{{ metrics_avg.fat_percentage|floatformat|default:"" }}</th>
+                                        <th>{{ metrics_avg.pulse|floatformat|default:"" }}</th>
+                                        {% if metrics_avg.pressure_upper and metrics_avg.pressure_lower %}
+                                            <th>{{ metrics_avg.pressure_upper|floatformat }}/{{ metrics_avg.pressure_lower|floatformat }}</th>
+                                        {% endif%}
+                                        <th>{{ metrics_avg.calories|floatformat }}</th>
+                                        <th>{{ metrics_avg.protein|floatformat }}</th>
+                                        <th>{{ metrics_avg.fat|floatformat }}</th>
+                                        <th>{{ metrics_avg.carbohydrate|floatformat }}</th>
+                                        <td>
+                                            <img src="{% static 'metrics/img/question-circle.svg' %}" id="avg-detail-btn" 
+                                                class="btn-link" data-bs-toggle="popover" data-bs-title="Расчет средних значений" 
+                                                data-bs-content="Средние значения высчитываются по выбранному периоду.
+                                                Данные КБЖУ за сегодня не учитываются при подсчетах среднего значения, так как 
+                                                могут измениться в течение дня, и соответственно расчеты будут не информативными.">
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div id="metrics-chart-container" class="p-3" style="display: none;">
+                            <canvas></canvas>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 my-3 mx-3">
+                        <div class="d-flex align-items-center">
+                            <label for="select-period-btn" class="fw-500 me-2">Даты:</label>
+                            <button type="button" id="select-period-btn" title="Выбрать период"
+                                class="btn-link" data-bs-toggle="modal" data-bs-target="#select-period-modal">
+                                {{ start_date|date:'d b y' }} ↔ {{ end_date|date:'d b y' }}
+                            </button>
+                        </div>
+                        <form id="select-days-form" method="get"
+                            class="d-flex align-items-center gap-2">
+                            <label for="id_days" class="fw-500">Дни:</label>
+                            <input type="hidden" name="client_id" value="{{ client.id }}">
+                            <input type="number" id="id_days" name="days" min="1" value="{{ metrics|length }}"
+                                class="form-control pe-1 py-0 text-center">
+                            <button type="submit" class="btn btn-primary py-0 px-1" title="Получить измерения">✓</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     {% if user.is_expert %}
@@ -57,5 +241,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'metrics/js/daily.js' %}"></script>
+    <script src="{% static 'metrics/js/daily.js' %}?update=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}

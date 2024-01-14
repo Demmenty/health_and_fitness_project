@@ -10,8 +10,12 @@ const levelsForms = $(".levels-form");
 const levelsMenuTogglers = $("#metrics-levels-section .toggler");
 const levelsMenuDetails = $("#metrics-levels-section .detail");
 const colouringBtn = $("#colouring-btn");
-const metricsTable = $("#metrics-table");
 const metricsLevelsSection = $("#metrics-levels-section");
+const metricsTable = $("#metrics-table");
+const metricsChartContainer = $("#metrics-chart-container");
+const showTableBtn = $("#show-table-btn");
+
+var metricsChart;
 
 $(document).ready(() => {
     commentBtns.on('click', toggleComment);
@@ -23,12 +27,16 @@ $(document).ready(() => {
     colouringBtn.on('click', toggleColouring);
     levelsForms.on('submit', saveMetricLevels);
     levelsMenuTogglers.on('click', toggleLevelsDetails);
+    showTableBtn.on('click', showMetricsTable);
+    metricsTable.find(".chart-parameter").on("click", showMetricsChart)
 
     // enable popovers
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     const popoverList = [...popoverTriggerList].map(
         popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl)
     )
+
+    initMetricsChart();
 })
 
 // REQUESTS
@@ -291,4 +299,91 @@ function applyColouring(colouringData) {
  */
 function removeColouring() {
     metricsTable.find("tbody td").css("background-color", "");
+}
+
+// CHART
+
+/**
+ * Show the metrics table and hide the metrics chart.
+ */
+function showMetricsTable() {
+    showTableBtn.hide();
+    colouringBtn.show();
+    metricsChartContainer.hide();
+    metricsTable.closest("div").show();
+}
+
+/**
+ * Show the metrics chart and hide the metric table.
+ * Clicked parameter is shown in the chart, others are hidden.
+ */
+function showMetricsChart() {
+    showTableBtn.show();
+    colouringBtn.hide();
+
+    const parameter = this.dataset.parameter;
+
+    metricsChart.data.datasets.forEach(dataset => {
+        dataset.hidden = (dataset.label !== parameter);
+    });
+    metricsChart.update();
+
+    metricsTable.closest("div").hide();
+    metricsChartContainer.show();
+}
+
+/**
+ * Initializes the metrics chart.
+ */
+function initMetricsChart() {
+    const table = metricsTable[0];
+
+    const dates = Array.from(table.querySelectorAll('.td_date'))
+        .map(elem => elem.getAttribute('value'));
+
+    const getDataList = (selector) => Array.from(table.querySelectorAll(selector))
+        .map(elem => {
+            const value = elem.getAttribute('value');
+            return value === 'None' ? null : parseFloat(value.replace(',', '.'));
+        });
+
+    const colors = ['#657ff7', '#6c757d', '#e07fe0', '#65b5f7', '#fe5065', '#00d2b5', '#ff783d', '#9565f7'];
+    const parameters = {
+        'Самочувствие': ".td_feel",
+        'Вес': ".td_weight",
+        'Процент жира': ".td_fat_percentage",
+        'Пульс': ".td_pulse",
+        'Калории': ".td_calories",
+        'Белки': ".td_protein",
+        'Жиры': ".td_fat",
+        'Углеводы': ".td_carbohydrate",
+    }
+
+    const datasets = Object.entries(parameters).map(([label, selector], index) => ({
+        label,
+        data: getDataList(selector),
+        backgroundColor: colors[index],
+        borderColor: colors[index],
+        borderWidth: 1,
+        spanGaps: true,
+    }));
+
+    const context = metricsChartContainer.find("canvas")[0].getContext('2d');
+    const settings = {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            elements: {
+                line: {
+                    tension: 0.2
+                }
+            }
+        }
+    }
+
+    metricsChart = new Chart(context, settings); 
 }
