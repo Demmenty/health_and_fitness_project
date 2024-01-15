@@ -311,6 +311,16 @@ function showMetricsTable() {
     colouringBtn.show();
     metricsChartContainer.hide();
     metricsTable.closest("div").show();
+
+    removeChartParamFromUrl();
+
+    function removeChartParamFromUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('show_chart');
+        window.history.replaceState({}, '', url.toString());
+
+        $("form input[name='show_chart']").val('');
+    }
 }
 
 /**
@@ -330,6 +340,18 @@ function showMetricsChart() {
 
     metricsTable.closest("div").hide();
     metricsChartContainer.show();
+
+    addChartParamToUrl();
+
+    function addChartParamToUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.set('show_chart', 'true');
+        url.searchParams.set('chart_param', parameter);
+        window.history.replaceState({}, '', url.toString());
+
+        $("form input[name='show_chart']").val('true');
+        $("form input[name='chart_param']").val(parameter);
+    }
 }
 
 /**
@@ -337,6 +359,7 @@ function showMetricsChart() {
  */
 function initMetricsChart() {
     const table = metricsTable[0];
+    const activeParameter = metricsChartContainer.data("parameter");
 
     const dates = Array.from(table.querySelectorAll('.td_date'))
         .map(elem => elem.getAttribute('value'));
@@ -366,6 +389,7 @@ function initMetricsChart() {
         borderColor: colors[index],
         borderWidth: 1,
         spanGaps: true,
+        hidden: (label !== activeParameter),
     }));
 
     const context = metricsChartContainer.find("canvas")[0].getContext('2d');
