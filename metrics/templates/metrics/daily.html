@@ -23,6 +23,8 @@
                 <div class="modal-body px-2 px-sm-3">
                     <form method="get">
                         <input type="hidden" name="client_id" value="{{ client.id }}">
+                        <input type="hidden" name="show_chart" value="{{ show_chart }}">
+                        <input type="hidden" name="chart_param" value="{{ chart_param }}">
                         <div class="d-flex flex-row justify-content-around justify-content-sm-center gap-sm-4 mb-4">
                             <div>
                                 <label for="id_start" class="form-label text-center w-100">Старт</label>
@@ -59,7 +61,8 @@
                             <p class="text-center mb-4">Интересно, почему же...</p>
                         {% endif %}
                     {% else %}
-                        <div id="metrics-table-container" class="overflow-auto">
+                        <div id="metrics-table-container" class="overflow-auto"
+                            {% if show_chart %} style="display: none;" {% endif %}>
                             <table id="metrics-table" class="table table-bordered table-responsive align-middle text-center w-100 mb-0">
                                 <thead class="table-light align-middle">
                                     <tr> 
@@ -210,7 +213,8 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <div id="metrics-chart-container" class="p-3" style="display: none;">
+                        <div id="metrics-chart-container" class="p-3" data-parameter="{{ chart_param }}"
+                            {% if not show_chart %} style="display: none;" {% endif %}>
                             <canvas></canvas>
                         </div>
                     {% endif %}
@@ -222,10 +226,11 @@
                                 {{ start_date|date:'d b y' }} ↔ {{ end_date|date:'d b y' }}
                             </button>
                         </div>
-                        <form id="select-days-form" method="get"
-                            class="d-flex align-items-center gap-2">
+                        <form id="select-days-form" method="get" class="d-flex align-items-center gap-2">
                             <label for="id_days" class="fw-500">Дни:</label>
                             <input type="hidden" name="client_id" value="{{ client.id }}">
+                            <input type="hidden" name="show_chart" value="{{ show_chart }}">
+                            <input type="hidden" name="chart_param" value="{{ chart_param }}">
                             <input type="number" id="id_days" name="days" min="1" value="{{ metrics|length }}"
                                 class="form-control pe-1 py-0 text-center">
                             <button type="submit" class="btn btn-primary py-0 px-1" title="Получить измерения">✓</button>
@@ -241,6 +246,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'metrics/js/daily.js' %}?update=1"></script>
+    <script src="{% static 'metrics/js/daily.js' %}?update=2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}

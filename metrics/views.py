@@ -26,10 +26,11 @@ def daily(request):
     """
 
     client = get_client(request)
-
     start = request.GET.get("start")
     end = request.GET.get("end")
     days = int(request.GET.get("days", 7))
+    show_chart = request.GET.get("show_chart", False)
+    chart_param = request.GET.get("chart_param", "")
 
     if start and end:
         start = date.fromisoformat(start)
@@ -47,6 +48,8 @@ def daily(request):
         "end_date": end or metrics[-1].date,
         "metrics": metrics,
         "metrics_avg": metrics_avg,
+        "show_chart": show_chart,
+        "chart_param": chart_param,
     }
 
     if request.user.is_expert:
