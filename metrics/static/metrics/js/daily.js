@@ -409,5 +409,8 @@ function initMetricsChart() {
         }
     }
 
-    metricsChart = new Chart(context, settings); 
+    metricsChart = new Chart(context, settings);
+    window.addEventListener('resize', () => {
+        metricsChart.resize();
+    });
 }
