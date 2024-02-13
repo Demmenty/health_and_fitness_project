@@ -30,3 +30,6 @@ summary::-webkit-details-marker {
     padding-bottom: 2px;
 }
 
+.exercise-record.done summary {
+    background-color: #d8e0ff !important
+}

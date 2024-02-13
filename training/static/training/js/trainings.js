@@ -38,6 +38,7 @@ $(document).ready(function() {
     exerciseOptions.find(".down-option").on("click", moveExercise);
     exerciseOptions.find(".delete-option").on("click", deleteExerciseRecord);
     exerciseRecordsForms.find(".edit-number-btn").on("click", editNumber);
+    exerciseRecordsForms.find(".is_done").on("change", toggleExerciseDone);
 });
 
 // CALENDAR
@@ -302,6 +303,15 @@ function moveExercise(event) {
     else {
         exerciseRecord.insertAfter(nearbyExerciseRecord);
     }
+}
+
+/**
+ * Toggles the "done" class on the closest exercise record.
+ */
+function toggleExerciseDone() {
+    const exerciseRecord = $(this).closest(".exercise-record");
+
+    exerciseRecord.toggleClass("done");
 }
 
 /**
