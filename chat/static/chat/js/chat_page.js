@@ -35,6 +35,7 @@ const messageTemplates = {
 // add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
+    // messages loading
     loadLastMessages();
     setInterval(loadNewMessages, 10000);
 
@@ -367,7 +368,13 @@ async function loadNewMessages() {
 
         const scrolledToBottom = isChatScrolledToBottom(allowance=50);
 
-        for (const message of response) {
+        for (const message of response) {            
+            const msgID = response[0].pk;
+
+            if (isMsgInHistory(msgID)) {
+                continue
+            }
+
             chatHistory.append(renderMessage(message));
         }
 
@@ -906,4 +913,14 @@ async function wait(ms) {
 
 function isMobileDevice() {
     return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/);
+}
+
+/**
+ * Check if the message with the given ID is in the chat history.
+ *
+ * @param {string} msgID - The ID of the message to check.
+ * @return {boolean} True if the message is in the chat history, false otherwise.
+ */
+function isMsgInHistory(msgID) {
+    return chatHistory.find(`#message-${msgID}`).length > 0
 }

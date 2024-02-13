@@ -37,6 +37,10 @@ const messageTemplates = {
 // add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
+    // messages loading
+    loadLastMessages();
+    setInterval(loadNewMessages, 10000);
+
     // chat window
     chatBtn.on('click', toggleChat);
     chat.find(".btn-close").on("click", toggleChat);
@@ -48,9 +52,6 @@ $(document).ready(function () {
     // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
     chatScrollBtn.on("click", scrollToLastMessage);
-
-    // messages loading
-    setInterval(loadNewMessages, 10000);
 
     // images
     chatMsgText.on("dragenter dragover dragleave drop", preventDefault);
@@ -205,7 +206,7 @@ async function openChat() {
 
     if (chat.data("first-open")) {
         chat.data("first-open", false);
-        loadLastMessages();
+        setTimeout(() => {scrollToLastMessage()}, 1);
     }
 }
 
@@ -328,7 +329,6 @@ async function loadLastMessages() {
 
         for (const message of response) {
             chatHistory.prepend(renderMessage(message));
-            setTimeout(() => {scrollToLastMessage()}, 1);
         }
 
         if (messagesAmount == lastMessagesLimit) {
@@ -415,6 +415,12 @@ async function loadNewMessages() {
         const scrolledToBottom = isChatScrolledToBottom(allowance=50);
 
         for (const message of response) {
+            const msgID = response[0].pk;
+
+            if (isMsgInHistory(msgID)) {
+                continue
+            }
+
             chatHistory.append(renderMessage(message));
         }
 
@@ -977,4 +983,14 @@ async function wait(ms) {
 
 function isMobileDevice() {
     return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/);
+}
+
+/**
+ * Check if the message with the given ID is in the chat history.
+ *
+ * @param {string} msgID - The ID of the message to check.
+ * @return {boolean} True if the message is in the chat history, false otherwise.
+ */
+function isMsgInHistory(msgID) {
+    return chatHistory.find(`#message-${msgID}`).length > 0
 }

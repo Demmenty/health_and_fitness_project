@@ -16,7 +16,7 @@
   <div class="card-body position-relative py-0 pe-0">
     <div id="chat-history" class="d-flex flex-column">
       <template id="message-template-user">
-        <div id="" class="chat-message user-message d-flex flex-column align-items-end my-2 me-2 p-1" data-id="">
+        <div id="" class="chat-message user-message d-flex flex-column rounded align-items-end my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
             <small>Я</small>
             <small> • </small>
@@ -28,7 +28,7 @@
         </div>
       </template>
       <template id="message-template-partner">
-        <div id="" class="chat-message partner-message d-flex flex-column align-items-start my-2 me-2 p-1" data-id="">
+        <div id="" class="chat-message partner-message d-flex rounded flex-column align-items-start my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
             <small>{{ partner.username|title }}</small>
             <small> • </small>
