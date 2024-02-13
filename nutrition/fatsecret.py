@@ -502,8 +502,8 @@ class FSManager:
 
         totals = self.calc_monthly_food_totals(monthly_food)
 
-        sort_key = (
-            lambda item: item[1][parameter] if item[1][parameter] is not None else 0
+        sort_key = lambda item: (
+            item[1][parameter] if item[1][parameter] is not None else 0
         )
         sorted_food = sorted(totals.items(), key=sort_key, reverse=True)
         top_food = sorted_food[:limit]

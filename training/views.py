@@ -203,3 +203,30 @@ def exercise_detail(request, id):
         "exercise": exercise,
     }
     return render(request, template, data)
+
+
+@login_required
+@require_http_methods(["GET"])
+def exercise_stats(request, id):
+    """
+    View function for displaying an exercise stats for a particular client.
+    Available only for strength training type.
+    """
+
+    exercise_record = get_object_or_404(ExerciseRecord, id=id)
+    client_id = get_client_id(request)
+    exercise = exercise_record.exercise
+
+    records = ExerciseRecord.objects.filter(
+        exercise=exercise,
+        training__type=exercise_record.training.type,
+        training__client_id=client_id,
+        is_done=True,
+    ).order_by("training__date")
+
+    template = "training/exercise_stats.html"
+    data = {
+        "exercise": exercise,
+        "records": records,
+    }
+    return render(request, template, data)

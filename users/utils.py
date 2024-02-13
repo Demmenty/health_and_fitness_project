@@ -5,13 +5,18 @@ def get_client_id(request) -> int | None:
     """
     Returns a client ID depending on request user type.
 
-    (If user is expert, "client_id" must be passed in GET or POST!)
+    Returns:
+        int | None: The ID of the client.
+            If user is expert, "client_id" must be passed in GET or POST!
+            If user is not expert, returns authenticated user ID
     """
 
     if request.user.is_expert:
-        return request.GET.get("client_id") or request.POST.get("client_id")
+        client_id = request.GET.get("client_id") or request.POST.get("client_id")
+    else:
+        client_id = request.user.id
 
-    return request.user.id
+    return client_id
 
 
 def get_client(request) -> User | None:

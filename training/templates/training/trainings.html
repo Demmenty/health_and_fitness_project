@@ -64,6 +64,12 @@
                                                             <li class="dropdown-item comment-option pointer">Комментарий</li>
                                                             <li class="dropdown-item up-option pointer">Переместить выше</li>
                                                             <li class="dropdown-item down-option pointer">Переместить ниже</li>
+                                                            {% if training.form.instance.type == 'strength' %}
+                                                                <a href="{% url 'training:exercise_stats' form.instance.id %}?client_id={{ client.id }}"
+                                                                    class="btn-link text-black">
+                                                                    <li class="dropdown-item stats pointer">Статистика</li>
+                                                                </a>
+                                                            {% endif %}
                                                             <li><hr class="dropdown-divider my-1"></li>
                                                             <li class="dropdown-item delete-option pointer">Удалить</li>
                                                         </ul>

@@ -410,6 +410,7 @@ function initMetricsChart() {
     }
 
     metricsChart = new Chart(context, settings);
+
     window.addEventListener('resize', () => {
         metricsChart.resize();
     });
