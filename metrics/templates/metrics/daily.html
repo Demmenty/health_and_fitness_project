@@ -229,7 +229,7 @@
                         <form id="select-days-form" method="get" class="d-flex align-items-center gap-2">
                             <label for="id_days" class="fw-500">Дни:</label>
                             <input type="hidden" name="client_id" value="{{ client.id }}">
-                            <input type="hidden" name="show_chart" value="{% if show_chart %}true{% else %}{% endif %}">
+                            <input type="hidden" name="show_chart" value="{% if show_chart %}true{% endif %}">
                             <input type="hidden" name="chart_param" value="{{ chart_param }}">
                             <input type="number" id="id_days" name="days" min="1" value="{{ metrics|length }}"
                                 class="form-control pe-1 py-0 text-center">
