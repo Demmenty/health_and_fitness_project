@@ -96,9 +96,3 @@ def remove_attr(field, attr):
 @register.filter("get_value")
 def get_value(dictionary, key):
     return dictionary.get(key, "")
-
-
-@register.filter("multiply")
-def multiply(field, num):
-    if field and num:
-        return field * num

@@ -21,8 +21,7 @@
                     data-dates="{% for record in records %}{{ record.training.date|date:'Y-m-d' }}{% if not forloop.last %};{% endif %}{% endfor %}"
                     data-weights="{% for record in records %}{{ record.weight }}{% if not forloop.last %};{% endif %}{% endfor %}"
                     data-repetitions="{% for record in records %}{{ record.repetitions }}{% if not forloop.last %};{% endif %}{% endfor %}" 
-                    data-sets="{% for record in records %}{{ record.sets }}{% if not forloop.last %};{% endif %}{% endfor %}"
-                    data-points="{% for record in records %}{{ record.weight|multiply:record.repetitions|multiply:record.sets }}{% if not forloop.last %};{% endif %}{% endfor %}">
+                    data-sets="{% for record in records %}{{ record.sets }}{% if not forloop.last %};{% endif %}{% endfor %}">
                 </params>
                 <div id="exercise-chart">
                     <canvas></canvas>
