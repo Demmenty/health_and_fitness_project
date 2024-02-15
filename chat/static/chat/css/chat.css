@@ -73,8 +73,8 @@
 }
 #input-audio-delete,
 #input-img-delete {
-    min-width: 25px;
-    max-width: 25px;
+    min-width: 19px;
+    max-width: 19px;
 }
 #input-img-preview,
 #input-audio-preview {
