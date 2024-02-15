@@ -9,11 +9,16 @@
     data-url-set-seen="{% url 'chat:set_seen' %}">
   </params>
   <div class="card-header draggable-point d-flex align-items-center bg-aux gap-2 justify-content-between">
-    <div class="col-1"></div>
+    <div class="col-1">
+      <img src="{% static 'chat/img/arrows-angle-contract.svg' %}" title="Уменьшить чат"
+        class="resize-btn pointer p-1">
+      <img src="{% static 'chat/img/arrows-angle-expand.svg' %}" title="Увеличить чат"
+        class="resize-btn pointer p-1" style="display: none;">
+    </div>
     <h6 class="mb-0 text-nowrap col-auto">Чат</h6>
     <button type="button" class="col-1 btn-close" title="Закрыть чат"></button>
   </div>
-  <div class="card-body position-relative py-0 pe-0">
+  <div class="card-body position-relative py-0 px-2">
     <div id="chat-history" class="d-flex flex-column">
       <template id="message-template-user">
         <div id="" class="chat-message user-message d-flex flex-column rounded align-items-end my-2 me-2 p-1" data-id="">

@@ -187,7 +187,7 @@ async function countNewMessagesRequest() {
 /**
  * Adjusts the optimal height of the chat window.
  */
-function adjustChatHeight() {
+function adjustChatHeight(event) {
     adjustTextarea();
     adjustHistory();
 
@@ -209,10 +209,12 @@ function adjustChatHeight() {
         const headerHeight = chat.find(".card-header").outerHeight();
         const footerHeight = chat.find(".card-footer").outerHeight();
 
-        const allowance = headerHeight + footerHeight;
-        const historyHeight = `calc(100vh - ${allowance}px)`;
-
-        chatHistory.css("max-height", historyHeight);
+        if (chat.hasClass("mini")) {
+            chatHistory.css("max-height", `calc(40vh - ${headerHeight + footerHeight}px)`);
+        }
+        else {
+            chatHistory.css("max-height", `calc(100vh - ${headerHeight + footerHeight}px)`);
+        }
     }
 }
 

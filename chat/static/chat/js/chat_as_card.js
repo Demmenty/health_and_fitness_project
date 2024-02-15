@@ -1,5 +1,6 @@
 const chatBtn = $('#chat-btn');
 const chatBtnBadge = chatBtn.find(".badge");
+const resizeChatBtns = chat.find(".resize-btn");
 
 $(document).ready(function () {
     // chat window
@@ -8,6 +9,8 @@ $(document).ready(function () {
     chatBtn.on('mousedown', function(event) {
         if (event.which === 2) openChatAsNewTab();
     })
+    makeChatResizable();
+    resizeChatBtns.on("click", toggleChatSize);
 })
 
 // CHAT WINDOW
@@ -47,6 +50,74 @@ function openChatAsNewPage() {
 function closeChat() {
     chat.hide();
     chatBtn.removeClass('active');
+}
+
+/**
+ * Makes the chat resizable horizontally by dragging its right side.
+ */
+function makeChatResizable() {
+    const chatElement = chat[0];
+    const sideWidth = 8;
+    let isResizing = false;
+    let startX;
+
+    chat.on("mousemove", changeCursor);
+    chat.on("mousedown", startResize);
+    document.addEventListener("mousemove", resizeHorizontally);
+    document.addEventListener("mouseup", stopResize);
+
+    function changeCursor(event) {
+        if (isMouseOnRightSide(event)) {
+            chatElement.style.cursor = "ew-resize";
+        }
+        else {
+            chatElement.style.cursor = "default";
+        }
+    }
+
+    function startResize(event) {
+        if (isMouseOnRightSide(event)) {
+            isResizing = true;
+            startX = event.clientX;
+        }
+    }
+
+    function resizeHorizontally(event) {
+        if (isResizing) {
+            event.preventDefault();
+            const width = chatElement.offsetWidth + (event.clientX - startX);
+            chatElement.style.width = `${width}px`;
+            startX = event.clientX;
+        }
+    }
+
+    function stopResize() {
+        isResizing = false;
+    }
+
+    function isMouseOnRightSide(event) {
+        const isMouseOnRightSide = (
+            event.clientX < chatElement.getBoundingClientRect().left + sideWidth ||
+            event.clientX > chatElement.getBoundingClientRect().right - sideWidth
+        );
+        return isMouseOnRightSide;
+    }
+}
+
+function toggleChatSize() {
+    chat.toggleClass("mini");
+    resizeChatBtns.toggle();
+
+    if (chat.hasClass("mini")) {
+        chat.css("top", "unset");
+        chat.css("bottom", "0");
+    }
+    else {
+        chat.css("top", "0");
+        chat.css("bottom", "0");
+    }
+
+    adjustChatHeight();
 }
 
 // MESSAGES LOADING

@@ -1,0 +1,67 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+.bg-aux {
+    background-color: #e8f0fe !important;
+}
+.btn-img {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+.btn-img.active img,
+.btn-img.active svg {
+    filter: invert(46%) sepia(50%) saturate(2348%) hue-rotate(211deg);
+}
+.filter-secondary {
+    filter: invert(54%) sepia(5%) saturate(776%) hue-rotate(167deg) brightness(100%);
+}
+.filter-primary,
+.filter-hover-primary:hover {
+    filter: invert(42%) sepia(65%) saturate(1255%) hue-rotate(209deg);
+}
+.btn-link {
+    border: none;
+    background: none;
+    padding: 0;
+    text-decoration: none;
+}
+.btn-link.active {
+    filter: invert(47%) sepia(56%) saturate(600%) brightness(90%) hue-rotate(192deg);
+}
+
+/* chat window */
+#chat {
+    height: 100vh;
+}
+#chat-history {
+    height: calc(100vh - 129px);
+    max-height: calc(100vh - 129px);
+    overflow-y: auto;
+}
+@media (min-width: 576px) {
+    #chat .message-image img {
+        max-width: 33rem;
+    }
+}
+#chat-scroll-btn {
+    bottom: 0.5rem;
+    right: 1rem;
+}
+
+/* scroll */
+::-webkit-scrollbar {
+    max-width: 9px;
+    max-height: 9px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #d8e0ff;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #b0bbe6;
+}
+::-webkit-scrollbar-track {
+    background-color: #F3F5F9;
+}
