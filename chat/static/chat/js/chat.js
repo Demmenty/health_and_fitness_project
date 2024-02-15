@@ -1,6 +1,4 @@
 const chat = $('#chat');
-const chatBtn = $('#chat-btn');
-const chatBtnBadge = chatBtn.find(".badge");
 const chatHistory = chat.find("#chat-history");
 const chatScrollBtn = chat.find("#chat-scroll-btn");
 
@@ -30,6 +28,8 @@ const messageTemplates = {
     [chatPartnerID]: chat.find("#message-template-partner"),
 }
 
+var isSendingInProgress = false;
+
 // TODO:
 // make resize by sides
 // btn for fuulscreen chat and back
@@ -42,12 +42,7 @@ $(document).ready(function () {
     setInterval(loadNewMessages, 10000);
 
     // chat window
-    chatBtn.on('click', toggleChat);
-    chat.find(".btn-close").on("click", toggleChat);
     chatMsgText.on("input change", adjustChatHeight);
-    chatBtn.on('mousedown', function(event) {
-        if (event.which === 2) openChatAsNewTab();
-    })
 
     // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
@@ -68,6 +63,7 @@ $(document).ready(function () {
     chatAudioStopBtn.on("click", stopRecording);
 
     // message sending
+    chatMsgForm.on('submit', preventDefault);
     chatMsgForm.on('submit', handleMessageSending);
     chatMsgText.on("keypress", handleMessageKeyPress);
 })
@@ -189,43 +185,6 @@ async function countNewMessagesRequest() {
 // CHAT WINDOW
 
 /**
-* Toggles the visibility of the chat window.
-*/
-function toggleChat() {
-    chatBtn.hasClass('active') ? closeChat() : openChat();
-}
-
-async function openChat() {
-    if (isMobileDevice()) {
-        openChatAsNewPage();
-        return;
-    }
-
-    chatBtn.addClass('active');
-    chat.show();
-
-    if (chat.data("first-open")) {
-        chat.data("first-open", false);
-        setTimeout(() => {scrollToLastMessage()}, 1);
-    }
-}
-
-function openChatAsNewTab() {
-    const chatUrl = chatParams.data("url-chat") + "?partner_id=" + chatPartnerID;
-    window.open(chatUrl, '_blank');
-}
-
-function openChatAsNewPage() {
-    const chatUrl = chatParams.data("url-chat") + "?partner_id=" + chatPartnerID;
-    window.location.href = chatUrl;
-}
-
-function closeChat() {
-    chat.hide();
-    chatBtn.removeClass('active');
-}
-
-/**
  * Adjusts the optimal height of the chat window.
  */
 function adjustChatHeight() {
@@ -329,6 +288,7 @@ async function loadLastMessages() {
 
         for (const message of response) {
             chatHistory.prepend(renderMessage(message));
+            setTimeout(() => {scrollToLastMessage()}, 1);
         }
 
         if (messagesAmount == lastMessagesLimit) {
@@ -388,51 +348,6 @@ async function loadOldMessages() {
         console.error("loadOldMessages error:", error);
         showDangerAlert(error);
         spinner.remove();
-    }
-}
-
-/**
- * Loads new messages from the server.
- * Appends the retrieved messages to the chat history.
- * 
- * New messages - messages newer than the last displayed message.
- * Updates the new messages badge if there are new messages.
- */
-async function loadNewMessages() {
-    const lastMsg = chatHistory.find(".chat-message").last();
-    const lastMsgID = lastMsg.attr("data-id");
-
-    try {
-        const response = await getNewMessagesRequest(lastMsgID);
-        const messagesAmount = response.length;
-
-        if (messagesAmount == 0) {
-            return;
-        }
-
-        chat.find("#no-messages").remove();
-
-        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
-
-        for (const message of response) {
-            const msgID = response[0].pk;
-
-            if (isMsgInHistory(msgID)) {
-                continue
-            }
-
-            chatHistory.append(renderMessage(message));
-        }
-
-        if (scrolledToBottom) {
-            scrollToLastMessage();
-        }
-
-        updateNewMessagesBadge();
-    }
-    catch (error) {
-        console.error("loadNewMessages error:", error);
-        updateNewMessagesBadge();
     }
 }
 
@@ -831,7 +746,9 @@ function handleMessageKeyPress(event) {
  * @param {Event} event - The event object.
  */
 async function handleMessageSending(event) {
-    event.preventDefault();
+    console.log("handleMessageSending");
+    chatMsgSubmitBtn.prop("disabled", true);
+    isSendingInProgress = true;
 
     if (rec && rec.state === "recording") {
         stopRecording();
@@ -839,13 +756,19 @@ async function handleMessageSending(event) {
     }
 
     if (messageIsEmpty()) {
+        chatMsgSubmitBtn.prop("disabled", false);
+        isSendingInProgress = false;
+        console.log("messageIsEmpty");
         return;
     }
 
-    chatMsgSubmitBtn.prop("disabled", true);
-
     try {
         const response = await saveMessageRequest();
+
+        if (!Array.isArray(response)) {
+            throw "Что-то пошло не так. Скорее всего, сессия истекла.";
+        }
+    
         const message = response[0];
         const scrolledToBottom = isChatScrolledToBottom(allowance=100);
 
@@ -853,7 +776,6 @@ async function handleMessageSending(event) {
         chatImageInputPreview.hide();
         chatAudioInputPreview.hide();
         adjustChatHeight();
-        chatMsgSubmitBtn.prop("disabled", false);
         chat.find("#no-messages").remove();
 
         chatHistory.append(renderMessage(message, lazy=false));
@@ -865,44 +787,14 @@ async function handleMessageSending(event) {
     catch (error) {
         console.error("saveChatMessage error:", error);
         showDangerAlert(error);
-        chatMsgSubmitBtn.prop("disabled", false);
     }
-
-    function messageIsEmpty() {
-        const textEmpty = chatMsgText.val().trim() == "";
-        const uploadedImg = chatImageInput[0].files[0];
-        const uploadedAudio = chatAudioInput[0].files[0];
-
-        return textEmpty && !uploadedImg && !uploadedAudio
+    finally {
+        isSendingInProgress = false;
+        chatMsgSubmitBtn.prop("disabled", false);
     }
 }
 
 // NEW/SEEN HANDLING
-
-/**
- * Updates the badge displaying the number of new messages
- * by retrieving the count of new messages from the server.
- */
-async function updateNewMessagesBadge() {
-    try {
-        const response = await countNewMessagesRequest();
-        const messagesCount = response.count;
-
-        if (messagesCount == 0) {
-            chatBtnBadge.text("");
-        }
-        else if (messagesCount > 99) {
-            chatBtnBadge.text("99+");
-        }
-        else {
-            chatBtnBadge.text(messagesCount);
-        }
-    }
-    catch (error) {
-        console.error("updateUnreadMessagesCount error:", error);
-        chatBtnBadge.text("?");
-    }
-}
 
 /**
  * Handles new message intersection.
@@ -917,34 +809,6 @@ function handleNewMsgIntersection(entries) {
             setMessageAsSeen(message);
         }
     });
-}
-
-/**
- * Sets a message as seen.
- * 
- * Sends a request to the server to mark the message as seen.
- * On success:
- * stops observing the message element using the newMsgObserver,
- * removes the "new" class from the message,
- * updates the new messages badge.
- * 
- * @param {Element} message - The message jQuery element.
- */
-async function setMessageAsSeen(message) {
-    const msgID = message.attr("data-id");
-
-    newMsgObserver.unobserve(message[0]);
-
-    try {
-        await setMessageAsSeenRequest(msgID);
-        setTimeout(() => {message.removeClass("new")}, 2000);
-        updateNewMessagesBadge();
-    }
-    catch (error) {
-        console.error("setMessageAsSeen error:", error);
-        showDangerAlert(error);
-        newMsgObserver.observe(message[0]);
-    }
 }
 
 // UTILS
@@ -993,4 +857,12 @@ function isMobileDevice() {
  */
 function isMsgInHistory(msgID) {
     return chatHistory.find(`#message-${msgID}`).length > 0
+}
+
+function messageIsEmpty() {
+    const textEmpty = chatMsgText.val().trim() == "";
+    const uploadedImg = chatImageInput[0].files[0];
+    const uploadedAudio = chatAudioInput[0].files[0];
+
+    return textEmpty && !uploadedImg && !uploadedAudio
 }
