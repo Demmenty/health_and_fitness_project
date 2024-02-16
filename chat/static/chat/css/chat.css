@@ -1,31 +1,11 @@
-/* chat-window */
-#chat {
-    margin-top: env(safe-area-inset-top);
-    width: 100%;
-    overflow: hidden;
-    bottom: 0;
-}
-@media (min-width: 576px) {
-    #chat {
-        left: 0;
-        width: 31rem;
-    }
-}
-#chat-history {
-    min-height: 16rem;
-    max-height: calc(100vh - 8rem - env(safe-area-inset-top));
-    overflow-y: auto;
-}
-
-#chat-scroll-btn {
-    bottom: 0.5rem;
-    right: 1rem;
-}
 #chat .partner-message.new {
     background-color: #eff3f8;
 }
 #chat .spinner-border {
     min-height: 2rem;
+}
+.chat-message.selected {
+    background-color: #f3f5f9;
 }
 #chat .message-text {
     white-space: pre-wrap;
@@ -36,12 +16,6 @@
     height: auto;
     object-fit: contain;
 }
-@media (min-width: 576px) {
-    #chat .message-image img {
-        max-width: 28rem;
-    }
-}
-
 #chat .message-image img.lazy {
     box-shadow: inset 0px 0px 13px 2px #6a717980;
     background-image: url("/static/chat/img/hourglass.svg");
@@ -79,7 +53,7 @@
 
 /* message-form */
 #message-form #id_text {
-    min-height: 65px;
+    min-height: 64px;
     max-height: 500px;
     overflow: hidden;
     resize: none;
@@ -102,8 +76,8 @@
 }
 #input-audio-delete,
 #input-img-delete {
-    min-width: 25px;
-    max-width: 25px;
+    min-width: 19px;
+    max-width: 19px;
 }
 #input-img-preview,
 #input-audio-preview {

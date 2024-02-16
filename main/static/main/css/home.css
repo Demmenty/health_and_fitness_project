@@ -1936,7 +1936,7 @@ img:not(.lazy) {
     }
     #about_me_text .container {
         max-width: 636px;
-        margin-top: 4rem;
+        margin-bottom: 3rem;
     }
 }
 

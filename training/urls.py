@@ -21,4 +21,5 @@ urlpatterns = [
     path("exercise/save/", ajax.exercise_save, name="exercise_save"),
     path("exercise/delete/", ajax.exercise_delete, name="exercise_delete"),
     path("exercise/<int:id>/details/", views.exercise_detail, name="exercise_detail"),
+    path("exercise/<int:id>/stats/", views.exercise_stats, name="exercise_stats"),
 ]

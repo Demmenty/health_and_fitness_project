@@ -131,7 +131,7 @@ def exercise_replace(request, id):
 
     Returns:
         GET: A rendered HTML template for selecting another suitable exercise.
-        POST: Replaces the exercise in the exercise record (if selected) with cleared data.
+        POST: Replaces the exercise in the exercise record (if selected) with same data.
             Redirects to the training page of this record after.
     """
 
@@ -143,7 +143,7 @@ def exercise_replace(request, id):
 
     if request.method == "GET":
         allowed_exercise_type = EXERCISE_TYPE_MAP[training.type]
-        exercises = Exercise.objects.filter(type=allowed_exercise_type)
+        exercises_for_replace = Exercise.objects.filter(type=allowed_exercise_type)
         tools = Tool.objects.all()
         areas = Area.objects.all()
 
@@ -152,7 +152,7 @@ def exercise_replace(request, id):
             "tools": tools,
             "areas": areas,
             "training": training,
-            "exercises": exercises,
+            "exercises": exercises_for_replace,
             "exercise_record": exercise_record,
         }
         return render(request, template, data)
@@ -163,7 +163,6 @@ def exercise_replace(request, id):
         if exercise_id:
             exercise = get_object_or_404(Exercise, id=exercise_id)
             exercise_record.exercise = exercise
-            exercise_record.clear_data()
             exercise_record.save()
 
         return redirect_to_training(training)
@@ -201,5 +200,32 @@ def exercise_detail(request, id):
     template = "training/exercise_detail.html"
     data = {
         "exercise": exercise,
+    }
+    return render(request, template, data)
+
+
+@login_required
+@require_http_methods(["GET"])
+def exercise_stats(request, id):
+    """
+    View function for displaying an exercise stats for a particular client.
+    Available only for strength training type.
+    """
+
+    exercise_record = get_object_or_404(ExerciseRecord, id=id)
+    client_id = get_client_id(request)
+    exercise = exercise_record.exercise
+
+    records = ExerciseRecord.objects.filter(
+        exercise=exercise,
+        training__type=exercise_record.training.type,
+        training__client_id=client_id,
+        is_done=True,
+    ).order_by("training__date")
+
+    template = "training/exercise_stats.html"
+    data = {
+        "exercise": exercise,
+        "records": records,
     }
     return render(request, template, data)

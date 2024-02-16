@@ -1,7 +1,6 @@
 const chat = $('#chat');
 const chatHistory = chat.find("#chat-history");
 const chatScrollBtn = chat.find("#chat-scroll-btn");
-
 const chatMsgForm = chat.find('#message-form');
 const chatMsgText = chatMsgForm.find("#id_text");
 const chatImageInput = chatMsgForm.find("#id_image");
@@ -28,6 +27,8 @@ const messageTemplates = {
     [chatPartnerID]: chat.find("#message-template-partner"),
 }
 
+var isSendingInProgress = false;
+
 // TODO:
 // make resize by sides
 // btn for fuulscreen chat and back
@@ -35,10 +36,14 @@ const messageTemplates = {
 // add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
+    // messages loading
     loadLastMessages();
     setInterval(loadNewMessages, 10000);
 
+    // chat window
     chatMsgText.on("input change", adjustChatHeight);
+
+    // scrolling
     chatHistory.on("scroll", toggleChatScrollBtn);
     chatScrollBtn.on("click", scrollToLastMessage);
 
@@ -56,7 +61,8 @@ $(document).ready(function () {
     chatAudioDeleteBtn.on("click", removeUploadedAudio);
     chatAudioStopBtn.on("click", stopRecording);
 
-    // sending
+    // message sending
+    chatMsgForm.on('submit', preventDefault);
     chatMsgForm.on('submit', handleMessageSending);
     chatMsgText.on("keypress", handleMessageKeyPress);
 })
@@ -180,7 +186,7 @@ async function countNewMessagesRequest() {
 /**
  * Adjusts the optimal height of the chat window.
  */
-function adjustChatHeight() {
+function adjustChatHeight(event) {
     adjustTextarea();
     adjustHistory();
 
@@ -195,17 +201,19 @@ function adjustChatHeight() {
     
         textarea.style.overflow = 'hidden';
         textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 2 + 'px';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 
     function adjustHistory() {
         const headerHeight = chat.find(".card-header").outerHeight();
         const footerHeight = chat.find(".card-footer").outerHeight();
 
-        const allowance = headerHeight + footerHeight + 1;
-        const historyHeight = `calc(100vh - ${allowance}px)`;
-
-        chatHistory.css("max-height", historyHeight);
+        if (chat.hasClass("mini")) {
+            chatHistory.css("max-height", `calc(40vh - ${headerHeight + footerHeight}px)`);
+        }
+        else {
+            chatHistory.css("max-height", `calc(100vh - ${headerHeight + footerHeight}px)`);
+        }
     }
 }
 
@@ -345,42 +353,6 @@ async function loadOldMessages() {
 }
 
 /**
- * Loads new messages from the server.
- * Appends the retrieved messages to the chat history.
- * 
- * New messages - messages newer than the last displayed message.
- * Updates the new messages badge if there are new messages.
- */
-async function loadNewMessages() {
-    const lastMsg = chatHistory.find(".chat-message").last();
-    const lastMsgID = lastMsg.attr("data-id");
-
-    try {
-        const response = await getNewMessagesRequest(lastMsgID);
-        const messagesAmount = response.length;
-
-        if (messagesAmount == 0) {
-            return;
-        }
-
-        chat.find("#no-messages").remove();
-
-        const scrolledToBottom = isChatScrolledToBottom(allowance=50);
-
-        for (const message of response) {
-            chatHistory.append(renderMessage(message));
-        }
-
-        if (scrolledToBottom) {
-            scrollToLastMessage();
-        }
-    }
-    catch (error) {
-        console.error("loadNewMessages error:", error);
-    }
-}
-
-/**
  * Render a message and return the rendered message as a jQuery object.
  *
  * @param {object} message - The dictionary with the message data.
@@ -422,6 +394,14 @@ function renderMessage(message, lazy=true) {
     if (sender == chatPartnerID && !seen) {
         newMessage.addClass("new");
         newMsgObserver.observe(newMessage[0]);
+    }
+
+    if (sender == userID) {
+        const chatMsgDeleteForm = newMessage.find(".msg-delete-form");
+
+        chatMsgDeleteForm.find("input[name='message_id']").val(pk);
+        chatMsgDeleteForm.on('submit', preventDefault);
+        chatMsgDeleteForm.on('submit', handleMessageDelete);
     }
 
     return newMessage;
@@ -775,7 +755,8 @@ function handleMessageKeyPress(event) {
  * @param {Event} event - The event object.
  */
 async function handleMessageSending(event) {
-    event.preventDefault();
+    chatMsgSubmitBtn.prop("disabled", true);
+    isSendingInProgress = true;
 
     if (rec && rec.state === "recording") {
         stopRecording();
@@ -783,10 +764,10 @@ async function handleMessageSending(event) {
     }
 
     if (messageIsEmpty()) {
+        chatMsgSubmitBtn.prop("disabled", false);
+        isSendingInProgress = false;
         return;
     }
-
-    chatMsgSubmitBtn.prop("disabled", true);
 
     try {
         const response = await saveMessageRequest();
@@ -794,7 +775,7 @@ async function handleMessageSending(event) {
         if (!Array.isArray(response)) {
             throw "Что-то пошло не так. Скорее всего, сессия истекла.";
         }
-
+    
         const message = response[0];
         const scrolledToBottom = isChatScrolledToBottom(allowance=100);
 
@@ -802,7 +783,6 @@ async function handleMessageSending(event) {
         chatImageInputPreview.hide();
         chatAudioInputPreview.hide();
         adjustChatHeight();
-        chatMsgSubmitBtn.prop("disabled", false);
         chat.find("#no-messages").remove();
 
         chatHistory.append(renderMessage(message, lazy=false));
@@ -814,15 +794,41 @@ async function handleMessageSending(event) {
     catch (error) {
         console.error("saveChatMessage error:", error);
         showDangerAlert(error);
+    }
+    finally {
+        isSendingInProgress = false;
         chatMsgSubmitBtn.prop("disabled", false);
     }
+}
 
-    function messageIsEmpty() {
-        const textEmpty = chatMsgText.val().trim() == "";
-        const uploadedImg = chatImageInput[0].files[0];
-        const uploadedAudio = chatAudioInput[0].files[0];
+// MESSAGE OPTIONS
 
-        return textEmpty && !uploadedImg && !uploadedAudio
+async function handleMessageDelete() {
+    const form = $(this);
+    const msg = form.closest(".chat-message");
+
+    msg.addClass("selected");
+    await wait(100);
+
+    if (!confirm("Вы уверены, что хотите удалить это сообщение?")) {
+        msg.removeClass("selected");
+        return
+    }
+
+    try {
+        await $.ajax({
+            url: form.attr("action"),
+            type: form.attr("method"),
+            data: form.serialize(),
+        })
+
+        msg.remove();
+        showSuccessAlert("Сообщение удалено");
+    }
+    catch (error) {
+        console.error("handleMessageDelete error:", error);
+        msg.removeClass("selected");
+        showDangerAlert(error);
     }
 }
 
@@ -841,33 +847,6 @@ function handleNewMsgIntersection(entries) {
             setMessageAsSeen(message);
         }
     });
-}
-
-/**
- * Sets a message as seen.
- * 
- * Sends a request to the server to mark the message as seen.
- * On success:
- * stops observing the message element using the newMsgObserver,
- * removes the "new" class from the message,
- * updates the new messages badge.
- * 
- * @param {Element} message - The message jQuery element.
- */
-async function setMessageAsSeen(message) {
-    const msgID = message.attr("data-id");
-
-    newMsgObserver.unobserve(message[0]);
-
-    try {
-        await setMessageAsSeenRequest(msgID);
-        setTimeout(() => {message.removeClass("new")}, 2000);
-    }
-    catch (error) {
-        console.error("setMessageAsSeen error:", error);
-        showDangerAlert(error);
-        newMsgObserver.observe(message[0]);
-    }
 }
 
 // UTILS
@@ -906,4 +885,22 @@ async function wait(ms) {
 
 function isMobileDevice() {
     return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/);
+}
+
+/**
+ * Check if the message with the given ID is in the chat history.
+ *
+ * @param {string} msgID - The ID of the message to check.
+ * @return {boolean} True if the message is in the chat history, false otherwise.
+ */
+function isMsgInHistory(msgID) {
+    return chatHistory.find(`#message-${msgID}`).length > 0
+}
+
+function messageIsEmpty() {
+    const textEmpty = chatMsgText.val().trim() == "";
+    const uploadedImg = chatImageInput[0].files[0];
+    const uploadedAudio = chatAudioInput[0].files[0];
+
+    return textEmpty && !uploadedImg && !uploadedAudio
 }

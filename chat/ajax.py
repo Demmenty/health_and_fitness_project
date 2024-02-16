@@ -1,6 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse,
+)
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
@@ -51,6 +56,30 @@ def set_seen(request):
 
     message.seen = True
     message.save()
+
+    return HttpResponse("ok")
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_msg(request):
+    """
+    Deletes a message.
+
+    Args:
+        request: The HTTP request object (with message_id).
+
+    Returns:
+        HttpResponse: A response object with the string "ok".
+    """
+
+    message_id = request.POST.get("message_id")
+    message = get_object_or_404(Message, pk=message_id)
+
+    if message.sender != request.user:
+        return HttpResponseForbidden("Недостаточно прав!")
+
+    message.delete()
 
     return HttpResponse("ok")
 

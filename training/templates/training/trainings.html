@@ -4,7 +4,7 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'main/css/page_menu.css' %}">
     <link rel="stylesheet" href="{% static 'training/css/calendar.css' %}">
-    <link rel="stylesheet" href="{% static 'training/css/trainings.css' %}?update=1">
+    <link rel="stylesheet" href="{% static 'training/css/trainings.css' %}?update=2">
 {% endblock %}
 
 {% block title %}
@@ -44,7 +44,7 @@
                                     <div class="exercises-list d-flex flex-column gap-3">
                                         {% for form in training.exercise_formset %}
                                         {% with form.instance.exercise as exercise %}
-                                            <details class="exercise-record">
+                                            <details class="exercise-record {% if form.instance.is_done %} done {% endif %}">
                                                 <summary class="d-flex gap-2 justify-content-between bg-aux border rounded p-2">
                                                     <span class="exercise-name">{{ exercise.name }}</span>
                                                     <div class="d-flex align-items-center gap-2">
@@ -64,6 +64,12 @@
                                                             <li class="dropdown-item comment-option pointer">Комментарий</li>
                                                             <li class="dropdown-item up-option pointer">Переместить выше</li>
                                                             <li class="dropdown-item down-option pointer">Переместить ниже</li>
+                                                            {% if training.form.instance.type == 'strength' %}
+                                                                <a href="{% url 'training:exercise_stats' form.instance.id %}?client_id={{ client.id }}"
+                                                                    class="btn-link text-black">
+                                                                    <li class="dropdown-item stats pointer">Статистика</li>
+                                                                </a>
+                                                            {% endif %}
                                                             <li><hr class="dropdown-divider my-1"></li>
                                                             <li class="dropdown-item delete-option pointer">Удалить</li>
                                                         </ul>
@@ -159,5 +165,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'training/js/trainings.js' %}?update=2"></script>
+    <script src="{% static 'training/js/trainings.js' %}?update=3"></script>
 {% endblock %}

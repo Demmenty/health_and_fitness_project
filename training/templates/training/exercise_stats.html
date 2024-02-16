@@ -1,0 +1,38 @@
+{% extends layout %}
+{% load static %}
+{% load custom_filters %}
+
+{% block stylesheet %}
+{% endblock %}
+
+{% block title %}
+    <title>{{ exercise.name|capfirst }}: статистика</title>
+{% endblock %}
+
+{% block content %}
+<section id="exercise-chart-section" class="mb-4">
+    <div class="container">
+        <div class="card shadow-sm mx-auto">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">{{ exercise.name|capfirst }}</h5>
+            </div>
+            <div class="card-body p-3">
+                <params id="exercise-chart-data" 
+                    data-dates="{% for record in records %}{{ record.training.date|date:'Y-m-d' }}{% if not forloop.last %};{% endif %}{% endfor %}"
+                    data-weights="{% for record in records %}{{ record.weight }}{% if not forloop.last %};{% endif %}{% endfor %}"
+                    data-repetitions="{% for record in records %}{{ record.repetitions }}{% if not forloop.last %};{% endif %}{% endfor %}" 
+                    data-sets="{% for record in records %}{{ record.sets }}{% if not forloop.last %};{% endif %}{% endfor %}">
+                </params>
+                <div id="exercise-chart">
+                    <canvas></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'training/js/exercise_stats.js' %}"></script>
+{% endblock %}

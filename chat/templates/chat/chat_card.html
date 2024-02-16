@@ -9,32 +9,48 @@
     data-url-set-seen="{% url 'chat:set_seen' %}">
   </params>
   <div class="card-header draggable-point d-flex align-items-center bg-aux gap-2 justify-content-between">
-    <div class="col-1"></div>
+    <div class="col-1">
+      <img src="{% static 'chat/img/arrows-angle-contract.svg' %}" title="Уменьшить чат"
+        class="resize-btn pointer p-1">
+      <img src="{% static 'chat/img/arrows-angle-expand.svg' %}" title="Увеличить чат"
+        class="resize-btn pointer p-1" style="display: none;">
+    </div>
     <h6 class="mb-0 text-nowrap col-auto">Чат</h6>
     <button type="button" class="col-1 btn-close" title="Закрыть чат"></button>
   </div>
-  <div class="card-body position-relative py-0 pe-0">
+  <div class="card-body position-relative py-0 px-2">
     <div id="chat-history" class="d-flex flex-column">
       <template id="message-template-user">
-        <div id="" class="chat-message user-message d-flex flex-column align-items-end my-2 me-2 p-1" data-id="">
+        <div id="" class="chat-message user-message d-flex flex-column rounded align-items-end my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
             <small>Я</small>
             <small> • </small>
             <small class="created-at"></small>
+            <img src="{% static 'chat/img/three-dots-vertical.svg' %}" title="Меню" data-bs-toggle="dropdown"
+              class="delete-message-btn filter-hover-primary pointer">
+            <ul class="dropdown-menu py-1">
+              <li class="dropdown-item pointer p-0">
+                <form method="POST" action="{% url 'chat:delete_msg' %}" class="msg-delete-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="message_id" value="">
+                  <input type="submit" value="Удалить" class="btn-link text-black text-start py-1 px-3 w-100">
+                </form>
+              </li>
+            </ul>
           </div>
-          <p class="message-text m-0"></p>
+          <p class="message-text bg-white rounded p-1"></p>
           <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>
       </template>
       <template id="message-template-partner">
-        <div id="" class="chat-message partner-message d-flex flex-column align-items-start my-2 me-2 p-1" data-id="">
+        <div id="" class="chat-message partner-message d-flex rounded flex-column align-items-start my-2 me-2 p-1" data-id="">
           <div class="chat-message-header d-flex flex-row gap-1">
             <small>{{ partner.username|title }}</small>
             <small> • </small>
             <small class="created-at"></small>
           </div>
-          <p class="message-text m-0"></p>
+          <p class="message-text bg-white rounded p-1"></p>
           <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>
@@ -60,7 +76,7 @@
           <img src="{% static 'chat/img/file-earmark-image.svg' %}" width="19"
             title="Прикрепляемое изображение" class="file-type filter-primary">
           <span class="trancate mx-2"></span>
-          <img src="{% static 'chat/img/x.svg' %}" id="input-img-delete" width="25"
+          <img src="{% static 'chat/img/trash.svg' %}" id="input-img-delete" width="19"
             title="Удалить" class="filter-secondary filter-hover-primary pointer">
         </div>
         <div id="input-audio-preview" style="display: none;">
@@ -69,7 +85,7 @@
           <div class="status"></div>
           <img src="{% static 'chat/img/stop-fill.svg' %}" id="stop-audio" width="22"
             title="Завершить запись" class="filter-secondary filter-hover-primary pointer">
-          <img src="{% static 'chat/img/x.svg' %}" id="input-audio-delete" width="25"
+          <img src="{% static 'chat/img/trash.svg' %}" id="input-audio-delete" width="19"
             title="Удалить" class="filter-secondary filter-hover-primary pointer">
         </div>
       </div>
