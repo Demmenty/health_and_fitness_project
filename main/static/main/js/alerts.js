@@ -1,5 +1,6 @@
 const successAlert = $("#success-alert");
 const dangerAlert = $("#danger-alert");
+const infoAlert = $("#info-alert");
 
 $(document).ready(function() {
     $(".alert .btn-close").on("click", hideAlert);
@@ -8,7 +9,7 @@ $(document).ready(function() {
 // FUNCS
 
 /**
- * Shows the success alert message.
+ * Shows the success alert message what dissappears after 4 seconds.
  *
  * @param {string} msg - The message to be displayed in the alert.
  */
@@ -19,7 +20,7 @@ function showSuccessAlert(msg) {
 }
 
 /**
- * Shows the danger alert message based on the error.
+ * Shows the danger alert message based on the error what dissappears after 4 seconds.
  * 
  * @param {any} error - The error to be displayed in the alert.
  */
@@ -29,6 +30,16 @@ function showDangerAlert(error) {
     dangerAlert.find(".text").text(msg);
     dangerAlert.addClass("active");
     setTimeout(() => dangerAlert.removeClass("active"), 4000);
+}
+
+/**
+ * Shows the info alert message what won't dissappear by itself.
+ * 
+ * @param {any} msg - The message to be displayed in the alert.
+ */
+function showInfoAlert(msg) {
+    infoAlert.find(".text").text(msg);
+    infoAlert.addClass("active");
 }
 
 /**
@@ -58,9 +69,8 @@ function renderErrorMessage(error) {
 }
 
 /**
- * Hides the success and danger alerts.
+ * Hides the alert.
  */
 function hideAlert() {
-    successAlert.removeClass("active");
-    dangerAlert.removeClass("active");
+    $(this).closest(".alert").removeClass("active");
 }
