@@ -70,9 +70,17 @@
                         </td>
                     </tr>
                     <tr>
-                        <!-- TODO -->
-                        <td class="label">Тариф:</td>
-                        <td class="text-center">индивидуальный</td>
+                        <td class="label">Тарифный план:</td>
+                        <td class="text-center">
+                            {% if client.subscription %}
+                                <a href="{% url 'subscription:detail' %}" title="Изменить"
+                                    class="filter-hover-primary text-black text-decoration-none">
+                                    {{ client.subscription.plan.name }}
+                                </a>
+                            {% else %}
+                                отсутствует
+                            {% endif %} 
+                        </td>
                     </tr>
                 </table>
                 <div class="d-flex justify-content-center gap-4">
