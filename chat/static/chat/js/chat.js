@@ -1,7 +1,6 @@
 const chat = $('#chat');
 const chatHistory = chat.find("#chat-history");
 const chatScrollBtn = chat.find("#chat-scroll-btn");
-
 const chatMsgForm = chat.find('#message-form');
 const chatMsgText = chatMsgForm.find("#id_text");
 const chatImageInput = chatMsgForm.find("#id_image");
@@ -397,6 +396,14 @@ function renderMessage(message, lazy=true) {
         newMsgObserver.observe(newMessage[0]);
     }
 
+    if (sender == userID) {
+        const chatMsgDeleteForm = newMessage.find(".msg-delete-form");
+
+        chatMsgDeleteForm.find("input[name='message_id']").val(pk);
+        chatMsgDeleteForm.on('submit', preventDefault);
+        chatMsgDeleteForm.on('submit', handleMessageDelete);
+    }
+
     return newMessage;
 
     function renderLazyImage(url, width, height) {
@@ -748,7 +755,6 @@ function handleMessageKeyPress(event) {
  * @param {Event} event - The event object.
  */
 async function handleMessageSending(event) {
-    console.log("handleMessageSending");
     chatMsgSubmitBtn.prop("disabled", true);
     isSendingInProgress = true;
 
@@ -760,7 +766,6 @@ async function handleMessageSending(event) {
     if (messageIsEmpty()) {
         chatMsgSubmitBtn.prop("disabled", false);
         isSendingInProgress = false;
-        console.log("messageIsEmpty");
         return;
     }
 
@@ -793,6 +798,37 @@ async function handleMessageSending(event) {
     finally {
         isSendingInProgress = false;
         chatMsgSubmitBtn.prop("disabled", false);
+    }
+}
+
+// MESSAGE OPTIONS
+
+async function handleMessageDelete() {
+    const form = $(this);
+    const msg = form.closest(".chat-message");
+
+    msg.addClass("selected");
+    await wait(100);
+
+    if (!confirm("Вы уверены, что хотите удалить это сообщение?")) {
+        msg.removeClass("selected");
+        return
+    }
+
+    try {
+        await $.ajax({
+            url: form.attr("action"),
+            type: form.attr("method"),
+            data: form.serialize(),
+        })
+
+        msg.remove();
+        showSuccessAlert("Сообщение удалено");
+    }
+    catch (error) {
+        console.error("handleMessageDelete error:", error);
+        msg.removeClass("selected");
+        showDangerAlert(error);
     }
 }
 

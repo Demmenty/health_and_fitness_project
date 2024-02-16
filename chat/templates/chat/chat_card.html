@@ -26,8 +26,19 @@
             <small>Я</small>
             <small> • </small>
             <small class="created-at"></small>
+            <img src="{% static 'chat/img/three-dots-vertical.svg' %}" title="Меню" data-bs-toggle="dropdown"
+              class="delete-message-btn filter-hover-primary pointer">
+            <ul class="dropdown-menu py-1">
+              <li class="dropdown-item pointer p-0">
+                <form method="POST" action="{% url 'chat:delete_msg' %}" class="msg-delete-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="message_id" value="">
+                  <input type="submit" value="Удалить" class="btn-link text-black text-start py-1 px-3 w-100">
+                </form>
+              </li>
+            </ul>
           </div>
-          <p class="message-text m-0"></p>
+          <p class="message-text bg-white rounded p-1"></p>
           <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>
@@ -39,7 +50,7 @@
             <small> • </small>
             <small class="created-at"></small>
           </div>
-          <p class="message-text m-0"></p>
+          <p class="message-text bg-white rounded p-1"></p>
           <div class="message-audio"></div>
           <div class="message-image"></div>
         </div>

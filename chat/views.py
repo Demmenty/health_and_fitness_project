@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
 from chat.forms import MessageForm
@@ -12,7 +12,9 @@ def chat(request):
     """Renders the separate chat page view"""
 
     user = request.user
-    partner = User(id=request.GET.get("partner_id")) if user.is_expert else EXPERT
+    partner_id = request.GET.get("partner_id")
+    partner = get_object_or_404(User, id=partner_id) if user.is_expert else EXPERT
+
     message_form = MessageForm(initial={"sender": user.id, "recipient": partner.id})
 
     template = "chat/chat_page.html"

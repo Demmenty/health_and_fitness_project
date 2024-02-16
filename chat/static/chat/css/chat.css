@@ -4,6 +4,9 @@
 #chat .spinner-border {
     min-height: 2rem;
 }
+.chat-message.selected {
+    background-color: #f3f5f9;
+}
 #chat .message-text {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
