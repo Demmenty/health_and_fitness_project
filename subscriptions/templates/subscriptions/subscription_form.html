@@ -29,7 +29,7 @@
                                 <div class="col-sm-8">
                                     {{ field }}
                                     <div id="plan-helptext-0" class="plan-helptext" style="display: none;">
-                                        <small class="text-muted">Без активного тарифного плана клиент не сможет зайти на сайт!</small>
+                                        <small class="text-muted">Доступ: только профиль и измерения.</small>
                                     </div>
                                     {% for plan in form.fields.plan.queryset %}
                                         <div id="plan-helptext-{{ plan.id }}" class="plan-helptext" style="display: none;">

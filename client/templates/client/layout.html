@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li>
-                            {% if client.subscription.plan.access == 'TRAINING' %}
+                            {% if not client.subscription or client.subscription.plan.access == 'TRAINING' %}
                                 <span class="nav-link disabled">Питание</span>
                             {% else %}
                                 <a href="{% url 'nutrition:nutrition' %}" 
@@ -59,7 +59,7 @@
                             {% endif %}
                         </li>
                         <li>
-                            {% if client.subscription.plan.access == 'NUTRITION' %}
+                            {% if not client.subscription or client.subscription.plan.access == 'NUTRITION' %}
                                 <span class="nav-link disabled">Тренировки</span>
                             {% else %}
                                 <a href="{% url 'training:trainings' %}" 
@@ -94,14 +94,14 @@
                                 <a class="dropdown-item" href="{% url 'metrics:daily' %}">Измерения</a>
                             </li>
                             <li>
-                                {% if client.subscription.plan.access == 'TRAINING' %}
+                                {% if not client.subscription or client.subscription.plan.access == 'TRAINING' %}
                                     <span class="dropdown-item disabled">Питание</span>
                                 {% else %}
                                     <a class="dropdown-item" href="{% url 'nutrition:nutrition' %}">Питание</a>
                                 {% endif %}
                             </li>
                             <li>
-                                {% if client.subscription.plan.access == 'NUTRITION' %}
+                                {% if not client.subscription or client.subscription.plan.access == 'NUTRITION' %}
                                     <span class="dropdown-item disabled">Тренировки</span>
                                 {% else %}
                                     <a class="dropdown-item" href="{% url 'training:trainings' %}">Тренировки</a>
