@@ -131,7 +131,7 @@ def exercise_replace(request, id):
 
     Returns:
         GET: A rendered HTML template for selecting another suitable exercise.
-        POST: Replaces the exercise in the exercise record (if selected) with cleared data.
+        POST: Replaces the exercise in the exercise record (if selected) with same data.
             Redirects to the training page of this record after.
     """
 
@@ -143,7 +143,7 @@ def exercise_replace(request, id):
 
     if request.method == "GET":
         allowed_exercise_type = EXERCISE_TYPE_MAP[training.type]
-        exercises = Exercise.objects.filter(type=allowed_exercise_type)
+        exercises_for_replace = Exercise.objects.filter(type=allowed_exercise_type)
         tools = Tool.objects.all()
         areas = Area.objects.all()
 
@@ -152,7 +152,7 @@ def exercise_replace(request, id):
             "tools": tools,
             "areas": areas,
             "training": training,
-            "exercises": exercises,
+            "exercises": exercises_for_replace,
             "exercise_record": exercise_record,
         }
         return render(request, template, data)
@@ -163,7 +163,6 @@ def exercise_replace(request, id):
         if exercise_id:
             exercise = get_object_or_404(Exercise, id=exercise_id)
             exercise_record.exercise = exercise
-            exercise_record.clear_data()
             exercise_record.save()
 
         return redirect_to_training(training)
