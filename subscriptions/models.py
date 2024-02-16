@@ -8,16 +8,16 @@ class Plan(models.Model):
     """Model of a subscription plan for access to app"""
 
     class Access(models.TextChoices):
-        NUTRITION = "N", "Питание"
-        TRAININGS = "T", "Тренировки"
-        FULLSTACK = "F", "Полный"
+        NUTRITION = "NUTRITION", "Питание"
+        TRAININGS = "TRAINING", "Тренировки"
+        FULL = "FULL", "Полный"
 
     name = models.CharField("Название", max_length=255)
     access = models.CharField(
         "Доступ",
-        max_length=1,
+        max_length=9,
         choices=Access.choices,
-        default=Access.FULLSTACK,
+        default=Access.FULL,
         help_text="Доступные клиенту модули приложения.",
     )
     default_price = models.PositiveSmallIntegerField(

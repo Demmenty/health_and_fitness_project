@@ -8,12 +8,14 @@ from django.http import (
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 
+from subscriptions.decorators import require_access
 from training.forms import EXERCISE_RECORD_FORMSETS, TRAINING_FORMS, ExerciseForm
 from training.models import Exercise, Training
 from users.utils import get_client_id
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def training_save(request, id):
     """
@@ -52,6 +54,7 @@ def training_save(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def training_delete(request, id):
     """
@@ -73,6 +76,7 @@ def training_delete(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def get_schedule(request, year: int, month: int):
     """
@@ -92,6 +96,7 @@ def get_schedule(request, year: int, month: int):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def exercise_save(request):
     """Saves an exercise object"""
@@ -114,6 +119,7 @@ def exercise_save(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def exercise_delete(request):
     """Deletes an exercise object"""

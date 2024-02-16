@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
+from subscriptions.decorators import require_access
 from training.forms import EXERCISE_RECORD_FORMSETS, TRAINING_FORMS, ExerciseForm
 from training.models import (
     EXERCISE_TYPE_MAP,
@@ -19,6 +20,7 @@ from users.utils import get_client, get_client_id
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def training_new(request):
     """Create a new training for a client"""
@@ -36,6 +38,7 @@ def training_new(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def trainings(request):
     """Render the page with client's trainings for day (default: today)"""
@@ -64,6 +67,7 @@ def trainings(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET", "POST"])
 def exercise_select(request, id):
     """
@@ -103,6 +107,7 @@ def exercise_select(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def copy_previous(request, id):
     """Copies the records from the previous training to the current training"""
@@ -120,6 +125,7 @@ def copy_previous(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET", "POST"])
 def exercise_replace(request, id):
     """
@@ -169,6 +175,7 @@ def exercise_replace(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_form(request):
     """View function for the exercise form (new or edit)"""
@@ -191,6 +198,7 @@ def exercise_form(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_detail(request, id):
     """View function for displaying an exercise detail"""
@@ -205,6 +213,7 @@ def exercise_detail(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_stats(request, id):
     """

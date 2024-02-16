@@ -19,6 +19,9 @@ body {
 .nav-link.active {
     color: #657ff7;
 }
+.nav-link.disabled {
+    color: #c7ccd3;
+}
 .nav-link:hover {
     color: #657ff7;
 }
