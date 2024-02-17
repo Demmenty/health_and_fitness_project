@@ -41,6 +41,38 @@
     padding-left: 4px;
     padding-right: 4px;
 }
+.message-audio .speed {
+    padding: 13px;
+    background-color: #f1f3f4;
+}
+.message-audio input[type="range"] {
+    cursor: pointer;
+    color:#657ff7;
+    height: 10px;
+}
+.message-audio .form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 8px 1px #8565f786;
+}
+.message-audio input[type='range']::-webkit-slider-runnable-track {
+    height: 4px;
+    background-color: #d5dbf6;
+}
+.message-audio input[type='range']::-webkit-slider-thumb {
+    background-color: #7289f6;
+    width: 13px;
+    height: 13px;
+    margin-top: -5px;
+}
+.message-audio .dropdown-menu,
+.message-audio .dropdown-item {
+    border-radius: 100px;
+}
+.message-audio .dropdown-item,
+.message-audio .dropdown-item:active  {
+    background-color: #f1f3f4;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
 #chat a {
     color: #657ff7;
 }
