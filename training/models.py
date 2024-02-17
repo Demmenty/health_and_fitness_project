@@ -1,6 +1,7 @@
 from typing import Optional
 
 from django.db import models, transaction
+from django.forms.models import model_to_dict
 
 from main.utils import resize_uploaded_image
 from users.models import User
@@ -135,6 +136,41 @@ class Training(models.Model):
             client=self.client, type=self.type, date__lt=self.date
         ).last()
 
+    def add_exercises_with_previous_data(self, exercise_ids: list[int]) -> None:
+        """
+        Adds exercises to the training with same data
+        as in the previous client's training with the same type.
+
+        If there is no previous record, data will be clear.
+        Exclude 'comment' and 'is_done' fields from copied data.
+
+        Args:
+            exercise_ids: The IDs of the exercises to be added.
+        """
+
+        excluded_fields = ["id", "exercise", "training", "order", "comment", "is_done"]
+
+        same_records = ExerciseRecord.objects.filter(
+            exercise_id__in=exercise_ids,
+            training__client=self.client,
+            training__type=self.type,
+        ).order_by("id")
+
+        records_to_create = []
+
+        for exercise_id in exercise_ids:
+            last_same_record = same_records.filter(exercise_id=exercise_id).last()
+            defaults = (
+                model_to_dict(last_same_record, exclude=excluded_fields)
+                if last_same_record
+                else {}
+            )
+            records_to_create.append(
+                ExerciseRecord(exercise_id=exercise_id, training=self, **defaults)
+            )
+
+        ExerciseRecord.objects.bulk_create(records_to_create)
+
     def copy_records(self, from_training: "Training") -> None:
         """
         Copy records from one Training instance to another.
@@ -229,6 +265,47 @@ class ExerciseRecord(models.Model):
     cycles = models.PositiveSmallIntegerField("Повторы цикла", null=True, blank=True)
     comment = models.TextField("Комментарий", null=True, blank=True)
     is_done = models.BooleanField("Выполнено", default=False)
+
+    def replace_exercise(self, new_exercise_id: int) -> None:
+        """
+        Replaces the exercise in the training record. 
+        Updates the exercise fields based on the last same record, 
+        or clears the fields if no same record is found. 
+
+        Args:
+            new_exercise_id (int): The ID of the new exercise.
+        """
+
+        fields_to_replace = [
+            "weight",
+            "repetitions",
+            "sets",
+            "load",
+            "time",
+            "pulse_avg",
+            "high_load_time",
+            "high_load_pulse",
+            "low_load_time",
+            "low_load_pulse",
+            "cycles",
+        ]
+
+        last_same_record = ExerciseRecord.objects.filter(
+            exercise_id=new_exercise_id,
+            training__client=self.training.client,
+            training__type=self.training.type,
+        ).order_by('id').values(*fields_to_replace).last()
+
+        with transaction.atomic():
+            self.exercise_id = new_exercise_id
+
+            if last_same_record:
+                self.__dict__.update(last_same_record)
+            else:
+                self.__dict__.update({field: None for field in fields_to_replace + ["comment"]})
+                self.is_done = False
+
+            self.save()
 
     class Meta:
         ordering = ("order", "pk")

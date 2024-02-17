@@ -100,8 +100,7 @@ def exercise_select(request, id):
 
     if request.method == "POST":
         checked_exercise_ids = request.POST.getlist("exercises")
-
-        training.exercises.set(checked_exercise_ids)
+        training.add_exercises_with_previous_data(checked_exercise_ids)
 
         return redirect_to_training(training)
 
@@ -132,12 +131,11 @@ def exercise_replace(request, id):
     View function for replacing an exercise in a training.
 
     Args:
-        request: The HTTP request object.
         id: The ID of the exercise record to be replaced.
 
     Returns:
         GET: A rendered HTML template for selecting another suitable exercise.
-        POST: Replaces the exercise in the exercise record (if selected) with same data.
+        POST: Replaces the exercise in the exercise record (if selected).
             Redirects to the training page of this record after.
     """
 
@@ -167,9 +165,7 @@ def exercise_replace(request, id):
         exercise_id = request.POST.get("exercise")
 
         if exercise_id:
-            exercise = get_object_or_404(Exercise, id=exercise_id)
-            exercise_record.exercise = exercise
-            exercise_record.save()
+            exercise_record.replace_exercise(exercise_id)
 
         return redirect_to_training(training)
 
