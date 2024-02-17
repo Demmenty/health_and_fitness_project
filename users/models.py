@@ -66,17 +66,23 @@ class User(AbstractUser):
 
         return age
 
+    def resize_uploaded_avatar(self):
+        """Resizes uploaded avatar if it is new."""
+
+        avatar = self.avatar
+        old_instance = self.__class__.objects.filter(pk=self.pk).first()
+        old_avatar = getattr(old_instance, "avatar", None)
+
+        is_avatar_new = avatar and avatar != old_avatar
+
+        if is_avatar_new:
+            self.avatar = resize_uploaded_image(
+                avatar, avatar.name, max_size=(150, 150), square=True
+            )
+
     def save(self, *args, **kwargs):
         self.email = self.email.lower()
-
-        is_new_avatar_uploaded = (
-            self.avatar and self.avatar != self.__class__.objects.get(pk=self.pk).avatar
-        )
-
-        if is_new_avatar_uploaded:
-            self.avatar = resize_uploaded_image(
-                self.avatar, self.avatar.name, square=True, size=(150, 150)
-            )
+        self.resize_uploaded_avatar()
 
         super().save(*args, **kwargs)
 

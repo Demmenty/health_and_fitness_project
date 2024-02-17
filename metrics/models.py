@@ -4,12 +4,11 @@ from decimal import Decimal
 from django.db import models
 from django.forms.models import model_to_dict
 
+from main.utils import resize_uploaded_image
 from metrics.managers import DailyMetricsManager
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
 from users.models import User
-
-# TODO resize big anthropo photos before uploading
 
 
 class Colors(models.Model):
@@ -409,6 +408,34 @@ class Anthropo(models.Model):
 
     def __str__(self):
         return f"Антропометрия №{self.id}"
+
+    def resize_uploaded_photos(self):
+        """Resizes uploaded photos if they are new."""
+
+        old_instance = self.__class__.objects.filter(pk=self.pk).first()
+        old_photos = {
+            "photo_1": getattr(old_instance, "photo_1", None),
+            "photo_2": getattr(old_instance, "photo_2", None),
+            "photo_3": getattr(old_instance, "photo_3", None),
+        }
+
+        for field_name in ["photo_1", "photo_2", "photo_3"]:
+            photo = getattr(self, field_name)
+            old_photo = old_photos[field_name]
+
+            is_photo_new = photo and photo != old_photo
+
+            if is_photo_new:
+                setattr(
+                    self,
+                    field_name,
+                    resize_uploaded_image(photo, photo.name, max_size=(800, 800)),
+                )
+
+    def save(self, *args, **kwargs):
+        self.resize_uploaded_photos()
+
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["-date"]
