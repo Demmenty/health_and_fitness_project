@@ -43,13 +43,27 @@
                         <img src="{% static 'client/img/question-circle.svg' %}" class="filter-primary" width="18">
                         <span>как делать измерения - инструкция</span>
                     </a>
-                    <div class="d-flex justify-content-between mt-3">
+                    <div class="d-flex justify-content-between gap-2 mt-3">
                         <a href="{% url 'metrics:anthropo' %}" class="btn btn-outline-primary">Назад</a>
+                        {% if form.instance.id %}
+                            <button type="button" id="delete-form-btn" class="btn btn-danger me-auto" title="Удалить измерения">
+                                <img src="{% static 'metrics/img/trash.svg' %}" class="filter-white" width="20">
+                            </button>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                 </form>
+                {% if form.instance.id %}
+                    <form id="delete-form" method="POST" action="{% url 'metrics:anthropo_delete' form.instance.id %}">
+                        {% csrf_token %}
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'metrics/js/anthropo_form.js' %}"></script>
 {% endblock %}

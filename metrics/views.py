@@ -171,3 +171,14 @@ def anthropo_edit(request, id):
     template = "metrics/anthropo_form.html"
     data = {"form": form}
     return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["POST"])
+def anthropo_delete(request, id):
+    """View function for deleting an existing anthropometry entry"""
+
+    instance = get_object_or_404(AnthropoMetrics, id=id, client=request.user)
+    instance.delete()
+
+    return redirect("metrics:anthropo")
