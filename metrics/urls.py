@@ -4,9 +4,6 @@ from metrics import ajax, views
 
 app_name = "metrics"
 
-# TODO funcs for clients:
-# path("daily/add/", views.daily_add, name="daily_add"),
-
 urlpatterns = [
     path("daily/", views.daily, name="daily"),
     path("daily/edit/", views.daily_edit, name="daily_edit"),

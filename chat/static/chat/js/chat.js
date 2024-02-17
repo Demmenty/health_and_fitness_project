@@ -29,11 +29,6 @@ const messageTemplates = {
 
 var isSendingInProgress = false;
 
-// TODO:
-// make resize by sides
-// btn for fuulscreen chat and back
-// open image full screen when clicked
-// add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
     // messages loading

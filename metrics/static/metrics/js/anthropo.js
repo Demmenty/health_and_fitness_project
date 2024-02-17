@@ -10,8 +10,7 @@ $(document).ready(() => {
     editBtns.on("click", editMetricsRedirect);
 })
 
-// TODO
-// function getUpper (by click, open, drag photo card)
+// TODO function getUpper (by click, open, drag photo card)
 
 // REQUESTS
 

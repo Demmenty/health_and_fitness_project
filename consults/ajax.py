@@ -10,7 +10,7 @@ from expert.decorators import expert_required
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def save_new(request):
+def add_request(request):
     """
     Saves new consultation requests from users.
 
@@ -34,7 +34,7 @@ def save_new(request):
 
 @expert_required
 @require_http_methods(["POST"])
-def edit(request, id):
+def edit_request(request, id):
     """
     Saves changes made to a consultation request form.
     Used if the expert made changes or added a note to existing one.
@@ -61,7 +61,7 @@ def edit(request, id):
 
 @expert_required
 @require_http_methods(["POST"])
-def set_seen(request, id):
+def set_request_seen(request, id):
     """
     Sets the 'seen' field of a consult request to True.
 
@@ -83,7 +83,7 @@ def set_seen(request, id):
 
 @expert_required
 @require_http_methods(["POST"])
-def delete(request, id):
+def delete_request(request, id):
     """
     Deletes a consultation request.
 
