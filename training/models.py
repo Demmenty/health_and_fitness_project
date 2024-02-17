@@ -268,9 +268,9 @@ class ExerciseRecord(models.Model):
 
     def replace_exercise(self, new_exercise_id: int) -> None:
         """
-        Replaces the exercise in the training record. 
-        Updates the exercise fields based on the last same record, 
-        or clears the fields if no same record is found. 
+        Replaces the exercise in the training record.
+        Updates the exercise fields based on the last same record,
+        or clears the fields if no same record is found.
 
         Args:
             new_exercise_id (int): The ID of the new exercise.
@@ -290,11 +290,16 @@ class ExerciseRecord(models.Model):
             "cycles",
         ]
 
-        last_same_record = ExerciseRecord.objects.filter(
-            exercise_id=new_exercise_id,
-            training__client=self.training.client,
-            training__type=self.training.type,
-        ).order_by('id').values(*fields_to_replace).last()
+        last_same_record = (
+            ExerciseRecord.objects.filter(
+                exercise_id=new_exercise_id,
+                training__client=self.training.client,
+                training__type=self.training.type,
+            )
+            .order_by("id")
+            .values(*fields_to_replace)
+            .last()
+        )
 
         with transaction.atomic():
             self.exercise_id = new_exercise_id
@@ -302,7 +307,9 @@ class ExerciseRecord(models.Model):
             if last_same_record:
                 self.__dict__.update(last_same_record)
             else:
-                self.__dict__.update({field: None for field in fields_to_replace + ["comment"]})
+                self.__dict__.update(
+                    {field: None for field in fields_to_replace + ["comment"]}
+                )
                 self.is_done = False
 
             self.save()

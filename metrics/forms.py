@@ -2,7 +2,6 @@ from datetime import date
 
 from django.forms import (
     CheckboxInput,
-    ClearableFileInput,
     DateInput,
     HiddenInput,
     ModelForm,
@@ -13,6 +12,7 @@ from django.forms import (
 from django.urls import reverse
 
 from client.utils import create_change_log_entry, create_log_entry
+from main.forms import CustomImageFileInput
 from metrics.models import Anthropo, Colors, Daily, Levels, PhotoAccess
 from users.models import User
 
@@ -260,17 +260,17 @@ class AnthropoMetricsForm(ModelForm):
                     "max": "100",
                 }
             ),
-            "photo_1": ClearableFileInput(
+            "photo_1": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "photo_2": ClearableFileInput(
+            "photo_2": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "photo_3": ClearableFileInput(
+            "photo_3": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                 }

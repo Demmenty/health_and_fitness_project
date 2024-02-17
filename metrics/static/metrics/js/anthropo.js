@@ -1,11 +1,13 @@
 const photoBtns = $("#anthropo-metrics .photo-btn");
 const photoCards = $("#anthropo-metrics .photo-card");
 const photoAccessBtn = $("#photo-access-btn");
+const editBtns = $("#anthropo-metrics .edit-btn");
 
 $(document).ready(() => {
     photoBtns.on("click", togglePhoto);
     photoCards.find(".btn-close").on("click", closePhoto);
     photoAccessBtn.on("click", editPhotoAccess);
+    editBtns.on("click", editMetricsRedirect);
 })
 
 // TODO
@@ -31,6 +33,20 @@ async function editPhotoAccessRequest(newValue) {
             csrfmiddlewaretoken: csrfToken 
         },
     });
+}
+
+// EVENTS
+
+/**
+ * Function to redirect the user to the edit anthropometrics page.
+ * Checks if table row clicked (and not a photo).
+ */
+function editMetricsRedirect(event) {
+    const isTableClicked = event.target.tagName.toLowerCase() === "td";
+
+    if (isTableClicked) {
+        window.location.href = this.dataset.url;
+    }
 }
 
 // PHOTO WINDOWS

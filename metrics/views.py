@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from client.decorators import client_required
@@ -144,6 +144,27 @@ def anthropo_add(request):
         form = AnthropoMetricsForm(request.POST, request.FILES)
         if form.is_valid():
             form.instance.client = request.user
+            form.save()
+            return redirect("metrics:anthropo")
+
+    template = "metrics/anthropo_form.html"
+    data = {"form": form}
+    return render(request, template, data)
+
+
+@client_required
+@require_http_methods(["GET", "POST"])
+def anthropo_edit(request, id):
+    """View function for editing an existing anthropometry entry"""
+
+    instance = get_object_or_404(AnthropoMetrics, id=id, client=request.user)
+
+    if request.method == "GET":
+        form = AnthropoMetricsForm(instance=instance)
+
+    if request.method == "POST":
+        form = AnthropoMetricsForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
             form.save()
             return redirect("metrics:anthropo")
 
