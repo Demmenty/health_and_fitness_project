@@ -41,6 +41,9 @@
     padding-left: 4px;
     padding-right: 4px;
 }
+#chat a {
+    color: #657ff7;
+}
 
 @keyframes fade-in {
     from {

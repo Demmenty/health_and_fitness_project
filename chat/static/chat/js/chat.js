@@ -19,6 +19,7 @@ const oldMessagesLimit = 30;
 const userID = chatMsgForm.find("#id_sender").val();
 const chatPartnerID = chatMsgForm.find("#id_recipient").val();
 const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
+const urlRegex = /(\b(?:https?|ftp|mailto):\/\/[^\s]+)/g;
 
 const newMsgObserver = new IntersectionObserver(handleNewMsgIntersection);
 
@@ -365,7 +366,7 @@ function renderMessage(message, lazy=true) {
     newMessage.attr("data-id", pk);
     newMessage.attr("id", `message-${pk}`);
     newMessage.find('.created-at').text(createdAtFormatted);
-    newMessage.find('.message-text').text(text);
+    newMessage.find('.message-text').html(replaceURLWithLink(text));
 
     if (image) {
         const { image_width: width, image_height: height } = fields;
@@ -400,6 +401,12 @@ function renderMessage(message, lazy=true) {
     }
 
     return newMessage;
+
+    function replaceURLWithLink(text) {
+        return text.replace(urlRegex, (url) => {
+            return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+    }
 
     function renderLazyImage(url, width, height) {
         return $(`<img width="${width}" height="${height}" class="lazy">`)
