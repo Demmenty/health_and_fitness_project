@@ -1,6 +1,6 @@
 from typing import Optional
 
-from django.db import models
+from django.db import models, transaction
 
 from main.utils import resize_uploaded_image
 from users.models import User
@@ -141,24 +141,32 @@ class Training(models.Model):
         All fields except 'comment' and 'is_done' are copied.
         """
 
-        records = self.exercises.through.objects.filter(training=from_training)
-        for record in records:
-            self.exercises.through.objects.create(
-                training=self,
-                exercise=record.exercise,
-                order=record.order,
-                weight=record.weight,
-                repetitions=record.repetitions,
-                sets=record.sets,
-                load=record.load,
-                time=record.time,
-                pulse_avg=record.pulse_avg,
-                high_load_time=record.high_load_time,
-                high_load_pulse=record.high_load_pulse,
-                low_load_time=record.low_load_time,
-                low_load_pulse=record.low_load_pulse,
-                cycles=record.cycles,
-            )
+        old_records = self.exercises.through.objects.filter(training=from_training)
+
+        new_data = [
+            {
+                "training": self,
+                "exercise": record.exercise,
+                "order": record.order,
+                "weight": record.weight,
+                "repetitions": record.repetitions,
+                "sets": record.sets,
+                "load": record.load,
+                "time": record.time,
+                "pulse_avg": record.pulse_avg,
+                "high_load_time": record.high_load_time,
+                "high_load_pulse": record.high_load_pulse,
+                "low_load_time": record.low_load_time,
+                "low_load_pulse": record.low_load_pulse,
+                "cycles": record.cycles,
+            }
+            for record in old_records
+        ]
+
+        new_records = (self.exercises.through(**data) for data in new_data)
+
+        with transaction.atomic():
+            self.exercises.through.objects.bulk_create(new_records)
 
     @classmethod
     def get_schedule(cls, client_id: int, year: int, month: int) -> dict:
