@@ -46,11 +46,6 @@ a:hover {
 .pointer:hover {
     cursor: pointer;
 }
-.input-icon-right {
-    position: absolute;
-    right: 0.75rem;
-    top: 30px;
-}
 main {
     margin-bottom: 2.5rem;
 }
