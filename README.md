@@ -1,4 +1,4 @@
-# FULLSTACK HEALTH & FITNESS
+# FULLSTACK FITNESS
 
 Commercial freelance project.
 

@@ -51,7 +51,7 @@ def register_client(request):
                 f"Ваш логин: {form.cleaned_data['username']}\n"
                 f"Ваш пароль: {form.cleaned_data['password1']}\n\n"
                 f"С уважением,\n"
-                f"Команда Health & Fitness"
+                f"Команда Fullstack Fitness"
             ),
         )
         return HttpResponse("ОK")
