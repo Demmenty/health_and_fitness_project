@@ -8,9 +8,10 @@ class PlanAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",
         "access",
+        "coaching",
         "default_price",
     )
-    list_filter = ("access",)
+    list_filter = ("access", "coaching")
 
 
 @admin.register(Subscription)

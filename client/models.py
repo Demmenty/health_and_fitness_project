@@ -1,6 +1,7 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.timezone import now
-from django.core.validators import MaxValueValidator, MinValueValidator
+
 from users.models import User
 
 
@@ -517,11 +518,11 @@ class Feedback(models.Model):
     clientname = models.CharField("Имя клиента", max_length=255)
     name = models.CharField("Имя", max_length=255)
     rate = models.DecimalField(
-        "Оценка", 
+        "Оценка",
         default=0,
-        max_digits=2, 
-        decimal_places=1, 
-        validators=[MinValueValidator(0), MaxValueValidator(5)]
+        max_digits=2,
+        decimal_places=1,
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
     text = models.TextField("Отзыв")
     created_at = models.DateTimeField("Дата", default=now, editable=False)

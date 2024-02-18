@@ -12,6 +12,12 @@ class Plan(models.Model):
         TRAININGS = "TRAINING", "Тренировки"
         FULL = "FULL", "Полный"
 
+    class Coaching(models.TextChoices):
+        NONE = "NONE", "Нет"
+        NUTRITION = "NUTRITION", "Питание"
+        TRAININGS = "TRAINING", "Тренировки"
+        FULL = "FULL", "Полное"
+
     name = models.CharField("Название", max_length=255)
     access = models.CharField(
         "Доступ",
@@ -19,6 +25,13 @@ class Plan(models.Model):
         choices=Access.choices,
         default=Access.FULL,
         help_text="Доступные клиенту модули приложения.",
+    )
+    coaching = models.CharField(
+        "Сопровождение",
+        max_length=9,
+        choices=Coaching.choices,
+        default=Coaching.NONE,
+        help_text="Осуществляемое экспертом сопровождение.",
     )
     default_price = models.PositiveSmallIntegerField(
         "Цена", default=0, help_text="Стандартная цена подписки за месяц."

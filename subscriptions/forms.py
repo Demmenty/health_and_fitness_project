@@ -8,15 +8,18 @@ class PlanForm(ModelForm):
 
     class Meta:
         model = Plan
-        fields = ("name", "access", "default_price", "description")
+        fields = ("name", "access", "coaching", "default_price", "description")
         widgets = {
             "name": TextInput(attrs={"class": "form-control"}),
             "access": Select(
                 attrs={"class": "form-control"}, choices=Plan.Access.choices
             ),
+            "coaching": Select(
+                attrs={"class": "form-control"}, choices=Plan.Coaching.choices
+            ),
             "default_price": NumberInput(attrs={"class": "form-control"}),
             "description": Textarea(
-                attrs={"rows": 11, "cols": 10, "class": "form-control"}
+                attrs={"rows": 10, "cols": 10, "class": "form-control"}
             ),
         }
 

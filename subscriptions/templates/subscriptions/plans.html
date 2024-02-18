@@ -41,6 +41,7 @@
                         </div>
                         <div class="card-body pt-4">
                             <p>Доступ: {{ plan.get_access_display }}</p>
+                            <p>Сопровождение: {{ plan.get_coaching_display }}</p>
                             <p>Стандартная цена: {{ plan.default_price }}</p>
                             <p>{{ plan.description|linebreaks }}</p>
                         </div>

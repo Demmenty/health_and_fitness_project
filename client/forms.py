@@ -17,6 +17,7 @@ from client.models import Contacts, Feedback, Food, Goal, Health, Note, Sleep, W
 from client.utils import create_change_log_entry, create_log_entry
 from users.models import User
 
+
 # Сделать логи через сигналы!!!
 class NoteForm(ModelForm):
     """Form for the client's personal note."""
@@ -1021,9 +1022,7 @@ class FeedbackForm(ModelForm):
             "text",
         )
         widgets = {
-            "name": TextInput(
-                attrs={"class": "form-control text-center"}
-            ),
+            "name": TextInput(attrs={"class": "form-control text-center"}),
             "rate": HiddenInput(
                 attrs={
                     "min": 0,
@@ -1045,7 +1044,7 @@ class FeedbackForm(ModelForm):
         super().save(*args, **kwargs)
 
         client = self.instance.client
-        link=reverse("expert:client_feedback") + f"?client_id={client.id}"
+        link = reverse("expert:client_feedback") + f"?client_id={client.id}"
 
         if self.instance.id:
             create_change_log_entry(form=self, client=client, link=link)
