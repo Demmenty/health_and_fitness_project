@@ -1017,14 +1017,24 @@ class FeedbackForm(ModelForm):
         model = Feedback
         fields = (
             "name",
+            "rate",
             "text",
         )
         widgets = {
-            "name": TextInput(attrs={"class": "form-control"}),
+            "name": TextInput(
+                attrs={"class": "form-control text-center"}
+            ),
+            "rate": HiddenInput(
+                attrs={
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                }
+            ),
             "text": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": 15,
+                    "rows": 10,
                 }
             ),
         }

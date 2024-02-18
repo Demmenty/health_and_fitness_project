@@ -1,6 +1,10 @@
 {% extends layout %}
 {% load static %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'client/css/feedback.css' %}">
+{% endblock %}
+
 {% block title %}
 	<title>{{ client|capfirst }}: отзыв</title>
 {% endblock %}
@@ -14,33 +18,52 @@
 				<h5 class="mb-0">Отзыв</h5>
 			</div>
             <div class="card-body">
-                <form method="post" class="d-flex flex-column gap-3">
+                <form id="feedback-form" method="post" class="d-flex flex-column gap-3">
                     {% csrf_token %}
                     {% if is_expert and not form.instance.id %}
                         <p class="text-center my-3">
                             Отзыв отсутствует
                         </p>
                     {% else %}
-                        <div id="created_at" class="form-group d-flex gap-2">
-                            <label>Дата:</label>
-                            <div>
-                                {% if form.instance.created_at.value %}
-                                    {{ form.created_at.value|date:"n E Y H:i" }}
-                                {% else %}
-                                    {% now "n E Y" %}
-                                {% endif %}
-                            </div>
+                        <div id="created_at" class="d-flex justify-content-center">
+                            {% if form.instance.created_at.value %}
+                                {{ form.created_at.value|date:"n E Y H:i" }}
+                            {% else %}
+                                {% now "n E Y" %}
+                            {% endif %}
                         </div>
-                        {% for field in form %}
-                            <div id="{{ field.name }}" class="form-group">
-                                <div>{{ field.label_tag }}</div>
-                                <div>{{ field }}</div>
-                                <small class="helptext text-secondary">{{ field.help_text }}</small>
-                                {% for error in field.errors %}
+                        <div class="row align-items-center g-3 g-sm-5">
+                            <div id="{{ form.name.name }}" class="form-group text-center col-sm-6">
+                                <div>{{ form.name.label_tag }}</div>
+                                <div>{{ form.name }}</div>
+                                {% for error in form.name.errors %}
                                     <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
                                 {% endfor %}
                             </div>
-                        {% endfor%}
+                            <div id="{{ form.rate.name }}" class="form-group text-center col-sm-6">
+                                <div>{{ form.rate.label_tag }}</div>
+                                {{ form.rate }}
+                                <div class="d-flex align-items-center justify-content-center py-1 gap-1">
+                                    {% for i in 1|ljust:5 %}
+                                        <div class="star empty">
+                                            <img src="{% static 'client/img/star.svg' %}" width="29" class="empty pointer filter-primary">
+                                            <img src="{% static 'client/img/star-half.svg' %}" width="29" class="half pointer filter-primary">
+                                            <img src="{% static 'client/img/star-fill.svg' %}" width="29" class="fill pointer filter-primary">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% for error in form.rate.errors %}
+                                    <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div id="{{ form.text.name }}" class="form-group">
+                            <div>{{ form.text }}</div>
+                            <small class="helptext text-secondary">{{ form.text.help_text }}</small>
+                            {% for error in form.text.errors %}
+                                <small class="text-danger ms-4">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                     {% if is_expert %}
                         <div class="d-flex justify-content-center gap-2">
@@ -69,5 +92,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'client/js/feedback.js' %}"></script>
+    <script src="{% static 'client/js/feedback.js' %}?update=1"></script>
 {% endblock %}

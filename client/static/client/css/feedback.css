@@ -1,0 +1,27 @@
+.star.empty img.empty {
+    display: inline;
+}
+.star.empty img.half,
+.star.empty img.fill {
+    display: none;
+}
+
+.star.half img.half {
+    display: inline;
+}
+.star.half img.empty,
+.star.half img.fill {
+    display: none;
+}
+
+.star.fill img.fill {
+    display: inline;
+}
+.star.fill img.empty,
+.star.fill img.half {
+    display: none;
+}
+
+#rate-badge {
+    padding: 10px 14px;
+}

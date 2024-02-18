@@ -18,9 +18,9 @@
         <div class="card shadow-sm mx-auto" style="max-width: 696px;">
             <div class="card-header bg-primary text-light text-center">
                 {% if form.instance.id %}
-                    <h5 class="mb-0">Новый тарифный план</h5>
-                {% else %}
                     <h5 class="mb-0">Тарифный план "{{ form.name.value|capfirst }}"</h5>
+                {% else %}
+                    <h5 class="mb-0">Новый тарифный план</h5>
                 {% endif %}
 			</div>
             <div class="card-body">
