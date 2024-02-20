@@ -124,7 +124,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_DIRS = [
     (BASE_DIR / "main" / "static"),
     (BASE_DIR / "users" / "static"),
-    (BASE_DIR / "subscriptions" / "static"),
     (BASE_DIR / "client" / "static"),
     (BASE_DIR / "expert" / "static"),
     (BASE_DIR / "metrics" / "static"),
