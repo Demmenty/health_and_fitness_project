@@ -108,16 +108,16 @@ def crop_to_square(image: Image) -> Image:
 
 def resize_uploaded_image(
     image: InMemoryUploadedFile,
-    name: str,
+    filename: str,
+    max_size: tuple[int, int],
     square: bool = False,
-    size: tuple[int, int] = None,
 ) -> InMemoryUploadedFile:
     """
     Resizes and/or crops an uploaded image.
 
     Args:
         image (InMemoryUploadedFile): An object representing the original image.
-        name (str): The name of the image file.
+        filename (str): The name of the image file.
         square (bool, optional): Whether to crop the image to a square shape. Defaults to False.
         resize (tuple[int, int], optional): The size of the resized image. Defaults to None.
 
@@ -125,25 +125,21 @@ def resize_uploaded_image(
         An InMemoryUploadedFile object representing the edited image.
     """
 
-    image = Image.open(image)
-    image = image.convert("RGB")
+    img = Image.open(image).convert("RGB")
 
     if square:
-        image = crop_to_square(image)
-    if size:
-        image = image.resize(size)
+        img = crop_to_square(img)
 
-    edited_image_stream = BytesIO()
-    image.save(edited_image_stream, format="JPEG")
+    img.thumbnail(max_size)
 
-    edited_image_data = edited_image_stream.getvalue()
-    edited_image = InMemoryUploadedFile(
-        edited_image_stream,
-        None,
-        name,
-        "image/jpeg",
-        len(edited_image_data),
-        None,
+    output = BytesIO()
+    img.save(output, format="JPEG")
+
+    return InMemoryUploadedFile(
+        file=output,
+        field_name=None,
+        name=filename,
+        content_type="image/jpeg",
+        size=output.tell(),
+        charset=None,
     )
-
-    return edited_image

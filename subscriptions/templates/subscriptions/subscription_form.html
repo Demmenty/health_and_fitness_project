@@ -1,0 +1,72 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+{% endblock %}
+
+{% block title %}
+	<title>{{ client.username|capfirst }}: подписка</title>
+{% endblock %}
+
+{% block content %}
+<section id="subscription-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 696px;">
+            <div class="card-header bg-primary text-light text-center">
+                <h5 class="mb-0">Подписка клиента</h5>
+			</div>
+            <div class="card-body">
+                <form id="subscription-form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row mb-4">
+                        <div class="col-sm-4 col-form-label">Клиент</div>
+                        <div class="col-sm-8 align-self-center">{{ client.username|capfirst }}</div>
+                    </div>
+                    {% for field in form %}
+                        {% if field.name == 'plan' %}
+                            <div class="form-group row mb-4">
+                                <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    {{ field }}
+                                    <div id="plan-helptext-0" class="plan-helptext" style="display: none;">
+                                        <small class="text-muted">Доступ: только профиль и измерения.</small>
+                                    </div>
+                                    {% for plan in form.fields.plan.queryset %}
+                                        <div id="plan-helptext-{{ plan.id }}" class="plan-helptext" style="display: none;">
+                                            <small class="text-muted">Доступ: {{ plan.get_access_display }}</small><br>
+                                            <small class="text-muted">Стандартная цена: {{ plan.default_price }}</small><br>
+                                            <small class="text-muted" style="white-space: pre-line;">{{ plan.description }}</small>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% for error in field.errors %}
+                                    <small class="text-danger">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-group row mb-4">
+                                <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <small class="text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                                {% for error in field.errors %}
+                                    <small class="text-danger">• {{ error|striptags }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                    <a href="{% url 'expert:client_profile' %}?client_id={{ client.id }}" class="btn btn-outline-primary">Назад</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'subscriptions/js/client_subscription.js' %}"></script>
+{% endblock %}

@@ -19,6 +19,9 @@ body {
 .nav-link.active {
     color: #657ff7;
 }
+.nav-link.disabled {
+    color: #c7ccd3;
+}
 .nav-link:hover {
     color: #657ff7;
 }
@@ -95,6 +98,9 @@ table th {
 }
 
 /* colors & buttons */
+.filter-white {
+    filter: invert(1);
+}
 .filter-secondary {
     filter: invert(54%) sepia(5%) saturate(776%) hue-rotate(167deg) brightness(100%);
 }

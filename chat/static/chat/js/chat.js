@@ -19,6 +19,7 @@ const oldMessagesLimit = 30;
 const userID = chatMsgForm.find("#id_sender").val();
 const chatPartnerID = chatMsgForm.find("#id_recipient").val();
 const csrfToken = chatMsgForm.find("input[name=csrfmiddlewaretoken]").val();
+const urlRegex = /(\b(?:https?|ftp|mailto):\/\/[^\s]+)/g;
 
 const newMsgObserver = new IntersectionObserver(handleNewMsgIntersection);
 
@@ -29,11 +30,6 @@ const messageTemplates = {
 
 var isSendingInProgress = false;
 
-// TODO:
-// make resize by sides
-// btn for fuulscreen chat and back
-// open image full screen when clicked
-// add info about chat - include time of voice restriction in 1 hour
 
 $(document).ready(function () {
     // messages loading
@@ -362,6 +358,7 @@ async function loadOldMessages() {
 function renderMessage(message, lazy=true) {
     const { pk, fields } = message;
     const { created_at, sender, text, seen, image, audio } = fields;
+    const { image_width: width, image_height: height } = fields;
 
     const createdAtFormatted = formatMessageDate(created_at);
     const messageTemplate = messageTemplates[sender].html();
@@ -370,25 +367,17 @@ function renderMessage(message, lazy=true) {
     newMessage.attr("data-id", pk);
     newMessage.attr("id", `message-${pk}`);
     newMessage.find('.created-at').text(createdAtFormatted);
-    newMessage.find('.message-text').text(text);
 
-    if (image) {
-        const { image_width: width, image_height: height } = fields;
-
-        if (lazy) {
-            const imageElement = renderLazyImage(image, width, height);
-            newMessage.find(".message-image").append(imageElement);
-            lazyImgObserver.observe(imageElement[0]);
-        }
-        else {
-            const imageElement = renderImage(image);
-            newMessage.find(".message-image").append(imageElement);
-        }
+    if (text) {
+        newMessage.append(renderText(text));
     }
 
     if (audio) {
-        const audioElement = renderAudio(audio);
-        newMessage.find(".message-audio").append(audioElement);
+        newMessage.append(renderAudio(audio));
+    }
+
+    if (image) {
+        newMessage.append(renderImage(image, width, height, lazy));
     }
 
     if (sender == chatPartnerID && !seen) {
@@ -406,18 +395,71 @@ function renderMessage(message, lazy=true) {
 
     return newMessage;
 
-    function renderLazyImage(url, width, height) {
-        return $(`<img width="${width}" height="${height}" class="lazy">`)
-            .attr("data-src", `/media/${url}`);
+    function renderText(text) {
+        const textElement = $('<p></p>', {class: "message-text py-1 pe-1 my-1"});
+        textElement.html(replaceURLWithLink(text))
+        return textElement;
     }
 
-    function renderImage(url) {
-        return $("<img>", {src: `/media/${url}`});
+    function replaceURLWithLink(text) {
+        return text.replace(urlRegex, (url) => {
+            return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+    }
+
+    function renderImage(url, width, height, lazy) {
+        const imageContainer = $('<div class="message-image"></div>');
+        let imageElement;
+
+        if (lazy) {
+            imageElement = $(`<img width="${width}" height="${height}" class="lazy">`);
+            imageElement.attr("data-src", `/media/${url}`);
+            lazyImgObserver.observe(imageElement[0]);
+        }
+        else {
+            imageElement = $("<img>", {src: `/media/${url}`});
+        }
+
+        imageContainer.append(imageElement);
+
+        return imageContainer;
     }
 
     function renderAudio(url) {
-        return $("<audio controls controlsList='nodownload' class='py-2'></audio>")
-            .append(`<source src="/media/${url}" type="audio/mpeg">`);
+        const audioContainer = $('<div></div>', {
+            class: "message-audio d-flex gap-1 align-items-center"
+        });
+
+        const audioElement = $(
+            `<audio controls controlsList='nodownload' class='py-2'>
+                <source src='/media/${url}' type='audio/mpeg'>
+            </audio>`
+        )
+
+        const speedBadge = $(
+            `<div></div>`, {
+                class: "speed badge text-primary rounded-pill",
+                title: "Скорость воспроизведения",
+                text: "x1",
+            }
+        ).attr("data-bs-toggle", "dropdown");
+
+        const speedDropdown = $(
+            `<ul class='dropdown-menu p-0'>
+                <li class='dropdown-item'>
+                    <input type='range' min='0.5' max='2' step='0.1' value='1' class="form-range">
+                </li>
+            </ul>`
+        );
+ 
+        speedDropdown.find("input").on('input', function () {
+            audioElement[0].playbackRate = parseFloat($(this).val());
+            speedBadge.text(`x${parseFloat($(this).val())}`);
+        });
+
+        audioContainer.append(speedBadge, speedDropdown, audioElement);
+
+        return audioContainer;
     }
 }
 

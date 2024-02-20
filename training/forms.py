@@ -1,7 +1,6 @@
 from django.forms import (
     CheckboxInput,
     CheckboxSelectMultiple,
-    ClearableFileInput,
     HiddenInput,
     ModelForm,
     NumberInput,
@@ -14,15 +13,8 @@ from django.forms import (
 from django.urls import reverse
 
 from client.utils import create_log_entry
+from main.forms import CustomFileInput, CustomImageFileInput
 from training.models import Exercise, ExerciseRecord, Training
-
-
-class ImageFileInput(ClearableFileInput):
-    template_name = "widgets/image_file_input.html"
-
-
-class CustomFileInput(ClearableFileInput):
-    template_name = "widgets/custom_file_input.html"
 
 
 class ExerciseForm(ModelForm):
@@ -75,19 +67,19 @@ class ExerciseForm(ModelForm):
                     "rows": 6,
                 }
             ),
-            "icon": ImageFileInput(
+            "icon": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                     "accept": "image/*",
                 }
             ),
-            "image1": ImageFileInput(
+            "image1": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                     "accept": "image/*",
                 }
             ),
-            "image2": ImageFileInput(
+            "image2": CustomImageFileInput(
                 attrs={
                     "class": "form-control",
                     "accept": "image/*",

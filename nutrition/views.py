@@ -8,10 +8,12 @@ from client.utils import create_log_entry
 from config.settings import DOMAIN
 from nutrition.fatsecret import FSManager
 from nutrition.models import FatSecretEntry
+from subscriptions.decorators import require_access
 from users.utils import get_client_id
 
 
 @login_required
+@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def nutrition(request):
     """Render the client's nutrition page"""
@@ -27,6 +29,7 @@ def nutrition(request):
 
 
 @login_required
+@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def no_fatsecret(request):
     """Render the page when no FatSecret account is linked"""
@@ -36,6 +39,7 @@ def no_fatsecret(request):
 
 
 @client_required
+@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def link_fatsecret(request):
     """

@@ -1,6 +1,10 @@
 {% extends layout %}
 {% load static %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'metrics/css/anthropo_form.css' %}">
+{% endblock %}
+
 {% block title %}
 	<title>{{ user.username|capfirst }}: антропометрия</title>
 {% endblock %}
@@ -10,7 +14,11 @@
     <div class="container">
         <div class="card shadow-sm mx-auto" style="max-width: 30rem;">
             <div class="card-header bg-primary text-light text-center">
-                <h5 class="mb-0">Внесение измерений</h5>
+                {% if form.instance.id %}
+                    <h5 class="mb-0">Редактирование измерений</h5>
+                {% else %}
+                    <h5 class="mb-0">Внесение измерений</h5>
+                {% endif %}
 			</div>
             <div class="card-body">
                 <form id="anthropo-metrics-form" method="POST" enctype="multipart/form-data">
@@ -35,13 +43,27 @@
                         <img src="{% static 'client/img/question-circle.svg' %}" class="filter-primary" width="18">
                         <span>как делать измерения - инструкция</span>
                     </a>
-                    <div class="d-flex justify-content-between mt-3">
+                    <div class="d-flex justify-content-between gap-2 mt-3">
                         <a href="{% url 'metrics:anthropo' %}" class="btn btn-outline-primary">Назад</a>
+                        {% if form.instance.id %}
+                            <button type="button" id="delete-form-btn" class="btn btn-danger me-auto" title="Удалить измерения">
+                                <img src="{% static 'metrics/img/trash.svg' %}" class="filter-white" width="20">
+                            </button>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                 </form>
+                {% if form.instance.id %}
+                    <form id="delete-form" method="POST" action="{% url 'metrics:anthropo_delete' form.instance.id %}">
+                        {% csrf_token %}
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'metrics/js/anthropo_form.js' %}"></script>
 {% endblock %}

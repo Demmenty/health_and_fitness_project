@@ -2,18 +2,18 @@
 {% load static %}
 
 {% block stylesheet %}
-  <link rel="stylesheet" href="{% static 'main/css/home.css' %}?update=1">
+  <link rel="stylesheet" href="{% static 'main/css/home.css' %}?update=2">
 {% endblock %}
 
 {% block title %}
-  <title>Fullstack Health & Fitness</title>
+  <title>Fullstack Fitness</title>
 {% endblock %}
 
 {% block content %}
 <section id="welcome_section" class="lazy-bg" 
   data-bg-image="{% static 'main/img/home_trapeze.svg' %}, {% static 'main/img/man_lowpoly.jpg' %}">
   <div class="container">
-    <h2 class="logo-title mx-auto mx-md-0 align-self-start mt-4 pt-lg-1" name="logo_title">HEALTH & FITNESS</h2>
+    <h2 class="logo-title mx-auto mx-md-0 align-self-start mt-4 pt-lg-1" name="logo_title">FULLSTACK FITNESS</h2>
     <div class="d-flex flex-column align-items-center align-self-center align-self-md-end mb-4 mb-sm-5"
       id="welcome_section_block">
       <h2 class="text-center d-none d-lg-block mb-4 mb-lg-5">
@@ -141,7 +141,7 @@
 <section id="why_section" class="bg-white pb-5">
   <div class="container">
     <h2 class="text-nowrap text-center pt-4 pt-md-5">ЗАЧЕМ ВАМ</h2>
-    <h2 class="logo-title text-center pb-5" name="logo_title">HEALTH & FITNESS</h2>
+    <h2 class="logo-title text-center pb-5" name="logo_title">FULLSTACK FITNESS</h2>
     <div class="why_section_block" id="why_section_block1">
       <p class="why_section_txt pin pin_left" id="why_section_txt1">
         <img src="" data-src="{% static 'main/img/why_section_img1_health_mini.svg' %}" width="" class="why_section_img_mini lazy"
@@ -243,7 +243,7 @@
 <section id="what_section" class="bg-white pb-5">
   <div class="container">
     <h2 class="text-nowrap text-center pt-4 pt-md-5">ЧТО ДАЕТ</h2>
-    <h2 class="logo-title text-center pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">HEALTH & FITNESS</h2>
+    <h2 class="logo-title text-center pb-5 pb-sm-4 pb-md-5 pb-xl-4" name="logo_title">FULLSTACK FITNESS</h2>
     <!-- 1 -->
     <div class="d-flex" id="what_section_block1">
       <img src="" data-src="{% static 'main/img/what_section_gear_sm.svg' %}" class="gear_sm lazy align-self-start me-2 me-xl-3">
@@ -480,10 +480,10 @@
         </ul>
       </div>
       <div class="d-flex flex-column w-100 w-md-50">
-        <form id="consultation-form" method="post" action="{% url 'consults:save_new' %}">
+        <form id="consultation-form" method="post" action="{% url 'consults:add' %}">
           {{ consult_request_form.as_p }}
           <p class="mb-4" id="consultation_error">&nbsp;</p>
-          <button type="submit" class="btn btn-primary w-100">Отправить заявку на консультацию</button>
+          <button type="submit" class="btn btn-primary w-100">Отправить заявку</button>
         </form>
       </div>
     </div>

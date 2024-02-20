@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
+from subscriptions.decorators import require_access
 from training.forms import EXERCISE_RECORD_FORMSETS, TRAINING_FORMS, ExerciseForm
 from training.models import (
     EXERCISE_TYPE_MAP,
@@ -19,6 +20,7 @@ from users.utils import get_client, get_client_id
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["POST"])
 def training_new(request):
     """Create a new training for a client"""
@@ -36,6 +38,7 @@ def training_new(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def trainings(request):
     """Render the page with client's trainings for day (default: today)"""
@@ -64,6 +67,7 @@ def trainings(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET", "POST"])
 def exercise_select(request, id):
     """
@@ -96,13 +100,13 @@ def exercise_select(request, id):
 
     if request.method == "POST":
         checked_exercise_ids = request.POST.getlist("exercises")
-
-        training.exercises.set(checked_exercise_ids)
+        training.add_exercises_with_previous_data(checked_exercise_ids)
 
         return redirect_to_training(training)
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def copy_previous(request, id):
     """Copies the records from the previous training to the current training"""
@@ -120,18 +124,18 @@ def copy_previous(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET", "POST"])
 def exercise_replace(request, id):
     """
     View function for replacing an exercise in a training.
 
     Args:
-        request: The HTTP request object.
         id: The ID of the exercise record to be replaced.
 
     Returns:
         GET: A rendered HTML template for selecting another suitable exercise.
-        POST: Replaces the exercise in the exercise record (if selected) with same data.
+        POST: Replaces the exercise in the exercise record (if selected).
             Redirects to the training page of this record after.
     """
 
@@ -161,14 +165,13 @@ def exercise_replace(request, id):
         exercise_id = request.POST.get("exercise")
 
         if exercise_id:
-            exercise = get_object_or_404(Exercise, id=exercise_id)
-            exercise_record.exercise = exercise
-            exercise_record.save()
+            exercise_record.replace_exercise(exercise_id)
 
         return redirect_to_training(training)
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_form(request):
     """View function for the exercise form (new or edit)"""
@@ -191,6 +194,7 @@ def exercise_form(request):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_detail(request, id):
     """View function for displaying an exercise detail"""
@@ -205,6 +209,7 @@ def exercise_detail(request, id):
 
 
 @login_required
+@require_access(["TRAINING", "FULL"])
 @require_http_methods(["GET"])
 def exercise_stats(request, id):
     """

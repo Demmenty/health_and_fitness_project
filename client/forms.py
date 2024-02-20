@@ -18,6 +18,7 @@ from client.utils import create_change_log_entry, create_log_entry
 from users.models import User
 
 
+# Сделать логи через сигналы!!!
 class NoteForm(ModelForm):
     """Form for the client's personal note."""
 
@@ -1017,14 +1018,22 @@ class FeedbackForm(ModelForm):
         model = Feedback
         fields = (
             "name",
+            "rate",
             "text",
         )
         widgets = {
-            "name": TextInput(attrs={"class": "form-control"}),
+            "name": TextInput(attrs={"class": "form-control text-center"}),
+            "rate": HiddenInput(
+                attrs={
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                }
+            ),
             "text": Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": 15,
+                    "rows": 10,
                 }
             ),
         }
@@ -1035,10 +1044,14 @@ class FeedbackForm(ModelForm):
         super().save(*args, **kwargs)
 
         client = self.instance.client
+        link = reverse("expert:client_feedback") + f"?client_id={client.id}"
 
-        create_log_entry(
-            modelname=self.Meta.model._meta.verbose_name,
-            description="Клиент оставил отзыв",
-            client=client,
-            link=reverse("expert:client_feedback") + f"?client_id={client.id}",
-        )
+        if self.instance.id:
+            create_change_log_entry(form=self, client=client, link=link)
+        else:
+            create_log_entry(
+                modelname=self.Meta.model._meta.verbose_name,
+                description="Клиент оставил отзыв",
+                client=client,
+                link=link,
+            )

@@ -1,0 +1,51 @@
+{% extends layout %}
+{% load static %}
+
+{% block stylesheet %}
+{% endblock %}
+
+{% block title %}
+    {% if form.instance.id %}
+        <title>Редактирование тарифного плана</title>
+    {% else %}
+	    <title>Новый тарифный план</title>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<section id="plan-section">
+    <div class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 696px;">
+            <div class="card-header bg-primary text-light text-center">
+                {% if form.instance.id %}
+                    <h5 class="mb-0">Тарифный план "{{ form.name.value|capfirst }}"</h5>
+                {% else %}
+                    <h5 class="mb-0">Новый тарифный план</h5>
+                {% endif %}
+			</div>
+            <div class="card-body">
+                <form id="plan-form" method="POST"
+                {% if form.instance.id %} action="{% url 'subscription:edit_plan' form.instance.id %}" {% endif %}>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group row mb-4">
+                            <div class="col-sm-4 col-form-label">{{ field.label_tag }}</div>
+                            <div class="col-sm-8">
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                            {% for error in field.errors %}
+                                <small class="text-danger">• {{ error|striptags }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary float-end">Сохранить</button>
+                    <a href="{% url 'subscription:plans' %}" class="btn btn-outline-primary">Назад</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

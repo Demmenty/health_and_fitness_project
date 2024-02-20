@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'main/css/alerts.css' %}?update=1">
-    <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}?update=2">
+    <link rel="stylesheet" href="{% static 'chat/css/chat.css' %}?update=4">
     <link rel="stylesheet" href="{% static 'chat/css/chat_as_page.css' %}">
     <title>Чат</title>
 </head>
@@ -62,9 +62,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            <p class="message-text bg-white rounded p-1"></p>
-                            <div class="message-audio"></div>
-                            <div class="message-image"></div>
                         </div>
                     </template>
                     <template id="message-template-partner">
@@ -74,9 +71,6 @@
                                 <small> • </small>
                                 <small class="created-at"></small>
                             </div>
-                            <p class="message-text bg-white rounded p-1"></p>
-                            <div class="message-audio"></div>
-                            <div class="message-image"></div>
                         </div>
                     </template>
                 </div>
@@ -137,10 +131,10 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'main/js/alerts.js' %}"></script>
+<script src="{% static 'main/js/alerts.js' %}?update=1"></script>
 <script src="{% static 'main/js/lazy_images.js' %}"></script>
 <script src="{% static 'main/js/backclose_btn.js' %}"></script>
-<script src="{% static 'chat/js/chat.js' %}?update=1"></script>
+<script src="{% static 'chat/js/chat.js' %}?update=3"></script>
 <script src="{% static 'chat/js/chat_as_page.js' %}"></script>
 
 </html>
