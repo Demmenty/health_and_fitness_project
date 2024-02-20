@@ -220,7 +220,4 @@
 
 {% block script %}
     <script src="{% static 'nutrition/js/nutrition.js' %}?update=2"></script>
-    {% if client.subscription.plan.access == 'TRAINING' %}
-        <script>showInfoAlert("У клиента нет доступа к этому модулю")</script>
-    {% endif %}
 {% endblock %}

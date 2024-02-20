@@ -69,11 +69,11 @@
                             {% if user.height %} см{% endif %}
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="label">Тарифный план:</td>
                         <td class="text-center">
                             {% if client.subscription %}
-                                <a href="{% url 'subscription:detail' %}" title="Изменить"
+                                <a href="" title="Изменить"
                                     class="filter-hover-primary text-black text-decoration-none">
                                     {{ client.subscription.plan.name }}
                                 </a>
@@ -81,7 +81,7 @@
                                 отсутствует
                             {% endif %} 
                         </td>
-                    </tr>
+                    </tr> -->
                 </table>
                 <div class="d-flex justify-content-center gap-4">
                     <a href="{% url 'client:profile_edit' %}" title="Изменить информацию" class="filter-hover-primary">

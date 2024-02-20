@@ -69,15 +69,15 @@
                             {% if client.height %} см{% endif %}
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="label">Тарифный план:</td>
                         <td class="text-center">
-                            <a href="{% url 'subscription:edit' client.id %}" title="Изменить"
+                            <a href="" title="Изменить"
                                 class="filter-hover-primary text-black text-decoration-none">
                                 {{ client.subscription.plan.name|default:"отсутствует" }}
                             </a>
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td class="label">Дата регистрации:</td>
                         <td class="text-center">{{ client.date_joined|date:"d E Y" }}</td>

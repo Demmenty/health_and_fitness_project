@@ -15,14 +15,12 @@ from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
 from nutrition.forms import EstimationForm
 from nutrition.models import Estimation, FatSecretEntry
-from subscriptions.decorators import require_access
 from users.utils import get_client
 
 fs_cache = FSCacheManager()
 
 
 @login_required
-@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def get_daily(request, day: str):
     """
@@ -54,7 +52,6 @@ def get_daily(request, day: str):
 
 
 @login_required
-@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def get_daily_food(request):
     """
@@ -97,7 +94,6 @@ def get_daily_food(request):
 
 
 @login_required
-@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def get_monthly(request):
     """
@@ -139,7 +135,6 @@ def get_monthly(request):
 
 
 @login_required
-@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["POST"])
 def update_food_servings(request):
     """
@@ -175,7 +170,6 @@ def update_food_servings(request):
 
 
 @login_required
-@require_access(["NUTRITION", "FULL"])
 @require_http_methods(["GET"])
 def get_monthly_top_food(request):
     """

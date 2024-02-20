@@ -69,12 +69,12 @@
                         </ul>
                     {% else %}
                         <ul class="nav justify-content-center">
-                            <li>
-                                <a href="{% url 'subscription:plans' %}" 
+                            <!-- <li>
+                                <a href="" 
                                     class="nav-link {% if 'subscription' in url %} active {% endif %}">
                                     Тарифы
                                 </a>
-                            </li>
+                            </li> -->
                             <li>
                                 <a href="{% url 'expert:clients' %}" 
                                     class="nav-link {% if 'client' in url %} active {% endif %}">
@@ -130,7 +130,7 @@
                         </a>
                         <ul class="dropdown-menu text-small shadow position-absolute" data-popper-placement="bottom-end"
                             style="inset: 0px auto auto 0px; margin: 0px; transform: translate(-111px, 34px);">
-                            <li><a class="dropdown-item" href="{% url 'subscription:plans' %}">Тарифы</a></li>
+                            <!-- <li><a class="dropdown-item" href="">Тарифы</a></li> -->
                             <li><a class="dropdown-item" href="{% url 'expert:clients' %}">Клиенты</a></li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'expert:consult_requests' %}">

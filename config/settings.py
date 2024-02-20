@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "client.apps.ClientConfig",
     "expert.apps.ExpertConfig",
-    "subscriptions.apps.SubscriptionsConfig",
     "metrics.apps.MetricsConfig",
     "nutrition.apps.NutritionConfig",
     "training.apps.TrainingConfig",

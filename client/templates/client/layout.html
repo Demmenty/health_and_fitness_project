@@ -49,24 +49,16 @@
                             </a>
                         </li>
                         <li>
-                            {% if not client.subscription or client.subscription.plan.access == 'TRAINING' %}
-                                <span class="nav-link disabled">Питание</span>
-                            {% else %}
-                                <a href="{% url 'nutrition:nutrition' %}" 
-                                    class="nav-link {% if 'nutrition' in url %} active {% endif %}">
-                                    Питание
-                                </a>
-                            {% endif %}
+                            <a href="{% url 'nutrition:nutrition' %}" 
+                                class="nav-link {% if 'nutrition' in url %} active {% endif %}">
+                                Питание
+                            </a>
                         </li>
                         <li>
-                            {% if not client.subscription or client.subscription.plan.access == 'NUTRITION' %}
-                                <span class="nav-link disabled">Тренировки</span>
-                            {% else %}
-                                <a href="{% url 'training:trainings' %}" 
-                                    class="nav-link {% if 'training' in url %} active {% endif %}">
-                                    Тренировки
-                                </a>
-                            {% endif %}
+                            <a href="{% url 'training:trainings' %}" 
+                                class="nav-link {% if 'training' in url %} active {% endif %}">
+                                Тренировки
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -94,18 +86,10 @@
                                 <a class="dropdown-item" href="{% url 'metrics:daily' %}">Измерения</a>
                             </li>
                             <li>
-                                {% if not client.subscription or client.subscription.plan.access == 'TRAINING' %}
-                                    <span class="dropdown-item disabled">Питание</span>
-                                {% else %}
-                                    <a class="dropdown-item" href="{% url 'nutrition:nutrition' %}">Питание</a>
-                                {% endif %}
+                                <a class="dropdown-item" href="{% url 'nutrition:nutrition' %}">Питание</a>
                             </li>
                             <li>
-                                {% if not client.subscription or client.subscription.plan.access == 'NUTRITION' %}
-                                    <span class="dropdown-item disabled">Тренировки</span>
-                                {% else %}
-                                    <a class="dropdown-item" href="{% url 'training:trainings' %}">Тренировки</a>
-                                {% endif %}
+                                <a class="dropdown-item" href="{% url 'training:trainings' %}">Тренировки</a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             {% if user.is_staff %}
