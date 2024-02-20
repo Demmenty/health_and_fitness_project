@@ -14,6 +14,8 @@ from metrics.models import (
     PhotoAccess,
 )
 from metrics.utils import create_levels_forms
+from nutrition.forms import EstimationForm
+from nutrition.models import Estimation
 from users.utils import get_client
 
 
@@ -42,6 +44,9 @@ def daily(request):
     metrics = DailyMetrics.update_nutrition_from_fs(metrics)
     metrics_avg = DailyMetrics.get_avg(metrics, count_today_nutrition=False)
 
+    nutrition_estimation = Estimation.objects.filter(client=client).first()
+    estimation_form = EstimationForm(instance=nutrition_estimation)
+
     template = "metrics/daily.html"
     data = {
         "start_date": start or metrics[0].date,
@@ -50,6 +55,7 @@ def daily(request):
         "metrics_avg": metrics_avg,
         "show_chart": show_chart,
         "chart_param": chart_param,
+        "estimation_form": estimation_form,
     }
 
     if request.user.is_expert:

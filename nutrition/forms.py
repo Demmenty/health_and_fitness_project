@@ -1,13 +1,13 @@
 from django.forms import ModelForm, NumberInput, Textarea
 
-from nutrition.models import Recommendation
+from nutrition.models import Estimation
 
 
-class RecommendationForm(ModelForm):
-    """Form for nutrition recommendations for the client."""
+class EstimationForm(ModelForm):
+    """Form for nutrition calculations for the client."""
 
     class Meta:
-        model = Recommendation
+        model = Estimation
         fields = (
             "calories",
             "protein",

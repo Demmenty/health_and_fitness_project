@@ -8,17 +8,14 @@ from django.http import (
     HttpResponseServerError,
     JsonResponse,
 )
-from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from fatsecret.fatsecret import GeneralError as FatsecretGeneralError
 
-from expert.decorators import expert_required
 from nutrition.cache import FSCacheManager
 from nutrition.fatsecret import FSManager
-from nutrition.forms import RecommendationForm
-from nutrition.models import FatSecretEntry, Recommendation
+from nutrition.forms import EstimationForm
+from nutrition.models import Estimation, FatSecretEntry
 from subscriptions.decorators import require_access
-from users.models import User
 from users.utils import get_client
 
 fs_cache = FSCacheManager()
@@ -219,23 +216,18 @@ def get_monthly_top_food(request):
     return JsonResponse(data)
 
 
-@expert_required
+@login_required
 @require_http_methods(["POST"])
-def save_recommendations(request, client_id: int):
-    """
-    Save the nutrition recommendations for a client.
+def save_estimation(request):
+    """Save the estimated nutrition calculations for a client."""
 
-    Args:
-        client_id (int): The ID of the client.
-    """
+    client = get_client(request)
+    instance = Estimation.objects.filter(client=client).first()
 
-    client = get_object_or_404(User, id=client_id)
-    instance = Recommendation.objects.filter(client=client).first()
-
-    form = RecommendationForm(request.POST, instance=instance)
+    form = EstimationForm(request.POST, instance=instance)
     if form.is_valid():
         form.instance.client = client
         form.save()
-        return HttpResponse("Рекомендации сохранены")
+        return HttpResponse("КБЖУ расчеты сохранены")
 
     return HttpResponseBadRequest("Ошибка при сохранении данных")

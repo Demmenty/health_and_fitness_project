@@ -1,11 +1,9 @@
 {% extends layout %}
 {% load static %}
-{% load nutrition_recommendations %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'main/css/page_menu.css' %}">
-    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition.css' %}?update=2">
-    <link rel="stylesheet" href="{% static 'nutrition/css/recommendations.css' %}?update=1">
+    <link rel="stylesheet" href="{% static 'nutrition/css/nutrition.css' %}?update=3">
 {% endblock %}
 
 {% block title %}
@@ -13,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-{% nutrition_recommendations %}
+{% include 'nutrition/estimation_card.html' %}
 
 <section id="nutrition-menu-section">
     <div class="container">
@@ -221,7 +219,7 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'nutrition/js/nutrition.js' %}?update=1"></script>
+    <script src="{% static 'nutrition/js/nutrition.js' %}?update=2"></script>
     {% if client.subscription.plan.access == 'TRAINING' %}
         <script>showInfoAlert("У клиента нет доступа к этому модулю")</script>
     {% endif %}

@@ -1,8 +1,8 @@
-const recommendationsBtn = $("#recommendations-btn");
-const recommendations = $("#recommendations");
-const recommendationsCloseBtn = $("#recommendations .btn-close");
-const recommedationsForm = $("#recommedations-form");
-const recommendedValues = {};
+const estimationBtn = $("#estimation-btn");
+const estimation = $("#estimation");
+const estimationCloseBtn = $("#estimation .btn-close");
+const estimationForm = $("#estimation-form");
+const estimatedValues = {};
 
 const dayNutrition = $("#day-nutrition");
 const nextDayBtn = dayNutrition.find(".next-arrow");
@@ -56,7 +56,7 @@ var nutritionDay = today;
 var nutritionMonth = today;
 
 $(document).ready(() => {
-    setRecommendedValuesDict(recommendedValues);
+    setEstimatesValuesDict(estimatedValues);
 
     updateDayNutrition(today);
     nextDayBtn.on("click", () => {
@@ -82,9 +82,9 @@ $(document).ready(() => {
 
     foodMetricsForm.on("submit", saveFoodMetric);
 
-    recommendationsBtn.on('click', toggleNutritionRecss);
-    recommendationsCloseBtn.on('click', toggleNutritionRecss);
-    recommedationsForm.on('submit', saveRecommendation);
+    estimationBtn.on('click', toggleEstimationCard);
+    estimationCloseBtn.on('click', toggleEstimationCard);
+    estimationForm.on('submit', saveEstimation);
 })
 
 // REQUESTS
@@ -166,44 +166,44 @@ async function saveFoodMetricsRequest() {
     })
 }
 
-// RECOMMENDATIONS
+// ESTIMATION
 
 /**
- * Sets the recommended values in the given dictionary.
+ * Sets the estimated nutrition values in the given dictionary.
  * Keys are "calories", "protein", "fat", "carbohydrate".
  * Values are numbers or null if the value is not set.
  *
- * @param {Object} recommendedValues - The dictionary to store the recommended values.
+ * @param {Object} estimatedValues - The dictionary to store the estimated values.
  * @return {void} This function does not return a value.
  */
-function setRecommendedValuesDict(recommendedValues) {
+function setEstimatesValuesDict(estimatedValues) {
     const fieldNames = ["calories", "protein", "fat", "carbohydrate"];
 
     fieldNames.forEach(fieldName => {
-        const field = recommendations.find(`#id_${fieldName}`);
+        const field = estimation.find(`#id_${fieldName}`);
         const value = parseInt(field.val());
-        recommendedValues[fieldName] = isNaN(value) ? null : value;
+        estimatedValues[fieldName] = isNaN(value) ? null : value;
     });
 }
 
 /**
- * Toggles the visibility of the nutrition recommendations.
+ * Toggles the visibility of the nutrition estimation card.
  */
-function toggleNutritionRecss() {
-    recommendationsBtn.toggleClass('active');
-    recommendations.toggle(300);
+function toggleEstimationCard() {
+    estimationBtn.toggleClass('active');
+    estimation.toggle(300);
 }
 
 /**
- * Saves the nutrition recommendation.
+ * Saves the nutrition estimation.
  *
- * @param {Event} event - The event that triggered the save recommendation.
+ * @param {Event} event - The event that triggered the save estimation.
  */
-async function saveRecommendation(event) {
+async function saveEstimation(event) {
     event.preventDefault();
 
     try {
-        const response = await sendFormRequest(recommedationsForm);
+        const response = await sendFormRequest(estimationForm);
         showSuccessAlert(response);
     } 
     catch (error) {
@@ -407,18 +407,18 @@ function updateDayNutritionTable(meal, totalNutrition, totalAmount) {
 
         /**
          * Updates the bars for the given day's food.
-         * These bars reflect the progress towards achieving the recommended nutrient consumption level.
+         * These bars reflect the progress towards achieving the estimated nutrient consumption level.
          */
         function updateBars() {
-            updateBar(dayTotalCalories.next(".bar"), calories, recommendedValues.calories);
-            updateBar(dayTotalProtein.next(".bar"), protein, recommendedValues.protein);
-            updateBar(dayTotalFats.next(".bar"), fat, recommendedValues.fat);
-            updateBar(dayTotalCarbs.next(".bar"), carbohydrate, recommendedValues.carbohydrate);
+            updateBar(dayTotalCalories.next(".bar"), calories, estimatedValues.calories);
+            updateBar(dayTotalProtein.next(".bar"), protein, estimatedValues.protein);
+            updateBar(dayTotalFats.next(".bar"), fat, estimatedValues.fat);
+            updateBar(dayTotalCarbs.next(".bar"), carbohydrate, estimatedValues.carbohydrate);
     
-            function updateBar(bar, value, recommendation) {
-                bar.toggle(recommendation != null);
-                if (recommendation) {
-                    const width = `${(value / recommendation * 100)}%`;
+            function updateBar(bar, value, estimation) {
+                bar.toggle(estimation != null);
+                if (estimation) {
+                    const width = `${(value / estimation * 100)}%`;
                     bar.find(".bar-scale").css({ width });
                 }
             }

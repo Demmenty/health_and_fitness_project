@@ -1,10 +1,12 @@
 const commentBtns = $(".comment-btn");
 const commentCloseBtns = $(".comment .btn-close");
 const comments = $("div.comment");
-const recommendationsBtn = $("#recommendations-btn");
-const recommendations = $("#recommendations");
-const recommendationsCloseBtn = $("#recommendations .btn-close");
-const recommedationsForm = $("#recommedations-form");
+
+const estimationBtn = $("#estimation-btn");
+const estimation = $("#estimation");
+const estimationCloseBtn = $("#estimation .btn-close");
+const estimationForm = $("#estimation-form");
+
 const avgDetailBtn = $("#avg-detail-btn");
 const levelsForms = $(".levels-form");
 const levelsMenuTogglers = $("#metrics-levels-section .toggler");
@@ -20,9 +22,11 @@ var metricsChart;
 $(document).ready(() => {
     commentBtns.on('click', toggleComment);
     commentCloseBtns.on('click', closeComment);
-    recommendationsBtn.on('click', toggleNutritionRecs);
-    recommendationsCloseBtn.on('click', toggleNutritionRecs);
-    recommedationsForm.on('submit', saveRecommendation);
+
+    estimationBtn.on('click', toggleEstimationCard);
+    estimationCloseBtn.on('click', toggleEstimationCard);
+    estimationForm.on('submit', saveEstimation);
+
     avgDetailBtn.on('click', () => {avgDetailBtn.toggleClass("active")});
     colouringBtn.on('click', toggleColouring);
     levelsForms.on('submit', saveMetricLevels);
@@ -101,26 +105,24 @@ function closeComment() {
     comment.hide(300);
 }
 
-// RECOMMENDATIONS
+// ESTIMATION
 
 /**
- * Toggles the display of nutrition recommendations.
+ * Toggles the display of estimated nutrition.
  */
-function toggleNutritionRecs() {
-    recommendationsBtn.toggleClass('active');
-    recommendations.toggle(300);
+function toggleEstimationCard() {
+    estimationBtn.toggleClass('active');
+    estimation.toggle(300);
 }
 
 /**
- * Saves the nutrition recommendation.
- *
- * @param {Event} event - The event that triggered the save recommendation.
+ * Saves the estimated nutrition form.
  */
-async function saveRecommendation(event) {
+async function saveEstimation(event) {
     event.preventDefault();
 
     try {
-        const response = await sendFormRequest(recommedationsForm);
+        const response = await sendFormRequest(estimationForm);
         showSuccessAlert(response);
     } 
     catch (error) {

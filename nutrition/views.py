@@ -7,7 +7,8 @@ from client.decorators import client_required
 from client.utils import create_log_entry
 from config.settings import DOMAIN
 from nutrition.fatsecret import FSManager
-from nutrition.models import FatSecretEntry
+from nutrition.forms import EstimationForm
+from nutrition.models import Estimation, FatSecretEntry
 from subscriptions.decorators import require_access
 from users.utils import get_client_id
 
@@ -24,8 +25,12 @@ def nutrition(request):
     if not fs_linked:
         return redirect(reverse("nutrition:no_fatsecret") + f"?client_id={client_id}")
 
+    estimation = Estimation.objects.filter(client_id=client_id).first()
+    estimation_form = EstimationForm(instance=estimation)
+
     template = "nutrition/nutrition.html"
-    return render(request, template)
+    data = {"estimation_form": estimation_form}
+    return render(request, template, data)
 
 
 @login_required

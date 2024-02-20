@@ -16,8 +16,8 @@ class FatSecretEntry(models.Model):
         verbose_name_plural = "Данные доступа к Fatsecret"
 
 
-class Recommendation(models.Model):
-    """Nutrition recommendations for the client."""
+class Estimation(models.Model):
+    """Nutrition calculations for the client."""
 
     client = models.OneToOneField("users.User", on_delete=models.CASCADE)
     calories = models.PositiveSmallIntegerField("Калории", null=True, blank=True)
@@ -27,8 +27,8 @@ class Recommendation(models.Model):
     comment = models.TextField("Комментарий", default="", blank=True)
 
     def __str__(self):
-        return f"Рекомендации КБЖУ: {self.client}"
+        return f"Расчет КБЖУ: {self.client}"
 
     class Meta:
-        verbose_name = "Рекомендации КБЖУ"
-        verbose_name_plural = "Рекомендации КБЖУ"
+        verbose_name = "Расчет КБЖУ"
+        verbose_name_plural = "Расчеты КБЖУ"

@@ -1,0 +1,30 @@
+<div id="estimation" class="card overflow-auto draggable shadow" style="display: none;">
+    <div class="card-header draggable-point d-flex justify-content-between 
+        align-items-center bg-aux gap-2">
+        <div class="col-1"></div>
+        <h6 class="mb-0 text-nowrap col-auto">Расчет КБЖУ</h6>
+        <button type="button" class="col-1 btn-close"></button>
+    </div>
+    <div class="card-body bg-white d-flex flex-column gap-2">
+        <form method="post" id="estimation-form" class="d-flex flex-column gap-2"
+            action="{% url 'nutrition:save_estimation' %}?client_id={{ client.id }}">
+            {% csrf_token %}
+            {% for field in estimation_form %}
+                {% if field.name != "comment" %}
+                <div class="d-flex align-items-center gap-3">
+                    <label for="{{ field.id_for_label }}" class="w-50">
+                        {{ field.label }}:
+                    </label>
+                    {{ field }}
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div class="my-3">
+                {{ estimation_form.comment }}
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-aux float-end">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>

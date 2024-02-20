@@ -42,8 +42,8 @@ urlpatterns = [
         name="update_food_servings",
     ),
     path(
-        "recommendations/<int:client_id>/save",
-        ajax.save_recommendations,
-        name="save_recommendations",
+        "estimation/save",
+        ajax.save_estimation,
+        name="save_estimation",
     ),
 ]

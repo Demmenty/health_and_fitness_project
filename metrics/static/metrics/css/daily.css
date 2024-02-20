@@ -39,3 +39,18 @@
     background-color: unset;
     border-color: #dee2e6;
 }
+
+/* estimation */
+#estimation {
+    bottom: 0;
+    max-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+@media (min-width: 576px) {
+    #estimation {
+        left: 1.5rem;
+        bottom: 1.5rem;
+        width: fit-content;
+    }
+}

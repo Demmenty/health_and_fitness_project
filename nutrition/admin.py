@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from nutrition.models import FatSecretEntry, Recommendation
+from nutrition.models import Estimation, FatSecretEntry
 
 admin.site.register(FatSecretEntry)
-admin.site.register(Recommendation)
+admin.site.register(Estimation)
