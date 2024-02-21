@@ -8,6 +8,8 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
+MAINTENANCE_MODE = config("MAINTENANCE_MODE", default=False, cast=bool)
+
 DOMAIN = config("DOMAIN")
 
 ALLOWED_HOSTS = [DOMAIN, "localhost", "127.0.0.1"]
@@ -26,11 +28,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "main.apps.MainConfig",
-    "consults.apps.ConsultsConfig",
     "users.apps.UsersConfig",
     "client.apps.ClientConfig",
     "expert.apps.ExpertConfig",
+    "main.apps.MainConfig",
+    "consults.apps.ConsultsConfig",
     "metrics.apps.MetricsConfig",
     "nutrition.apps.NutritionConfig",
     "training.apps.TrainingConfig",
@@ -46,6 +48,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "main.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -121,10 +124,10 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [
-    (BASE_DIR / "main" / "static"),
     (BASE_DIR / "users" / "static"),
     (BASE_DIR / "client" / "static"),
     (BASE_DIR / "expert" / "static"),
+    (BASE_DIR / "main" / "static"),
     (BASE_DIR / "metrics" / "static"),
     (BASE_DIR / "nutrition" / "static"),
     (BASE_DIR / "training" / "static"),

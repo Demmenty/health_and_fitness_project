@@ -5,7 +5,7 @@ from users.forms import UserLoginForm
 
 
 def home(request):
-    """View for website home page"""
+    """Renders the home page"""
 
     template = "main/home.html"
     data = {
@@ -13,3 +13,10 @@ def home(request):
         "consult_request_form": NewRequestForm(),
     }
     return render(request, template, data)
+
+
+def maintenance(request):
+    """Renders the maintenance page"""
+
+    template = "main/maintenance.html"
+    return render(request, template)
