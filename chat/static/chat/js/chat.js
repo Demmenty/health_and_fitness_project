@@ -11,7 +11,7 @@ const chatAudioInputPreview = chatMsgForm.find("#input-audio-preview");
 const chatAudioDeleteBtn = chatMsgForm.find("#input-audio-delete");
 const chatAudioRecordBtn = chatMsgForm.find("#audio-record-btn");
 const chatAudioStopBtn = chatMsgForm.find("#stop-audio");
-const chatMsgSubmitBtn = chatMsgForm.find("button [type=submit]");
+const chatMsgSubmitBtn = chatMsgForm.find("button[type=submit]");
 
 const chatParams = chat.find("params");
 const lastMessagesLimit = 20;
