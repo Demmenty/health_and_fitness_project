@@ -431,7 +431,7 @@ function renderMessage(message, lazy=true) {
         });
 
         const audioElement = $(
-            `<audio controls controlsList='nodownload' preload='metadata' class='py-2'>
+            `<audio controls controlsList='nodownload' preload='none' class='py-2'>
                 <source src='/media/${url}' type='audio/mpeg'>
             </audio>`
         )
