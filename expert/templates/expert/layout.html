@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'main/img/logo_144.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'main/img/FF_Logo.svg' %}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
@@ -36,7 +36,7 @@
             <div class="d-flex align-items-center justify-content-between gap-2">
                 <div class="col-3 d-flex align-items-center gap-3">
                     <a href="/">
-                        <img id="logo" src="{% static 'main/img/logo_text.svg' %}" type="image/svg+xml" width="80">
+                        <img id="logo" src="{% static 'main/img/FF_Logo.svg' %}" type="image/svg+xml" width="40" class="my-2">
                     </a>
                     {% if client %}
                         <a href="{% url 'expert:client_profile' %}?client_id={{ client.id }}" 
